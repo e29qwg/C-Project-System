@@ -54,32 +54,39 @@ $projectMaps = ProjectMap::find("user_id='$params[0]'");
  	{
 	?>
 		<div class="row">
-			<label class="col-sm-3">Project Advisor: </label>
-			<div class="col-sm-9">
-    
-			<?php
-			foreach ($projectMaps as $projectMap)
-			{
-				if ($projectMap->map_type == 'advisor')
+			<label class="col-sm-10">Advising Project: </label>
+		</div>
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-10">
+				<?php
+				foreach ($projectMaps as $projectMap)
 				{
-					$project = Project::findFirst("project_id='$projectMap->project_id'");
-					echo $project->project_name;
-					echo '<br>';
+					if ($projectMap->map_type == 'advisor')
+					{
+						$project = Project::findFirst("project_id='$projectMap->project_id' AND project_status='Accept'");
+						if (!$project)
+							continue;
+						echo $project->project_name;
+						echo '<br>';
+					}
 				}
-			}
-		?>
+				?>
 			</div>
         </div>
 		<div class="row">
-			<label class="col-sm-3">Project Coadvisor: </label>
-			<div class="col-sm-9">
+			<label class="col-sm-10">Project Co-advising: </label>
+		</div>
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-10">
 			<?php
 	
 			foreach ($projectMaps as $projectMap)
 			{
 				if ($projectMap->map_type == 'coadvisor')
 				{
-					$project = Project::findFirst("project_id='$projectMap->project_id'");
+					$project = Project::findFirst("project_id='$projectMap->project_id' AND project_status='Accept'");
+					if (!$project)
+						continue;
 					echo $project->project_name;
 					echo '<br>';
 				}

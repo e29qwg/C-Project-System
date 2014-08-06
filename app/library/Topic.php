@@ -16,16 +16,6 @@ class Topic extends Phalcon\Mvc\User\Component
         $row = 2;
         $count = 0;
   
-        //explain level id
-        $projectLevels = ProjectLevel::find();
-        $obj->getActiveSheet()->setCellValue('I2', 'ระดับโครงงาน');
-        foreach ($projectLevels as $projectLevel)
-        {
-            $obj->getActiveSheet()->setCellValue('I'.$levelRow, $projectLevel->project_level_id);
-            $obj->getActiveSheet()->setCellValue('J'.$levelRow, $projectLevel->project_level_name);
-            $levelRow++;
-        }
-    
         foreach ($projects as $project)
         {
             //if ($project->project_status != 'Accept')
@@ -33,6 +23,8 @@ class Topic extends Phalcon\Mvc\User\Component
 
 			if ($project->project_status != 'Accept')
 				$con = '(รอยืนยัน)';
+			else
+				$con = '';
 
             $projectMaps = ProjectMap::find("project_id='$project->project_id' AND map_type='owner'");
     
@@ -49,7 +41,17 @@ class Topic extends Phalcon\Mvc\User\Component
                 $obj->getActiveSheet()->setCellValue('A'.$row, $count);
                 $obj->getActiveSheet()->setCellValue('B'.$row, $user->user_id);
                 $obj->getActiveSheet()->setCellValue('C'.$row, $user->title.$user->name);
-                $obj->getActiveSheet()->setCellValue('D'.$row, $project->project_level_id);
+
+				switch ($project->project_level_id)
+				{
+					case 1: $projectLevel = "pp"; break;
+					case 2: $projectLevel = "1"; break;
+					case 3: $projectLevel = "2"; break;
+					default: $projectLevel = $project->project_level_id;
+				}
+				
+
+                $obj->getActiveSheet()->setCellValue('D'.$row, $projectLevel);
                 $obj->getActiveSheet()->setCellValue('E'.$row, $project->project_name.$con);
                 $obj->getActiveSheet()->setCellValue('F'.$row, $advisor->name);
                 $obj->getActiveSheet()->setCellValue('G'.$row, $project->create_date);
@@ -64,6 +66,7 @@ class Topic extends Phalcon\Mvc\User\Component
         $user_id = $auth['id'];
 
         $buffer = file_get_contents('excel/'.$hash.'.xlsx');
+		unlink('excel/'.$hash.'.xlsx');
 
         $excel = ExcelFile::findFirst("common_name='Topic'");
         if (!$excel)

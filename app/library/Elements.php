@@ -6,11 +6,11 @@ class Elements extends Phalcon\Mvc\User\Component
     private $_headerMenu = array
     (
         'pull-left' => array(
-/*            'problemset' => array(
-                'caption' => 'Problem',
-                'action' => 'problem',
-                'active' => 'problem'
-            ),*/
+            'mainmenu' => array(
+                'caption' => 'หน้าหลัก',
+                'action' => 'index',
+                'active' => 'index'
+            ),
         ),
     );
 

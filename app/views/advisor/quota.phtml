@@ -1,0 +1,74 @@
+<?php
+
+echo $this->getContent();
+
+$advisors = User::find("type='Advisor'");
+$auth = $this->session->get('auth');
+$user_id = $auth['id'];
+
+$currentSemester = Semester::maximum(array("column" => "semester_id"));
+
+//show all config for admin otherwise show only user
+if ($auth['type'] != 'Admin')
+	$advisors = User::find("type='Advisor' AND id='$user_id'");
+
+?>
+
+<div class="row">
+	<form method="post" action="<?= $this->url->get('advisor/setQuota'); ?>">
+		<table width="100%" class="table">
+			<thead>
+				<tr class="success">
+					<th>อาจารย์ที่ปรึกษา</th>
+					<th width="20%"><center>จำนวนที่รับได้</center></th>
+					<th width="20%"><center>จำนวนที่รับแล้ว</center></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php
+	
+				foreach ($advisors as $advisor)
+				{
+
+					$quota = Quota::findFirst("advisor_id='$advisor->id'");
+
+					?>
+					<tr>
+						<td><?= $advisor->title.$advisor->name; ?></td>
+						<td>
+							<?= 
+								$this->tag->numericField(array(
+									'quota[]',
+									'class' => 'form-control',
+									'value' => $quota->quota_pp
+								));
+							?>
+							<input type="hidden" name="id[]" value="<?= $quota->advisor_id; ?>">
+						</td>
+						<td>
+							<center>
+							<?php
+								$record = $this->modelsManager->createBuilder()
+									->from(array("ProjectMap", "Project"))
+									->where("ProjectMap.user_id='$quota->advisor_id'")
+									->andWhere("ProjectMap.map_type='advisor'")
+									->andWhere("Project.project_status='Accept'")
+									->andWhere("Project.project_id = ProjectMap.project_id")
+									->andWhere("Project.semester_id='$currentSemester'")
+									->getQuery()
+									->execute();
+								echo count($record);	
+							?>
+							</center>
+						</td>
+					</tr>
+					<?php
+				}
+	
+				?>
+			</tbody>
+		</table>
+		<button type="submit" class="btn btn-sm btn-success">บันทึก</button>
+	</form>
+</div>
+

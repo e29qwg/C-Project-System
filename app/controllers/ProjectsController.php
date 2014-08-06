@@ -107,15 +107,10 @@ class ProjectsController extends ControllerBase
             $projectMap->user_id = $coadvisor->id;
             $projectMap->project_id = $project->project_id;
             $projectMap->map_type = 'coadvisor';
-
             $projectMap->save();
-            $coadvisor->work_load = $coadvisor->work_load+1;
-            $coadvisor->save();
         }
-        
-        //increse work_load
-        $advisor->work_load = $advisor->work_load + 1;
-        $advisor->save();
+			
+		$this->_updateWork();
     }
 
     //reject project
@@ -160,6 +155,8 @@ class ProjectsController extends ControllerBase
             //delete project
             $project->delete();
         }
+
+		$this->_updateWork();
 
         $this->flash->success('Reject Success');
         return $this->forward('projects/proposed');
@@ -545,14 +542,12 @@ class ProjectsController extends ControllerBase
         $log->user_id = $advisor;
         $log->description = $auth['name'].'ได้สร้างโครงงาน '.$project_name.' รอการยืนยัน';
         $log->save();
-
-		$this->_updateWorkloads();
-
+	
         $this->flash->success('New project success');
         return $this->forward('index');
     }
 
-	private function _updateWorkloads()
+	private function _updateWork()
 	{
 		$works = User::find("type='Advisor'");
 		foreach ($works as $work)
