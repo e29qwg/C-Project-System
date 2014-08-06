@@ -1,0 +1,159 @@
+<?php echo $this->getContent(); ?>
+
+<script type="text/javascript">
+
+tinymce.init({
+        selector: "textarea#description",
+        theme: "modern",
+        plugins: [
+            "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+            "searchreplace wordcount visualblocks visualchars code fullscreen",
+            "insertdatetime media nonbreaking save table contextmenu directionality",
+            "emoticons template paste textcolor"
+        ],
+        toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image print preview media | forecolor backcolor emoticons",
+        image_advtab: true,
+        autosave_ask_before_unload: false,
+        width: "100%",
+        height: "200px",
+    });
+</script>
+
+
+<div class="row">
+    <?php require(__DIR__.'/../layouts/projectHeader.php'); ?>
+        <?php 
+            $params = $this->dispatcher->getParams();
+            $project = Project::findFirst("project_id='$params[0]'");
+        ?>
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="setting">
+                <br>
+                <?php 
+                
+                if ($project->project_status == "Pending")
+                    $this->flash->notice('รอการยืนยัน <a href="'.$this->url->get('projects/delete/').$project->project_id.'" class="btn btn-danger btn-xs" onclick="return confirm(\'ยืนยันการลบโครงงาน\');">Cancel Request</a>');
+                ?>
+                <form class="form-horizontal" action="<?= $this->url->get('projects/editSetting'); ?>" method="post">
+                    <input type="hidden" id="id" name="id" value="<?= $project->project_id ?>">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Project Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="project_name" name="project_name" value="<?= $project->project_name ?>" class="form-control" required autofocus placeholder="Project Name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Project Type</label>
+                        <?php $this->tag->setDefault("project_type", $project->project_type); ?>
+                        <div class="col-sm-2">
+                        <?php
+                        
+                        echo $this->tag->selectStatic(
+                            array(
+                                "project_type",
+                                "class" => "form-control",
+                                "required" => "",
+                                array(
+                                    "Software" => "Software",
+                                    "Hardware" => "Hardware"
+                                )
+                            )
+                        );
+
+                        ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Semester</label>
+                        <?php
+                        
+                        $semester = Semester::findFirst("semester_id='$project->semester_id'");
+
+                        ?>
+                        <div class="col-sm-2">
+                            <p class="form-control-static"><?= $semester->semester_term ?>/<?= $semester->semester_year ?></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Advisor</label>
+                        <div class="col-sm-10">
+                        <?php
+                        
+                        $projectMap = ProjectMap::findFirst("project_id='$project->project_id' AND map_type='advisor'");
+                        $user = User::findFirst("id='$projectMap->user_id'");
+                        ?>
+                            <p class="form-control-static"><?= $user->title.$user->name ?></p>
+                        </div>
+                    </div>
+                    <?php
+                    $projectMaps = projectMap::find("project_id='$project->project_id' AND map_type='coadvisor'");
+                    foreach ($projectMaps as $projectMap)
+                    {
+                        $user = User::findFirst("id='$projectMap->user_id'");
+                        ?>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Co-Advisor</label>
+                            <div class="col-sm-10">
+                                <p class="form-control-static"><?= $user->title.$user->name?></p>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Project Level</label>
+                        <div class="col-sm-10">
+                            <?php
+                        
+                            $projectLevel = ProjectLevel::findFirst("project_level_id='$project->project_level_id'");
+
+                            ?>
+                            <p class="form-control-static"><?= $projectLevel->project_level_name ?></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Description</label>
+                        <div class="col-sm-10">
+                            <textarea id="description" name="description"><?= $project->project_description ?></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-sm btn-primary">Save Change</button>
+                        </div>
+                    </div>
+                </form>
+                <br>
+                <?php
+                if ($auth['type'] == 'Advisor')
+                {
+                ?>
+                <center>
+                    <h3>Dangerous Zone</h3>
+                    <button class="btn btn-danger btn-sm" id="show">Dangerous</button>
+                </center>
+                <br>
+                <div class="panel panel-danger" id="panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Dangerous Zone</h3>
+                    </div>
+                    <div class="panel-body">
+                        <h3>Delete project cannot be restored!</h3>
+                        <a href="<?= $this->url->get('projects/delete/'); ?><?= $params[0] ?>" class="btn btn-danger btn-sm" onclick="return confirm('ยืนยันการลบโครงงาน');">Delete</a>
+                    </div>
+                </div>
+                <script>
+                    $("#panel").toggle();
+                    $(document).ready(function() {
+                        $("#show").click(function() {
+                            $("#panel").fadeToggle();
+                        });
+                    });
+                </script>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+</div>

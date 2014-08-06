@@ -1,0 +1,57 @@
+<?php
+$auth = $this->session->get('auth');
+?>
+
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="<?= $this->url->get('index'); ?>">CoE-Project</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <?php echo $this->elements->getMenu(); ?>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3 sidebar">
+			<div class="list-group">
+				<a class="list-group-item active" href="#">
+					<h4 class="list-group-item-heading">Menu</h4>
+				</a>
+                <a class="list-group-item" href="<?= $this->url->get('admin/summaryTopic'); ?>">สรุปหัวข้อโครงงาน</a>
+				<a class="list-group-item" href="<?= $this->url->get('exam/manage'); ?>">จัดการตารางสอบ</a>
+				<a class="list-group-item" href="<?= $this->url->get('score/manageScore'); ?>">จัดการคะแนน</a>
+				<a class="list-group-item" href="<?= $this->url->get('news/manageNews'); ?>">จัดการข่าว</a>
+				<a class="list-group-item" href="<?= $this->url->get('admin/setView'); ?>">เปลี่ยนมุมมอง</a>
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <?php echo $this->getContent(); ?>
+        </div>
+    </div>
+</div>
+
+<?php
+function showProject($projectMaps, $level)
+{
+    foreach ($projectMaps as $projectMap)
+    {
+        $project = Project::findFirst("project_id='$projectMap->project_id' AND project_level_id='$level' AND project_status='Accept'");
+        if ($project)
+        {
+        ?>
+            <li><a href="<?= $this->url->get('projects/manage/'); ?><?= $project->project_id?>"><?= $project->project_name ?></a></li>
+        <?php
+        }
+    }
+}
+?>
+

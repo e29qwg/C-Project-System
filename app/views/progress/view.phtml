@@ -1,0 +1,64 @@
+<?php echo $this->getContent(); ?>
+<?php 
+    $auth = $this->session->get('auth');
+    $user_id = $auth['id'];
+?>
+
+<div class="row">
+    <?php require(__DIR__.'/../layouts/projectHeader.php'); ?>
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="progress">
+                <br>
+                <br>
+                <div>
+                    <?php $progress = Progress::findFirst("progress_id='$params[1]'"); ?>
+                    <form>
+                        <div class="form-group">
+                            <h4>โครงงาน <?= $project->project_name ?></h4>
+                        </div>
+                        <div class="form-group">
+                            <label for="progress_finish">งานที่ทำเสร็จเรียบร้อยแล้ว</label>
+                            <p class="form-control-static"><?= $progress->progress_finish ?></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="progress_working">งานที่อยู่ระหว่างดำเนินการ</label>
+                            <p class="form-control-static"><?= $progress->progress_working ?></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="progress_todo">งานที่ยังไม่ได้ดำเนินการ</label>
+                            <p class="form-control-static"><?= $progress->progress_todo ?></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="progress_summary">สรุปผลการดำเนินการและปัญหาที่เกิดขึ้น</label>
+                            <p class="form-control-static"><?= $progress->progress_summary ?></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="progress_target">เป้าหมายที่วางไว้เพื่อประเมินความสำเร็จในครั้งต่อไป</label>
+                            <p class="form-control-static"><?= $progress->progress_target ?></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="create_date">วันที่</label>
+                            <p class="form-control-static"><?= $progress->create_date ?></p>
+                        </div>
+                        <div class="form-group">
+                            <?php
+                            if ($auth['type'] != 'Advisor')
+                            {
+                            ?>
+                                <a href="<?= $this->url->get('progress/index/'); ?><?= $params[0] ?>" class="btn btn-sm btn-primary">Back</a>
+                            <?php
+                            }
+                            else
+                            {
+                            ?>
+                                <a href="<?= $this->url->get('progress/evaluate/'); ?><?= $params[0] ?>" class="btn btn-sm btn-primary">Back</a>
+                            <?php
+                            }
+                            ?>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,62 @@
+<?php echo $this->getContent() ?>
+<?php use \Phalcon\Tag as Tag; ?>
+
+<?php
+$auth = $this->session->get('auth');
+$user_id = $auth['id'];
+$user = User::findFirst("id='$user_id'");
+?>
+
+<script type="text/javascript">
+
+
+tinymce.init({
+    selector: "textarea#interesting",
+    theme: "modern",
+    plugins: [
+        "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+        "searchreplace wordcount visualblocks visualchars code fullscreen",
+        "insertdatetime media nonbreaking save table contextmenu directionality",
+        "template paste textcolor"
+    ],
+    toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image print preview media | forecolor backcolor emoticons",
+    image_advtab: true,
+    autosave_ask_before_unload: false,
+    width: "80%",
+    height: "200px",
+});
+
+</script>
+
+<h2>Edit User Profile</h2>
+<hr>
+<form class="form-horizontal" method="post" action="<?= $this->url->get('profile/update'); ?>">
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="name">Name</label>
+        <div class="col-sm-10">
+            <p class="static-form-control"><?= $user->title.' '.$user->name ?></p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="facebook">Facebook</label>
+        <div class="col-sm-5">
+            <input type="text" id="facebook" name="facebook" class="form-control" value="<?= $user->facebook ?>">
+            <p class="help-inline">ใส่เฉพาะ id เท่านั้น เช่น https://www.facebook.com/xxx<strong>ให้ใส่เฉพาะ xxx</strong> </p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="interesting">Interesting</label>
+        <div class="col-sm-10">
+            <textarea id="interesting" name="interesting"><?= $user->interesting ?></textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-md">Edit</button>
+        </div>
+    </div>
+
+</form>

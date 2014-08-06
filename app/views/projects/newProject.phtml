@@ -1,0 +1,179 @@
+<?php 
+
+echo $this->getContent();
+$auth = $this->session->get('auth');
+$user_id = $auth['id'];
+
+?>
+
+<script type="text/javascript">
+
+tinymce.init({
+        selector: "textarea#description",
+        plugins: [
+            "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+            "searchreplace wordcount visualblocks visualchars code fullscreen",
+            
+            "insertdatetime media nonbreaking save table contextmenu directionality",
+            "template paste textcolor"
+        ],
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image print preview media | forecolor backcolor emoticons",
+        image_advtab: true,
+        autosave_ask_before_unload: false,
+        width: "80%",
+        height: "200px",
+    });
+</script>
+
+<h4>Create Project</h4>
+    
+<hr>
+
+<form class="form-horizontal" action="<?= $this->url->get('projects/doNewProject'); ?>" method="post">
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="project_name">Project Name</label>
+        <div class="col-sm-10">
+            <input placeholder="Project Name" class="form-control" style="width: 60%" name="name" id="name" required autofocus>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="project_type">Project Type</label>
+        <div class="col-sm-2">
+            <select class="form-control" name="project_type" id="project_type" required>
+                <option value="Software">Software</option>
+                <option value="Hardware">Hardware</option>
+            </select>
+        </div>
+    </div>
+	<div class="form-group">
+        <label class="col-sm-2 control-label" for="semester">Semester</label>
+        <div class="col-sm-2">
+            <select class="form-control" name="semester" id="semester" required>
+            <?php
+
+            $projectMaps = ProjectMap::find("user_id='$user_id'");
+            $semesters_id = array();
+
+            foreach ($projectMaps as $projectMap)
+            { 
+                $project = Project::findFirst("project_id='$projectMap->project_id'");
+                array_push($semesters_id, $project->semester_id);
+            }
+
+            $semesters = Semester::find();
+        
+            foreach ($semesters as $semester)
+            {
+                if (in_array($semester->semester_id, $semesters_id))
+                    continue;
+
+                echo '<option value="'.$semester->semester_id.'">';
+                echo $semester->semester_term.'/'.$semester->semester_year;
+                echo '</option>';
+            }
+
+            ?>
+            </select>
+        </div>
+    </div>
+ 
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="project_level">Project Level</label>
+        <div class="col-sm-4">
+            <select class="form-control" name="project_level" id="project_level" required>
+            <?php
+            $minlevel = 0;
+            $projectLevels = ProjectLevel::find("project_level_id > '$minlevel'");
+
+            foreach ($projectLevels as $projectLevel)
+            {
+                echo '<option value="'.$projectLevel->project_level_id.'">';
+                echo $projectLevel->project_level_name;
+                echo '</option>';
+            }
+
+            ?>
+            </select>
+        </div>
+	</div>
+	<div class="form-group">
+        <label class="col-sm-2 control-label" for="advisor">Advisor</label>
+        <div class="col-sm-3">
+            <select class="form-control" name="advisor" id="advisor" required>
+                <?php
+    
+                $advisors = User::find("type = 'Advisor'");
+                foreach ($advisors as $advisor)
+                {
+                    echo '<option value="'.$advisor->id.'">';
+                    echo $advisor->title.$advisor->name;
+                    echo '</option>';
+                }
+    
+                ?>
+            </select>
+        </div>
+    </div>
+	<div id="exco">
+	<div class="form-group">
+		<label class="col-sm-2 control-label">CoAdvisor</label>
+		<div class="col-sm-3">
+			<select class="form-control" name="coadvisor1" id="coadvisor1">
+			<?php
+                foreach ($advisors as $advisor)
+                {
+                    echo '<option value="'.$advisor->id.'">';
+                    echo $advisor->title.$advisor->name;
+                    echo '</option>';
+                }
+			?>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">CoAdvisor</label>
+		<div class="col-sm-3">
+			<select class="form-control" name="coadvisor2" id="coadvisor2">
+			<?php
+                foreach ($advisors as $advisor)
+                {
+                    echo '<option value="'.$advisor->id.'">';
+                    echo $advisor->title.$advisor->name;
+                    echo '</option>';
+                }
+			?>
+			</select>
+		</div>
+	</div>
+	</div>
+
+	<div class="form-group">
+        <label class="col-sm-2 control-label" for="description">Description</label>
+        <div class="col-sm-10">
+            <textarea id="description" name="description"></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary btn-sm">New Project</button>
+        </div>
+    </div>
+</form>
+
+<script>
+$("#project_level").change(function() { 
+	check();
+});
+
+$(document).ready(function() {
+	check();
+});
+
+function check()
+{
+	if ($("#project_level").val() != 1)
+		$("#exco").show();
+	else 
+		$("#exco").hide();
+}
+</script>

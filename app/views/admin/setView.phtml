@@ -1,0 +1,16 @@
+<?php echo $this->getContent(); ?>
+
+<form method="post" class="form-horizontal" action="<?= $this->url->get('admin/changeView'); ?>">
+	<div class="form-group">
+		<div class="col-sm-3">
+			<select name="view" class="form-control">
+				<option>Student</option>
+				<option>Advisor</option>
+				<option>Admin</option>
+			</select>
+		</div>
+		<div class="col-sm-9">
+			<button type="submit" class="btn btn-primary btn-sm">Change</button>
+		</div>
+	</div>
+</form>

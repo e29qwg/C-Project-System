@@ -1,0 +1,28 @@
+<?php
+
+use Phalcon\Mvc\Model\Validator\Uniqueness;
+
+class Progress extends \Phalcon\Mvc\Model
+{
+    public $progress_id;
+    public $user_id;
+    public $project_id;
+    public $progress_finish;
+    public $progress_working;
+    public $progress_todo;
+    public $progress_summary;
+    public $progress_target;
+    public $create_date;
+
+    public function initialize()
+    {
+        $this->useDynamicUpdate(true);
+    }
+
+    public function beforeValidationOnCreate()
+    {
+        $this->create_date = date('Y-m-d H:i:s');
+    }
+}
+
+?>

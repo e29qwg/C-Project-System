@@ -1,0 +1,27 @@
+<?php echo $this->getContent(); ?>
+
+<div class="row">
+    <table width="100%">
+        <tr>
+            <td width="30%">
+                <a href="<?= $this->url->get('exam/generate'); ?>" class="btn btn-primary btn-lg btn-block">
+                    สร้าง<br>ตารางสอบ
+                </a>
+            </td>
+            <td width="5%"></td>
+            <td width="30%">
+                <a href="<?= $this->url->get('exam/edit'); ?>" class="btn btn-primary btn-lg btn-block">
+                    แก้ไข<br>ตารางสอบ
+                </a>
+            </td>
+            <td width="5%"></td>
+            <td width="30%">
+                <a href="<?= $this->url->get('exam/upload'); ?>" class="btn btn-primary btn-lg btn-block">
+                    อัพโหลด<br>ตารางสอบ
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+

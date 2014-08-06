@@ -1,0 +1,34 @@
+<?php
+
+echo $this->getContent(); 
+$newss = News::find();
+
+?>
+
+<a href="<?= $this->url->get('news/create'); ?>" class="btn btn-sm btn-success pull-right">Create News</a>
+<br>
+<br>
+
+<table class="table" width="100%">
+	<thead>
+		<tr class="success">
+			<th width="90%">News</th>
+			<th width="5%"></th>
+			<th width="5%"></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php
+			foreach ($newss as $news)
+			{
+				?>
+				<tr>
+				<td><?= $news->news; ?></td>
+				<td><a href="<?= $this->url->get('news/edit/').$news->id; ?>">Edit</a></td>
+				<td><a href="<?= $this->url->get('news/delete/').$news->id; ?>" onclick="return confirm('ยืนยันการลบ');">Delete</a></td>
+				</tr>
+				<?php
+			}
+		?>
+	</tbody>
+</table>

@@ -1,0 +1,31 @@
+<?php use Phalcon\Tag as Tag ?>
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <?php echo Tag::getTitle(); ?>
+        <?php echo Tag::stylesheetLink('lib/bootstrap/css/bootstrap.min.css'); ?>
+        <?php echo Tag::stylesheetLink('lib/bootstrap/css/bootstrap-theme.min.css'); ?>
+        <?php echo Tag::stylesheetLink('lib/custom/theme.css'); ?>
+        <?php echo Tag::stylesheetLink('lib/jqueryui/css/ui-lightness/jquery-ui-1.10.4.custom.min.css'); ?>
+        <?php echo Tag::javascriptInclude('lib/jquery/jquery-2.1.0.min.js'); ?>
+        <?php echo Tag::javascriptInclude('lib/jqueryui/js/jquery-ui-1.10.4.custom.min.js'); ?>
+        <?php echo Tag::javascriptInclude('lib/bootstrap/js/bootstrap.min.js'); ?>
+        <?php echo Tag::javascriptInclude('lib/tinymce/js/tinymce/tinymce.min.js'); ?>
+    </head>
+    <body>
+        <div class="container">
+        	<?php echo $this->getContent(); ?>
+            <hr>
+            <footer>
+                <div class="copyright pull-right">
+                    <p>Copyright &copy; 2014 CoE</p>
+                </div>
+            </footer>
+        </div>
+    </body>
+
+    <!-- Powered By Phalcon PHP -->
+</html>

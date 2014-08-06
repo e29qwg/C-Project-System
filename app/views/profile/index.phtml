@@ -1,0 +1,114 @@
+<?php echo $this->getContent() ?>
+<?php use \Phalcon\Tag as Tag; ?>
+
+<?php
+
+//check auth
+$auth = $this->session->get('auth');
+$params = $this->dispatcher->getParams();
+if (empty($params[0]))
+	$params[0] = 0;
+$user = User::findFirst("id='$params[0]'");
+$projectMaps = ProjectMap::find("user_id='$params[0]'");
+
+?>
+<br>
+
+<div class="row">
+    <div class="col-sm-5">
+        <?php
+            $imgSrc = "https://graph.facebook.com/";
+            $imgSrc .= $user->facebook;
+            $imgSrc .= "/picture?type=square&width=150&height=150";
+        ?>
+
+        <center>
+            <img src="<?=$imgSrc?>" class="bordered" width="150" height="150"><br><br>
+            <?php 
+            if ($params[0] == $auth['id'])
+            {
+            ?>
+                <a href="<?= $this->url->get('profile/updateProfile'); ?>" class="btn btn-success btn-sm">Edit Profile</a>
+            <?php
+            }
+            ?>
+        </center>
+    </div>
+
+    <div class="col-sm-7">
+		<div class="row">
+        	<label class="col-sm-3">Name: </label>
+	        <div class="col-sm-9">
+	            <?=$user->title?> <?= $user->name ?>
+	        </div>
+		</div>
+		<div class="row">
+	        <label class="col-sm-3">Interesting: </label>
+			<div class="col-sm-9">
+    	        <?= $user->interesting ?> 
+	        </div>
+		</div>
+    
+	<?php
+	if ($user->type == 'Advisor')
+ 	{
+	?>
+		<div class="row">
+			<label class="col-sm-3">Project Advisor: </label>
+			<div class="col-sm-9">
+    
+			<?php
+			foreach ($projectMaps as $projectMap)
+			{
+				if ($projectMap->map_type == 'advisor')
+				{
+					$project = Project::findFirst("project_id='$projectMap->project_id'");
+					echo $project->project_name;
+					echo '<br>';
+				}
+			}
+		?>
+			</div>
+        </div>
+		<div class="row">
+			<label class="col-sm-3">Project Coadvisor: </label>
+			<div class="col-sm-9">
+			<?php
+	
+			foreach ($projectMaps as $projectMap)
+			{
+				if ($projectMap->map_type == 'coadvisor')
+				{
+					$project = Project::findFirst("project_id='$projectMap->project_id'");
+					echo $project->project_name;
+					echo '<br>';
+				}
+			}
+			?>
+	        </div>
+		</div>
+    <?php
+    }
+    else
+    {
+    ?>
+		<div class="row">
+			<label class="col-sm-3">Project: </label>
+			<div class="col-sm-9">
+				<?php
+				foreach ($projectMaps as $projectMap)
+				{
+					if ($projectMap->map_type == 'owner')
+					{
+						$project = Project::findFirst("project_id='$projectMap->project_id'");
+						echo $project->project_name;
+						echo '<br>';
+					}
+				}
+				?>
+			</div>
+		</div>
+	<?php
+ 	}
+	?>
+</div>

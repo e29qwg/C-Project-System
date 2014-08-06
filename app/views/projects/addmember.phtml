@@ -1,0 +1,81 @@
+<?php 
+
+echo $this->getContent();
+$auth = $this->session->get('auth');
+$user_id = $auth['id'];
+
+$params = $this->dispatcher->getParams();
+if (!isset($params[0]))
+{
+    return $this->flash->error('Invalid request');
+}
+
+$project = Project::findFirst("project_id='$params[0]'");
+
+if (!$project)
+{
+    $this->flashSession->error('Project not found');
+    $this->response->redirect('projects/me');
+}
+
+?>
+
+<div class="row">
+    <?php require(__DIR__.'/../layouts/projectHeader.php'); ?>
+        <?php 
+            $params = $this->dispatcher->getParams();
+            $project = Project::findFirst("project_id='$params[0]'");
+        ?>
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="setting">
+                <br>
+                <h4>New project member(s) for <?= $project->project_name ?></h4>
+                <?php
+
+                $users = User::find("type='Student' AND id != '$user_id'");
+
+                ?>
+                <script>
+                    $(function() {
+                        var availableUser = [
+                            <?php 
+                            foreach ($users as $user)
+                            {
+                                echo '{label: "';
+                                echo $user->user_id.' '.$user->title.$user->name.'",';
+                                echo 'value: "';
+                                echo $user->user_id.' '.$user->title.$user->name.'",';
+                                echo 'id: "'.$user->id.'"}';
+                                echo ',';
+                            }
+                            ?>
+                        ];
+                        $("#people").autocomplete({
+                            source: availableUser,
+                            select: function(event, ui) {
+                                $("#id").val(ui.item.id);
+                            }
+                        });
+                    });
+                </script>
+                <form class="form-horizontal" action="<?= $this->url->get('projects/doAddMember'); ?>" method="post">
+                    <input type="hidden" name="id" id="id">
+                    <input type="hidden" name="pid" value="<?= $params[0] ?>">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="people">Student Id</label>
+                        <div class="col-sm-5">
+                            <input id="people" name="people" class="form-control" placeholder="รหัสนักศึกษา" required autofocus>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-success btn-sm">Add Member</button>
+                            <a href="<?= $this->url->get('projects/member/'); ?><?= $params[0] ?>" class="btn btn-danger btn-sm">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
