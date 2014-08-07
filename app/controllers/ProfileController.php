@@ -19,6 +19,13 @@ class ProfileController extends ControllerBase
         $request = $this->request;
         $user_id = $auth['id'];
 
+		if ($auth['type'] == 'Admin')
+		{
+			$advisor_id = $request->getPost('advisor_id');
+			if (!empty($advisor_id))
+				$user_id = $advisor_id;
+		}
+
         $user = User::findFirst("id='$user_id'");
         $facebook = $request->getPost('facebook');
         $interesting = $request->getPost('interesting');

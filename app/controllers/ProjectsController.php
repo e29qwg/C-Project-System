@@ -17,6 +17,13 @@ class ProjectsController extends ControllerBase
         $user_id = $auth['id'];
         $user = User::findFirst("id='$user_id'");
 
+		$quota = Quota::findFirst("advisor_id='$user_id'");
+		if ($this->CheckQuota->acceptProject($user_id)+1 > $quota->quota_pp)
+		{
+			$this->flash->error('ไม่สามารถเพิ่มได้เนื่องจากเกินจำนวนที่อาจารย์ที่ปรึกษาจะรับได้');
+			return $this->forward('projects/newProject');
+		}
+
         if (empty($params[0]))
         {
             $this->flash->error('Invalid Request');
@@ -368,15 +375,17 @@ class ProjectsController extends ControllerBase
 
         $auth = $this->session->get('auth');
         $user_id = $auth['id'];
+		$pid = $this->request->getPost('pid');
+		$comment = $this->request->getPost('comment');
 
-        if (empty($params[0]))
+        if (empty($pid))
         {
             $this->flash->error('Invalid Request');
             return $this->forward('projects/me');
         }
 
         //check owner
-        $projectMap = ProjectMap::findFirst("project_id='$params[0]' AND user_id='$user_id'");
+        $projectMap = ProjectMap::findFirst("project_id='$pid' AND user_id='$user_id'");
 
         if (!$projectMap)
         {
@@ -384,7 +393,7 @@ class ProjectsController extends ControllerBase
             return $this->forward('projects/me');
         }
 
-        $project = Project::findFirst("project_id='$params[0]'");
+        $project = Project::findFirst("project_id='$pid'");
         
         if ($project->project_status == "Accept" && $auth['type'] != 'Advisor')
         {
@@ -404,7 +413,7 @@ class ProjectsController extends ControllerBase
             }
             $log = new Log();
             $log->user_id = $projectMap->user_id;
-            $log->description = $auth['name'].' ได้ลบโครงงาน '.$project->project_name;
+            $log->description = $auth['name'].' ได้ลบโครงงาน '.$project->project_name.' ( '.$comment.' ) ';
             $log->save();
         }
 
@@ -472,9 +481,16 @@ class ProjectsController extends ControllerBase
 
         if (empty($project_name) || empty($project_type) || empty($advisor) || empty($project_level) || empty($semester))
         {
-            $this->flashSession->error('Importand field are required');
+            $this->flash->error('Importand field are required');
             return $this->forward('projects/newProject');
         }
+
+		$quota = Quota::findFirst("advisor_id='$advisor'");
+		if ($this->CheckQuota->acceptProject($advisor)+1 > $quota->quota_pp)
+		{
+			$this->flash->error('ไม่สามารถเพิ่มได้เนื่องจากเกินจำนวนที่อาจารย์ที่ปรึกษาจะรับได้');
+			return $this->forward('projects/newProject');
+		}
 
         //check project in semester
         $projectMaps = ProjectMap::find("user_id='$user_id'");
@@ -517,7 +533,7 @@ class ProjectsController extends ControllerBase
         $projectMap->map_type = 'advisor';
         $projectMap->save();
 
-		if (!empty($coadvisor1) && !empty($coadvisor2))
+		if (!empty($coadvisor1) && !empty($coadvisor2) && $project_level != 1)
 		{
 			$projectMap = new ProjectMap();
 			$projectMap->user_id = $coadvisor1;
@@ -552,14 +568,14 @@ class ProjectsController extends ControllerBase
 		$works = User::find("type='Advisor'");
 		foreach ($works as $work)
 		{
-			$count = ProjectMap::find("user_id='$work->id'");
-			$work->work_load = count($count);
+			$work->work_load = $this->CheckQuota->getLoad($work->id);
 			$work->save();
 		}
 	}
 
     public function newProjectAction()
     {
+		$this->_updateWork();
     }
 }
 

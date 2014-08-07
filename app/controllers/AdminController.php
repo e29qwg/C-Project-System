@@ -9,6 +9,10 @@ class AdminController extends ControllerBase
         parent::initialize();
     }
 
+	public function advisorProfileAction()
+	{
+	}
+
     public function summaryTopicAction()
     {
         $this->view->setTemplateAfter('adminside');

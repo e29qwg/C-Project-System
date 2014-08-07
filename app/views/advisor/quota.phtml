@@ -48,16 +48,7 @@ if ($auth['type'] != 'Admin')
 						<td>
 							<center>
 							<?php
-								$record = $this->modelsManager->createBuilder()
-									->from(array("ProjectMap", "Project"))
-									->where("ProjectMap.user_id='$quota->advisor_id'")
-									->andWhere("ProjectMap.map_type='advisor'")
-									->andWhere("Project.project_status='Accept'")
-									->andWhere("Project.project_id = ProjectMap.project_id")
-									->andWhere("Project.semester_id='$currentSemester'")
-									->getQuery()
-									->execute();
-								echo count($record);	
+								echo $this->CheckQuota->acceptProject($advisor->id);
 							?>
 							</center>
 						</td>

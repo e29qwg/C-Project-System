@@ -4,6 +4,13 @@
 <?php
 $auth = $this->session->get('auth');
 $user_id = $auth['id'];
+
+if ($auth['type'] == 'Admin')
+{
+	if (isset($advisor_id))
+		$user_id = $advisor_id;
+}
+
 $user = User::findFirst("id='$user_id'");
 ?>
 
@@ -31,6 +38,7 @@ tinymce.init({
 <h2>Edit User Profile</h2>
 <hr>
 <form class="form-horizontal" method="post" action="<?= $this->url->get('profile/update'); ?>">
+	<input type="hidden" name="advisor_id" value="<?= $user_id ?>">
     <div class="form-group">
         <label class="col-sm-2 control-label" for="name">Name</label>
         <div class="col-sm-10">

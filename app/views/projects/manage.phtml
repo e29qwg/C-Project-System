@@ -139,7 +139,18 @@ tinymce.init({
                     </div>
                     <div class="panel-body">
                         <h3>Delete project cannot be restored!</h3>
-                        <a href="<?= $this->url->get('projects/delete/'); ?><?= $params[0] ?>" class="btn btn-danger btn-sm" onclick="return confirm('ยืนยันการลบโครงงาน');">Delete</a>
+						<form method="post" action="<?= $this->url->get('projects/delete'); ?>">
+							<input type="hidden" value="<?= $params[0]; ?>" name="pid">
+							<?= 
+								$this->tag->textField(array(
+									'comment',
+									'class' => 'form-control',
+									'placeholder' => 'Comment'
+								));
+							?>
+							<br>
+                        	<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('ยืนยันการลบโครงงาน');">Delete</a>
+						</form>
                     </div>
                 </div>
                 <script>

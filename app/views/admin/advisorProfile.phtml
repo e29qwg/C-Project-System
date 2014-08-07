@@ -1,0 +1,34 @@
+<?php echo $this->getContent() ?>
+<?php use \Phalcon\Tag as Tag; ?>
+
+<?php
+
+$auth = $this->session->get('auth');
+$user_id = $auth['id'];
+$user = User::findFirst("id='$user_id'");
+
+if ($this->request->isPost())
+{
+	$advisor_id = $this->request->getPost('advisor');
+	require (__DIR__.'/../profile/updateProfile.phtml');	
+}
+else
+{
+	$advisors = User::find("type='Advisor'");
+	?>
+	<form method="post" action="<?= $this->url->get('admin/advisorProfile'); ?>">
+		<div class="col-sm-5">
+		<?=
+			$this->tag->select(array(
+				'advisor',
+				$advisors,
+				'class' => 'form-control',
+				'using' => array('id', 'name')
+			));
+		?>
+		</div>
+		<button type="submit" class="btn btn-primary btn-sm">แก้ไข</button>
+	</form>
+	<?php
+}
+

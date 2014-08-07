@@ -96,6 +96,10 @@ try
         return $flashSession;
     });
 
+	$di->set('CheckQuota', function() {
+		return new CheckQuota();
+	});
+
     $di->set('Exam', function() {
         return new Exam();
     });
