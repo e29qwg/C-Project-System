@@ -4,7 +4,7 @@
 $auth = $this->session->get('auth');
 $user_id = $auth['id'];
 
-$newss = News::find(array("order" => "id DESC"));
+$newss = News::find(array("order" => "id DESC", "limit" => 8));
 
 ?>
 
@@ -30,7 +30,7 @@ $newss = News::find(array("order" => "id DESC"));
             </td>
             <td width="1%"></td>
             <td width="19%">
-                <a href="<?= $this->url->get('exam/download'); ?>" class="btn btn-primary btn-lg btn-block">
+                <a href="<?= $this->url->get('exam/showExam'); ?>" class="btn btn-primary btn-lg btn-block">
                     Exam<br>Schedule
                 </a>
             </td>

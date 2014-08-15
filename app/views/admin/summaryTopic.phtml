@@ -1,0 +1,16 @@
+<?php
+
+echo $this->getContent();
+$this->Topic->updateTopic();
+
+?>
+
+<a href="<?= $this->url->get('admin/summaryTopicExport'); ?>" class="btn btn-primary btn-sm">Download Excel</a>
+<br>
+<br>
+
+<?php
+
+$this->ShowExcel->show('Topic');
+
+?>

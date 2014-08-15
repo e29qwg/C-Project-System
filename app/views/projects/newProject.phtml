@@ -124,14 +124,20 @@ tinymce.init({
 		<label class="col-sm-2 control-label">CoAdvisor</label>
 		<div class="col-sm-3">
 			<select class="form-control" name="coadvisor1" id="coadvisor1">
-			<?php
+				<option value="">ไม่ระบุ</option>
+				<?php
                 foreach ($advisors as $advisor)
                 {
+					$quota = Quota::findFirst("advisor_id='$advisor->id'");
+					if (!$quota)
+						continue;
+					if ($this->CheckQuota->acceptProject($advisor->id)+1 > $quota->quota_pp)
+						continue;
                     echo '<option value="'.$advisor->id.'">';
                     echo $advisor->title.$advisor->name;
                     echo '</option>';
                 }
-			?>
+				?>
 			</select>
 		</div>
 	</div>
@@ -139,14 +145,20 @@ tinymce.init({
 		<label class="col-sm-2 control-label">CoAdvisor</label>
 		<div class="col-sm-3">
 			<select class="form-control" name="coadvisor2" id="coadvisor2">
-			<?php
+			<option value="">ไม่ระบุ</option>
+				<?php
                 foreach ($advisors as $advisor)
                 {
+					$quota = Quota::findFirst("advisor_id='$advisor->id'");
+					if (!$quota)
+						continue;
+					if ($this->CheckQuota->acceptProject($advisor->id)+1 > $quota->quota_pp)
+						continue;
                     echo '<option value="'.$advisor->id.'">';
                     echo $advisor->title.$advisor->name;
                     echo '</option>';
                 }
-			?>
+				?>
 			</select>
 		</div>
 	</div>

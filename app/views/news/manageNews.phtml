@@ -1,7 +1,7 @@
 <?php
 
 echo $this->getContent(); 
-$newss = News::find();
+$newss = News::find(array("order" => "create_date DESC"));
 
 ?>
 
@@ -12,7 +12,8 @@ $newss = News::find();
 <table class="table" width="100%">
 	<thead>
 		<tr class="success">
-			<th width="90%">News</th>
+			<th width="70%">News</th>
+			<th width="20%"></th>
 			<th width="5%"></th>
 			<th width="5%"></th>
 		</tr>
@@ -24,6 +25,7 @@ $newss = News::find();
 				?>
 				<tr>
 				<td><?= $news->news; ?></td>
+				<td><?= $news->create_date; ?></td>
 				<td><a href="<?= $this->url->get('news/edit/').$news->id; ?>">Edit</a></td>
 				<td><a href="<?= $this->url->get('news/delete/').$news->id; ?>" onclick="return confirm('ยืนยันการลบ');">Delete</a></td>
 				</tr>

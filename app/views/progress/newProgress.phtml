@@ -24,34 +24,32 @@ tinymce.init({
         <div class="tab-content">
             <div class="tab-pane fade in active" id="progress">
                 <br>
-                <div class="row">
-                    <form method="post" action="<?= $this->url->get('progress/doAddProgress'); ?>">
-                        <input type="hidden" name="id" value="<?= $params[0] ?>">
-                        <div class="form-group">
-                            <label for="progress_finish">งานที่ทำเสร็จเรียบร้อยแล้ว</label>
-                            <textarea id="progress_finish" name="progress_finish"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="progress_working">งานที่อยู่ระหว่างดำเนินการ</label>
-                            <textarea id="progress_working" name="progress_working"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="progress_todo">งานที่ยังไม่ได้ดำเนินการ</label>
-                            <textarea id="progress_todo" name="progress_todo"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="progress_summary">สรุปผลการดำเนินการและปัญหาที่เกิดขึ้น</label>
-                            <textarea id="progress_summary" name="progress_summary"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="progress_target">เป้าหมายที่วางไว้เพื่อประเมินความสำเร็จในครั้งต่อไป</label>
-                            <textarea id="progress_target" name="progress_target"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-success btn-sm">Create Progress</button>
-                        </div>
-                    </form>
-                </div>
+				<form method="post" action="<?= $this->url->get('progress/doAddProgress'); ?>">
+					<input type="hidden" name="id" value="<?= $params[0] ?>">
+					<div class="form-group">
+						<label for="progress_finish">งานที่ทำเสร็จเรียบร้อยแล้ว</label>
+						<textarea id="progress_finish" name="progress_finish"></textarea>
+					</div>
+					<div class="form-group">
+						<label for="progress_working">งานที่อยู่ระหว่างดำเนินการ</label>
+						<textarea id="progress_working" name="progress_working"></textarea>
+					</div>
+					<div class="form-group">
+						<label for="progress_todo">งานที่ยังไม่ได้ดำเนินการ</label>
+						<textarea id="progress_todo" name="progress_todo"></textarea>
+					</div>
+					<div class="form-group">
+						<label for="progress_summary">สรุปผลการดำเนินการและปัญหาที่เกิดขึ้น</label>
+						<textarea id="progress_summary" name="progress_summary"></textarea>
+					</div>
+					<div class="form-group">
+						<label for="progress_target">เป้าหมายที่วางไว้เพื่อประเมินความสำเร็จในครั้งต่อไป</label>
+						<textarea id="progress_target" name="progress_target"></textarea>
+					</div>
+					<div class="form-group">
+						<button type="submit" class="btn btn-success btn-sm">Create Progress</button>
+					</div>
+				</form>
             </div>
         </div>
     </div>

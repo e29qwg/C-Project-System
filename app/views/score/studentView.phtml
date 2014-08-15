@@ -2,6 +2,9 @@
 
 echo $this->getContent();
 
+$this->flash->notice('กำลังปรับปรุงยังไม่สามารถใช้งานได้ในขณะนี้');
+return;
+
 $auth = $this->session->get('auth');
 $user_id = $auth['id'];
 $student = User::findFirst("id='$user_id'");

@@ -77,7 +77,7 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 ),
                 'advisor' => array('advisorList'),
                 'profile' => array('*'),
-                'exam' => array('download'),
+                'exam' => array('showExam'),
                 'score' => array('studentView')
             );
 

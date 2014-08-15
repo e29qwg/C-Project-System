@@ -4,6 +4,7 @@ class ExamController extends ControllerBase
 {
     public function initialize()
     {
+		$this->view->setTemplateAfter('main');
         Phalcon\Tag::setTitle('ระบบจัดการโครงงานนักศึกษา');
         parent::initialize();
     }
@@ -13,6 +14,11 @@ class ExamController extends ControllerBase
         $this->DownloadFile->download("Exam");
         $this->view->disable();
     }
+
+	public function showExamAction()
+	{
+		$this->flash->notice('กำลังปรับปรุงยังไม่สามารถใช้งานได้');
+	}
 
     public function doUploadAction()
     {

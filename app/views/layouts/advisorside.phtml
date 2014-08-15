@@ -44,6 +44,17 @@ $projectMaps = ProjectMap::find("user_id='$user_id' AND map_type='advisor'");
                     showProject($projectMaps, '3', $this);
                 ?>
             </div>
+			<div class="list-group">
+				<a href="#" class="list-group-item active">
+					Menu
+				</a>
+				<a href="<?= $this->url->get(); ?>" class="list-group-item">
+					Home
+				</a>
+				<a href="<?= $this->url->get('projects/proposed'); ?>" class="list-group-item">
+					Proposed Project
+				</a>
+			</div>
         </div>
         <div class="col-sm-9">
             <?php echo $this->getContent(); ?>

@@ -6,12 +6,16 @@ $user_id = $auth['id'];
 
 $projectMaps = ProjectMap::find("user_id='$user_id' AND map_type='advisor'");
 
+$found = false;
+
 foreach ($projectMaps as $projectMap)
 {
     $project = Project::findFirst("project_id='$projectMap->project_id' AND project_status='Pending'");
 
     if (!$project)
         continue;
+
+	$found = true;
 
     ?>
     <div class="panel panel-info" style="display: block;">
@@ -23,6 +27,25 @@ foreach ($projectMaps as $projectMap)
                 <label class="col-sm-2">Project Name</label>
                 <p class="col-sm-10"><?= $project->project_name ?></p>
             </div>
+			<div class="row">
+				<label class="col-sm-2">Create By</label>
+				<p class="col-sm-10">
+				<?php
+
+				$projectMaps = ProjectMap::find("project_id='$project->project_id' AND map_type='owner'");
+
+				for ($i = 0 ; $i < count($projectMaps) ; $i++)
+				{
+					if ($i != 0)
+						echo '<br>';
+					$tuid = $projectMaps[$i]->user_id;
+					$student = User::findFirst("id='$tuid'");
+					echo $student->title.$student->name;
+				}
+
+				?>
+				</p>
+			</div>
             <div class="row">
                 <label class="col-sm-2">Project Type</label>
                 <p class="col-sm-10"><?= $project->project_type ?></p>
@@ -58,5 +81,8 @@ foreach ($projectMaps as $projectMap)
     </div>
     <?php
 }
+
+if (!$found)
+	$this->flash->notice('ยังไม่มีโครงงานให้เลือก');
 
 ?>

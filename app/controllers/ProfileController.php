@@ -33,6 +33,14 @@ class ProfileController extends ControllerBase
         if (empty($interesting))
             $interesting = 'ยังไม่ระบุ';
 
+		if ($request->hasFiles())
+		{
+			foreach ($request->getUploadedFiles() as $file)
+			{
+				$file->moveTo('./profilePicture/'.$user->user_id.'.img');
+			}
+		}
+
         $user->facebook = $facebook;
         $user->interesting = $interesting;
 

@@ -63,7 +63,6 @@ class Exam extends Phalcon\Mvc\User\Component
         $excel->public = 0;
         $excel->save();
         unlink('excel/'.$hash.'.xlsx');
-
     }
 }
 ?>

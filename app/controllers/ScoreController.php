@@ -10,10 +10,12 @@ class ScoreController extends ControllerBase
 
     public function advisorViewAction()
     {
-        $auth = $this->session->get('auth');
-        $this->Score->advisorView();
-        $this->DownloadFile->download($auth['id']);
-        $this->view->disable();
+//        $auth = $this->session->get('auth');
+//        $this->Score->advisorView();
+//        $this->DownloadFile->download($auth['id']);
+//        $this->view->disable();
+
+		$this->flash->notice('กำลังปรับปรุงยังไม่สามารถใช้งานได้ในขณะนี้');
     }
 
     public function studentViewAction()

@@ -13,7 +13,7 @@ $advisors = User::find("type='Advisor'");
         foreach ($advisors as $advisor)
         { ?>
 			<a href="<?= $this->url->get('profile/advisorProfile/'); ?><?=$advisor->id?>" class="list-group-item">
-				<?= $advisor->title.' '.$advisor->name ?>
+				<?= $advisor->title.$advisor->name ?>
 			</a>
         <?php 
         } 

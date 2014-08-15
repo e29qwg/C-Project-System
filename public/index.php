@@ -45,6 +45,7 @@ try
         return $dispatcher;
     });
 
+
     $di->set('url', function() use ($config) {
         $url = new \Phalcon\Mvc\Url();
         $url->setBaseUri($config->phalcon->baseUri);
@@ -95,6 +96,10 @@ try
 
         return $flashSession;
     });
+	
+	$di->set('ShowExcel', function () {
+		return new ShowExcel();
+	});
 
 	$di->set('CheckQuota', function() {
 		return new CheckQuota();

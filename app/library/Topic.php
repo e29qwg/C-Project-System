@@ -10,7 +10,6 @@ class Topic extends Phalcon\Mvc\User\Component
         $excel = PHPExcel_IOFactory::createReader('Excel2007');
         $obj = $excel->load('./excel/topic.xlsx');
         $obj->setActiveSheetIndex(0);
-        //$this->autoSize($obj); 
 
         $levelRow = 3;
         $row = 2;
@@ -18,9 +17,6 @@ class Topic extends Phalcon\Mvc\User\Component
   
         foreach ($projects as $project)
         {
-            //if ($project->project_status != 'Accept')
-            //    continue;
-
 			if ($project->project_status != 'Accept')
 				$con = '(รอยืนยัน)';
 			else
@@ -57,6 +53,8 @@ class Topic extends Phalcon\Mvc\User\Component
                 $obj->getActiveSheet()->setCellValue('G'.$row, $project->create_date);
             }
         }
+        
+		$this->autoSize($obj); 
     
         $objWriter = PHPExcel_IOFactory::createWriter($obj, 'Excel2007');
         $hash = $this->security->getToken();
@@ -78,5 +76,16 @@ class Topic extends Phalcon\Mvc\User\Component
         $excel->public = 1;
         $excel->save();
     }
+
+	public function autosize($obj)
+	{
+		foreach (range('A','G') as $columnId) 
+		{
+			$obj
+				->getActiveSheet()
+				->getColumnDimension($columnId)
+				->setAutoSize(true);
+		}
+	}
 }
 ?>

@@ -17,9 +17,16 @@ $projectMaps = ProjectMap::find("user_id='$params[0]'");
 <div class="row">
     <div class="col-sm-5">
         <?php
-            $imgSrc = "https://graph.facebook.com/";
-            $imgSrc .= $user->facebook;
-            $imgSrc .= "/picture?type=square&width=150&height=150";
+
+		if (!file_exists("./profilePicture/$user->user_id.img"))
+		{
+			$imgSrc = "https://graph.facebook.com/";
+			$imgSrc .= $user->facebook;
+			$imgSrc .= "/picture?type=square&width=150&height=150";
+		}
+		else
+			$imgSrc = $this->url->get("profilePicture/$user->user_id.img");
+
         ?>
 
         <center>
@@ -39,7 +46,7 @@ $projectMaps = ProjectMap::find("user_id='$params[0]'");
 		<div class="row">
         	<label class="col-sm-3">Name: </label>
 	        <div class="col-sm-9">
-	            <?=$user->title?> <?= $user->name ?>
+	            <?=$user->title?><?= $user->name ?>
 	        </div>
 		</div>
 		<div class="row">

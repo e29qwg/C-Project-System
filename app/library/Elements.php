@@ -7,7 +7,7 @@ class Elements extends Phalcon\Mvc\User\Component
     (
         'pull-left' => array(
             'mainmenu' => array(
-                'caption' => 'หน้าหลัก',
+                'caption' => 'Home',
                 'action' => 'index',
                 'active' => 'index'
             ),
@@ -31,6 +31,7 @@ class Elements extends Phalcon\Mvc\User\Component
                 echo '</li>';
            }
         }
+		echo '<li><a href="http://intranet.coe.phuket.psu.ac.th/projectsfarm" target="_blank">Project Farm</a></li>';
         echo '</ul>';
         echo '<ul class="nav navbar-nav navbar-right">';
         $this->getLIO();
@@ -60,7 +61,7 @@ class Elements extends Phalcon\Mvc\User\Component
             }
 
 
-            echo '<li>'.Phalcon\Tag::linkTo('./profile/index/'.$auth['id'] , '<span class="glyphicon glyphicon-user col-sm-2"></span>&nbsp;&nbsp;'.$auth['title'].'&nbsp;'.$auth['name']).'</li>';
+            echo '<li>'.Phalcon\Tag::linkTo('./profile/index/'.$auth['id'] , '<span class="glyphicon glyphicon-user col-sm-2"></span>&nbsp;&nbsp;'.$auth['title'].$auth['name']).'</li>';
             echo '<li>'.Phalcon\Tag::linkTo('./session/logout', '<span class="glyphicon glyphicon-log-out"></span>');
         }
         echo '</li>';

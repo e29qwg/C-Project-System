@@ -101,6 +101,9 @@ class ProjectsController extends ControllerBase
 		if ($project->project_level_id > 1)
 			$ncoadvisor = 0;
 
+		//TODO
+		$ncoadvisor = 0;
+
         $coadvisors = User::find(array(
             "conditions" => "advisor_group='$advisor->advisor_group' AND id!='$advisor->id' AND type='Advisor'",
             "limit" => $ncoadvisor,
@@ -405,12 +408,6 @@ class ProjectsController extends ControllerBase
 
         foreach ($projectMaps as $projectMap)
         {
-            if ($project->project_status == 'Accept' && $projectMap->map_type != 'owner' && $project->semester_id == Semester::maximum(array("column" => "semester_id")))
-            {
-                $advisor = User::findFirst("id='$projectMap->user_id'");
-                $advisor->work_load = $advisor->work_load - 1;
-                $advisor->save();
-            }
             $log = new Log();
             $log->user_id = $projectMap->user_id;
             $log->description = $auth['name'].' ได้ลบโครงงาน '.$project->project_name.' ( '.$comment.' ) ';
@@ -418,6 +415,7 @@ class ProjectsController extends ControllerBase
         }
 
         $project->delete();
+		$this->_updateWork();
         
         $this->flash->success('Cancel success');
         return $this->forward('index');
@@ -533,19 +531,25 @@ class ProjectsController extends ControllerBase
         $projectMap->map_type = 'advisor';
         $projectMap->save();
 
-		if (!empty($coadvisor1) && !empty($coadvisor2) && $project_level != 1)
+		if ($project_level != 1)
 		{
-			$projectMap = new ProjectMap();
-			$projectMap->user_id = $coadvisor1;
-			$projectMap->project_id = $project->project_id;
-			$projectMap->map_type = 'coadvisor';
-			$projectMap->save();
+			if (!empty($coadvisor1))
+			{
+				$projectMap = new ProjectMap();
+				$projectMap->user_id = $coadvisor1;
+				$projectMap->project_id = $project->project_id;
+				$projectMap->map_type = 'coadvisor';
+				$projectMap->save();
+			}
 
-			$projectMap = new ProjectMap();
-			$projectMap->user_id = $coadvisor2;
-			$projectMap->project_id = $project->project_id;
-			$projectMap->map_type = 'coadvisor';
-			$projectMap->save();
+			if (!empty($coadvisor2))
+			{
+				$projectMap = new ProjectMap();
+				$projectMap->user_id = $coadvisor2;
+				$projectMap->project_id = $project->project_id;
+				$projectMap->map_type = 'coadvisor';
+				$projectMap->save();
+			}
 		}
 
         //insert log to advisor
