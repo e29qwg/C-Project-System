@@ -2,13 +2,17 @@
 
 echo $this->getContent();
 
-$this->flash->notice('กำลังปรับปรุงหน้านี้');
+$this->flash->notice('กำลังปรับปรุงหน้านี้ ยังไม่สามารถใช้งานได้');
 
 $currentSemester = Semester::maximum(array("column" => "semester_id"));
 
 $projects = Project::find("project_status='Accept'");
 
 ?>
+
+<a class="btn btn-success btn-sm">Download Excel</a>
+<br>
+<br>
 
 <form method="post" action="<?= $this->url->get('admin/manageCoadvisor'); ?>">
 	<table class="table" width="100%">

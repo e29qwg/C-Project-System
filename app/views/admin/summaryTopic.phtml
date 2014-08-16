@@ -6,11 +6,74 @@ $this->Topic->updateTopic();
 ?>
 
 <a href="<?= $this->url->get('admin/summaryTopicExport'); ?>" class="btn btn-primary btn-sm">Download Excel</a>
+
 <br>
 <br>
 
-<?php
+<style>
+	th, td
+	{
+		text-align: center;
+	}
+	.aleft
+	{
+		text-align: left;
+	}
+</style>
 
-$this->ShowExcel->show('Topic');
+<table class="table table-bordered" width="100%">
+	<thead>
+		<tr class="success">
+			<th>ลำดับ</th>
+			<th>รหัสนักศึกษา</th>
+			<th>ระดับโครงงาน</th>
+			<th>ชื่อโครงงาน</th>
+			<th>อาจารย์ที่ปรึกษา</th>
+			<th>วันที่</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php
+		
+		$projects = Project::find();
+		$count = 0;
 
-?>
+		foreach ($projects as $project)
+		{
+			if ($project->project_status != 'Accept')
+				$con = '(รอยืนยัน)';
+			else
+				$con = '';
+
+			$projectMaps = ProjectMap::find("project_id='$project->project_id' AND map_type='owner'");
+			 $advisor = ProjectMap::findFirst("project_id='$project->project_id' AND map_type='advisor'");
+			$advisor = User::findFirst("id='$advisor->user_id'");
+
+			foreach ($projectMaps as $projectMap)
+			{
+				$user = User::findFirst("id='$projectMap->user_id'");
+				switch ($project->project_level_id)
+	  			{
+					case 1: $projectLevel = "pp"; break;
+					case 2: $projectLevel = "1"; break;
+					case 3: $projectLevel = "2"; break;
+					default: $projectLevel = $project->project_level_id;
+				}
+
+				?>
+				<tr>
+					<td><?= ++$count; ?></td>
+					<td class="aleft"><?= $user->user_id; ?></td>
+					<td><?= $projectLevel; ?></td>
+					<td class="aleft"><?= $project->project_name.$con; ?></td>
+					<td class="aleft"><?= $advisor->name; ?></td>
+					<td class="aleft"><?= $project->create_date; ?></td>
+					
+				</tr>
+				<?php
+			}
+		}
+
+		?>
+	</tbody>
+</table>
