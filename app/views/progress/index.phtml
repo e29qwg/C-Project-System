@@ -28,13 +28,13 @@
 							<?= $progress->create_date ?>
 						</td>
 						<td>
+							<a href="<?= $this->url->get('progress/view/'); ?><?= $params[0] ?>/<?=$progress->progress_id ?>" class="btn btn-xs btn-success">View</a>
 							<?php
 							if ($progress->user_id == $auth['id'])
 							{
-							?>
-								<a href="<?= $this->url->get('progress/view/'); ?><?= $params[0] ?>/<?=$progress->progress_id ?>" class="btn btn-xs btn-success">View</a>
+								?>
 								<a href="<?= $this->url->get('progress/delete/'); ?><?= $params[0] ?>/<?= $progress->progress_id ?>" class="btn btn-xs btn-danger" onclick="return confirm('Confirm Delete');">Delete</a>
-							<?php
+								<?php
 							}
 						?>
 						</td>

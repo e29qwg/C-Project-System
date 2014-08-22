@@ -73,8 +73,20 @@ function showProject($projectMaps, $level, $di)
         $project = Project::findFirst("project_id='$projectMap->project_id' AND project_level_id='$level' AND project_status='Accept' AND semester_id='$current_semester'");
         if ($project)
         {
+			 $projectMaps = ProjectMap::find("project_id='$project->project_id' AND map_type='owner'");
+
+			 $str = "";
+			 
+			 for ($i = 0 ; $i < count($projectMaps) ; $i++)
+			 {
+				 if ($i != 0)
+					$str += '<br>';
+				$tuid = $projectMaps[$i]->user_id;
+				$student = User::findFirst("id='$tuid'");
+				$str .= $student->title.$student->name;
+			 }
         ?>
-            <a class="list-group-item" href="<?= $di->url->get('projects/manage/');?><?= $project->project_id?>"><?= $project->project_name ?></a>
+            <a class="list-group-item" href="<?= $di->url->get('projects/manage/');?><?= $project->project_id?>" data-toggle="tooltip" data-placement="bottom" title="<?= $str; ?>"><?= $project->project_name ?></a>
         <?php
 			$found = true;
         }
@@ -88,4 +100,8 @@ function showProject($projectMaps, $level, $di)
 	}
 }
 ?>
+
+<script>
+	$('.list-group-item').tooltip();
+</script>
 

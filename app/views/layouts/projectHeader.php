@@ -47,7 +47,7 @@ if ($auth['type'] == 'Student')
             <a href="<?= $this->url->get('projects/member/'); ?><?= $params[0] ?>">Member</a></li>
             <?= ($controller == 'progress')?'<li class="active">':'<li>'; ?>
             <?php 
-            if ($auth['type'] == 'Advisor') 
+            if ($auth['type'] != 'Student') 
             {
             ?>
                 <a href="<?= $this->url->get('progress/evaluate/'); ?><?= $params[0] ?>">Progress</a></li>

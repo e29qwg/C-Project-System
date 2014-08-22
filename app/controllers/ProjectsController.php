@@ -564,7 +564,7 @@ class ProjectsController extends ControllerBase
         $log->save();
 	
         $this->flash->success('New project success');
-        return $this->forward('index');
+        return $this->response->redirect('index');
     }
 
 	private function _updateWork()

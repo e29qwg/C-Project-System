@@ -42,7 +42,7 @@
                         </div>
                         <div class="form-group">
                             <?php
-                            if ($auth['type'] != 'Advisor')
+                            if ($auth['type'] == 'Student')
                             {
                             ?>
                                 <a href="<?= $this->url->get('progress/index/'); ?><?= $params[0] ?>" class="btn btn-sm btn-primary">Back</a>

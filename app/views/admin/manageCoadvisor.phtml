@@ -2,7 +2,7 @@
 
 echo $this->getContent();
 
-$this->flash->notice('กำลังปรับปรุงหน้านี้ ยังไม่สามารถใช้งานได้');
+$this->flash->notice('กำลังปรับปรุงหน้านี้ ยังไม่สามารถใช้งานด้วย Excel ได้');
 
 $currentSemester = Semester::maximum(array("column" => "semester_id"));
 

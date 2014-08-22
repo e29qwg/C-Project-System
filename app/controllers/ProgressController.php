@@ -57,6 +57,7 @@ class ProgressController extends ControllerBase
     public function deleteAction()
     {
         $auth = $this->session->get('auth');
+		$type = $auth['type'];
         $user_id = $auth['id'];
         $params = $this->dispatcher->getParams();
 
@@ -72,7 +73,13 @@ class ProgressController extends ControllerBase
 
         $progress->delete();
         
+
         $this->flashSession->success('Delete Success');
+
+
+		if ($type != 'Student')
+			return $this->response->redirect('progress/evaluate/'.$params[0]);
+
         return $this->response->redirect('progress/index/'.$params[0]);
     }
 
@@ -86,6 +93,7 @@ class ProgressController extends ControllerBase
     {
         $request = $this->request;
         $auth = $this->session->get('auth');
+		$type = $auth['type'];
         
         $project_id = $request->getPost('id');
         if (!$this->_checkPermission($project_id))
@@ -131,6 +139,10 @@ class ProgressController extends ControllerBase
         }
 
         $this->flashSession->success('Add progress success');
+
+		if ($type != 'Student')
+			return $this->response->redirect('progress/evaluate/'.$project_id);
+
         $this->response->redirect('progress/index/'.$project_id);
     }
 

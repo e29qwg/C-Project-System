@@ -5,13 +5,16 @@
         <div class="tab-content">
             <div class="tab-pane fade in active" id="progress">
                 <br>
+				<a href="<?= $this->url->get('progress/newProgress/').$project->project_id; ?>" class="btn btn-xs btn-success pull-right">New Progress</a>
+				<br>
+				<br>
                 <div>
                     <form method="post" action="<?= $this->url->get('progress/doEvaluate'); ?>">
                         <table class="table" width="100%">
                             <tr class="success">
                                 <th><?= $project->project_name ?> progress</th>
                                 <th></th>
-                                <th width="10%"></th>
+                                <th width="20%"></th>
                                 <th width="20%"></th>
                             </tr>
                             <?php
@@ -31,6 +34,7 @@
                                     </td>
                                     <td>
                                         <a href="<?= $this->url->get('progress/view/'); ?><?= $params[0] ?>/<?=$progress->progress_id ?>" class="btn btn-xs btn-success" target="popup">View</a>
+										<a href="<?= $this->url->get('progress/delete/').$params[0].'/'.$progress->progress_id; ?>" class="btn btn-xs btn-danger" onclick="return confirm('Confirm Delete');">Delete</a>
                                     </td>
                                     <td>
                                         <?php 
