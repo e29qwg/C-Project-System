@@ -1,7 +1,7 @@
 <?php echo $this->getContent(); ?>
 <?php 
-    $auth = $this->session->get('auth');
-    $user_id = $auth['id'];
+$auth = $this->session->get('auth');
+$user_id = $auth['id'];
 ?>
 
 <div class="row">
@@ -11,7 +11,10 @@
                 <br>
                 <br>
                 <div>
-                    <?php $progress = Progress::findFirst("progress_id='$params[1]'"); ?>
+                    <?php 
+						$progress = Progress::findFirst("progress_id='$params[1]'"); 
+					?>
+
                     <form>
                         <div class="form-group">
                             <h4>โครงงาน <?= $project->project_name ?></h4>
@@ -37,9 +40,22 @@
                             <p class="form-control-static"><?= $progress->progress_target ?></p>
                         </div>
                         <div class="form-group">
-                            <label for="create_date">วันที่</label>
+                            <label for="create_date">วันที่สร้าง</label>
                             <p class="form-control-static"><?= $progress->create_date ?></p>
                         </div>
+						<?php
+
+						if (!empty($progress->edit_date))
+						{
+							?>
+							<div class="form-group">
+								<label for="edit_date">วันที่แก้ไข</label>
+								<p class="form-control-static"><?= $progress->edit_date; ?></p>
+							</div>
+							<?php
+						}
+
+						?>
                         <div class="form-group">
                             <?php
                             if ($auth['type'] == 'Student')
@@ -54,6 +70,12 @@
                                 <a href="<?= $this->url->get('progress/evaluate/'); ?><?= $params[0] ?>" class="btn btn-sm btn-primary">Back</a>
                             <?php
                             }
+							if ($progress->user_id == $user_id)
+							{
+							?>
+								<a href="<?= $this->url->get('progress/edit/').$params[0].'/'.$progress->progress_id; ?>" class="btn btn-sm btn-primary">Edit</a>
+							<?php
+							}
                             ?>
                         </div>
                     </form>

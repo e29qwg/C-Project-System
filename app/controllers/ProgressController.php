@@ -9,6 +9,60 @@ class ProgressController extends ControllerBase
         parent::initialize();
     }
 
+	public function doEditAction()
+	{
+		$request = $this->request;
+		$auth = $this->session->get('auth');
+		$user_id = $auth['id'];
+
+		if (!$request->isPost())
+		{
+			$this->flash->error('Invalid Request');
+			return;
+		}
+
+		
+		$id = $request->getPost('id');
+		$progress_id = $request->getPost('progress_id');
+		$progress_finish = $request->getPost('progress_finish');
+		$progress_working = $request->getPost('progress_working');
+		$progress_todo = $request->getPost('progress_todo');
+		$progress_summary = $request->getPost('progress_summary');
+		$progress_target = $request->getPost('progress_target');
+
+		$progress = Progress::findFirst("progress_id='$progress_id' AND user_id='$user_id'");
+
+		if (!$progress)
+		{
+			$this->flash->error('Access Denied');
+			return;
+		}
+
+		$progress->progress_finish = $progress_finish;
+		$progress->progress_working = $progress_working;
+		$progress->progress_todo = $progress_todo;
+		$progress->progress_summary = $progress_summary;
+		$progress->progress_target = $progress_target;
+
+		if (!$progress->save())
+		{
+			$this->flash->error('DB Error: When update progress');
+			return;
+		}
+
+		$this->flash->success('Update Success');
+
+		return $this->dispatcher->forward(array(
+			'controller' => 'progress',
+			'action' => 'index',
+			'params' => array($id)
+		));
+	}
+
+	public function editAction()
+	{
+	}
+
     //insert evaluate to database
     public function doEvaluateAction()
     {
@@ -156,8 +210,17 @@ class ProgressController extends ControllerBase
     //show progress page
     public function indexAction()
     {
+		$auth = $this->session->get('auth');
+
         $params = $this->dispatcher->getParams();
         $this->_checkPermission($params[0]);
+		
+		if ($auth['type'] != 'Student')
+			return $this->dispatcher->forward(array(
+				'controller' => 'progress',
+				'action' => 'evaluate',
+				'params' => array($params[0])
+			));
     }
 }
 ?>

@@ -73,7 +73,9 @@ class Security extends \Phalcon\Mvc\User\Plugin
                     'newProgress',
                     'doAddProgress',
                     'view',
-                    'delete'
+                    'delete',
+					'edit',
+					'doEdit'
                 ),
                 'advisor' => array('advisorList'),
                 'profile' => array('*'),
@@ -113,7 +115,13 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 'progress' => array(
                     'view',
                     'evaluate',
-                    'doEvaluate'
+                    'doEvaluate',
+					'index',
+					'newProgress',
+					'doAddProgress',
+					'delete',
+					'edit',
+					'doEdit'
                 ),
                 'profile' => array('*'),
                 'exam' => array('download'),
