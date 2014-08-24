@@ -4,6 +4,18 @@ $auth = $this->session->get('auth');
 $user_id = $auth['id'];
 ?>
 
+<?php 
+$params = $this->dispatcher->getParams();
+$progress = Progress::findFirst("progress_id='$params[1]'"); 
+$projectMap = ProjectMap::findFirst("project_id='$progress->project_id' AND user_id='$user_id'");
+
+if (!$projectMap)
+{
+	$this->flash->error('Access Denied.');
+	return;
+}
+?>
+
 <div class="row">
     <?php require(__DIR__.'/../layouts/projectHeader.php'); ?>
         <div class="tab-content">
@@ -11,10 +23,6 @@ $user_id = $auth['id'];
                 <br>
                 <br>
                 <div>
-                    <?php 
-						$progress = Progress::findFirst("progress_id='$params[1]'"); 
-					?>
-
                     <form>
                         <div class="form-group">
                             <h4>โครงงาน <?= $project->project_name ?></h4>
@@ -70,7 +78,7 @@ $user_id = $auth['id'];
                                 <a href="<?= $this->url->get('progress/evaluate/'); ?><?= $params[0] ?>" class="btn btn-sm btn-primary">Back</a>
                             <?php
                             }
-							if ($progress->user_id == $user_id)
+							if (($projectMap->map_type == 'owner' && $progress->user_id == $user_id) || $projectMap->map_type='advisor')
 							{
 							?>
 								<a href="<?= $this->url->get('progress/edit/').$params[0].'/'.$progress->progress_id; ?>" class="btn btn-sm btn-primary">Edit</a>

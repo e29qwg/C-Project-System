@@ -30,13 +30,16 @@ class ProgressController extends ControllerBase
 		$progress_summary = $request->getPost('progress_summary');
 		$progress_target = $request->getPost('progress_target');
 
-		$progress = Progress::findFirst("progress_id='$progress_id' AND user_id='$user_id'");
+		$progress = Progress::findFirst("progress_id='$progress_id'");
 
-		if (!$progress)
+		//check user permission
+		$projectMap = ProjectMap::findFirst("project_id='$progress->project_id' AND user_id='$user_id'");
+
+		if (!(($projectMap->map_type == 'owner' && $progress->user_id == $user_id) || $projectMap->map_type='advisor'))
 		{
 			$this->flash->error('Access Denied');
 			return;
-		}
+		}	
 
 		$progress->progress_finish = $progress_finish;
 		$progress->progress_working = $progress_working;
@@ -117,7 +120,20 @@ class ProgressController extends ControllerBase
 
         $progress_id = $params[1];
 
-        $progress = Progress::findFirst("progress_id='$progress_id' AND user_id='$user_id'");
+        $progress = Progress::findFirst("progress_id='$progress_id'");
+		$projectMap = ProjectMap::findFirst("project_id='$progress->project_id' AND user_id='$user_id'");
+
+		if (!$progress || !$projectMap)
+		{
+			$this->flash->error('Access Denied');
+			return;
+		}
+
+		if (!(($projectMap->map_type == 'owner' && $progress->user_id == $user_id) || $projectMap->map_type='advisor'))
+		{
+			$this->flash->error('Access Denied');
+			return;
+		}
 
         if (!$progress)
         {
