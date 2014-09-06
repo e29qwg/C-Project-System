@@ -383,8 +383,13 @@ class ProjectsController extends ControllerBase
 
         if (empty($pid))
         {
-            $this->flash->error('Invalid Request');
-            return $this->forward('projects/me');
+            if (!empty($params[0]))
+                $pid = $params[0];
+            else
+            {
+                $this->flash->error('Invalid Request'); 
+                return $this->forward('projects/me');
+            }
         }
 
         //check owner

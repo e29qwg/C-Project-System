@@ -32,6 +32,7 @@ class Elements extends Phalcon\Mvc\User\Component
            }
         }
 		echo '<li><a href="http://intranet.coe.phuket.psu.ac.th/projectsfarm" target="_blank">Project Farm</a></li>';
+		echo '<li><a href="http://intranet.coe.phuket.psu.ac.th/materials/" target="_blank">Hardware Store</a></li>';
         echo '</ul>';
         echo '<ul class="nav navbar-nav navbar-right">';
         $this->getLIO();
