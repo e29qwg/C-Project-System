@@ -18,9 +18,14 @@ class ProjectsController extends ControllerBase
         $user = User::findFirst("id='$user_id'");
 
 		$quota = Quota::findFirst("advisor_id='$user_id'");
+
+
 		if ($this->CheckQuota->acceptProject($user_id)+1 > $quota->quota_pp)
 		{
 			$this->flash->error('ไม่สามารถเพิ่มได้เนื่องจากเกินจำนวนที่อาจารย์ที่ปรึกษาจะรับได้');
+            if ($auth['type'] != 'Student')
+                return $this->forward('index');
+                
 			return $this->forward('projects/newProject');
 		}
 
