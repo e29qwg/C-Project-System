@@ -15,8 +15,7 @@ class Project extends \Phalcon\Mvc\Model
 
     public function initialize()
     {
-		$this->hasMany("project_id", "ProjectMap", "project_id");
-		
+        $this->hasMany("project_id", "ProjectMap", "project_id");
         $this->useDynamicUpdate(true);
     }
 

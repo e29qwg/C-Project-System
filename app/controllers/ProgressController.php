@@ -9,6 +9,10 @@ class ProgressController extends ControllerBase
         parent::initialize();
     }
 
+    public function exportPDFAction()
+    {
+    }
+
 	public function doEditAction()
 	{
 		$request = $this->request;
@@ -163,11 +167,15 @@ class ProgressController extends ControllerBase
     {
         $request = $this->request;
         $auth = $this->session->get('auth');
+        $user_id = $auth['id'];
 		$type = $auth['type'];
         
         $project_id = $request->getPost('id');
         if (!$this->_checkPermission($project_id))
             return false;
+
+        $project = Project::findFirst("project_id='$project_id'");
+        $user = User::findFirst("id='$user_id'");
 
         $progress_finish = $request->getPost('progress_finish');
         $progress_working = $request->getPost('progress_working');
@@ -183,6 +191,7 @@ class ProgressController extends ControllerBase
         $progress->progress_todo = $progress_todo;
         $progress->progress_summary = $progress_summary;
         $progress->progress_target = $progress_target;
+
 
         if (!$progress->save())
         {
@@ -212,6 +221,14 @@ class ProgressController extends ControllerBase
 
 		if ($type != 'Student')
 			return $this->response->redirect('progress/evaluate/'.$project_id);
+
+        $projectMap = ProjectMap::findFirst("project_id='$project_id' AND map_type='advisor'");
+
+        //sent notification to advisor
+        $log = new Log();
+        $log->user_id = $projectMap->user_id;
+        $log->description = $user->title.' '.$user->name.' ได้บันทึกความก้าวหน้าโครงงาน '.$project->project_name;
+        $log->save();
 
         $this->response->redirect('progress/index/'.$project_id);
     }

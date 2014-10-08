@@ -75,7 +75,8 @@ class Security extends \Phalcon\Mvc\User\Plugin
                     'view',
                     'delete',
 					'edit',
-					'doEdit'
+					'doEdit',
+                    'exportPDF'
                 ),
                 'advisor' => array('advisorList'),
                 'profile' => array('*'),

@@ -71,21 +71,18 @@ function countProjects($projectMaps, $level)
 {
     $current_semester = Semester::maximum(array("column" => "semester_id"));
 
-    // Filter projects
-    $projects = $projectMaps->filter(function($projectMap)
+    $count = 0;
+    
+    foreach ($projectMaps as $projectMap)
     {
-        $criteria = array(
-            "project_id" => $projectMap->project_id,
-            "project_level_id" => $level,
-            "project_status" => 'Accept',
-            "semester_id" => $current_semester
-        );
+        $project = Project::findFirst("project_id='$projectMap->project_id' AND project_level_id='$level' AND semester_id='$current_semester'");
+        if ($project)
+        {
+            $count++;
+        }
+    }
 
-        if (Project::findFirst($criteria))
-            return $projectMap;
-    });
-
-    return $projects->count();
+    return $count;
 }
 
 function showProject($projectMaps, $level, $di)
@@ -111,7 +108,7 @@ function showProject($projectMaps, $level, $di)
 				$str .= $student->title.$student->name;
 			 }
         ?>
-            <a class="list-group-item" href="<?= $di->url->get('projects/manage/');?><?= $project->project_id?>" data-toggle="tooltip" data-placement="bottom" title="<?= $str; ?>"><?= $project->project_name ?></a>
+            <a class="list-group-item" href="<?= $di->url->get('progress/evaluate/');?><?= $project->project_id?>" data-toggle="tooltip" data-placement="bottom" title="<?= $str; ?>"><?= $project->project_name ?></a>
         <?php
 			$found = true;
         }

@@ -6,3 +6,4 @@ public/excel/export*
 public/.htaccess
 public/profilePicture
 public/excel
+public/*.docx

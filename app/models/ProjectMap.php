@@ -11,8 +11,7 @@ class ProjectMap extends \Phalcon\Mvc\Model
 
     public function initialize()
     {
-		$this->belongsTo("project_id", "Project", "project_id");
-
+        $this->belongsTo("project_id", "Project", "project_id");
         $this->useDynamicUpdate(true);
     }
 }
