@@ -42,9 +42,7 @@ if ($auth['type'] == 'Student')
     ?>
         <ul class="nav nav-tabs" id="pTab">
             <?= ($action == 'manage')?'<li class="active">':'<li>'; ?>
-            <a href="<?= $this->url->get('projects/manage/'); ?><?= $params[0] ?>">Project Setting</a></li>
-            <?= ($action == 'member' || $action == 'addmember')?'<li class="active">':'<li>'; ?>
-            <a href="<?= $this->url->get('projects/member/'); ?><?= $params[0] ?>">Member</a></li>
+            <a href="<?= $this->url->get('projects/manage/'); ?><?= $params[0] ?>">Project Info</a></li>
             <?= ($controller == 'progress')?'<li class="active">':'<li>'; ?>
             <?php 
             if ($auth['type'] != 'Student') 
@@ -60,4 +58,6 @@ if ($auth['type'] == 'Student')
             <?php
             }
             ?>
+            <?= ($action == 'member' || $action == 'addmember')?'<li class="active">':'<li>'; ?>
+            <a href="<?= $this->url->get('projects/member/'); ?><?= $params[0] ?>">Member</a></li>
         </ul>

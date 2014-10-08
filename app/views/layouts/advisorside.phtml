@@ -27,18 +27,21 @@ $projectMaps = ProjectMap::find("user_id='$user_id' AND map_type='advisor'");
             <div class="list-group">
                 <a href="#" class="list-group-item active">
 					Prepare Project
+                    <span class="badge"><?php echo countProjects($projectMaps, '1'); ?></span>
 				</a>
                 <?php
                     showProject($projectMaps, '1', $this);
                 ?>
                 <a href="#" class="list-group-item active">
 					Project I
+                    <span class="badge"><?php echo countProjects($projectMaps, '2'); ?></span>
 				</a>
                 <?php
                     showProject($projectMaps, '2', $this);
                 ?>
                 <a href="#" class="list-group-item active">
 	                Project II
+                    <span class="badge"><?php echo countProjects($projectMaps, '3'); ?></span>
                 </a>
                 <?php
                     showProject($projectMaps, '3', $this);
@@ -63,6 +66,25 @@ $projectMaps = ProjectMap::find("user_id='$user_id' AND map_type='advisor'");
 </div>
 
 <?php
+
+function countProjects($projectMaps, $level)
+{
+    $current_semester = Semester::maximum(array("column" => "semester_id"));
+
+    $count = 0;
+    
+    foreach ($projectMaps as $projectMap)
+    {
+        $project = Project::findFirst("project_id='$projectMap->project_id' AND project_level_id='$level' AND semester_id='$current_semester'");
+        if ($project)
+        {
+            $count++;
+        }
+    }
+
+    return $count;
+}
+
 function showProject($projectMaps, $level, $di)
 {
     $current_semester = Semester::maximum(array("column" => "semester_id"));
@@ -86,7 +108,7 @@ function showProject($projectMaps, $level, $di)
 				$str .= $student->title.$student->name;
 			 }
         ?>
-            <a class="list-group-item" href="<?= $di->url->get('projects/manage/');?><?= $project->project_id?>" data-toggle="tooltip" data-placement="bottom" title="<?= $str; ?>"><?= $project->project_name ?></a>
+            <a class="list-group-item" href="<?= $di->url->get('progress/evaluate/');?><?= $project->project_id?>" data-toggle="tooltip" data-placement="bottom" title="<?= $str; ?>"><?= $project->project_name ?></a>
         <?php
 			$found = true;
         }
