@@ -69,20 +69,23 @@ $projectMaps = ProjectMap::find("user_id='$user_id' AND map_type='advisor'");
 
 function countProjects($projectMaps, $level)
 {
-	$current_semester = Semester::maximum(array("column" => "semester_id"));
+    $current_semester = Semester::maximum(array("column" => "semester_id"));
 
-	// Construct conditions and parameters
-	$conditions = "project_level_id = :level: AND project_status = :status: AND semester_id = :semester:";
-	$parameters = array(
-		"level"    => $level,
-		"status"   => "Accept",
-		"semester" => $current_semester
-	);
+    // Filter projects
+    $projects = $projectMaps->filter(function($projectMap)
+    {
+        $criteria = array(
+            "project_id" => $projectMap->project_id,
+            "project_level_id" => $level,
+            "project_status" => 'Accept',
+            "semester_id" => $current_semester
+        );
 
-	return $projectMaps->countProject(array(
-		$conditions,
-		"bind" => $parameters
-	));
+        if (Project::findFirst($criteria))
+            return $projectMap;
+    });
+
+    return $projects->count();
 }
 
 function showProject($projectMaps, $level, $di)
