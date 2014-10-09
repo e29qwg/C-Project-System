@@ -27,21 +27,21 @@ $projectMaps = ProjectMap::find("user_id='$user_id' AND map_type='advisor'");
             <div class="list-group">
                 <a href="#" class="list-group-item active">
 					Prepare Project
-                    <span class="badge"><?php echo countProjects($projectMaps, '1'); ?></span>
+					<span class="badge"><?php echo countProjects($projectMaps, '1'); ?></span>
 				</a>
                 <?php
                     showProject($projectMaps, '1', $this);
                 ?>
                 <a href="#" class="list-group-item active">
 					Project I
-                    <span class="badge"><?php echo countProjects($projectMaps, '2'); ?></span>
+					<span class="badge"><?php echo countProjects($projectMaps, '2'); ?></span>
 				</a>
                 <?php
                     showProject($projectMaps, '2', $this);
                 ?>
                 <a href="#" class="list-group-item active">
 	                Project II
-                    <span class="badge"><?php echo countProjects($projectMaps, '3'); ?></span>
+					<span class="badge"><?php echo countProjects($projectMaps, '3'); ?></span>
                 </a>
                 <?php
                     showProject($projectMaps, '3', $this);
