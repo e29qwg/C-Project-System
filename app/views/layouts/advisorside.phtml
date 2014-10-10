@@ -85,6 +85,23 @@ function countProjects($projectMaps, $level)
     return $count;
 }
 
+function getNewProgress($projectId)
+{
+    $progresss = Progress::find("project_id='$projectId'");
+
+    $count = 0;
+
+    foreach ($progresss as $progress)
+    {
+        $progressEvaluate = ProgressEvaluate::findFirst("progress_id='$progress->progress_id' AND evaluation='0'");
+
+        if ($progressEvaluate)
+            $count++;
+    }
+
+    return $count;
+}
+
 function showProject($projectMaps, $level, $di)
 {
     $current_semester = Semester::maximum(array("column" => "semester_id"));
@@ -108,7 +125,10 @@ function showProject($projectMaps, $level, $di)
 				$str .= $student->title.$student->name;
 			 }
         ?>
-            <a class="list-group-item" href="<?= $di->url->get('progress/evaluate/');?><?= $project->project_id?>" data-toggle="tooltip" data-placement="bottom" title="<?= $str; ?>"><?= $project->project_name ?></a>
+            <a class="list-group-item" href="<?= $di->url->get('progress/evaluate/');?><?= $project->project_id?>" data-toggle="tooltip" data-placement="bottom" title="<?= $str; ?>">
+            <?= $project->project_name ?>
+					<span class="badge"><?php echo getNewProgress($project->project_id); ?></span>
+            </a>
         <?php
 			$found = true;
         }

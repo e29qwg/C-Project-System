@@ -125,7 +125,7 @@ class Security extends \Phalcon\Mvc\User\Plugin
 					'doEdit'
                 ),
                 'profile' => array('*'),
-                'exam' => array('download'),
+                'exam' => array('download', 'showExam'),
                 'score' => array('advisorView')
             );
 
