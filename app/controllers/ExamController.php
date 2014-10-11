@@ -17,8 +17,7 @@ class ExamController extends ControllerBase
 
 	public function showExamAction()
 	{
-        $this->downloadAction();
-//		$this->flash->notice('กำลังปรับปรุงยังไม่สามารถใช้งานได้');
+		$this->flash->notice('กำลังปรับปรุงยังไม่สามารถใช้งานได้');
 	}
 
     public function doUploadAction()

@@ -85,23 +85,6 @@ function countProjects($projectMaps, $level)
     return $count;
 }
 
-function getNewProgress($projectId)
-{
-    $progresss = Progress::find("project_id='$projectId'");
-
-    $count = 0;
-
-    foreach ($progresss as $progress)
-    {
-        $progressEvaluate = ProgressEvaluate::findFirst("progress_id='$progress->progress_id' AND evaluation='0'");
-
-        if ($progressEvaluate)
-            $count++;
-    }
-
-    return $count;
-}
-
 function showProject($projectMaps, $level, $di)
 {
     $current_semester = Semester::maximum(array("column" => "semester_id"));
@@ -125,6 +108,7 @@ function showProject($projectMaps, $level, $di)
 				$str .= $student->title.$student->name;
 			 }
         ?>
+<<<<<<< HEAD
             <a class="list-group-item" href="<?= $di->url->get('progress/evaluate/');?><?= $project->project_id?>" data-toggle="tooltip" data-placement="bottom" title="<?= $str; ?>">
             <?= $project->project_name ?>
 				<?php 
@@ -134,6 +118,9 @@ function showProject($projectMaps, $level, $di)
 						echo '<span class="badge">' . $newProgresses . '</span';
                 ?>
             </a>
+=======
+            <a class="list-group-item" href="<?= $di->url->get('progress/evaluate/');?><?= $project->project_id?>" data-toggle="tooltip" data-placement="bottom" title="<?= $str; ?>"><?= $project->project_name ?></a>
+>>>>>>> parent of 4e0ccc4... show not evaluate progress in project name
         <?php
 			$found = true;
         }
