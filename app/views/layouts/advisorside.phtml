@@ -127,7 +127,12 @@ function showProject($projectMaps, $level, $di)
         ?>
             <a class="list-group-item" href="<?= $di->url->get('progress/evaluate/');?><?= $project->project_id?>" data-toggle="tooltip" data-placement="bottom" title="<?= $str; ?>">
             <?= $project->project_name ?>
-					<span class="badge"><?php echo getNewProgress($project->project_id); ?></span>
+				<?php 
+                    $newProgresses = getNewProgress($project->project_id);
+
+					if ($newProgresses > 0)
+						echo '<span class="badge">' . $newProgresses . '</span';
+                ?>
             </a>
         <?php
 			$found = true;
