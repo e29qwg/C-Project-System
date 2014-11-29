@@ -98,7 +98,7 @@ class PHPExcel_CachedObjectStorage_Memory extends PHPExcel_CachedObjectStorage_C
         $this->_cellCache = $newCollection;
     }    //	function getCacheData()
 
-/**
+    /**
      * Clear the cell collection and disconnect from our parent
      *
      * @return    void
@@ -119,7 +119,7 @@ class PHPExcel_CachedObjectStorage_Memory extends PHPExcel_CachedObjectStorage_C
         $this->_parent = null;
     }
 
-/**
+    /**
      * Dummy method callable from CacheBase, but unused by Memory cache
      *
      * @return    void

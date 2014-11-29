@@ -27,10 +27,7 @@ class PSUService
 
     public function checkLogin($username, $password)
     {
-        $params = array(
-            'username' => $username,
-            'password' => $password
-        );
+        $params = array('username' => $username, 'password' => $password);
 
         $obj = $this->_soapClient->Authenticate($params);
 

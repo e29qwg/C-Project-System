@@ -3,16 +3,7 @@
 class Elements extends Phalcon\Mvc\User\Component
 {
 
-    private $_headerMenu = array
-    (
-        'pull-left' => array(
-            'mainmenu' => array(
-                'caption' => 'Home',
-                'action' => 'index',
-                'active' => 'index'
-            ),
-        ),
-    );
+    private $_headerMenu = array('pull-left' => array('mainmenu' => array('caption' => 'Home', 'action' => 'index', 'active' => 'index'),),);
 
 
     public function getMenu()
@@ -26,7 +17,8 @@ class Elements extends Phalcon\Mvc\User\Component
                 if ($option['active'] == $controllerName)
                 {
                     echo '<li class="active">';
-                } else
+                }
+                else
                 {
                     echo '<li>';
                 }
@@ -49,7 +41,8 @@ class Elements extends Phalcon\Mvc\User\Component
         if (!$auth)
         {
             //echo Phalcon\Tag::linkTo('./session' , 'Login');
-        } else
+        }
+        else
         {
             $controllerName = $this->view->getControllerName();
 

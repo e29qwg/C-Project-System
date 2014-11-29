@@ -357,7 +357,8 @@ class PHPExcel_Worksheet_PageSetup
             {
                 $this->_fitToPage = false;
             }
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception("Scale must not be negative");
         }
@@ -645,10 +646,12 @@ class PHPExcel_Worksheet_PageSetup
         if (strpos($value, '!') !== false)
         {
             throw new PHPExcel_Exception('Cell coordinate must not specify a worksheet.');
-        } elseif (strpos($value, ':') === false)
+        }
+        elseif (strpos($value, ':') === false)
         {
             throw new PHPExcel_Exception('Cell coordinate must be a range of cells.');
-        } elseif (strpos($value, '$') !== false)
+        }
+        elseif (strpos($value, '$') !== false)
         {
             throw new PHPExcel_Exception('Cell coordinate must not be absolute.');
         }
@@ -659,7 +662,8 @@ class PHPExcel_Worksheet_PageSetup
             if ($index == 0)
             {
                 $this->_printArea = $value;
-            } else
+            }
+            else
             {
                 $printAreas = explode(',', $this->_printArea);
                 if ($index < 0)
@@ -673,12 +677,14 @@ class PHPExcel_Worksheet_PageSetup
                 $printAreas[$index - 1] = $value;
                 $this->_printArea = implode(',', $printAreas);
             }
-        } elseif ($method == self::SETPRINTRANGE_INSERT)
+        }
+        elseif ($method == self::SETPRINTRANGE_INSERT)
         {
             if ($index == 0)
             {
                 $this->_printArea .= ($this->_printArea == '') ? $value : ',' . $value;
-            } else
+            }
+            else
             {
                 $printAreas = explode(',', $this->_printArea);
                 if ($index < 0)
@@ -692,7 +698,8 @@ class PHPExcel_Worksheet_PageSetup
                 $printAreas = array_merge(array_slice($printAreas, 0, $index), array($value), array_slice($printAreas, $index));
                 $this->_printArea = implode(',', $printAreas);
             }
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception('Invalid method for setting print range.');
         }
@@ -733,7 +740,8 @@ class PHPExcel_Worksheet_PageSetup
         if ($index == 0)
         {
             $this->_printArea = NULL;
-        } else
+        }
+        else
         {
             $printAreas = explode(',', $this->_printArea);
             if (isset($printAreas[$index - 1]))
@@ -856,7 +864,8 @@ class PHPExcel_Worksheet_PageSetup
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

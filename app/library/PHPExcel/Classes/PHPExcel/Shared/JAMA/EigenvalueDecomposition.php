@@ -97,7 +97,8 @@ class EigenvalueDecomposition
             $this->tred2();
             // Diagonalize.
             $this->tql2();
-        } else
+        }
+        else
         {
             $this->H = $this->A;
             $this->ort = array();
@@ -135,7 +136,8 @@ class EigenvalueDecomposition
                 {
                     $this->V[$j][$i] = $this->V[$i][$j] = 0.0;
                 }
-            } else
+            }
+            else
             {
                 // Generate Householder vector.
                 for ($k = 0; $k < $i; ++$k)
@@ -456,7 +458,7 @@ class EigenvalueDecomposition
         }
     }
 
-/**
+    /**
      *    Nonsymmetric reduction from Hessenberg to real Schur form.
      *
      *    Code is derived from the Algol procedure hqr2,
@@ -521,7 +523,8 @@ class EigenvalueDecomposition
                 --$n;
                 $iter = 0;
                 // Two roots found
-            } else if ($l == $n - 1)
+            }
+            else if ($l == $n - 1)
             {
                 $w = $this->H[$n][$n - 1] * $this->H[$n - 1][$n];
                 $p = ($this->H[$n - 1][$n - 1] - $this->H[$n][$n]) / 2.0;
@@ -536,7 +539,8 @@ class EigenvalueDecomposition
                     if ($p >= 0)
                     {
                         $z = $p + $z;
-                    } else
+                    }
+                    else
                     {
                         $z = $p - $z;
                     }
@@ -577,7 +581,8 @@ class EigenvalueDecomposition
                         $this->V[$i][$n] = $q * $this->V[$i][$n] - $p * $z;
                     }
                     // Complex pair
-                } else
+                }
+                else
                 {
                     $this->d[$n - 1] = $x + $p;
                     $this->d[$n] = $x + $p;
@@ -587,7 +592,8 @@ class EigenvalueDecomposition
                 $n = $n - 2;
                 $iter = 0;
                 // No convergence yet
-            } else
+            }
+            else
             {
                 // Form shift
                 $x = $this->H[$n][$n];
@@ -651,8 +657,7 @@ class EigenvalueDecomposition
                     {
                         break;
                     }
-                    if (abs($this->H[$m][$m - 1]) * (abs($q) + abs($r)) <
-                        $eps * (abs($p) * (abs($this->H[$m - 1][$m - 1]) + abs($z) + abs($this->H[$m + 1][$m + 1])))
+                    if (abs($this->H[$m][$m - 1]) * (abs($q) + abs($r)) < $eps * (abs($p) * (abs($this->H[$m - 1][$m - 1]) + abs($z) + abs($this->H[$m + 1][$m + 1])))
                     )
                     {
                         break;
@@ -698,7 +703,8 @@ class EigenvalueDecomposition
                         if ($k != $m)
                         {
                             $this->H[$k][$k - 1] = -$s * $x;
-                        } elseif ($l != $m)
+                        }
+                        elseif ($l != $m)
                         {
                             $this->H[$k][$k - 1] = -$this->H[$k][$k - 1];
                         }
@@ -776,7 +782,8 @@ class EigenvalueDecomposition
                     {
                         $z = $w;
                         $s = $r;
-                    } else
+                    }
+                    else
                     {
                         $l = $i;
                         if ($this->e[$i] == 0.0)
@@ -784,12 +791,14 @@ class EigenvalueDecomposition
                             if ($w != 0.0)
                             {
                                 $this->H[$i][$n] = -$r / $w;
-                            } else
+                            }
+                            else
                             {
                                 $this->H[$i][$n] = -$r / ($eps * $norm);
                             }
                             // Solve real equations
-                        } else
+                        }
+                        else
                         {
                             $x = $this->H[$i][$i + 1];
                             $y = $this->H[$i + 1][$i];
@@ -799,7 +808,8 @@ class EigenvalueDecomposition
                             if (abs($x) > abs($z))
                             {
                                 $this->H[$i + 1][$n] = (-$r - $w * $t) / $x;
-                            } else
+                            }
+                            else
                             {
                                 $this->H[$i + 1][$n] = (-$s - $y * $t) / $z;
                             }
@@ -816,7 +826,8 @@ class EigenvalueDecomposition
                     }
                 }
                 // Complex vector
-            } else if ($q < 0)
+            }
+            else if ($q < 0)
             {
                 $l = $n - 1;
                 // Last vector component imaginary so matrix is triangular
@@ -824,7 +835,8 @@ class EigenvalueDecomposition
                 {
                     $this->H[$n - 1][$n - 1] = $q / $this->H[$n][$n - 1];
                     $this->H[$n - 1][$n] = -($this->H[$n][$n] - $p) / $this->H[$n][$n - 1];
-                } else
+                }
+                else
                 {
                     $this->cdiv(0.0, -$this->H[$n - 1][$n], $this->H[$n - 1][$n - 1] - $p, $q);
                     $this->H[$n - 1][$n - 1] = $this->cdivr;
@@ -848,7 +860,8 @@ class EigenvalueDecomposition
                         $z = $w;
                         $r = $ra;
                         $s = $sa;
-                    } else
+                    }
+                    else
                     {
                         $l = $i;
                         if ($this->e[$i] == 0)
@@ -856,7 +869,8 @@ class EigenvalueDecomposition
                             $this->cdiv(-$ra, -$sa, $w, $q);
                             $this->H[$i][$n - 1] = $this->cdivr;
                             $this->H[$i][$n] = $this->cdivi;
-                        } else
+                        }
+                        else
                         {
                             // Solve complex equations
                             $x = $this->H[$i][$i + 1];
@@ -874,7 +888,8 @@ class EigenvalueDecomposition
                             {
                                 $this->H[$i + 1][$n - 1] = (-$ra - $w * $this->H[$i][$n - 1] + $q * $this->H[$i][$n]) / $x;
                                 $this->H[$i + 1][$n] = (-$sa - $w * $this->H[$i][$n] - $q * $this->H[$i][$n - 1]) / $x;
-                            } else
+                            }
+                            else
                             {
                                 $this->cdiv(-$r - $y * $this->H[$i][$n - 1], -$s - $y * $this->H[$i][$n], $z, $q);
                                 $this->H[$i + 1][$n - 1] = $this->cdivr;
@@ -936,7 +951,8 @@ class EigenvalueDecomposition
             $d = $yr + $r * $yi;
             $this->cdivr = ($xr + $r * $xi) / $d;
             $this->cdivi = ($xi - $r * $xr) / $d;
-        } else
+        }
+        else
         {
             $r = $yr / $yi;
             $d = $yi + $r * $yr;

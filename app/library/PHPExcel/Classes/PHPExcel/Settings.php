@@ -52,15 +52,9 @@ class PHPExcel_Settings
     const PDF_RENDERER_MPDF = 'mPDF';
 
 
-    private static $_chartRenderers = array(
-        self::CHART_RENDERER_JPGRAPH,
-    );
+    private static $_chartRenderers = array(self::CHART_RENDERER_JPGRAPH,);
 
-    private static $_pdfRenderers = array(
-        self::PDF_RENDERER_TCPDF,
-        self::PDF_RENDERER_DOMPDF,
-        self::PDF_RENDERER_MPDF,
-    );
+    private static $_pdfRenderers = array(self::PDF_RENDERER_TCPDF, self::PDF_RENDERER_DOMPDF, self::PDF_RENDERER_MPDF,);
 
 
     /**
@@ -126,7 +120,7 @@ class PHPExcel_Settings
         return self::$_zipClass;
     } // function setZipClass()
 
-/**
+    /**
      * Set the Zip handler Class that PHPExcel should use for Zip file management (PCLZip or ZipArchive)
      *
      * @param string $zipClass The Zip handler class that PHPExcel should use for Zip file management
@@ -135,8 +129,7 @@ class PHPExcel_Settings
      */
     public static function setZipClass($zipClass)
     {
-        if (($zipClass === self::PCLZIP) ||
-            ($zipClass === self::ZIPARCHIVE)
+        if (($zipClass === self::PCLZIP) || ($zipClass === self::ZIPARCHIVE)
         )
         {
             self::$_zipClass = $zipClass;
@@ -145,7 +138,7 @@ class PHPExcel_Settings
         return FALSE;
     } // function getZipClass()
 
-/**
+    /**
      * Return the name of the method that is currently configured for cell cacheing
      *
      * @return string Name of the cacheing method
@@ -174,10 +167,7 @@ class PHPExcel_Settings
      * @param array $arguments Optional configuration arguments for the cacheing method
      * @return boolean Success or failure
      */
-    public static function setCacheStorageMethod(
-        $method = PHPExcel_CachedObjectStorageFactory::cache_in_memory,
-        $arguments = array()
-    )
+    public static function setCacheStorageMethod($method = PHPExcel_CachedObjectStorageFactory::cache_in_memory, $arguments = array())
     {
         return PHPExcel_CachedObjectStorageFactory::initialize($method, $arguments);
     } // function setCacheStorageMethod()
@@ -211,7 +201,7 @@ class PHPExcel_Settings
         return self::setChartRendererPath($libraryBaseDir);
     } // function setChartRenderer()
 
-/**
+    /**
      * Return the Chart Rendering Library that PHPExcel is currently configured to use (e.g. jpgraph)
      *
      * @return string|NULL Internal reference name of the Chart Rendering Library that PHPExcel is
@@ -223,7 +213,7 @@ class PHPExcel_Settings
         return self::$_chartRendererName;
     } // function setChartRendererName()
 
-/**
+    /**
      * Identify to PHPExcel the external library to use for rendering charts
      *
      * @param string $libraryName Internal reference name of the library
@@ -243,7 +233,7 @@ class PHPExcel_Settings
         return TRUE;
     } // function setChartRendererPath()
 
-/**
+    /**
      * Return the directory path to the Chart Rendering Library that PHPExcel is currently configured to use
      *
      * @return string|NULL Directory Path to the Chart Rendering Library that PHPExcel is
@@ -254,7 +244,7 @@ class PHPExcel_Settings
         return self::$_chartRendererPath;
     } // function getChartRendererName()
 
-/**
+    /**
      * Tell PHPExcel where to find the external library to use for rendering charts
      *
      * @param string $libraryBaseDir Directory path to the library's base folder
@@ -271,7 +261,7 @@ class PHPExcel_Settings
         return TRUE;
     } // function getChartRendererPath()
 
-/**
+    /**
      * Set details of the external library that PHPExcel should use for rendering PDF files
      *
      * @param string $libraryName Internal reference name of the library
@@ -289,7 +279,7 @@ class PHPExcel_Settings
         return self::setPdfRendererPath($libraryBaseDir);
     } // function setPdfRenderer()
 
-/**
+    /**
      * Return the PDF Rendering Library that PHPExcel is currently configured to use (e.g. dompdf)
      *
      * @return string|NULL Internal reference name of the PDF Rendering Library that PHPExcel is
@@ -303,7 +293,7 @@ class PHPExcel_Settings
         return self::$_pdfRendererName;
     } // function setPdfRendererName()
 
-/**
+    /**
      * Identify to PHPExcel the external library to use for rendering PDF files
      *
      * @param string $libraryName Internal reference name of the library
@@ -325,7 +315,7 @@ class PHPExcel_Settings
         return TRUE;
     } // function setPdfRendererPath()
 
-/**
+    /**
      * Return the directory path to the PDF Rendering Library that PHPExcel is currently configured to use
      *
      * @return string|NULL Directory Path to the PDF Rendering Library that PHPExcel is

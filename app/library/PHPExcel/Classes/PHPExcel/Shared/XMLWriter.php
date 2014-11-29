@@ -68,7 +68,8 @@ class PHPExcel_Shared_XMLWriter extends XMLWriter
         if ($pTemporaryStorage == self::STORAGE_MEMORY)
         {
             $this->openMemory();
-        } else
+        }
+        else
         {
             // Create temporary filename
             if ($pTemporaryStorageFolder === NULL)
@@ -112,7 +113,8 @@ class PHPExcel_Shared_XMLWriter extends XMLWriter
         if ($this->_tempFileName == '')
         {
             return $this->outputMemory(true);
-        } else
+        }
+        else
         {
             $this->flush();
             return file_get_contents($this->_tempFileName);

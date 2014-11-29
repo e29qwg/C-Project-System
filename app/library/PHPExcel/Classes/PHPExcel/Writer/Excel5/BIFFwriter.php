@@ -101,7 +101,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter
     {
         $this->_data = '';
         $this->_datasize = 0;
-//		$this->_limit      = 8224;
+        //		$this->_limit      = 8224;
     }
 
     /**
@@ -120,10 +120,12 @@ class PHPExcel_Writer_Excel5_BIFFwriter
             if ($number == $teststr)
             {
                 $byte_order = 0;    // Little Endian
-            } elseif ($number == strrev($teststr))
+            }
+            elseif ($number == strrev($teststr))
             {
                 $byte_order = 1;    // Big Endian
-            } else
+            }
+            else
             {
                 // Give up. I'll fix this in a later version.
                 throw new PHPExcel_Writer_Exception("Required floating point format not supported on this platform.");

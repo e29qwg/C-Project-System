@@ -465,22 +465,7 @@ class PHPExcel_Cell_DataValidation
      */
     public function getHashCode()
     {
-        return md5(
-            $this->_formula1
-            . $this->_formula2
-            . $this->_type = PHPExcel_Cell_DataValidation::TYPE_NONE
-                . $this->_errorStyle = PHPExcel_Cell_DataValidation::STYLE_STOP
-                    . $this->_operator
-                    . ($this->_allowBlank ? 't' : 'f')
-                    . ($this->_showDropDown ? 't' : 'f')
-                    . ($this->_showInputMessage ? 't' : 'f')
-                    . ($this->_showErrorMessage ? 't' : 'f')
-                    . $this->_errorTitle
-                    . $this->_error
-                    . $this->_promptTitle
-                    . $this->_prompt
-                    . __CLASS__
-        );
+        return md5($this->_formula1 . $this->_formula2 . $this->_type = PHPExcel_Cell_DataValidation::TYPE_NONE . $this->_errorStyle = PHPExcel_Cell_DataValidation::STYLE_STOP . $this->_operator . ($this->_allowBlank ? 't' : 'f') . ($this->_showDropDown ? 't' : 'f') . ($this->_showInputMessage ? 't' : 'f') . ($this->_showErrorMessage ? 't' : 'f') . $this->_errorTitle . $this->_error . $this->_promptTitle . $this->_prompt . __CLASS__);
     }
 
     /**
@@ -494,7 +479,8 @@ class PHPExcel_Cell_DataValidation
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

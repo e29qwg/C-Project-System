@@ -48,7 +48,7 @@ class PHPExcel_Calculation_Database
 {
 
 
-/**
+    /**
      * DAVERAGE
      *
      * Averages the values in a column of a list or database that match conditions you specify.
@@ -170,7 +170,8 @@ class PHPExcel_Calculation_Database
             {
                 $testConditions[] = 'OR(' . implode(',', $testCondition) . ')';
                 $testConditionsCount++;
-            } elseif ($testConditionCount == 1)
+            }
+            elseif ($testConditionCount == 1)
             {
                 $testConditions[] = $testCondition[0];
                 $testConditionsCount++;
@@ -180,7 +181,8 @@ class PHPExcel_Calculation_Database
         if ($testConditionsCount > 1)
         {
             $testConditionSet = 'AND(' . implode(',', $testConditions) . ')';
-        } elseif ($testConditionsCount == 1)
+        }
+        elseif ($testConditionsCount == 1)
         {
             $testConditionSet = $testConditions[0];
         }
@@ -212,7 +214,7 @@ class PHPExcel_Calculation_Database
         return $database;
     }    //	function DAVERAGE()
 
-/**
+    /**
      * DCOUNT
      *
      * Counts the cells that contain numbers in a column of a list or database that match conditions

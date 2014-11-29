@@ -29,12 +29,8 @@ $projects = Project::find("project_status='Accept'");
 
         foreach ($projects as $project)
         {
-            $projectMap = ProjectMap::findFirst(array(
-                "conditions" => "project_id='$project->project_id' AND map_type = 'advisor'"
-            ));
-            $projectMaps = ProjectMap::find(array(
-                "conditions" => "project_id='$project->project_id' AND map_type = 'coadvisor'"
-            ));
+            $projectMap = ProjectMap::findFirst(array("conditions" => "project_id='$project->project_id' AND map_type = 'advisor'"));
+            $projectMaps = ProjectMap::find(array("conditions" => "project_id='$project->project_id' AND map_type = 'coadvisor'"));
 
             $advisor = User::findFirst("id='$projectMap->user_id'");
             ?>
@@ -54,13 +50,7 @@ $projects = Project::find("project_status='Accept'");
                         $this->tag->setDefault("coadvisor[]", $coadvisors[$i]['user_id']);
                     else
                         $this->tag->setDefault("coadvisor[]", "");
-                    echo $this->tag->select(array(
-                        'coadvisor[]',
-                        User::find("type='Advisor'"),
-                        'using' => array('id', 'name'),
-                        'class' => 'form-control',
-                        'useEmpty' => true
-                    ));
+                    echo $this->tag->select(array('coadvisor[]', User::find("type='Advisor'"), 'using' => array('id', 'name'), 'class' => 'form-control', 'useEmpty' => true));
                     echo '</td>';
                 }
 

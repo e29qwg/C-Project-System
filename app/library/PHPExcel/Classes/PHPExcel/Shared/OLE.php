@@ -126,8 +126,7 @@ class PHPExcel_Shared_OLE
         // days from 1-1-1601 until the beggining of UNIX era
         $days = 134774;
         // calculate seconds
-        $big_date = $days * 24 * 3600 + gmmktime(date("H", $date), date("i", $date), date("s", $date),
-                date("m", $date), date("d", $date), date("Y", $date));
+        $big_date = $days * 24 * 3600 + gmmktime(date("H", $date), date("i", $date), date("s", $date), date("m", $date), date("d", $date), date("Y", $date));
         // multiply just to make MS happy
         $big_date *= 10000000;
 
@@ -299,8 +298,7 @@ class PHPExcel_Shared_OLE
         static $isRegistered = false;
         if (!$isRegistered)
         {
-            stream_wrapper_register('ole-chainedblockstream',
-                'PHPExcel_Shared_OLE_ChainedBlockStream');
+            stream_wrapper_register('ole-chainedblockstream', 'PHPExcel_Shared_OLE_ChainedBlockStream');
             $isRegistered = true;
         }
 
@@ -315,7 +313,8 @@ class PHPExcel_Shared_OLE
         {
             $path .= '&blockId=' . $blockIdOrPps->_StartBlock;
             $path .= '&size=' . $blockIdOrPps->Size;
-        } else
+        }
+        else
         {
             $path .= '&blockId=' . $blockIdOrPps;
         }
@@ -349,8 +348,7 @@ class PHPExcel_Shared_OLE
                     $this->root = $pps;
                     break;
                 case self::OLE_PPS_TYPE_DIR:
-                    $pps = new PHPExcel_Shared_OLE_PPS(null, null, null, null, null,
-                        null, null, null, null, array());
+                    $pps = new PHPExcel_Shared_OLE_PPS(null, null, null, null, null, null, null, null, null, array());
                     break;
                 case self::OLE_PPS_TYPE_FILE:
                     $pps = new PHPExcel_Shared_OLE_PPS_File($name);
@@ -373,8 +371,7 @@ class PHPExcel_Shared_OLE
             $this->_list[] = $pps;
 
             // check if the PPS tree (starting from root) is complete
-            if (isset($this->root) &&
-                $this->_ppsTreeComplete($this->root->No)
+            if (isset($this->root) && $this->_ppsTreeComplete($this->root->No)
             )
             {
 
@@ -461,14 +458,7 @@ class PHPExcel_Shared_OLE
      */
     public function _ppsTreeComplete($index)
     {
-        return isset($this->_list[$index]) &&
-        ($pps = $this->_list[$index]) &&
-        ($pps->PrevPps == -1 ||
-            $this->_ppsTreeComplete($pps->PrevPps)) &&
-        ($pps->NextPps == -1 ||
-            $this->_ppsTreeComplete($pps->NextPps)) &&
-        ($pps->DirPps == -1 ||
-            $this->_ppsTreeComplete($pps->DirPps));
+        return isset($this->_list[$index]) && ($pps = $this->_list[$index]) && ($pps->PrevPps == -1 || $this->_ppsTreeComplete($pps->PrevPps)) && ($pps->NextPps == -1 || $this->_ppsTreeComplete($pps->NextPps)) && ($pps->DirPps == -1 || $this->_ppsTreeComplete($pps->DirPps));
     }
 
     /**

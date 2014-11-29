@@ -67,11 +67,13 @@ class CholeskyDecomposition
                         if ($sum >= 0)
                         {
                             $this->L[$i][$i] = sqrt($sum);
-                        } else
+                        }
+                        else
                         {
                             $this->isspd = false;
                         }
-                    } else
+                    }
+                    else
                     {
                         if ($this->L[$i][$i] != 0)
                         {
@@ -85,7 +87,8 @@ class CholeskyDecomposition
                     $this->L[$i][$k] = 0.0;
                 }
             }
-        } else
+        }
+        else
         {
             throw new PHPExcel_Calculation_Exception(JAMAError(ArgumentTypeException));
         }
@@ -163,15 +166,18 @@ class CholeskyDecomposition
                     }
 
                     return new Matrix($X, $this->m, $nx);
-                } else
+                }
+                else
                 {
                     throw new PHPExcel_Calculation_Exception(JAMAError(MatrixSPDException));
                 }
-            } else
+            }
+            else
             {
                 throw new PHPExcel_Calculation_Exception(JAMAError(MatrixDimensionException));
             }
-        } else
+        }
+        else
         {
             throw new PHPExcel_Calculation_Exception(JAMAError(ArgumentTypeException));
         }

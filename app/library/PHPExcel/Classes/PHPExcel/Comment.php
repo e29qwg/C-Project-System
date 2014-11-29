@@ -305,18 +305,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
      */
     public function getHashCode()
     {
-        return md5(
-            $this->_author
-            . $this->_text->getHashCode()
-            . $this->_width
-            . $this->_height
-            . $this->_marginLeft
-            . $this->_marginTop
-            . ($this->_visible ? 1 : 0)
-            . $this->_fillColor->getHashCode()
-            . $this->_alignment
-            . __CLASS__
-        );
+        return md5($this->_author . $this->_text->getHashCode() . $this->_width . $this->_height . $this->_marginLeft . $this->_marginTop . ($this->_visible ? 1 : 0) . $this->_fillColor->getHashCode() . $this->_alignment . __CLASS__);
     }
 
     /**
@@ -330,7 +319,8 @@ class PHPExcel_Comment implements PHPExcel_IComparable
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

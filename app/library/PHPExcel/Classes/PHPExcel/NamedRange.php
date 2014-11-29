@@ -93,8 +93,7 @@ class PHPExcel_NamedRange
         $this->_worksheet = $pWorksheet;
         $this->_range = $pRange;
         $this->_localOnly = $pLocalOnly;
-        $this->_scope = ($pLocalOnly == true) ?
-            (($pScope == null) ? $pWorksheet : $pScope) : null;
+        $this->_scope = ($pLocalOnly == true) ? (($pScope == null) ? $pWorksheet : $pScope) : null;
     }
 
     /**
@@ -258,7 +257,8 @@ class PHPExcel_NamedRange
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

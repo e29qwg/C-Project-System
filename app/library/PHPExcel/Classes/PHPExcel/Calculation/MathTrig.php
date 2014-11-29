@@ -80,8 +80,7 @@ class PHPExcel_Calculation_MathTrig
         $xCoordinate = ($xCoordinate !== NULL) ? $xCoordinate : 0.0;
         $yCoordinate = ($yCoordinate !== NULL) ? $yCoordinate : 0.0;
 
-        if (((is_numeric($xCoordinate)) || (is_bool($xCoordinate))) &&
-            ((is_numeric($yCoordinate))) || (is_bool($yCoordinate))
+        if (((is_numeric($xCoordinate)) || (is_bool($xCoordinate))) && ((is_numeric($yCoordinate))) || (is_bool($yCoordinate))
         )
         {
             $xCoordinate = (float)$xCoordinate;
@@ -97,7 +96,7 @@ class PHPExcel_Calculation_MathTrig
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function _factors()
 
-/**
+    /**
      * COMBIN
      *
      * Returns the number of combinations for a given number of items. Use COMBIN to
@@ -122,7 +121,8 @@ class PHPExcel_Calculation_MathTrig
             if ($numObjs < $numInSet)
             {
                 return PHPExcel_Calculation_Functions::NaN();
-            } elseif ($numInSet < 0)
+            }
+            elseif ($numInSet < 0)
             {
                 return PHPExcel_Calculation_Functions::NaN();
             }
@@ -131,7 +131,7 @@ class PHPExcel_Calculation_MathTrig
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function _romanCut()
 
-/**
+    /**
      * FACT
      *
      * Returns the factorial of a number.
@@ -174,7 +174,7 @@ class PHPExcel_Calculation_MathTrig
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function ATAN2()
 
-/**
+    /**
      * FACTDOUBLE
      *
      * Returns the double factorial of a number.
@@ -209,7 +209,7 @@ class PHPExcel_Calculation_MathTrig
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function CEILING()
 
-/**
+    /**
      * FLOOR
      *
      * Rounds number down, toward zero, to the nearest multiple of significance.
@@ -242,7 +242,8 @@ class PHPExcel_Calculation_MathTrig
             if (self::SIGN($number) == self::SIGN($significance))
             {
                 return floor($number / $significance) * $significance;
-            } else
+            }
+            else
             {
                 return PHPExcel_Calculation_Functions::NaN();
             }
@@ -250,7 +251,7 @@ class PHPExcel_Calculation_MathTrig
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function COMBIN()
 
-/**
+    /**
      * SIGN
      *
      * Determines the sign of a number. Returns 1 if the number is positive, zero (0)
@@ -276,7 +277,7 @@ class PHPExcel_Calculation_MathTrig
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function EVEN()
 
-/**
+    /**
      * GCD
      *
      * Returns the greatest common divisor of a series of numbers.
@@ -301,10 +302,12 @@ class PHPExcel_Calculation_MathTrig
             if (!is_numeric($value))
             {
                 return PHPExcel_Calculation_Functions::VALUE();
-            } elseif ($value == 0)
+            }
+            elseif ($value == 0)
             {
                 continue;
-            } elseif ($value < 0)
+            }
+            elseif ($value < 0)
             {
                 return PHPExcel_Calculation_Functions::NaN();
             }
@@ -327,7 +330,8 @@ class PHPExcel_Calculation_MathTrig
         if ($mergedArrayValues == 0)
         {
             return $returnValue;
-        } elseif ($mergedArrayValues > 1)
+        }
+        elseif ($mergedArrayValues > 1)
         {
             foreach ($mergedArray as $mergedKey => $mergedValue)
             {
@@ -350,7 +354,8 @@ class PHPExcel_Calculation_MathTrig
                 $returnValue *= pow($key, $value);
             }
             return $returnValue;
-        } else
+        }
+        else
         {
             $keys = array_keys($mergedArray);
             $key = $keys[0];
@@ -369,7 +374,7 @@ class PHPExcel_Calculation_MathTrig
         }
     }    //	function FACT()
 
-private static function _factors($value)
+    private static function _factors($value)
     {
         $startVal = floor(sqrt($value));
 
@@ -390,13 +395,14 @@ private static function _factors($value)
         {
             rsort($factorArray);
             return $factorArray;
-        } else
+        }
+        else
         {
             return array((integer)$value);
         }
     }    //	function FACTDOUBLE()
 
-/**
+    /**
      * INT
      *
      * Casts a floating point value to an integer
@@ -416,7 +422,8 @@ private static function _factors($value)
         if (is_null($number))
         {
             return 0;
-        } elseif (is_bool($number))
+        }
+        elseif (is_bool($number))
         {
             return (int)$number;
         }
@@ -427,7 +434,7 @@ private static function _factors($value)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function FLOOR()
 
-/**
+    /**
      * LCM
      *
      * Returns the lowest common multiplier of a series of numbers
@@ -457,7 +464,8 @@ private static function _factors($value)
             if ($value == 0)
             {
                 return 0;
-            } elseif ($value < 0)
+            }
+            elseif ($value < 0)
             {
                 return PHPExcel_Calculation_Functions::NaN();
             }
@@ -476,7 +484,8 @@ private static function _factors($value)
                     {
                         $allPoweredFactors[$myPoweredValue] = $myPoweredFactor;
                     }
-                } else
+                }
+                else
                 {
                     $allPoweredFactors[$myPoweredValue] = $myPoweredFactor;
                 }
@@ -489,7 +498,7 @@ private static function _factors($value)
         return $returnValue;
     }    //	function GCD()
 
-/**
+    /**
      * LOG_BASE
      *
      * Returns the logarithm of a number to a specified base. The default base is 10.
@@ -515,7 +524,7 @@ private static function _factors($value)
         return log($number, $base);
     }    //	function INT()
 
-/**
+    /**
      * MDETERM
      *
      * Returns the matrix determinant of an array.
@@ -574,7 +583,7 @@ private static function _factors($value)
         }
     }    //	function LCM()
 
-/**
+    /**
      * MINVERSE
      *
      * Returns the inverse matrix for the matrix stored in an array.
@@ -633,7 +642,7 @@ private static function _factors($value)
         }
     }    //	function LOG_BASE()
 
-/**
+    /**
      * MMULT
      *
      * @param    array $matrixData1 A matrix of values
@@ -707,7 +716,7 @@ private static function _factors($value)
         }
     }    //	function MDETERM()
 
-/**
+    /**
      * MOD
      *
      * @param    int $a Dividend
@@ -722,10 +731,12 @@ private static function _factors($value)
         if ($b == 0.0)
         {
             return PHPExcel_Calculation_Functions::DIV0();
-        } elseif (($a < 0.0) && ($b > 0.0))
+        }
+        elseif (($a < 0.0) && ($b > 0.0))
         {
             return $b - fmod(abs($a), $b);
-        } elseif (($a > 0.0) && ($b < 0.0))
+        }
+        elseif (($a > 0.0) && ($b < 0.0))
         {
             return $b + fmod($a, abs($b));
         }
@@ -733,7 +744,7 @@ private static function _factors($value)
         return fmod($a, $b);
     }    //	function MINVERSE()
 
-/**
+    /**
      * MROUND
      *
      * Rounds a number to the nearest multiple of a specified value
@@ -763,7 +774,7 @@ private static function _factors($value)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function MMULT()
 
-/**
+    /**
      * MULTINOMIAL
      *
      * Returns the ratio of the factorial of a sum of values to the product of factorials.
@@ -787,7 +798,8 @@ private static function _factors($value)
                 }
                 $summer += floor($arg);
                 $divisor *= self::FACT($arg);
-            } else
+            }
+            else
             {
                 return PHPExcel_Calculation_Functions::VALUE();
             }
@@ -802,7 +814,7 @@ private static function _factors($value)
         return 0;
     }    //	function MOD()
 
-/**
+    /**
      * ODD
      *
      * Returns number rounded up to the nearest odd integer.
@@ -817,7 +829,8 @@ private static function _factors($value)
         if (is_null($number))
         {
             return 1;
-        } elseif (is_bool($number))
+        }
+        elseif (is_bool($number))
         {
             $number = (int)$number;
         }
@@ -841,7 +854,7 @@ private static function _factors($value)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function MROUND()
 
-/**
+    /**
      * CEILING
      *
      * Returns number rounded up, away from zero, to the nearest multiple of significance.
@@ -863,8 +876,7 @@ private static function _factors($value)
         $number = PHPExcel_Calculation_Functions::flattenSingleValue($number);
         $significance = PHPExcel_Calculation_Functions::flattenSingleValue($significance);
 
-        if ((is_null($significance)) &&
-            (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_GNUMERIC)
+        if ((is_null($significance)) && (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_GNUMERIC)
         )
         {
             $significance = $number / abs($number);
@@ -875,10 +887,12 @@ private static function _factors($value)
             if ($significance == 0.0)
             {
                 return 0.0;
-            } elseif (self::SIGN($number) == self::SIGN($significance))
+            }
+            elseif (self::SIGN($number) == self::SIGN($significance))
             {
                 return ceil($number / $significance) * $significance;
-            } else
+            }
+            else
             {
                 return PHPExcel_Calculation_Functions::NaN();
             }
@@ -886,7 +900,7 @@ private static function _factors($value)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function MULTINOMIAL()
 
-/**
+    /**
      * EVEN
      *
      * Returns number rounded up to the nearest even integer.
@@ -910,7 +924,8 @@ private static function _factors($value)
         if (is_null($number))
         {
             return 0;
-        } elseif (is_bool($number))
+        }
+        elseif (is_bool($number))
         {
             $number = (int)$number;
         }
@@ -923,7 +938,7 @@ private static function _factors($value)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function ODD()
 
-/**
+    /**
      * POWER
      *
      * Computes x raised to the power y.
@@ -941,7 +956,8 @@ private static function _factors($value)
         if ($x == 0.0 && $y == 0.0)
         {
             return PHPExcel_Calculation_Functions::NaN();
-        } elseif ($x == 0.0 && $y < 0.0)
+        }
+        elseif ($x == 0.0 && $y < 0.0)
         {
             return PHPExcel_Calculation_Functions::DIV0();
         }
@@ -951,7 +967,7 @@ private static function _factors($value)
         return (!is_nan($result) && !is_infinite($result)) ? $result : PHPExcel_Calculation_Functions::NaN();
     }    //	function POWER()
 
-/**
+    /**
      * QUOTIENT
      *
      * QUOTIENT function returns the integer portion of a division. Numerator is the divided number
@@ -979,12 +995,14 @@ private static function _factors($value)
                 if (is_null($returnValue))
                 {
                     $returnValue = ($arg == 0) ? 0 : $arg;
-                } else
+                }
+                else
                 {
                     if (($returnValue == 0) || ($arg == 0))
                     {
                         $returnValue = 0;
-                    } else
+                    }
+                    else
                     {
                         $returnValue /= $arg;
                     }
@@ -996,7 +1014,7 @@ private static function _factors($value)
         return intval($returnValue);
     }    //	function PRODUCT()
 
-/**
+    /**
      * RAND
      *
      * @param    int $min Minimal value
@@ -1011,13 +1029,14 @@ private static function _factors($value)
         if ($min == 0 && $max == 0)
         {
             return (rand(0, 10000000)) / 10000000;
-        } else
+        }
+        else
         {
             return rand($min, $max);
         }
     }    //	function QUOTIENT()
 
-public static function ROMAN($aValue, $style = 0)
+    public static function ROMAN($aValue, $style = 0)
     {
         $aValue = PHPExcel_Calculation_Functions::flattenSingleValue($aValue);
         $style = (is_null($style)) ? 0 : (integer)PHPExcel_Calculation_Functions::flattenSingleValue($style);
@@ -1052,12 +1071,12 @@ public static function ROMAN($aValue, $style = 0)
         return $roman . $mill[$m] . $cent[$c] . $tens[$t] . $ones[$aValue];
     }    //	function RAND()
 
-private static function _romanCut($num, $n)
+    private static function _romanCut($num, $n)
     {
         return ($num - ($num % $n)) / $n;
     }    //	function ROMAN()
 
-/**
+    /**
      * ROUNDUP
      *
      * Rounds a number up to a specified number of decimal places
@@ -1077,7 +1096,8 @@ private static function _romanCut($num, $n)
             if ($number < 0.0)
             {
                 return floor($number * $significance) / $significance;
-            } else
+            }
+            else
             {
                 return ceil($number * $significance) / $significance;
             }
@@ -1106,7 +1126,8 @@ private static function _romanCut($num, $n)
             if ($number < 0.0)
             {
                 return ceil($number * $significance) / $significance;
-            } else
+            }
+            else
             {
                 return floor($number * $significance) / $significance;
             }
@@ -1148,7 +1169,8 @@ private static function _romanCut($num, $n)
                 if ((is_numeric($arg)) && (!is_string($arg)))
                 {
                     $returnValue += $arg * pow($x, $n + ($m * $i++));
-                } else
+                }
+                else
                 {
                     return PHPExcel_Calculation_Functions::VALUE();
                 }
@@ -1159,7 +1181,7 @@ private static function _romanCut($num, $n)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function SERIESSUM()
 
-/**
+    /**
      * SQRTPI
      *
      * Returns the square root of (number * pi).
@@ -1182,7 +1204,7 @@ private static function _romanCut($num, $n)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function SIGN()
 
-/**
+    /**
      * SUBTOTAL
      *
      * Returns a subtotal in a list or database.
@@ -1241,7 +1263,7 @@ private static function _romanCut($num, $n)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function SQRTPI()
 
-/**
+    /**
      * PRODUCT
      *
      * PRODUCT returns the product of all the values and cells referenced in the argument list.
@@ -1268,7 +1290,8 @@ private static function _romanCut($num, $n)
                 if (is_null($returnValue))
                 {
                     $returnValue = $arg;
-                } else
+                }
+                else
                 {
                     $returnValue *= $arg;
                 }
@@ -1283,7 +1306,7 @@ private static function _romanCut($num, $n)
         return $returnValue;
     }    //	function SUBTOTAL()
 
-/**
+    /**
      * SUM
      *
      * SUM computes the sum of all the values and cells referenced in the argument list.
@@ -1462,7 +1485,8 @@ private static function _romanCut($num, $n)
         if ($count1 < $count2)
         {
             $count = $count1;
-        } else
+        }
+        else
         {
             $count = $count2;
         }
@@ -1470,8 +1494,7 @@ private static function _romanCut($num, $n)
         $result = 0;
         for ($i = 0; $i < $count; ++$i)
         {
-            if (((is_numeric($array1[$i])) && (!is_string($array1[$i]))) &&
-                ((is_numeric($array2[$i])) && (!is_string($array2[$i])))
+            if (((is_numeric($array1[$i])) && (!is_string($array1[$i]))) && ((is_numeric($array2[$i])) && (!is_string($array2[$i])))
             )
             {
                 $result += ($array1[$i] * $array1[$i]) - ($array2[$i] * $array2[$i]);
@@ -1498,7 +1521,8 @@ private static function _romanCut($num, $n)
         if ($count1 < $count2)
         {
             $count = $count1;
-        } else
+        }
+        else
         {
             $count = $count2;
         }
@@ -1506,8 +1530,7 @@ private static function _romanCut($num, $n)
         $result = 0;
         for ($i = 0; $i < $count; ++$i)
         {
-            if (((is_numeric($array1[$i])) && (!is_string($array1[$i]))) &&
-                ((is_numeric($array2[$i])) && (!is_string($array2[$i])))
+            if (((is_numeric($array1[$i])) && (!is_string($array1[$i]))) && ((is_numeric($array2[$i])) && (!is_string($array2[$i])))
             )
             {
                 $result += ($array1[$i] * $array1[$i]) + ($array2[$i] * $array2[$i]);
@@ -1534,7 +1557,8 @@ private static function _romanCut($num, $n)
         if ($count1 < $count2)
         {
             $count = $count1;
-        } else
+        }
+        else
         {
             $count = $count2;
         }
@@ -1542,8 +1566,7 @@ private static function _romanCut($num, $n)
         $result = 0;
         for ($i = 0; $i < $count; ++$i)
         {
-            if (((is_numeric($array1[$i])) && (!is_string($array1[$i]))) &&
-                ((is_numeric($array2[$i])) && (!is_string($array2[$i])))
+            if (((is_numeric($array1[$i])) && (!is_string($array1[$i]))) && ((is_numeric($array2[$i])) && (!is_string($array2[$i])))
             )
             {
                 $result += ($array1[$i] - $array2[$i]) * ($array1[$i] - $array2[$i]);

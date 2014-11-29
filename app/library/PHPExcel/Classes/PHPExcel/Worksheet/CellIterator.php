@@ -140,8 +140,7 @@ class PHPExcel_Worksheet_CellIterator implements Iterator
             // because the first column doesn't exist or next() has
             // been called onto a nonexistent cell, then loop until we
             // find one, or pass the last column.
-            while ($this->_position < $columnCount &&
-                !$this->_subject->cellExistsByColumnAndRow($this->_position, $this->_rowIndex))
+            while ($this->_position < $columnCount && !$this->_subject->cellExistsByColumnAndRow($this->_position, $this->_rowIndex))
             {
                 ++$this->_position;
             }

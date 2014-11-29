@@ -129,7 +129,8 @@ class PHPExcel_Shared_JAMA_LUDecomposition
                     }
                 }
             }
-        } else
+        }
+        else
         {
             throw new PHPExcel_Calculation_Exception(PHPExcel_Shared_JAMA_Matrix::ArgumentTypeException);
         }
@@ -150,10 +151,12 @@ class PHPExcel_Shared_JAMA_LUDecomposition
                 if ($i > $j)
                 {
                     $L[$i][$j] = $this->LU[$i][$j];
-                } elseif ($i == $j)
+                }
+                elseif ($i == $j)
                 {
                     $L[$i][$j] = 1.0;
-                } else
+                }
+                else
                 {
                     $L[$i][$j] = 0.0;
                 }
@@ -177,7 +180,8 @@ class PHPExcel_Shared_JAMA_LUDecomposition
                 if ($i <= $j)
                 {
                     $U[$i][$j] = $this->LU[$i][$j];
-                } else
+                }
+                else
                 {
                     $U[$i][$j] = 0.0;
                 }
@@ -186,7 +190,7 @@ class PHPExcel_Shared_JAMA_LUDecomposition
         return new PHPExcel_Shared_JAMA_Matrix($U);
     }    //	function getU()
 
-/**
+    /**
      *    Alias for getPivot
      *
      * @see getPivot
@@ -196,7 +200,7 @@ class PHPExcel_Shared_JAMA_LUDecomposition
         return $this->getPivot();
     }    //	function getPivot()
 
-/**
+    /**
      *    Return pivot permutation vector.
      *
      * @return array Pivot vector
@@ -206,7 +210,7 @@ class PHPExcel_Shared_JAMA_LUDecomposition
         return $this->piv;
     }    //	function getDoublePivot()
 
-/**
+    /**
      *    Count determinants
      *
      * @return array d matrix deterninat
@@ -221,13 +225,14 @@ class PHPExcel_Shared_JAMA_LUDecomposition
                 $d *= $this->LU[$j][$j];
             }
             return $d;
-        } else
+        }
+        else
         {
             throw new PHPExcel_Calculation_Exception(PHPExcel_Shared_JAMA_Matrix::MatrixDimensionException);
         }
     }    //	function isNonsingular()
 
-/**
+    /**
      *    Solve A*X = B
      *
      * @param  $B  A Matrix with as many rows as A and any number of columns.
@@ -271,17 +276,19 @@ class PHPExcel_Shared_JAMA_LUDecomposition
                     }
                 }
                 return $X;
-            } else
+            }
+            else
             {
                 throw new PHPExcel_Calculation_Exception(self::MatrixSingularException);
             }
-        } else
+        }
+        else
         {
             throw new PHPExcel_Calculation_Exception(self::MatrixSquareException);
         }
     }    //	function det()
 
-/**
+    /**
      *    Is the matrix nonsingular?
      *
      * @return true if U, and hence A, is nonsingular.

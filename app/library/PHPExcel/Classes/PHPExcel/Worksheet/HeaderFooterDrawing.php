@@ -244,7 +244,8 @@ class PHPExcel_Worksheet_HeaderFooterDrawing extends PHPExcel_Worksheet_Drawing 
             {
                 $this->_height = ceil($xratio * $this->_height);
                 $this->_width = $width;
-            } else
+            }
+            else
             {
                 $this->_width = ceil($yratio * $this->_width);
                 $this->_height = $height;
@@ -327,11 +328,13 @@ class PHPExcel_Worksheet_HeaderFooterDrawing extends PHPExcel_Worksheet_Drawing 
                     // Get width/height
                     list($this->_width, $this->_height) = getimagesize($pValue);
                 }
-            } else
+            }
+            else
             {
                 throw new PHPExcel_Exception("File $pValue not found!");
             }
-        } else
+        }
+        else
         {
             $this->_path = $pValue;
         }
@@ -345,15 +348,7 @@ class PHPExcel_Worksheet_HeaderFooterDrawing extends PHPExcel_Worksheet_Drawing 
      */
     public function getHashCode()
     {
-        return md5(
-            $this->_path
-            . $this->_name
-            . $this->_offsetX
-            . $this->_offsetY
-            . $this->_width
-            . $this->_height
-            . __CLASS__
-        );
+        return md5($this->_path . $this->_name . $this->_offsetX . $this->_offsetY . $this->_width . $this->_height . __CLASS__);
     }
 
     /**
@@ -367,7 +362,8 @@ class PHPExcel_Worksheet_HeaderFooterDrawing extends PHPExcel_Worksheet_Drawing 
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

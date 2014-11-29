@@ -79,9 +79,7 @@ $user = User::findFirst("id='$user_id'");
         <div class="col-sm-7">
             <?=
 
-            $this->tag->fileField(array(
-                'profile_picture'
-            ));
+            $this->tag->fileField(array('profile_picture'));
             ?>
         </div>
     </div>

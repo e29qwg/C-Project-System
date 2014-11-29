@@ -162,7 +162,8 @@ class PHPExcel_RichText implements PHPExcel_IComparable
         if (is_array($pElements))
         {
             $this->_richTextElements = $pElements;
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception("Invalid PHPExcel_RichText_ITextElement[] array passed.");
         }
@@ -182,10 +183,7 @@ class PHPExcel_RichText implements PHPExcel_IComparable
             $hashElements .= $element->getHashCode();
         }
 
-        return md5(
-            $hashElements
-            . __CLASS__
-        );
+        return md5($hashElements . __CLASS__);
     }
 
     /**
@@ -199,7 +197,8 @@ class PHPExcel_RichText implements PHPExcel_IComparable
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

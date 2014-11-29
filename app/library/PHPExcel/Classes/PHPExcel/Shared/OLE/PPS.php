@@ -137,7 +137,8 @@ class PHPExcel_Shared_OLE_PPS
         if ($data != '')
         {
             $this->Size = strlen($data);
-        } else
+        }
+        else
         {
             $this->Size = 0;
         }
@@ -157,7 +158,8 @@ class PHPExcel_Shared_OLE_PPS
         if (!is_array($to_save) || (empty($to_save)))
         {
             return 0xFFFFFFFF;
-        } elseif (count($to_save) == 1)
+        }
+        elseif (count($to_save) == 1)
         {
             $cnt = count($raList);
             // If the first entry, it's the root... Don't clone it!
@@ -166,7 +168,8 @@ class PHPExcel_Shared_OLE_PPS
             $raList[$cnt]->PrevPps = 0xFFFFFFFF;
             $raList[$cnt]->NextPps = 0xFFFFFFFF;
             $raList[$cnt]->DirPps = self::_savePpsSetPnt($raList, @$raList[$cnt]->children, $depth++);
-        } else
+        }
+        else
         {
             $iPos = floor(count($to_save) / 2);
             $aPrev = array_slice($to_save, 0, $iPos);
@@ -227,8 +230,7 @@ class PHPExcel_Shared_OLE_PPS
             . "\x00\x00\x00\x00"                  // 100
             . PHPExcel_Shared_OLE::LocalDate2OLE($this->Time1st)       // 108
             . PHPExcel_Shared_OLE::LocalDate2OLE($this->Time2nd)       // 116
-            . pack("V", isset($this->_StartBlock) ?
-                $this->_StartBlock : 0)        // 120
+            . pack("V", isset($this->_StartBlock) ? $this->_StartBlock : 0)        // 120
             . pack("V", $this->Size)               // 124
             . pack("V", 0);                        // 128
         return $ret;

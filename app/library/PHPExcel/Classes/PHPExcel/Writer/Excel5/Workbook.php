@@ -194,9 +194,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
      * @param array &$colors Colour Table
      * @param mixed $parser The formula parser created for the Workbook
      */
-    public function __construct(PHPExcel $phpExcel = null,
-                                &$str_total, &$str_unique, &$str_table, &$colors,
-                                $parser)
+    public function __construct(PHPExcel $phpExcel = null, &$str_total, &$str_unique, &$str_table, &$colors, $parser)
     {
         // It needs to call its parent's constructor explicitly
         parent::__construct();
@@ -246,64 +244,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
      */
     function _setPaletteXl97()
     {
-        $this->_palette = array(
-            0x08 => array(0x00, 0x00, 0x00, 0x00),
-            0x09 => array(0xff, 0xff, 0xff, 0x00),
-            0x0A => array(0xff, 0x00, 0x00, 0x00),
-            0x0B => array(0x00, 0xff, 0x00, 0x00),
-            0x0C => array(0x00, 0x00, 0xff, 0x00),
-            0x0D => array(0xff, 0xff, 0x00, 0x00),
-            0x0E => array(0xff, 0x00, 0xff, 0x00),
-            0x0F => array(0x00, 0xff, 0xff, 0x00),
-            0x10 => array(0x80, 0x00, 0x00, 0x00),
-            0x11 => array(0x00, 0x80, 0x00, 0x00),
-            0x12 => array(0x00, 0x00, 0x80, 0x00),
-            0x13 => array(0x80, 0x80, 0x00, 0x00),
-            0x14 => array(0x80, 0x00, 0x80, 0x00),
-            0x15 => array(0x00, 0x80, 0x80, 0x00),
-            0x16 => array(0xc0, 0xc0, 0xc0, 0x00),
-            0x17 => array(0x80, 0x80, 0x80, 0x00),
-            0x18 => array(0x99, 0x99, 0xff, 0x00),
-            0x19 => array(0x99, 0x33, 0x66, 0x00),
-            0x1A => array(0xff, 0xff, 0xcc, 0x00),
-            0x1B => array(0xcc, 0xff, 0xff, 0x00),
-            0x1C => array(0x66, 0x00, 0x66, 0x00),
-            0x1D => array(0xff, 0x80, 0x80, 0x00),
-            0x1E => array(0x00, 0x66, 0xcc, 0x00),
-            0x1F => array(0xcc, 0xcc, 0xff, 0x00),
-            0x20 => array(0x00, 0x00, 0x80, 0x00),
-            0x21 => array(0xff, 0x00, 0xff, 0x00),
-            0x22 => array(0xff, 0xff, 0x00, 0x00),
-            0x23 => array(0x00, 0xff, 0xff, 0x00),
-            0x24 => array(0x80, 0x00, 0x80, 0x00),
-            0x25 => array(0x80, 0x00, 0x00, 0x00),
-            0x26 => array(0x00, 0x80, 0x80, 0x00),
-            0x27 => array(0x00, 0x00, 0xff, 0x00),
-            0x28 => array(0x00, 0xcc, 0xff, 0x00),
-            0x29 => array(0xcc, 0xff, 0xff, 0x00),
-            0x2A => array(0xcc, 0xff, 0xcc, 0x00),
-            0x2B => array(0xff, 0xff, 0x99, 0x00),
-            0x2C => array(0x99, 0xcc, 0xff, 0x00),
-            0x2D => array(0xff, 0x99, 0xcc, 0x00),
-            0x2E => array(0xcc, 0x99, 0xff, 0x00),
-            0x2F => array(0xff, 0xcc, 0x99, 0x00),
-            0x30 => array(0x33, 0x66, 0xff, 0x00),
-            0x31 => array(0x33, 0xcc, 0xcc, 0x00),
-            0x32 => array(0x99, 0xcc, 0x00, 0x00),
-            0x33 => array(0xff, 0xcc, 0x00, 0x00),
-            0x34 => array(0xff, 0x99, 0x00, 0x00),
-            0x35 => array(0xff, 0x66, 0x00, 0x00),
-            0x36 => array(0x66, 0x66, 0x99, 0x00),
-            0x37 => array(0x96, 0x96, 0x96, 0x00),
-            0x38 => array(0x00, 0x33, 0x66, 0x00),
-            0x39 => array(0x33, 0x99, 0x66, 0x00),
-            0x3A => array(0x00, 0x33, 0x00, 0x00),
-            0x3B => array(0x33, 0x33, 0x00, 0x00),
-            0x3C => array(0x99, 0x33, 0x00, 0x00),
-            0x3D => array(0x99, 0x33, 0x66, 0x00),
-            0x3E => array(0x33, 0x33, 0x99, 0x00),
-            0x3F => array(0x33, 0x33, 0x33, 0x00),
-        );
+        $this->_palette = array(0x08 => array(0x00, 0x00, 0x00, 0x00), 0x09 => array(0xff, 0xff, 0xff, 0x00), 0x0A => array(0xff, 0x00, 0x00, 0x00), 0x0B => array(0x00, 0xff, 0x00, 0x00), 0x0C => array(0x00, 0x00, 0xff, 0x00), 0x0D => array(0xff, 0xff, 0x00, 0x00), 0x0E => array(0xff, 0x00, 0xff, 0x00), 0x0F => array(0x00, 0xff, 0xff, 0x00), 0x10 => array(0x80, 0x00, 0x00, 0x00), 0x11 => array(0x00, 0x80, 0x00, 0x00), 0x12 => array(0x00, 0x00, 0x80, 0x00), 0x13 => array(0x80, 0x80, 0x00, 0x00), 0x14 => array(0x80, 0x00, 0x80, 0x00), 0x15 => array(0x00, 0x80, 0x80, 0x00), 0x16 => array(0xc0, 0xc0, 0xc0, 0x00), 0x17 => array(0x80, 0x80, 0x80, 0x00), 0x18 => array(0x99, 0x99, 0xff, 0x00), 0x19 => array(0x99, 0x33, 0x66, 0x00), 0x1A => array(0xff, 0xff, 0xcc, 0x00), 0x1B => array(0xcc, 0xff, 0xff, 0x00), 0x1C => array(0x66, 0x00, 0x66, 0x00), 0x1D => array(0xff, 0x80, 0x80, 0x00), 0x1E => array(0x00, 0x66, 0xcc, 0x00), 0x1F => array(0xcc, 0xcc, 0xff, 0x00), 0x20 => array(0x00, 0x00, 0x80, 0x00), 0x21 => array(0xff, 0x00, 0xff, 0x00), 0x22 => array(0xff, 0xff, 0x00, 0x00), 0x23 => array(0x00, 0xff, 0xff, 0x00), 0x24 => array(0x80, 0x00, 0x80, 0x00), 0x25 => array(0x80, 0x00, 0x00, 0x00), 0x26 => array(0x00, 0x80, 0x80, 0x00), 0x27 => array(0x00, 0x00, 0xff, 0x00), 0x28 => array(0x00, 0xcc, 0xff, 0x00), 0x29 => array(0xcc, 0xff, 0xff, 0x00), 0x2A => array(0xcc, 0xff, 0xcc, 0x00), 0x2B => array(0xff, 0xff, 0x99, 0x00), 0x2C => array(0x99, 0xcc, 0xff, 0x00), 0x2D => array(0xff, 0x99, 0xcc, 0x00), 0x2E => array(0xcc, 0x99, 0xff, 0x00), 0x2F => array(0xff, 0xcc, 0x99, 0x00), 0x30 => array(0x33, 0x66, 0xff, 0x00), 0x31 => array(0x33, 0xcc, 0xcc, 0x00), 0x32 => array(0x99, 0xcc, 0x00, 0x00), 0x33 => array(0xff, 0xcc, 0x00, 0x00), 0x34 => array(0xff, 0x99, 0x00, 0x00), 0x35 => array(0xff, 0x66, 0x00, 0x00), 0x36 => array(0x66, 0x66, 0x99, 0x00), 0x37 => array(0x96, 0x96, 0x96, 0x00), 0x38 => array(0x00, 0x33, 0x66, 0x00), 0x39 => array(0x33, 0x99, 0x66, 0x00), 0x3A => array(0x00, 0x33, 0x00, 0x00), 0x3B => array(0x33, 0x33, 0x00, 0x00), 0x3C => array(0x99, 0x33, 0x00, 0x00), 0x3D => array(0x99, 0x33, 0x66, 0x00), 0x3E => array(0x33, 0x33, 0x99, 0x00), 0x3F => array(0x33, 0x33, 0x33, 0x00),);
     }
 
     /**
@@ -320,20 +261,16 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
             {
                 // then we add a custom color altering the palette
                 $colorIndex = 8 + count($this->_colors);
-                $this->_palette[$colorIndex] =
-                    array(
-                        hexdec(substr($rgb, 0, 2)),
-                        hexdec(substr($rgb, 2, 2)),
-                        hexdec(substr($rgb, 4)),
-                        0
-                    );
+                $this->_palette[$colorIndex] = array(hexdec(substr($rgb, 0, 2)), hexdec(substr($rgb, 2, 2)), hexdec(substr($rgb, 4)), 0);
                 $this->_colors[$rgb] = $colorIndex;
-            } else
+            }
+            else
             {
                 // no room for more custom colors, just map to black
                 $colorIndex = 0;
             }
-        } else
+        }
+        else
         {
             // fetch already added custom color
             $colorIndex = $this->_colors[$rgb];
@@ -377,13 +314,15 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
             if (isset($this->_addedNumberFormats[$numberFormatHashCode]))
             {
                 $numberFormatIndex = $this->_addedNumberFormats[$numberFormatHashCode];
-            } else
+            }
+            else
             {
                 $numberFormatIndex = 164 + count($this->_numberFormats);
                 $this->_numberFormats[$numberFormatIndex] = $style->getNumberFormat();
                 $this->_addedNumberFormats[$numberFormatHashCode] = $numberFormatIndex;
             }
-        } else
+        }
+        else
         {
             $numberFormatIndex = (int)$style->getNumberFormat()->getBuiltInFormatCode();
         }
@@ -409,7 +348,8 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
         if (isset($this->_addedFonts[$fontHashCode]))
         {
             $fontIndex = $this->_addedFonts[$fontHashCode];
-        } else
+        }
+        else
         {
             $countFonts = count($this->_fontWriters);
             $fontIndex = ($countFonts < 4) ? $countFonts : $countFonts + 1;
@@ -521,10 +461,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
         $itabCur = $this->_phpExcel->getActiveSheetIndex();    // Active worksheet
 
         $header = pack("vv", $record, $length);
-        $data = pack("vvvvvvvvv", $xWn, $yWn, $dxWn, $dyWn,
-            $grbit,
-            $itabCur, $itabFirst,
-            $ctabsel, $wTabRatio);
+        $data = pack("vvvvvvvvv", $xWn, $yWn, $dxWn, $dyWn, $grbit, $itabCur, $itabFirst, $ctabsel, $wTabRatio);
         $this->_append($header . $data);
     }
 
@@ -536,8 +473,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
         $record = 0x0022;         // Record identifier
         $length = 0x0002;         // Bytes to follow
 
-        $f1904 = (PHPExcel_Shared_Date::getExcelCalendar() == PHPExcel_Shared_Date::CALENDAR_MAC_1904) ?
-            1 : 0;   // Flag for 1904 date system
+        $f1904 = (PHPExcel_Shared_Date::getExcelCalendar() == PHPExcel_Shared_Date::CALENDAR_MAC_1904) ? 1 : 0;   // Flag for 1904 date system
 
         $header = pack("vv", $record, $length);
         $data = pack("v", $f1904);
@@ -759,7 +695,8 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
                     {
                         // local scope
                         $scope = $this->_phpExcel->getIndex($namedRange->getScope()) + 1;
-                    } else
+                    }
+                    else
                     {
                         // global scope
                         $scope = 0;
@@ -801,7 +738,8 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
                 $chunk .= $this->writeData($this->_writeDefinedNameBiff8(pack('C', 0x07), $formulaData, $i + 1, true));
 
                 // (exclusive) either repeatColumns or repeatRows
-            } else if ($sheetSetup->isColumnsToRepeatAtLeftSet() || $sheetSetup->isRowsToRepeatAtTopSet())
+            }
+            else if ($sheetSetup->isColumnsToRepeatAtLeftSet() || $sheetSetup->isRowsToRepeatAtTopSet())
             {
 
                 // Columns to repeat
@@ -810,7 +748,8 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
                     $repeat = $sheetSetup->getColumnsToRepeatAtLeft();
                     $colmin = PHPExcel_Cell::columnIndexFromString($repeat[0]) - 1;
                     $colmax = PHPExcel_Cell::columnIndexFromString($repeat[1]) - 1;
-                } else
+                }
+                else
                 {
                     $colmin = 0;
                     $colmax = 255;
@@ -821,7 +760,8 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
                     $repeat = $sheetSetup->getRowsToRepeatAtTop();
                     $rowmin = $repeat[0] - 1;
                     $rowmax = $repeat[1] - 1;
-                } else
+                }
+                else
                 {
                     $rowmin = 0;
                     $rowmax = 65535;
@@ -916,8 +856,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
         $sz = strlen($formulaData);
 
         // combine the parts
-        $data = pack('vCCvvvCCCC', $options, 0, $nlen, $sz, 0, $sheetIndex, 0, 0, 0, 0)
-            . $name . $formulaData;
+        $data = pack('vCCvvvCCCC', $options, 0, $nlen, $sz, 0, $sheetIndex, 0, 0, 0, 0) . $name . $formulaData;
         $length = strlen($data);
 
         $header = pack('vv', $record, $length);
@@ -941,20 +880,13 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
         // option flags
         $options = ($isHidden ? 0x21 : 0x00);
 
-        $extra = pack('Cvvvvv',
-            0x3B,
-            $sheetIndex - 1,
-            $rangeBounds[0][1] - 1,
-            $rangeBounds[1][1] - 1,
-            $rangeBounds[0][0] - 1,
-            $rangeBounds[1][0] - 1);
+        $extra = pack('Cvvvvv', 0x3B, $sheetIndex - 1, $rangeBounds[0][1] - 1, $rangeBounds[1][1] - 1, $rangeBounds[0][0] - 1, $rangeBounds[1][0] - 1);
 
         // size of the formula (in bytes)
         $sz = strlen($extra);
 
         // combine the parts
-        $data = pack('vCCvvvCCCCC', $options, 0, 1, $sz, 0, $sheetIndex, 0, 0, 0, 0, 0)
-            . $name . $extra;
+        $data = pack('vCCvvvCCCCC', $options, 0, 1, $sz, 0, $sheetIndex, 0, 0, 0, 0, 0) . $name . $extra;
         $length = strlen($data);
 
         $header = pack('vv', $record, $length);
@@ -979,7 +911,8 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
 
             return $this->writeData($header . $data);
 
-        } else
+        }
+        else
         {
             return '';
         }
@@ -1046,7 +979,8 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
 
                     // we are finished writing this string
                     $finished = true;
-                } else
+                }
+                else
                 {
                     // special treatment writing the string (or remainder of the string)
                     // If the string is very long it may need to be written in more than one CONTINUE record.
@@ -1075,7 +1009,8 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
                         $recordData = '';
 
                         // 2. space remaining is greater than or equal to minimum space needed
-                    } else
+                    }
+                    else
                     {
                         // initialize effective remaining space, for Unicode strings this may need to be reduced by 1, see below
                         $effective_space_remaining = $space_remaining;
@@ -1298,14 +1233,9 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
                 $print_colmin = PHPExcel_Cell::columnIndexFromString($printArea[0][0]) - 1;
                 $print_colmax = PHPExcel_Cell::columnIndexFromString($printArea[1][0]) - 1;
 
-                $this->_writeNameShort(
-                    $i, // sheet index
+                $this->_writeNameShort($i, // sheet index
                     0x06, // NAME type
-                    $print_rowmin,
-                    $print_rowmax,
-                    $print_colmin,
-                    $print_colmax
-                );
+                    $print_rowmin, $print_rowmax, $print_colmin, $print_colmax);
             }
         }
 
@@ -1325,17 +1255,13 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
                 $rowmin = $repeat[0] - 1;
                 $rowmax = $repeat[1] - 1;
 
-                $this->_writeNameLong(
-                    $i, // sheet index
+                $this->_writeNameLong($i, // sheet index
                     0x07, // NAME type
-                    $rowmin,
-                    $rowmax,
-                    $colmin,
-                    $colmax
-                );
+                    $rowmin, $rowmax, $colmin, $colmax);
 
                 // (exclusive) either repeatColumns or repeatRows
-            } else if ($sheetSetup->isColumnsToRepeatAtLeftSet() || $sheetSetup->isRowsToRepeatAtTopSet())
+            }
+            else if ($sheetSetup->isColumnsToRepeatAtLeftSet() || $sheetSetup->isRowsToRepeatAtTopSet())
             {
 
                 // Columns to repeat
@@ -1344,7 +1270,8 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
                     $repeat = $sheetSetup->getColumnsToRepeatAtLeft();
                     $colmin = PHPExcel_Cell::columnIndexFromString($repeat[0]) - 1;
                     $colmax = PHPExcel_Cell::columnIndexFromString($repeat[1]) - 1;
-                } else
+                }
+                else
                 {
                     $colmin = 0;
                     $colmax = 255;
@@ -1356,20 +1283,16 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
                     $repeat = $sheetSetup->getRowsToRepeatAtTop();
                     $rowmin = $repeat[0] - 1;
                     $rowmax = $repeat[1] - 1;
-                } else
+                }
+                else
                 {
                     $rowmin = 0;
                     $rowmax = 65535;
                 }
 
-                $this->_writeNameShort(
-                    $i, // sheet index
+                $this->_writeNameShort($i, // sheet index
                     0x07, // NAME type
-                    $rowmin,
-                    $rowmax,
-                    $colmin,
-                    $colmax
-                );
+                    $rowmin, $rowmax, $colmin, $colmax);
             }
         }
     }

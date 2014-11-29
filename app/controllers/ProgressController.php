@@ -59,11 +59,7 @@ class ProgressController extends ControllerBase
 
         $this->flash->success('Update Success');
 
-        return $this->dispatcher->forward(array(
-            'controller' => 'progress',
-            'action' => 'index',
-            'params' => array($id)
-        ));
+        return $this->dispatcher->forward(array('controller' => 'progress', 'action' => 'index', 'params' => array($id)));
     }
 
     public function editAction()
@@ -196,11 +192,7 @@ class ProgressController extends ControllerBase
         if (!$progress->save())
         {
             $this->flash->error('Database Failure');
-            return $this->dispatcher->forward(array(
-                'controller' => 'progress',
-                'action' => 'newProgress',
-                'params' => array($project_id)
-            ));
+            return $this->dispatcher->forward(array('controller' => 'progress', 'action' => 'newProgress', 'params' => array($project_id)));
         }
 
         $evaluate = new ProgressEvaluate();
@@ -210,11 +202,7 @@ class ProgressController extends ControllerBase
         {
             $progress->delete();
             $this->flash->error('Database Failure');
-            return $this->dispatcher->forward(array(
-                'controller' => 'progress',
-                'action' => 'newProgress',
-                'params' => array($project_id)
-            ));
+            return $this->dispatcher->forward(array('controller' => 'progress', 'action' => 'newProgress', 'params' => array($project_id)));
         }
 
         $this->flashSession->success('Add progress success');
@@ -249,11 +237,7 @@ class ProgressController extends ControllerBase
         $this->_checkPermission($params[0]);
 
         if ($auth['type'] != 'Student')
-            return $this->dispatcher->forward(array(
-                'controller' => 'progress',
-                'action' => 'evaluate',
-                'params' => array($params[0])
-            ));
+            return $this->dispatcher->forward(array('controller' => 'progress', 'action' => 'evaluate', 'params' => array($params[0])));
     }
 }
 

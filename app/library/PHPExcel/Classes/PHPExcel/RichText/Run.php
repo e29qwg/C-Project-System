@@ -82,11 +82,7 @@ class PHPExcel_RichText_Run extends PHPExcel_RichText_TextElement implements PHP
      */
     public function getHashCode()
     {
-        return md5(
-            $this->getText()
-            . $this->_font->getHashCode()
-            . __CLASS__
-        );
+        return md5($this->getText() . $this->_font->getHashCode() . __CLASS__);
     }
 
     /**
@@ -100,7 +96,8 @@ class PHPExcel_RichText_Run extends PHPExcel_RichText_TextElement implements PHP
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

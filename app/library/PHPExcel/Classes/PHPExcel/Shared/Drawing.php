@@ -57,7 +57,8 @@ class PHPExcel_Shared_Drawing
         if ($pValue != 0)
         {
             return round($pValue / 9525);
-        } else
+        }
+        else
         {
             return 0;
         }
@@ -81,16 +82,13 @@ class PHPExcel_Shared_Drawing
         if (isset(PHPExcel_Shared_Font::$defaultColumnWidths[$name][$size]))
         {
             // Exact width can be determined
-            $colWidth = $pValue
-                * PHPExcel_Shared_Font::$defaultColumnWidths[$name][$size]['width']
-                / PHPExcel_Shared_Font::$defaultColumnWidths[$name][$size]['px'];
-        } else
+            $colWidth = $pValue * PHPExcel_Shared_Font::$defaultColumnWidths[$name][$size]['width'] / PHPExcel_Shared_Font::$defaultColumnWidths[$name][$size]['px'];
+        }
+        else
         {
             // We don't have data for this particular font and size, use approximation by
             // extrapolating from Calibri 11
-            $colWidth = $pValue * 11
-                * PHPExcel_Shared_Font::$defaultColumnWidths['Calibri'][11]['width']
-                / PHPExcel_Shared_Font::$defaultColumnWidths['Calibri'][11]['px'] / $size;
+            $colWidth = $pValue * 11 * PHPExcel_Shared_Font::$defaultColumnWidths['Calibri'][11]['width'] / PHPExcel_Shared_Font::$defaultColumnWidths['Calibri'][11]['px'] / $size;
         }
 
         return $colWidth;
@@ -112,17 +110,14 @@ class PHPExcel_Shared_Drawing
         if (isset(PHPExcel_Shared_Font::$defaultColumnWidths[$name][$size]))
         {
             // Exact width can be determined
-            $colWidth = $pValue
-                * PHPExcel_Shared_Font::$defaultColumnWidths[$name][$size]['px']
-                / PHPExcel_Shared_Font::$defaultColumnWidths[$name][$size]['width'];
+            $colWidth = $pValue * PHPExcel_Shared_Font::$defaultColumnWidths[$name][$size]['px'] / PHPExcel_Shared_Font::$defaultColumnWidths[$name][$size]['width'];
 
-        } else
+        }
+        else
         {
             // We don't have data for this particular font and size, use approximation by
             // extrapolating from Calibri 11
-            $colWidth = $pValue * $size
-                * PHPExcel_Shared_Font::$defaultColumnWidths['Calibri'][11]['px']
-                / PHPExcel_Shared_Font::$defaultColumnWidths['Calibri'][11]['width'] / 11;
+            $colWidth = $pValue * $size * PHPExcel_Shared_Font::$defaultColumnWidths['Calibri'][11]['px'] / PHPExcel_Shared_Font::$defaultColumnWidths['Calibri'][11]['width'] / 11;
         }
 
         // Round pixels to closest integer
@@ -153,7 +148,8 @@ class PHPExcel_Shared_Drawing
         if ($pValue != 0)
         {
             return (int)ceil($pValue * 1.333333333);
-        } else
+        }
+        else
         {
             return 0;
         }
@@ -181,7 +177,8 @@ class PHPExcel_Shared_Drawing
         if ($pValue != 0)
         {
             return round($pValue / 60000);
-        } else
+        }
+        else
         {
             return 0;
         }

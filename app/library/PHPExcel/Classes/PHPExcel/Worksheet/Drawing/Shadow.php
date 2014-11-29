@@ -275,16 +275,7 @@ class PHPExcel_Worksheet_Drawing_Shadow implements PHPExcel_IComparable
      */
     public function getHashCode()
     {
-        return md5(
-            ($this->_visible ? 't' : 'f')
-            . $this->_blurRadius
-            . $this->_distance
-            . $this->_direction
-            . $this->_alignment
-            . $this->_color->getHashCode()
-            . $this->_alpha
-            . __CLASS__
-        );
+        return md5(($this->_visible ? 't' : 'f') . $this->_blurRadius . $this->_distance . $this->_direction . $this->_alignment . $this->_color->getHashCode() . $this->_alpha . __CLASS__);
     }
 
     /**
@@ -298,7 +289,8 @@ class PHPExcel_Worksheet_Drawing_Shadow implements PHPExcel_IComparable
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

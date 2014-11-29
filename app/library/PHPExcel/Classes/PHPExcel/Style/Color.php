@@ -111,24 +111,28 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
             $red += (255 - $red) * $adjustPercentage;
             $green += (255 - $green) * $adjustPercentage;
             $blue += (255 - $blue) * $adjustPercentage;
-        } else
+        }
+        else
         {
             $red += $red * $adjustPercentage;
             $green += $green * $adjustPercentage;
             $blue += $blue * $adjustPercentage;
         }
 
-        if ($red < 0) $red = 0;
-        elseif ($red > 255) $red = 255;
-        if ($green < 0) $green = 0;
-        elseif ($green > 255) $green = 255;
-        if ($blue < 0) $blue = 0;
-        elseif ($blue > 255) $blue = 255;
+        if ($red < 0)
+            $red = 0;
+        elseif ($red > 255)
+            $red = 255;
+        if ($green < 0)
+            $green = 0;
+        elseif ($green > 255)
+            $green = 255;
+        if ($blue < 0)
+            $blue = 0;
+        elseif ($blue > 255)
+            $blue = 255;
 
-        $rgb = strtoupper(str_pad(dechex($red), 2, '0', 0) .
-            str_pad(dechex($green), 2, '0', 0) .
-            str_pad(dechex($blue), 2, '0', 0)
-        );
+        $rgb = strtoupper(str_pad(dechex($red), 2, '0', 0) . str_pad(dechex($green), 2, '0', 0) . str_pad(dechex($blue), 2, '0', 0));
         return (($rgba) ? 'FF' : '') . $rgb;
     }
 
@@ -205,8 +209,7 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
         // Indexed colors
         if (is_null(self::$_indexedColors))
         {
-            self::$_indexedColors = array(
-                1 => 'FF000000',    //	System Colour #1 - Black
+            self::$_indexedColors = array(1 => 'FF000000',    //	System Colour #1 - Black
                 2 => 'FFFFFFFF',    //	System Colour #2 - White
                 3 => 'FFFF0000',    //	System Colour #3 - Red
                 4 => 'FF00FF00',    //	System Colour #4 - Green
@@ -309,7 +312,8 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
             if ($this->_isSupervisor)
             {
                 $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($this->getStyleArray($pStyles));
-            } else
+            }
+            else
             {
                 if (array_key_exists('rgb', $pStyles))
                 {
@@ -320,7 +324,8 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
                     $this->setARGB($pStyles['argb']);
                 }
             }
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception("Invalid style array passed.");
         }
@@ -367,7 +372,8 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
         {
             $styleArray = $this->getStyleArray(array('argb' => 'FF' . $pValue));
             $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
-        } else
+        }
+        else
         {
             $this->_argb = 'FF' . $pValue;
         }
@@ -404,7 +410,8 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
         {
             $styleArray = $this->getStyleArray(array('argb' => $pValue));
             $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
-        } else
+        }
+        else
         {
             $this->_argb = $pValue;
         }
@@ -458,10 +465,7 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
         {
             return $this->getSharedComponent()->getHashCode();
         }
-        return md5(
-            $this->_argb
-            . __CLASS__
-        );
+        return md5($this->_argb . __CLASS__);
     }
 
 }

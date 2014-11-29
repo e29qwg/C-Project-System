@@ -435,7 +435,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
                         {
                             $pValue = PHPExcel_Shared_String::Substring($pValue, 0, 28);
                         }
-                    } elseif ($i == 100)
+                    }
+                    elseif ($i == 100)
                     {
                         if (PHPExcel_Shared_String::CountCharacters($pValue) > 27)
                         {
@@ -457,8 +458,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         {
             // New title
             $newTitle = $this->getTitle();
-            PHPExcel_Calculation::getInstance($this->_parent)
-                ->renameCalculationCacheForWorksheet($oldTitle, $newTitle);
+            PHPExcel_Calculation::getInstance($this->_parent)->renameCalculationCacheForWorksheet($oldTitle, $newTitle);
             if ($updateFormulaCellReferences)
                 PHPExcel_ReferenceHelper::getInstance()->updateNamedFormulas($this->_parent, $oldTitle, $newTitle);
         }
@@ -466,7 +466,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         return $this;
     }
 
-        /**
+    /**
      * Get array of invalid characters for sheet title
      *
      * @return array
@@ -491,9 +491,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
             throw new PHPExcel_Exception('Sheet code name cannot be empty.');
         }
         // Some of the printable ASCII characters are invalid:  * : / \ ? [ ] and  first and last characters cannot be a "'"
-        if ((str_replace(self::$_invalidCharacters, '', $pValue) !== $pValue) ||
-            (PHPExcel_Shared_String::Substring($pValue, -1, 1) == '\'') ||
-            (PHPExcel_Shared_String::Substring($pValue, 0, 1) == '\'')
+        if ((str_replace(self::$_invalidCharacters, '', $pValue) !== $pValue) || (PHPExcel_Shared_String::Substring($pValue, -1, 1) == '\'') || (PHPExcel_Shared_String::Substring($pValue, 0, 1) == '\'')
         )
         {
             throw new PHPExcel_Exception('Invalid character found in sheet code name');
@@ -538,8 +536,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
      */
     function __destruct()
     {
-        PHPExcel_Calculation::getInstance($this->_parent)
-            ->clearCalculationCacheForWorksheet($this->_title);
+        PHPExcel_Calculation::getInstance($this->_parent)->clearCalculationCacheForWorksheet($this->_title);
 
         $this->disconnectCells();
     }
@@ -560,7 +557,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         $this->_parent = null;
     }
 
-/**
+    /**
      * Return the cache controller for the cell collection
      *
      * @return PHPExcel_CachedObjectStorage_xxx
@@ -613,7 +610,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         if (is_null($iChartIndex))
         {
             $this->_chartCollection[] = $pChart;
-        } else
+        }
+        else
         {
             // Insert the chart at the requested index
             array_splice($this->_chartCollection, $iChartIndex, 0, array($pChart));
@@ -879,20 +877,9 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
                     {
                         // Calculated value
                         // To formatted string
-                        $cellValue = PHPExcel_Style_NumberFormat::toFormattedString(
-                            $cell->getCalculatedValue(),
-                            $this->getParent()->getCellXfByIndex($cell->getXfIndex())->getNumberFormat()->getFormatCode()
-                        );
+                        $cellValue = PHPExcel_Style_NumberFormat::toFormattedString($cell->getCalculatedValue(), $this->getParent()->getCellXfByIndex($cell->getXfIndex())->getNumberFormat()->getFormatCode());
 
-                        $autoSizes[$this->_cellCollection->getCurrentColumn()] = max(
-                            (float)$autoSizes[$this->_cellCollection->getCurrentColumn()],
-                            (float)PHPExcel_Shared_Font::calculateColumnWidth(
-                                $this->getParent()->getCellXfByIndex($cell->getXfIndex())->getFont(),
-                                $cellValue,
-                                $this->getParent()->getCellXfByIndex($cell->getXfIndex())->getAlignment()->getTextRotation(),
-                                $this->getDefaultStyle()->getFont()
-                            )
-                        );
+                        $autoSizes[$this->_cellCollection->getCurrentColumn()] = max((float)$autoSizes[$this->_cellCollection->getCurrentColumn()], (float)PHPExcel_Shared_Font::calculateColumnWidth($this->getParent()->getCellXfByIndex($cell->getXfIndex())->getFont(), $cellValue, $this->getParent()->getCellXfByIndex($cell->getXfIndex())->getAlignment()->getTextRotation(), $this->getDefaultStyle()->getFont()));
                     }
                 }
             }
@@ -900,7 +887,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
             // adjust column widths
             foreach ($autoSizes as $columnIndex => $width)
             {
-                if ($width == -1) $width = $this->getDefaultColumnDimension()->getWidth();
+                if ($width == -1)
+                    $width = $this->getDefaultColumnDimension()->getWidth();
                 $this->getColumnDimension($columnIndex)->setWidth($width);
             }
         }
@@ -988,8 +976,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         }
 
         // Named range?
-        if ((!preg_match('/^' . PHPExcel_Calculation::CALCULATION_REGEXP_CELLREF . '$/i', $pCoordinate, $matches)) &&
-            (preg_match('/^' . PHPExcel_Calculation::CALCULATION_REGEXP_NAMEDRANGE . '$/i', $pCoordinate, $matches))
+        if ((!preg_match('/^' . PHPExcel_Calculation::CALCULATION_REGEXP_CELLREF . '$/i', $pCoordinate, $matches)) && (preg_match('/^' . PHPExcel_Calculation::CALCULATION_REGEXP_NAMEDRANGE . '$/i', $pCoordinate, $matches))
         )
         {
             $namedRange = PHPExcel_NamedRange::resolveRange($pCoordinate, $this);
@@ -1006,7 +993,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         if (strpos($pCoordinate, ':') !== false || strpos($pCoordinate, ',') !== false)
         {
             throw new PHPExcel_Exception('Cell coordinate can not be a range of cells.');
-        } elseif (strpos($pCoordinate, '$') !== false)
+        }
+        elseif (strpos($pCoordinate, '$') !== false)
         {
             throw new PHPExcel_Exception('Cell coordinate must not be absolute.');
         }
@@ -1035,9 +1023,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
 
         if ($returnRange)
         {
-            return array(trim(substr($pRange, 0, $sep), "'"),
-                substr($pRange, $sep + 1)
-            );
+            return array(trim(substr($pRange, 0, $sep), "'"), substr($pRange, $sep + 1));
         }
 
         return substr($pRange, $sep + 1);
@@ -1051,14 +1037,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
      */
     private function _createNewCell($pCoordinate)
     {
-        $cell = $this->_cellCollection->addCacheData(
-            $pCoordinate,
-            new PHPExcel_Cell(
-                NULL,
-                PHPExcel_Cell_DataType::TYPE_NULL,
-                $this
-            )
-        );
+        $cell = $this->_cellCollection->addCacheData($pCoordinate, new PHPExcel_Cell(NULL, PHPExcel_Cell_DataType::TYPE_NULL, $this));
         $this->_cellCollectionIsSorted = false;
 
         // Coordinates
@@ -1076,7 +1055,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         {
             // then there is a row dimension with explicit style, assign it to the cell
             $cell->setXfIndex($rowDimension->getXfIndex());
-        } elseif ($columnDimension !== NULL && $columnDimension->getXfIndex() > 0)
+        }
+        elseif ($columnDimension !== NULL && $columnDimension->getXfIndex() > 0)
         {
             // then there is a column dimension, assign it to the cell
             $cell->setXfIndex($columnDimension->getXfIndex());
@@ -1180,9 +1160,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
                 $parent->addNamedRange($namedRange);
             }
 
-            $this->_parent->removeSheetByIndex(
-                $this->_parent->getIndex($this)
-            );
+            $this->_parent->removeSheetByIndex($this->_parent->getIndex($this));
         }
         $this->_parent = $parent;
 
@@ -1443,8 +1421,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         }
 
         // Named range?
-        if ((!preg_match('/^' . PHPExcel_Calculation::CALCULATION_REGEXP_CELLREF . '$/i', $pCoordinate, $matches)) &&
-            (preg_match('/^' . PHPExcel_Calculation::CALCULATION_REGEXP_NAMEDRANGE . '$/i', $pCoordinate, $matches))
+        if ((!preg_match('/^' . PHPExcel_Calculation::CALCULATION_REGEXP_CELLREF . '$/i', $pCoordinate, $matches)) && (preg_match('/^' . PHPExcel_Calculation::CALCULATION_REGEXP_NAMEDRANGE . '$/i', $pCoordinate, $matches))
         )
         {
             $namedRange = PHPExcel_NamedRange::resolveRange($pCoordinate, $this);
@@ -1456,12 +1433,14 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
                     if (!$namedRange->getLocalOnly())
                     {
                         return $namedRange->getWorksheet()->cellExists($pCoordinate);
-                    } else
+                    }
+                    else
                     {
                         throw new PHPExcel_Exception('Named range ' . $namedRange->getName() . ' is not accessible from within sheet ' . $this->getTitle());
                     }
                 }
-            } else
+            }
+            else
             {
                 return false;
             }
@@ -1473,10 +1452,12 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         if (strpos($pCoordinate, ':') !== false || strpos($pCoordinate, ',') !== false)
         {
             throw new PHPExcel_Exception('Cell coordinate can not be a range of cells.');
-        } elseif (strpos($pCoordinate, '$') !== false)
+        }
+        elseif (strpos($pCoordinate, '$') !== false)
         {
             throw new PHPExcel_Exception('Cell coordinate must not be absolute.');
-        } else
+        }
+        else
         {
             // Coordinates
             $aCoordinates = PHPExcel_Cell::coordinateFromString($pCoordinate);
@@ -1495,11 +1476,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
     {
         if ($this->_dirty)
         {
-            $this->_hash = md5($this->_title .
-                $this->_autoFilter .
-                ($this->_protection->isProtectionEnabled() ? 't' : 'f') .
-                __CLASS__
-            );
+            $this->_hash = md5($this->_title . $this->_autoFilter . ($this->_protection->isProtectionEnabled() ? 't' : 'f') . __CLASS__);
             $this->_dirty = false;
         }
         return $this->_hash;
@@ -1536,12 +1513,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
      */
     public function setDefaultStyle(PHPExcel_Style $pValue)
     {
-        $this->_parent->getDefaultStyle()->applyFromArray(array(
-            'font' => array(
-                'name' => $pValue->getFont()->getName(),
-                'size' => $pValue->getFont()->getSize(),
-            ),
-        ));
+        $this->_parent->getDefaultStyle()->applyFromArray(array('font' => array('name' => $pValue->getFont()->getName(), 'size' => $pValue->getFont()->getSize(),),));
         return $this;
     }
 
@@ -1665,7 +1637,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         {
             // there is already such cell Xf in our collection
             $xfIndex = $existingStyle->getIndex();
-        } else
+        }
+        else
         {
             // we don't have such a cell Xf, need to add
             $workbook->addCellXf($pCellStyle);
@@ -1805,11 +1778,13 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
                 {
                     unset($this->_breaks[$pCell]);
                 }
-            } else
+            }
+            else
             {
                 $this->_breaks[$pCell] = $pBreak;
             }
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception('No cell coordinate specified.');
         }
@@ -1878,7 +1853,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
                 $this->getCell($aReferences[$i])->setValueExplicit(null, PHPExcel_Cell_DataType::TYPE_NULL);
             }
 
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception('Merge must be set on a range of cells.');
         }
@@ -1919,11 +1895,13 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
             if (isset($this->_mergeCells[$pRange]))
             {
                 unset($this->_mergeCells[$pRange]);
-            } else
+            }
+            else
             {
                 throw new PHPExcel_Exception('Cell range ' . $pRange . ' not known as merged.');
             }
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception('Merge can only be removed from a range of cells.');
         }
@@ -2005,7 +1983,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         if (isset($this->_protectedCells[$pRange]))
         {
             unset($this->_protectedCells[$pRange]);
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception('Cell range ' . $pRange . ' not known as protected.');
         }
@@ -2045,7 +2024,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         if (is_string($pValue))
         {
             $this->_autoFilter->setRange($pValue);
-        } elseif (is_object($pValue) && ($pValue instanceof PHPExcel_Worksheet_AutoFilter))
+        }
+        elseif (is_object($pValue) && ($pValue instanceof PHPExcel_Worksheet_AutoFilter))
         {
             $this->_autoFilter = $pValue;
         }
@@ -2064,11 +2044,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
      */
     public function setAutoFilterByColumnAndRow($pColumn1 = 0, $pRow1 = 1, $pColumn2 = 0, $pRow2 = 1)
     {
-        return $this->setAutoFilter(
-            PHPExcel_Cell::stringFromColumnIndex($pColumn1) . $pRow1
-            . ':' .
-            PHPExcel_Cell::stringFromColumnIndex($pColumn2) . $pRow2
-        );
+        return $this->setAutoFilter(PHPExcel_Cell::stringFromColumnIndex($pColumn1) . $pRow1 . ':' . PHPExcel_Cell::stringFromColumnIndex($pColumn2) . $pRow2);
     }
 
     /**
@@ -2125,7 +2101,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         if (strpos($pCell, ':') === false && strpos($pCell, ',') === false)
         {
             $this->_freezePane = $pCell;
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception('Freeze pane can not be set on a range of cells.');
         }
@@ -2156,7 +2133,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         {
             $objReferenceHelper = PHPExcel_ReferenceHelper::getInstance();
             $objReferenceHelper->insertNewBefore('A' . $pBefore, 0, $pNumRows, $this);
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception("Rows can only be inserted before at least row 1.");
         }
@@ -2176,7 +2154,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         if ($pBefore >= 0)
         {
             return $this->insertNewColumnBefore(PHPExcel_Cell::stringFromColumnIndex($pBefore), $pNumCols);
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception("Columns can only be inserted before at least column A (0).");
         }
@@ -2196,7 +2175,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         {
             $objReferenceHelper = PHPExcel_ReferenceHelper::getInstance();
             $objReferenceHelper->insertNewBefore($pBefore . '1', $pNumCols, 0, $this);
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception("Column references should not be numeric.");
         }
@@ -2217,7 +2197,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         {
             $objReferenceHelper = PHPExcel_ReferenceHelper::getInstance();
             $objReferenceHelper->insertNewBefore('A' . ($pRow + $pNumRows), 0, -$pNumRows, $this);
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception("Rows to be deleted should at least start from row 1.");
         }
@@ -2237,7 +2218,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         if ($pColumn >= 0)
         {
             return $this->removeColumn(PHPExcel_Cell::stringFromColumnIndex($pColumn), $pNumCols);
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception("Columns to be deleted should at least start from column 0");
         }
@@ -2258,7 +2240,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
             $pColumn = PHPExcel_Cell::stringFromColumnIndex(PHPExcel_Cell::columnIndexFromString($pColumn) - 1 + $pNumCols);
             $objReferenceHelper = PHPExcel_ReferenceHelper::getInstance();
             $objReferenceHelper->insertNewBefore($pColumn . '1', -$pNumCols, 0, $this);
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception("Column references should not be numeric.");
         }
@@ -2425,20 +2408,24 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         if (strpos($pCellCoordinate, ':') !== false || strpos($pCellCoordinate, ',') !== false)
         {
             throw new PHPExcel_Exception('Cell coordinate string can not be a range of cells.');
-        } else if (strpos($pCellCoordinate, '$') !== false)
+        }
+        else if (strpos($pCellCoordinate, '$') !== false)
         {
             throw new PHPExcel_Exception('Cell coordinate string must not be absolute.');
-        } else if ($pCellCoordinate == '')
+        }
+        else if ($pCellCoordinate == '')
         {
             throw new PHPExcel_Exception('Cell coordinate can not be zero-length string.');
-        } else
+        }
+        else
         {
             // Check if we already have a comment for this cell.
             // If not, create a new comment.
             if (isset($this->_comments[$pCellCoordinate]))
             {
                 return $this->_comments[$pCellCoordinate];
-            } else
+            }
+            else
             {
                 $newComment = new PHPExcel_Comment();
                 $this->_comments[$pCellCoordinate] = $newComment;
@@ -2496,7 +2483,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         {
             list($first,) = PHPExcel_Cell::splitRange($pCoordinate);
             $this->_activeCell = $first[0];
-        } else
+        }
+        else
         {
             $this->_activeCell = $pCoordinate;
         }
@@ -2596,7 +2584,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
                             // Set cell value
                             $this->getCell($currentColumn . $startRow)->setValue($cellValue);
                         }
-                    } else
+                    }
+                    else
                     {
                         if ($cellValue != $nullValue)
                         {
@@ -2608,7 +2597,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
                 }
                 ++$startRow;
             }
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception("Parameter \$source should be an array.");
         }
@@ -2635,8 +2625,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
             $pWorkSheet = $namedRange->getWorksheet();
             $pCellRange = $namedRange->getRange();
 
-            return $pWorkSheet->rangeToArray($pCellRange,
-                $nullValue, $calculateFormulas, $formatData, $returnCellRef);
+            return $pWorkSheet->rangeToArray($pCellRange, $nullValue, $calculateFormulas, $formatData, $returnCellRef);
         }
 
         throw new PHPExcel_Exception('Named Range ' . $pNamedRange . ' does not exist.');
@@ -2686,12 +2675,14 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
                         if ($cell->getValue() instanceof PHPExcel_RichText)
                         {
                             $returnValue[$rRef][$cRef] = $cell->getValue()->getPlainText();
-                        } else
+                        }
+                        else
                         {
                             if ($calculateFormulas)
                             {
                                 $returnValue[$rRef][$cRef] = $cell->getCalculatedValue();
-                            } else
+                            }
+                            else
                             {
                                 $returnValue[$rRef][$cRef] = $cell->getValue();
                             }
@@ -2700,19 +2691,16 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
                         if ($formatData)
                         {
                             $style = $this->_parent->getCellXfByIndex($cell->getXfIndex());
-                            $returnValue[$rRef][$cRef] = PHPExcel_Style_NumberFormat::toFormattedString(
-                                $returnValue[$rRef][$cRef],
-                                ($style && $style->getNumberFormat()) ?
-                                    $style->getNumberFormat()->getFormatCode() :
-                                    PHPExcel_Style_NumberFormat::FORMAT_GENERAL
-                            );
+                            $returnValue[$rRef][$cRef] = PHPExcel_Style_NumberFormat::toFormattedString($returnValue[$rRef][$cRef], ($style && $style->getNumberFormat()) ? $style->getNumberFormat()->getFormatCode() : PHPExcel_Style_NumberFormat::FORMAT_GENERAL);
                         }
-                    } else
+                    }
+                    else
                     {
                         // Cell holds a NULL
                         $returnValue[$rRef][$cRef] = $nullValue;
                     }
-                } else
+                }
+                else
                 {
                     // Cell doesn't exist
                     $returnValue[$rRef][$cRef] = $nullValue;
@@ -2743,8 +2731,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         $maxCol = $this->getHighestColumn();
         $maxRow = $this->getHighestRow();
         // Return
-        return $this->rangeToArray('A1:' . $maxCol . $maxRow,
-            $nullValue, $calculateFormulas, $formatData, $returnCellRef);
+        return $this->rangeToArray('A1:' . $maxCol . $maxRow, $nullValue, $calculateFormulas, $formatData, $returnCellRef);
     }
 
     /**
@@ -2757,14 +2744,14 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         // Flush cache
         $this->_cellCollection->getCacheData('A1');
         // Build a reference table from images
-//        $imageCoordinates = array();
-//        $iterator = $this->getDrawingCollection()->getIterator();
-//        while ($iterator->valid()) {
-//            $imageCoordinates[$iterator->current()->getCoordinates()] = true;
-//
-//            $iterator->next();
-//        }
-//
+        //        $imageCoordinates = array();
+        //        $iterator = $this->getDrawingCollection()->getIterator();
+        //        while ($iterator->valid()) {
+        //            $imageCoordinates[$iterator->current()->getCoordinates()] = true;
+        //
+        //            $iterator->next();
+        //        }
+        //
         // Lookup highest column and highest row if cells are cleaned
         $colRow = $this->_cellCollection->getHighestRowAndColumn();
         $highestRow = $colRow['row'];
@@ -2786,7 +2773,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         if ($highestColumn < 0)
         {
             $this->_cachedHighestColumn = 'A';
-        } else
+        }
+        else
         {
             $this->_cachedHighestColumn = PHPExcel_Cell::stringFromColumnIndex(--$highestColumn);
         }
@@ -2837,7 +2825,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         if ($pHyperlink === null)
         {
             unset($this->_hyperlinkCollection[$pCellCoordinate]);
-        } else
+        }
+        else
         {
             $this->_hyperlinkCollection[$pCellCoordinate] = $pHyperlink;
         }
@@ -2895,7 +2884,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
         if ($pDataValidation === null)
         {
             unset($this->_dataValidationCollection[$pCellCoordinate]);
-        } else
+        }
+        else
         {
             $this->_dataValidationCollection[$pCellCoordinate] = $pDataValidation;
         }
@@ -3031,16 +3021,19 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
                     $newCollection = clone $this->_cellCollection;
                     $newCollection->copyCellCollection($this);
                     $this->_cellCollection = $newCollection;
-                } elseif ($key == '_drawingCollection')
+                }
+                elseif ($key == '_drawingCollection')
                 {
                     $newCollection = clone $this->_drawingCollection;
                     $this->_drawingCollection = $newCollection;
-                } elseif (($key == '_autoFilter') && ($this->_autoFilter instanceof PHPExcel_Worksheet_AutoFilter))
+                }
+                elseif (($key == '_autoFilter') && ($this->_autoFilter instanceof PHPExcel_Worksheet_AutoFilter))
                 {
                     $newAutoFilter = clone $this->_autoFilter;
                     $this->_autoFilter = $newAutoFilter;
                     $this->_autoFilter->setParent($this);
-                } else
+                }
+                else
                 {
                     $this->{$key} = unserialize(serialize($val));
                 }
@@ -3100,7 +3093,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
                         {
                             $pValue = PHPExcel_Shared_String::Substring($pValue, 0, 28);
                         }
-                    } elseif ($i == 100)
+                    }
+                    elseif ($i == 100)
                     {
                         if (PHPExcel_Shared_String::CountCharacters($pValue) > 27)
                         {

@@ -256,7 +256,8 @@ class PHPExcel_Chart_DataSeries
         if (in_array($index, $keys))
         {
             return $this->_plotLabel[$index];
-        } elseif (isset($keys[$index]))
+        }
+        elseif (isset($keys[$index]))
         {
             return $this->_plotLabel[$keys[$index]];
         }
@@ -284,7 +285,8 @@ class PHPExcel_Chart_DataSeries
         if (in_array($index, $keys))
         {
             return $this->_plotCategory[$index];
-        } elseif (isset($keys[$index]))
+        }
+        elseif (isset($keys[$index]))
         {
             return $this->_plotCategory[$keys[$index]];
         }
@@ -334,7 +336,8 @@ class PHPExcel_Chart_DataSeries
         if (in_array($index, $keys))
         {
             return $this->_plotValues[$index];
-        } elseif (isset($keys[$index]))
+        }
+        elseif (isset($keys[$index]))
         {
             return $this->_plotValues[$keys[$index]];
         }

@@ -136,7 +136,8 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
             if ($this->_isSupervisor)
             {
                 $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($this->getStyleArray($pStyles));
-            } else
+            }
+            else
             {
                 if (isset($pStyles['style']))
                 {
@@ -147,7 +148,8 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
                     $this->getColor()->applyFromArray($pStyles['color']);
                 }
             }
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception("Invalid style array passed.");
         }
@@ -224,7 +226,8 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
         {
             $styleArray = $this->getColor()->getStyleArray(array('argb' => $color->getARGB()));
             $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
-        } else
+        }
+        else
         {
             $this->_color = $color;
         }
@@ -259,7 +262,8 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
         if (empty($pValue))
         {
             $pValue = PHPExcel_Style_Border::BORDER_NONE;
-        } elseif (is_bool($pValue) && $pValue)
+        }
+        elseif (is_bool($pValue) && $pValue)
         {
             $pValue = PHPExcel_Style_Border::BORDER_MEDIUM;
         }
@@ -267,7 +271,8 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
         {
             $styleArray = $this->getStyleArray(array('style' => $pValue));
             $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
-        } else
+        }
+        else
         {
             $this->_borderStyle = $pValue;
         }
@@ -322,11 +327,7 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
         {
             return $this->getSharedComponent()->getHashCode();
         }
-        return md5(
-            $this->_borderStyle
-            . $this->_color->getHashCode()
-            . __CLASS__
-        );
+        return md5($this->_borderStyle . $this->_color->getHashCode() . __CLASS__);
     }
 
 }

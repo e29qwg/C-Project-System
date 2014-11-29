@@ -146,7 +146,8 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
             if ($this->_isSupervisor)
             {
                 $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($this->getStyleArray($pStyles));
-            } else
+            }
+            else
             {
                 if (array_key_exists('type', $pStyles))
                 {
@@ -169,7 +170,8 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
                     $this->getStartColor()->applyFromArray($pStyles['color']);
                 }
             }
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception("Invalid style array passed.");
         }
@@ -213,7 +215,8 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
         {
             $styleArray = $this->getStartColor()->getStyleArray(array('argb' => $color->getARGB()));
             $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
-        } else
+        }
+        else
         {
             $this->_startColor = $color;
         }
@@ -246,7 +249,8 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
         {
             $styleArray = $this->getEndColor()->getStyleArray(array('argb' => $color->getARGB()));
             $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
-        } else
+        }
+        else
         {
             $this->_endColor = $color;
         }
@@ -264,13 +268,7 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
         {
             return $this->getSharedComponent()->getHashCode();
         }
-        return md5(
-            $this->getFillType()
-            . $this->getRotation()
-            . $this->getStartColor()->getHashCode()
-            . $this->getEndColor()->getHashCode()
-            . __CLASS__
-        );
+        return md5($this->getFillType() . $this->getRotation() . $this->getStartColor()->getHashCode() . $this->getEndColor()->getHashCode() . __CLASS__);
     }
 
     /**
@@ -310,7 +308,8 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
         {
             $styleArray = $this->getStyleArray(array('type' => $pValue));
             $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
-        } else
+        }
+        else
         {
             $this->_fillType = $pValue;
         }
@@ -343,7 +342,8 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
         {
             $styleArray = $this->getStyleArray(array('rotation' => $pValue));
             $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
-        } else
+        }
+        else
         {
             $this->_rotation = $pValue;
         }

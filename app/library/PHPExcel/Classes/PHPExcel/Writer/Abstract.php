@@ -148,7 +148,8 @@ abstract class PHPExcel_Writer_Abstract implements PHPExcel_Writer_IWriter
             if (is_dir($pDirectory))
             {
                 $this->_diskCachingDirectory = $pDirectory;
-            } else
+            }
+            else
             {
                 throw new PHPExcel_Writer_Exception("Directory does not exist: $pDirectory");
             }

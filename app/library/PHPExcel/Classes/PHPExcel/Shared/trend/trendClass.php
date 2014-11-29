@@ -59,22 +59,13 @@ class trendClass
      *
      * @var string[]
      **/
-    private static $_trendTypes = array(self::TREND_LINEAR,
-        self::TREND_LOGARITHMIC,
-        self::TREND_EXPONENTIAL,
-        self::TREND_POWER
-    );
+    private static $_trendTypes = array(self::TREND_LINEAR, self::TREND_LOGARITHMIC, self::TREND_EXPONENTIAL, self::TREND_POWER);
     /**
      * Names of the best-fit trend polynomial orders
      *
      * @var string[]
      **/
-    private static $_trendTypePolyOrders = array(self::TREND_POLYNOMIAL_2,
-        self::TREND_POLYNOMIAL_3,
-        self::TREND_POLYNOMIAL_4,
-        self::TREND_POLYNOMIAL_5,
-        self::TREND_POLYNOMIAL_6
-    );
+    private static $_trendTypePolyOrders = array(self::TREND_POLYNOMIAL_2, self::TREND_POLYNOMIAL_3, self::TREND_POLYNOMIAL_4, self::TREND_POLYNOMIAL_5, self::TREND_POLYNOMIAL_6);
 
     /**
      * Cached results for each method when trying to identify which provides the best fit
@@ -95,7 +86,8 @@ class trendClass
         {
             $xValues = range(1, $nY);
             $nX = $nY;
-        } elseif ($nY != $nX)
+        }
+        elseif ($nY != $nX)
         {
             //	Ensure both arrays of points are the same size
             trigger_error("trend(): Number of elements in coordinate arrays do not match.", E_USER_ERROR);
@@ -148,7 +140,8 @@ class trendClass
                         if ($bestFit[$trendMethod]->getError())
                         {
                             unset($bestFit[$trendMethod]);
-                        } else
+                        }
+                        else
                         {
                             $bestFitValue[$trendMethod] = $bestFit[$trendMethod]->getGoodnessOfFit();
                         }

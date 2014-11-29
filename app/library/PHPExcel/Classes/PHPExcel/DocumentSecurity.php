@@ -90,9 +90,7 @@ class PHPExcel_DocumentSecurity
      */
     function isSecurityEnabled()
     {
-        return $this->_lockRevision ||
-        $this->_lockStructure ||
-        $this->_lockWindows;
+        return $this->_lockRevision || $this->_lockStructure || $this->_lockWindows;
     }
 
     /**
@@ -226,7 +224,8 @@ class PHPExcel_DocumentSecurity
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

@@ -88,10 +88,7 @@ class Topic extends Phalcon\Mvc\User\Component
     {
         foreach (range('A', 'G') as $columnId)
         {
-            $obj
-                ->getActiveSheet()
-                ->getColumnDimension($columnId)
-                ->setAutoSize(true);
+            $obj->getActiveSheet()->getColumnDimension($columnId)->setAutoSize(true);
         }
     }
 }

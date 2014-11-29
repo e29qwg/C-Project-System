@@ -112,7 +112,7 @@ class PHPExcel_Best_Fit
 
     protected $_Yoffset = 0;
 
-/**
+    /**
      * Define the regression
      *
      * @param    float[] $yValues The set of Y-values for this regression
@@ -130,7 +130,8 @@ class PHPExcel_Best_Fit
         {
             $xValues = range(1, $nY);
             $nX = $nY;
-        } elseif ($nY != $nX)
+        }
+        elseif ($nY != $nX)
         {
             //	Ensure both arrays of points are the same size
             $this->_error = True;
@@ -142,17 +143,17 @@ class PHPExcel_Best_Fit
         $this->_yValues = $yValues;
     }    //	function getBestFitType()
 
-public function getError()
+    public function getError()
     {
         return $this->_error;
     }    //	function getBestFitType()
 
-public function getBestFitType()
+    public function getBestFitType()
     {
         return $this->_bestFitType;
     }    //	function getValueOfYForX()
 
-/**
+    /**
      * Return the X-Value for a specified value of Y
      *
      * @param     float $yValue Y-Value
@@ -358,7 +359,7 @@ public function getBestFitType()
         return $this->_yBestFitValues;
     }    //	function getYBestFitValues()
 
-protected function _leastSquareFit($yValues, $xValues, $const)
+    protected function _leastSquareFit($yValues, $xValues, $const)
     {
         // calculate sums
         $x_sum = array_sum($xValues);
@@ -376,7 +377,8 @@ protected function _leastSquareFit($yValues, $xValues, $const)
             {
                 $mBase += ($xValues[$i] - $meanX) * ($yValues[$i] - $meanY);
                 $mDivisor += ($xValues[$i] - $meanX) * ($xValues[$i] - $meanX);
-            } else
+            }
+            else
             {
                 $mBase += $xValues[$i] * $yValues[$i];
                 $mDivisor += $xValues[$i] * $xValues[$i];
@@ -384,15 +386,16 @@ protected function _leastSquareFit($yValues, $xValues, $const)
         }
 
         // calculate slope
-//		$this->_slope = (($this->_valueCount * $xy_sum) - ($x_sum * $y_sum)) / (($this->_valueCount * $xx_sum) - ($x_sum * $x_sum));
+        //		$this->_slope = (($this->_valueCount * $xy_sum) - ($x_sum * $y_sum)) / (($this->_valueCount * $xx_sum) - ($x_sum * $x_sum));
         $this->_slope = $mBase / $mDivisor;
 
         // calculate intersect
-//		$this->_intersect = ($y_sum - ($this->_slope * $x_sum)) / $this->_valueCount;
+        //		$this->_intersect = ($y_sum - ($this->_slope * $x_sum)) / $this->_valueCount;
         if ($const)
         {
             $this->_intersect = $meanY - ($this->_slope * $meanX);
-        } else
+        }
+        else
         {
             $this->_intersect = 0;
         }
@@ -400,7 +403,7 @@ protected function _leastSquareFit($yValues, $xValues, $const)
         $this->_calculateGoodnessOfFit($x_sum, $y_sum, $xx_sum, $yy_sum, $xy_sum, $meanX, $meanY, $const);
     }    //	function _calculateGoodnessOfFit()
 
-protected function _calculateGoodnessOfFit($sumX, $sumY, $sumX2, $sumY2, $sumXY, $meanX, $meanY, $const)
+    protected function _calculateGoodnessOfFit($sumX, $sumY, $sumX2, $sumY2, $sumXY, $meanX, $meanY, $const)
     {
         $SSres = $SScov = $SScor = $SStot = $SSsex = 0.0;
         foreach ($this->_xValues as $xKey => $xValue)
@@ -411,7 +414,8 @@ protected function _calculateGoodnessOfFit($sumX, $sumY, $sumX2, $sumY2, $sumXY,
             if ($const)
             {
                 $SStot += ($this->_yValues[$xKey] - $meanY) * ($this->_yValues[$xKey] - $meanY);
-            } else
+            }
+            else
             {
                 $SStot += $this->_yValues[$xKey] * $this->_yValues[$xKey];
             }
@@ -419,7 +423,8 @@ protected function _calculateGoodnessOfFit($sumX, $sumY, $sumX2, $sumY2, $sumXY,
             if ($const)
             {
                 $SSsex += ($this->_xValues[$xKey] - $meanX) * ($this->_xValues[$xKey] - $meanX);
-            } else
+            }
+            else
             {
                 $SSsex += $this->_xValues[$xKey] * $this->_xValues[$xKey];
             }
@@ -431,14 +436,16 @@ protected function _calculateGoodnessOfFit($sumX, $sumY, $sumX2, $sumY2, $sumXY,
         if ($this->_DFResiduals == 0.0)
         {
             $this->_stdevOfResiduals = 0.0;
-        } else
+        }
+        else
         {
             $this->_stdevOfResiduals = sqrt($SSres / $this->_DFResiduals);
         }
         if (($SStot == 0.0) || ($SSres == $SStot))
         {
             $this->_goodnessOfFit = 1;
-        } else
+        }
+        else
         {
             $this->_goodnessOfFit = 1 - ($SSres / $SStot);
         }
@@ -453,23 +460,26 @@ protected function _calculateGoodnessOfFit($sumX, $sumY, $sumX2, $sumY2, $sumXY,
             if ($this->_DFResiduals == 0.0)
             {
                 $this->_F = 0.0;
-            } else
+            }
+            else
             {
                 $this->_F = $this->_SSRegression / ($this->_SSResiduals / $this->_DFResiduals);
             }
-        } else
+        }
+        else
         {
             if ($this->_DFResiduals == 0.0)
             {
                 $this->_F = 0.0;
-            } else
+            }
+            else
             {
                 $this->_F = $this->_SSRegression / $this->_DFResiduals;
             }
         }
     }    //	function _leastSquareFit()
 
-/**
+    /**
      * Return the Y-Value for a specified value of X
      *
      * @param     float $xValue X-Value

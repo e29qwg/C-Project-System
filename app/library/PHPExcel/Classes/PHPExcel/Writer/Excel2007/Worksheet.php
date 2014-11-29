@@ -53,7 +53,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
             if ($this->getParentWriter()->getUseDiskCaching())
             {
                 $objWriter = new PHPExcel_Shared_XMLWriter(PHPExcel_Shared_XMLWriter::STORAGE_DISK, $this->getParentWriter()->getDiskCachingDirectory());
-            } else
+            }
+            else
             {
                 $objWriter = new PHPExcel_Shared_XMLWriter(PHPExcel_Shared_XMLWriter::STORAGE_MEMORY);
             }
@@ -134,7 +135,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 
             // Return
             return $objWriter->getData();
-        } else
+        }
+        else
         {
             throw new PHPExcel_Writer_Exception("Invalid PHPExcel_Worksheet object passed.");
         }
@@ -250,7 +252,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
         if ($pSheet->getShowGridlines())
         {
             $objWriter->writeAttribute('showGridLines', 'true');
-        } else
+        }
+        else
         {
             $objWriter->writeAttribute('showGridLines', 'false');
         }
@@ -259,7 +262,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
         if ($pSheet->getShowRowColHeaders())
         {
             $objWriter->writeAttribute('showRowColHeaders', '1');
-        } else
+        }
+        else
         {
             $objWriter->writeAttribute('showRowColHeaders', '0');
         }
@@ -312,7 +316,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
         }
 
         // Selection
-//				if ($pane != '') {
+        //				if ($pane != '') {
         //	Only need to write selection element if we have a split pane
         //		We cheat a little by over-riding the active cell selection, setting it to the split cell
         $objWriter->startElement('selection');
@@ -323,7 +327,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
         $objWriter->writeAttribute('activeCell', $activeCell);
         $objWriter->writeAttribute('sqref', $activeCell);
         $objWriter->endElement();
-//				}
+        //				}
 
         $objWriter->endElement();
 
@@ -347,14 +351,14 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
         {
             $objWriter->writeAttribute('customHeight', 'true');
             $objWriter->writeAttribute('defaultRowHeight', PHPExcel_Shared_String::FormatNumber($pSheet->getDefaultRowDimension()->getRowHeight()));
-        } else
+        }
+        else
         {
             $objWriter->writeAttribute('defaultRowHeight', '14.4');
         }
 
         // Set Zero Height row
-        if ((string)$pSheet->getDefaultRowDimension()->getzeroHeight() == '1' ||
-            strtolower((string)$pSheet->getDefaultRowDimension()->getzeroHeight()) == 'true'
+        if ((string)$pSheet->getDefaultRowDimension()->getzeroHeight() == '1' || strtolower((string)$pSheet->getDefaultRowDimension()->getzeroHeight()) == 'true'
         )
         {
             $objWriter->writeAttribute('zeroHeight', '1');
@@ -419,7 +423,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
                 {
                     // No width set, apply default of 10
                     $objWriter->writeAttribute('width', '9.10');
-                } else
+                }
+                else
                 {
                     // Width set
                     $objWriter->writeAttribute('width', PHPExcel_Shared_String::FormatNumber($colDimension->getWidth()));
@@ -504,12 +509,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
                 $rowDimension = $pSheet->getRowDimension($currentRow);
 
                 // Write current row?
-                $writeCurrentRow = isset($cellsByRow[$currentRow]) ||
-                    $rowDimension->getRowHeight() >= 0 ||
-                    $rowDimension->getVisible() == false ||
-                    $rowDimension->getCollapsed() == true ||
-                    $rowDimension->getOutlineLevel() > 0 ||
-                    $rowDimension->getXfIndex() !== null;
+                $writeCurrentRow = isset($cellsByRow[$currentRow]) || $rowDimension->getRowHeight() >= 0 || $rowDimension->getVisible() == false || $rowDimension->getCollapsed() == true || $rowDimension->getOutlineLevel() > 0 || $rowDimension->getXfIndex() !== null;
 
                 if ($writeCurrentRow)
                 {
@@ -566,7 +566,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
             }
 
             $objWriter->endElement();
-        } else
+        }
+        else
         {
             throw new PHPExcel_Writer_Exception("Invalid parameters passed.");
         }
@@ -613,9 +614,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
                         $objWriter->writeAttribute('t', $mappedType);
                         break;
                     case 'f':            // Formula
-                        $calculatedValue = ($this->getParentWriter()->getPreCalculateFormulas()) ?
-                            $pCell->getCalculatedValue() :
-                            $cellValue;
+                        $calculatedValue = ($this->getParentWriter()->getPreCalculateFormulas()) ? $pCell->getCalculatedValue() : $cellValue;
                         if (is_string($calculatedValue))
                         {
                             $objWriter->writeAttribute('t', 'str');
@@ -632,7 +631,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
                         if (!$cellValue instanceof PHPExcel_RichText)
                         {
                             $objWriter->writeElement('t', PHPExcel_Shared_String::ControlCharacterPHP2OOXML(htmlspecialchars($cellValue)));
-                        } else if ($cellValue instanceof PHPExcel_RichText)
+                        }
+                        else if ($cellValue instanceof PHPExcel_RichText)
                         {
                             $objWriter->startElement('is');
                             $this->getParentWriter()->getWriterPart('stringtable')->writeRichText($objWriter, $cellValue);
@@ -647,7 +647,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
                             {
                                 $objWriter->writeElement('v', $pFlippedStringTable[$cellValue]);
                             }
-                        } else if ($cellValue instanceof PHPExcel_RichText)
+                        }
+                        else if ($cellValue instanceof PHPExcel_RichText)
                         {
                             $objWriter->writeElement('v', $pFlippedStringTable[$cellValue->getHashCode()]);
                         }
@@ -664,7 +665,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
                             $objWriter->writeAttribute('ca', '1');
                             $objWriter->text(substr($cellValue, 1));
                             $objWriter->endElement();
-                        } else
+                        }
+                        else
                         {
                             $objWriter->writeElement('f', substr($cellValue, 1));
                         }
@@ -672,15 +674,17 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
                         {
                             if ($this->getParentWriter()->getPreCalculateFormulas())
                             {
-//								$calculatedValue = $pCell->getCalculatedValue();
+                                //								$calculatedValue = $pCell->getCalculatedValue();
                                 if (!is_array($calculatedValue) && substr($calculatedValue, 0, 1) != '#')
                                 {
                                     $objWriter->writeElement('v', PHPExcel_Shared_String::FormatNumber($calculatedValue));
-                                } else
+                                }
+                                else
                                 {
                                     $objWriter->writeElement('v', '0');
                                 }
-                            } else
+                            }
+                            else
                             {
                                 $objWriter->writeElement('v', '0');
                             }
@@ -698,7 +702,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
                         {
                             $objWriter->writeElement('f', substr($cellValue, 1));
                             $objWriter->writeElement('v', substr($cellValue, 1));
-                        } else
+                        }
+                        else
                         {
                             $objWriter->writeElement('v', $cellValue);
                         }
@@ -708,7 +713,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
             }
 
             $objWriter->endElement();
-        } else
+        }
+        else
         {
             throw new PHPExcel_Writer_Exception("Invalid parameters passed.");
         }
@@ -828,14 +834,13 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 
                         foreach ($rules as $rule)
                         {
-                            if (($column->getFilterType() === PHPExcel_Worksheet_AutoFilter_Column::AUTOFILTER_FILTERTYPE_FILTER) &&
-                                ($rule->getOperator() === PHPExcel_Worksheet_AutoFilter_Column_Rule::AUTOFILTER_COLUMN_RULE_EQUAL) &&
-                                ($rule->getValue() === '')
+                            if (($column->getFilterType() === PHPExcel_Worksheet_AutoFilter_Column::AUTOFILTER_FILTERTYPE_FILTER) && ($rule->getOperator() === PHPExcel_Worksheet_AutoFilter_Column_Rule::AUTOFILTER_COLUMN_RULE_EQUAL) && ($rule->getValue() === '')
                             )
                             {
                                 //	Filter rule for Blanks
                                 $objWriter->writeAttribute('blank', 1);
-                            } elseif ($rule->getRuleType() === PHPExcel_Worksheet_AutoFilter_Column_Rule::AUTOFILTER_RULETYPE_DYNAMICFILTER)
+                            }
+                            elseif ($rule->getRuleType() === PHPExcel_Worksheet_AutoFilter_Column_Rule::AUTOFILTER_RULETYPE_DYNAMICFILTER)
                             {
                                 //	Dynamic Filter Rule
                                 $objWriter->writeAttribute('type', $rule->getGrouping());
@@ -849,13 +854,15 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
                                 {
                                     $objWriter->writeAttribute('maxVal', $maxVal);
                                 }
-                            } elseif ($rule->getRuleType() === PHPExcel_Worksheet_AutoFilter_Column_Rule::AUTOFILTER_RULETYPE_TOPTENFILTER)
+                            }
+                            elseif ($rule->getRuleType() === PHPExcel_Worksheet_AutoFilter_Column_Rule::AUTOFILTER_RULETYPE_TOPTENFILTER)
                             {
                                 //	Top 10 Filter Rule
                                 $objWriter->writeAttribute('val', $rule->getValue());
                                 $objWriter->writeAttribute('percent', (($rule->getOperator() === PHPExcel_Worksheet_AutoFilter_Column_Rule::AUTOFILTER_COLUMN_RULE_TOPTEN_PERCENT) ? '1' : '0'));
                                 $objWriter->writeAttribute('top', (($rule->getGrouping() === PHPExcel_Worksheet_AutoFilter_Column_Rule::AUTOFILTER_COLUMN_RULE_TOPTEN_TOP) ? '1' : '0'));
-                            } else
+                            }
+                            else
                             {
                                 //	Filter, DateGroupItem or CustomFilter
                                 $objWriter->startElement($rule->getRuleType());
@@ -869,10 +876,12 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
                                     // Date Group filters
                                     foreach ($rule->getValue() as $key => $value)
                                     {
-                                        if ($value > '') $objWriter->writeAttribute($key, $value);
+                                        if ($value > '')
+                                            $objWriter->writeAttribute($key, $value);
                                     }
                                     $objWriter->writeAttribute('dateTimeGrouping', $rule->getGrouping());
-                                } else
+                                }
+                                else
                                 {
                                     $objWriter->writeAttribute('val', $rule->getValue());
                                 }
@@ -952,49 +961,39 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
                     $objWriter->writeAttribute('dxfId', $this->getParentWriter()->getStylesConditionalHashTable()->getIndexForHashCode($conditional->getHashCode()));
                     $objWriter->writeAttribute('priority', $id++);
 
-                    if (($conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CELLIS
-                            ||
-                            $conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CONTAINSTEXT)
-                        && $conditional->getOperatorType() != PHPExcel_Style_Conditional::OPERATOR_NONE
+                    if (($conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CELLIS || $conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CONTAINSTEXT) && $conditional->getOperatorType() != PHPExcel_Style_Conditional::OPERATOR_NONE
                     )
                     {
                         $objWriter->writeAttribute('operator', $conditional->getOperatorType());
                     }
 
-                    if ($conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CONTAINSTEXT
-                        && !is_null($conditional->getText())
+                    if ($conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CONTAINSTEXT && !is_null($conditional->getText())
                     )
                     {
                         $objWriter->writeAttribute('text', $conditional->getText());
                     }
 
-                    if ($conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CONTAINSTEXT
-                        && $conditional->getOperatorType() == PHPExcel_Style_Conditional::OPERATOR_CONTAINSTEXT
-                        && !is_null($conditional->getText())
+                    if ($conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CONTAINSTEXT && $conditional->getOperatorType() == PHPExcel_Style_Conditional::OPERATOR_CONTAINSTEXT && !is_null($conditional->getText())
                     )
                     {
                         $objWriter->writeElement('formula', 'NOT(ISERROR(SEARCH("' . $conditional->getText() . '",' . $cellCoordinate . ')))');
-                    } else if ($conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CONTAINSTEXT
-                        && $conditional->getOperatorType() == PHPExcel_Style_Conditional::OPERATOR_BEGINSWITH
-                        && !is_null($conditional->getText())
+                    }
+                    else if ($conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CONTAINSTEXT && $conditional->getOperatorType() == PHPExcel_Style_Conditional::OPERATOR_BEGINSWITH && !is_null($conditional->getText())
                     )
                     {
                         $objWriter->writeElement('formula', 'LEFT(' . $cellCoordinate . ',' . strlen($conditional->getText()) . ')="' . $conditional->getText() . '"');
-                    } else if ($conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CONTAINSTEXT
-                        && $conditional->getOperatorType() == PHPExcel_Style_Conditional::OPERATOR_ENDSWITH
-                        && !is_null($conditional->getText())
+                    }
+                    else if ($conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CONTAINSTEXT && $conditional->getOperatorType() == PHPExcel_Style_Conditional::OPERATOR_ENDSWITH && !is_null($conditional->getText())
                     )
                     {
                         $objWriter->writeElement('formula', 'RIGHT(' . $cellCoordinate . ',' . strlen($conditional->getText()) . ')="' . $conditional->getText() . '"');
-                    } else if ($conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CONTAINSTEXT
-                        && $conditional->getOperatorType() == PHPExcel_Style_Conditional::OPERATOR_NOTCONTAINS
-                        && !is_null($conditional->getText())
+                    }
+                    else if ($conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CONTAINSTEXT && $conditional->getOperatorType() == PHPExcel_Style_Conditional::OPERATOR_NOTCONTAINS && !is_null($conditional->getText())
                     )
                     {
                         $objWriter->writeElement('formula', 'ISERROR(SEARCH("' . $conditional->getText() . '",' . $cellCoordinate . '))');
-                    } else if ($conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CELLIS
-                        || $conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CONTAINSTEXT
-                        || $conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_EXPRESSION
+                    }
+                    else if ($conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CELLIS || $conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_CONTAINSTEXT || $conditional->getConditionType() == PHPExcel_Style_Conditional::CONDITION_EXPRESSION
                     )
                     {
                         foreach ($conditional->getConditions() as $formula)
@@ -1118,7 +1117,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
                 {
                     $objWriter->writeAttribute('r:id', 'rId_hyperlink_' . $relationId);
                     ++$relationId;
-                } else
+                }
+                else
                 {
                     $objWriter->writeAttribute('location', str_replace('sheet://', '', $hyperlink->getUrl()));
                 }
@@ -1204,14 +1204,16 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
         if (!is_null($pSheet->getPageSetup()->getFitToHeight()))
         {
             $objWriter->writeAttribute('fitToHeight', $pSheet->getPageSetup()->getFitToHeight());
-        } else
+        }
+        else
         {
             $objWriter->writeAttribute('fitToHeight', '0');
         }
         if (!is_null($pSheet->getPageSetup()->getFitToWidth()))
         {
             $objWriter->writeAttribute('fitToWidth', $pSheet->getPageSetup()->getFitToWidth());
-        } else
+        }
+        else
         {
             $objWriter->writeAttribute('fitToWidth', '0');
         }
@@ -1266,7 +1268,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
             if ($breakType == PHPExcel_Worksheet::BREAK_ROW)
             {
                 $aRowBreaks[] = $cell;
-            } else if ($breakType == PHPExcel_Worksheet::BREAK_COLUMN)
+            }
+            else if ($breakType == PHPExcel_Worksheet::BREAK_COLUMN)
             {
                 $aColumnBreaks[] = $cell;
             }
@@ -1325,8 +1328,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
     {
         $chartCount = ($includeCharts) ? $pSheet->getChartCollection()->count() : 0;
         // If sheet contains drawings, add the relationships
-        if (($pSheet->getDrawingCollection()->count() > 0) ||
-            ($chartCount > 0)
+        if (($pSheet->getDrawingCollection()->count() > 0) || ($chartCount > 0)
         )
         {
             $objWriter->startElement('drawing');

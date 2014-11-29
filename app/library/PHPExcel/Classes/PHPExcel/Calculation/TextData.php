@@ -49,7 +49,7 @@ class PHPExcel_Calculation_TextData
 
     private static $_invalidChars = Null;
 
-        /**
+    /**
      * CHARACTER
      *
      * @param    string $character Value
@@ -67,13 +67,14 @@ class PHPExcel_Calculation_TextData
         if (function_exists('mb_convert_encoding'))
         {
             return mb_convert_encoding('&#' . intval($character) . ';', 'UTF-8', 'HTML-ENTITIES');
-        } else
+        }
+        else
         {
             return chr(intval($character));
         }
     }    //	function _uniord()
 
-/**
+    /**
      * TRIMNONPRINTABLE
      *
      * @param    mixed $stringValue Value to check
@@ -100,7 +101,7 @@ class PHPExcel_Calculation_TextData
         return NULL;
     }
 
-/**
+    /**
      * TRIMSPACES
      *
      * @param    mixed $stringValue Value to check
@@ -122,7 +123,7 @@ class PHPExcel_Calculation_TextData
         return NULL;
     }    //	function TRIMNONPRINTABLE()
 
-/**
+    /**
      * ASCIICODE
      *
      * @param    string $characters Value
@@ -138,7 +139,8 @@ class PHPExcel_Calculation_TextData
             if (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE)
             {
                 $characters = (int)$characters;
-            } else
+            }
+            else
             {
                 $characters = ($characters) ? PHPExcel_Calculation::getTRUE() : PHPExcel_Calculation::getFALSE();
             }
@@ -152,7 +154,8 @@ class PHPExcel_Calculation_TextData
                 $character = mb_substr($characters, 0, 1, 'UTF-8');
             }
             return self::_uniord($character);
-        } else
+        }
+        else
         {
             if (strlen($characters) > 0)
             {
@@ -162,7 +165,7 @@ class PHPExcel_Calculation_TextData
         }
     }    //	function TRIMSPACES()
 
-private static function _uniord($c)
+    private static function _uniord($c)
     {
         if (ord($c{0}) >= 0 && ord($c{0}) <= 127)
             return ord($c{0});
@@ -181,7 +184,7 @@ private static function _uniord($c)
         return 0;
     }    //	function ASCIICODE()
 
-/**
+    /**
      * CONCATENATE
      *
      * @return    string
@@ -200,7 +203,8 @@ private static function _uniord($c)
                 if (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE)
                 {
                     $arg = (int)$arg;
-                } else
+                }
+                else
                 {
                     $arg = ($arg) ? PHPExcel_Calculation::getTRUE() : PHPExcel_Calculation::getFALSE();
                 }
@@ -241,7 +245,8 @@ private static function _uniord($c)
         if ($decimals > 0)
         {
             $mask .= '.' . str_repeat('0', $decimals);
-        } else
+        }
+        else
         {
             $round = pow(10, abs($decimals));
             if ($value < 0)
@@ -286,7 +291,8 @@ private static function _uniord($c)
                 if (function_exists('mb_strpos'))
                 {
                     $pos = mb_strpos($haystack, $needle, --$offset, 'UTF-8');
-                } else
+                }
+                else
                 {
                     $pos = strpos($haystack, $needle, --$offset);
                 }
@@ -330,7 +336,8 @@ private static function _uniord($c)
                 if (function_exists('mb_stripos'))
                 {
                     $pos = mb_stripos($haystack, $needle, --$offset, 'UTF-8');
-                } else
+                }
+                else
                 {
                     $pos = stripos($haystack, $needle, --$offset);
                 }
@@ -378,7 +385,7 @@ private static function _uniord($c)
         return (string)$valueResult;
     }    //	function FIXEDFORMAT()
 
-/**
+    /**
      * MID
      *
      * @param    string $value Value
@@ -405,13 +412,14 @@ private static function _uniord($c)
         if (function_exists('mb_substr'))
         {
             return mb_substr($value, --$start, $chars, 'UTF-8');
-        } else
+        }
+        else
         {
             return substr($value, --$start, $chars);
         }
     }    //	function LEFT()
 
-/**
+    /**
      * LOWERCASE
      *
      * Converts a string value to upper case.
@@ -431,7 +439,7 @@ private static function _uniord($c)
         return PHPExcel_Shared_String::StrToLower($mixedCaseString);
     }    //	function MID()
 
-/**
+    /**
      * UPPERCASE
      *
      * Converts a string value to upper case.
@@ -451,7 +459,7 @@ private static function _uniord($c)
         return PHPExcel_Shared_String::StrToUpper($mixedCaseString);
     }    //	function RIGHT()
 
-/**
+    /**
      * PROPERCASE
      *
      * Converts a string value to upper case.
@@ -471,7 +479,7 @@ private static function _uniord($c)
         return PHPExcel_Shared_String::StrToTitle($mixedCaseString);
     }    //	function STRINGLENGTH()
 
-/**
+    /**
      * SUBSTITUTE
      *
      * @param    string $text Value
@@ -492,11 +500,13 @@ private static function _uniord($c)
             if (function_exists('mb_str_replace'))
             {
                 return mb_str_replace($fromText, $toText, $text);
-            } else
+            }
+            else
             {
                 return str_replace($fromText, $toText, $text);
             }
-        } else
+        }
+        else
         {
             $pos = -1;
             while ($instance > 0)
@@ -504,7 +514,8 @@ private static function _uniord($c)
                 if (function_exists('mb_strpos'))
                 {
                     $pos = mb_strpos($text, $fromText, $pos + 1, 'UTF-8');
-                } else
+                }
+                else
                 {
                     $pos = strpos($text, $fromText, $pos + 1);
                 }
@@ -519,7 +530,8 @@ private static function _uniord($c)
                 if (function_exists('mb_strlen'))
                 {
                     return self::REPLACE($text, ++$pos, mb_strlen($fromText, 'UTF-8'), $toText);
-                } else
+                }
+                else
                 {
                     return self::REPLACE($text, ++$pos, strlen($fromText), $toText);
                 }
@@ -529,7 +541,7 @@ private static function _uniord($c)
         return $text;
     }    //	function LOWERCASE()
 
-/**
+    /**
      * REPLACE
      *
      * @param    string $oldText String to modify
@@ -551,7 +563,7 @@ private static function _uniord($c)
         return $left . $newText . $right;
     }    //	function UPPERCASE()
 
-/**
+    /**
      * LEFT
      *
      * @param    string $value Value
@@ -576,13 +588,14 @@ private static function _uniord($c)
         if (function_exists('mb_substr'))
         {
             return mb_substr($value, 0, $chars, 'UTF-8');
-        } else
+        }
+        else
         {
             return substr($value, 0, $chars);
         }
     }    //	function PROPERCASE()
 
-/**
+    /**
      * RIGHT
      *
      * @param    string $value Value
@@ -607,13 +620,14 @@ private static function _uniord($c)
         if ((function_exists('mb_substr')) && (function_exists('mb_strlen')))
         {
             return mb_substr($value, mb_strlen($value, 'UTF-8') - $chars, $chars, 'UTF-8');
-        } else
+        }
+        else
         {
             return substr($value, strlen($value) - $chars);
         }
     }    //	function REPLACE()
 
-/**
+    /**
      * STRINGLENGTH
      *
      * @param    string $value Value
@@ -631,13 +645,14 @@ private static function _uniord($c)
         if (function_exists('mb_strlen'))
         {
             return mb_strlen($value, 'UTF-8');
-        } else
+        }
+        else
         {
             return strlen($value);
         }
     }    //	function SUBSTITUTE()
 
-/**
+    /**
      * RETURNSTRING
      *
      * @param    mixed $testValue Value to check

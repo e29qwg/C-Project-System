@@ -52,25 +52,17 @@ class PHPExcel_Worksheet_AutoFilter_Column
      *
      * @var string[]
      */
-    private static $_filterTypes = array(
-        //	Currently we're not handling
+    private static $_filterTypes = array(//	Currently we're not handling
         //		colorFilter
         //		extLst
         //		iconFilter
-        self::AUTOFILTER_FILTERTYPE_FILTER,
-        self::AUTOFILTER_FILTERTYPE_CUSTOMFILTER,
-        self::AUTOFILTER_FILTERTYPE_DYNAMICFILTER,
-        self::AUTOFILTER_FILTERTYPE_TOPTENFILTER,
-    );
+        self::AUTOFILTER_FILTERTYPE_FILTER, self::AUTOFILTER_FILTERTYPE_CUSTOMFILTER, self::AUTOFILTER_FILTERTYPE_DYNAMICFILTER, self::AUTOFILTER_FILTERTYPE_TOPTENFILTER,);
     /**
      * Join options for autofilter rules
      *
      * @var string[]
      */
-    private static $_ruleJoins = array(
-        self::AUTOFILTER_COLUMN_JOIN_AND,
-        self::AUTOFILTER_COLUMN_JOIN_OR,
-    );
+    private static $_ruleJoins = array(self::AUTOFILTER_COLUMN_JOIN_AND, self::AUTOFILTER_COLUMN_JOIN_OR,);
 
     /**
      * Autofilter
@@ -400,11 +392,13 @@ class PHPExcel_Worksheet_AutoFilter_Column
                 {
                     //	Detach from autofilter parent
                     $this->$key = NULL;
-                } else
+                }
+                else
                 {
                     $this->$key = clone $value;
                 }
-            } elseif ((is_array($value)) && ($key == '_ruleset'))
+            }
+            elseif ((is_array($value)) && ($key == '_ruleset'))
             {
                 //	The columns array of PHPExcel_Worksheet_AutoFilter objects
                 $this->$key = array();
@@ -414,7 +408,8 @@ class PHPExcel_Worksheet_AutoFilter_Column
                     // attach the new cloned Rule to this new cloned Autofilter Cloned object
                     $this->$key[$k]->setParent($this);
                 }
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

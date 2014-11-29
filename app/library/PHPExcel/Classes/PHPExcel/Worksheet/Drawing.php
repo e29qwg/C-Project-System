@@ -118,11 +118,13 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
                     // Get width/height
                     list($this->_width, $this->_height) = getimagesize($pValue);
                 }
-            } else
+            }
+            else
             {
                 throw new PHPExcel_Exception("File $pValue not found!");
             }
-        } else
+        }
+        else
         {
             $this->_path = $pValue;
         }
@@ -136,11 +138,7 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
      */
     public function getHashCode()
     {
-        return md5(
-            $this->_path
-            . parent::getHashCode()
-            . __CLASS__
-        );
+        return md5($this->_path . parent::getHashCode() . __CLASS__);
     }
 
     /**
@@ -154,7 +152,8 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

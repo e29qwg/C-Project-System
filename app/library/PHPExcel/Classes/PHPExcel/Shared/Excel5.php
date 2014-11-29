@@ -91,7 +91,8 @@ class PHPExcel_Shared_Excel5
             $width = $columnDimension->getWidth();
             $pixelWidth = PHPExcel_Shared_Drawing::cellDimensionToPixels($width, $font);
 
-        } else if ($sheet->getDefaultColumnDimension()->getWidth() != -1)
+        }
+        else if ($sheet->getDefaultColumnDimension()->getWidth() != -1)
         {
 
             // then we have default column dimension with explicit width
@@ -99,7 +100,8 @@ class PHPExcel_Shared_Excel5
             $width = $defaultColumnDimension->getWidth();
             $pixelWidth = PHPExcel_Shared_Drawing::cellDimensionToPixels($width, $font);
 
-        } else
+        }
+        else
         {
 
             // we don't even have any default column dimension. Width depends on default font
@@ -110,7 +112,8 @@ class PHPExcel_Shared_Excel5
         if (isset($columnDimensions[$col]) and !$columnDimensions[$col]->getVisible())
         {
             $effectivePixelWidth = 0;
-        } else
+        }
+        else
         {
             $effectivePixelWidth = $pixelWidth;
         }
@@ -173,7 +176,8 @@ class PHPExcel_Shared_Excel5
             $rowHeight = $rowDimension->getRowHeight();
             $pixelRowHeight = (int)ceil(4 * $rowHeight / 3); // here we assume Arial 10
 
-        } else if ($sheet->getDefaultRowDimension()->getRowHeight() != -1)
+        }
+        else if ($sheet->getDefaultRowDimension()->getRowHeight() != -1)
         {
 
             // then we have a default row dimension with explicit height
@@ -181,7 +185,8 @@ class PHPExcel_Shared_Excel5
             $rowHeight = $defaultRowDimension->getRowHeight();
             $pixelRowHeight = PHPExcel_Shared_Drawing::pointsToPixels($rowHeight);
 
-        } else
+        }
+        else
         {
 
             // we don't even have any default row dimension. Height depends on default font
@@ -194,7 +199,8 @@ class PHPExcel_Shared_Excel5
         if (isset($rowDimensions[$row]) and !$rowDimensions[$row]->getVisible())
         {
             $effectivePixelRowHeight = 0;
-        } else
+        }
+        else
         {
             $effectivePixelRowHeight = $pixelRowHeight;
         }
@@ -322,14 +328,7 @@ class PHPExcel_Shared_Excel5
         $startCoordinates = PHPExcel_Cell::stringFromColumnIndex($col_start) . ($row_start + 1);
         $endCoordinates = PHPExcel_Cell::stringFromColumnIndex($col_end) . ($row_end + 1);
 
-        $twoAnchor = array(
-            'startCoordinates' => $startCoordinates,
-            'startOffsetX' => $x1,
-            'startOffsetY' => $y1,
-            'endCoordinates' => $endCoordinates,
-            'endOffsetX' => $x2,
-            'endOffsetY' => $y2,
-        );
+        $twoAnchor = array('startCoordinates' => $startCoordinates, 'startOffsetX' => $x1, 'startOffsetY' => $y1, 'endCoordinates' => $endCoordinates, 'endOffsetX' => $x2, 'endOffsetY' => $y2,);
 
         return $twoAnchor;
     }

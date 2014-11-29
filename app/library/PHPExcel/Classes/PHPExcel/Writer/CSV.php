@@ -124,7 +124,8 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
             $this->setDelimiter(";");                //	Set delimiter to a semi-colon
             $this->setLineEnding("\r\n");
             fwrite($fileHandle, 'sep=' . $this->getDelimiter() . $this->_lineEnding);
-        } elseif ($this->_useBOM)
+        }
+        elseif ($this->_useBOM)
         {
             // Write the UTF-8 BOM code if required
             fwrite($fileHandle, "\xEF\xBB\xBF");
@@ -198,7 +199,8 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
                 if ($writeDelimiter)
                 {
                     $line .= $this->_delimiter;
-                } else
+                }
+                else
                 {
                     $writeDelimiter = true;
                 }
@@ -212,7 +214,8 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
 
             // Write to file
             fwrite($pFileHandle, $line);
-        } else
+        }
+        else
         {
             throw new PHPExcel_Writer_Exception("Invalid data row passed to CSV writer.");
         }

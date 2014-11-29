@@ -22,19 +22,15 @@ if ($this->request->isPost())
         $this->session->set('auth', $auth);
         $this->response->redirect('index');
     }
-} else
+}
+else
 {
     $advisors = User::find("type='Advisor' OR type='Admin'");
     ?>
     <form method="post" action="<?= $this->url->get('admin/advisorProfile'); ?>">
         <div class="col-sm-5">
             <?=
-            $this->tag->select(array(
-                'advisor',
-                $advisors,
-                'class' => 'form-control',
-                'using' => array('id', 'name')
-            ));
+            $this->tag->select(array('advisor', $advisors, 'class' => 'form-control', 'using' => array('id', 'name')));
             ?>
         </div>
         <button type="submit" class="btn btn-primary btn-sm">เปลี่ยน</button>

@@ -267,13 +267,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
      */
     public function getHashCode()
     {
-        return md5(
-            $this->_conditionType
-            . $this->_operatorType
-            . implode(';', $this->_condition)
-            . $this->_style->getHashCode()
-            . __CLASS__
-        );
+        return md5($this->_conditionType . $this->_operatorType . implode(';', $this->_condition) . $this->_style->getHashCode() . __CLASS__);
     }
 
     /**
@@ -287,7 +281,8 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

@@ -122,7 +122,8 @@ class PHPExcel_Reader_Excel2007_Theme
             if ((is_object($value)) && ($key != '_parent'))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

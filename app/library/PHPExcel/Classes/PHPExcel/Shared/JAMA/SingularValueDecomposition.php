@@ -246,7 +246,8 @@ class SingularValueDecomposition
                     {
                         $this->U[$i][$k] = 0.0;
                     }
-                } else
+                }
+                else
                 {
                     for ($i = 0; $i < $this->m; ++$i)
                     {
@@ -317,7 +318,8 @@ class SingularValueDecomposition
             if ($k == $p - 2)
             {
                 $kase = 4;
-            } else
+            }
+            else
             {
                 for ($ks = $p - 1; $ks >= $k; --$ks)
                 {
@@ -335,10 +337,12 @@ class SingularValueDecomposition
                 if ($ks == $k)
                 {
                     $kase = 3;
-                } else if ($ks == $p - 1)
+                }
+                else if ($ks == $p - 1)
                 {
                     $kase = 1;
-                } else
+                }
+                else
                 {
                     $kase = 2;
                     $k = $ks;
@@ -401,9 +405,7 @@ class SingularValueDecomposition
                 // Perform one qr step.
                 case 3:
                     // Calculate the shift.
-                    $scale = max(max(max(max(
-                            abs($this->s[$p - 1]), abs($this->s[$p - 2])), abs($e[$p - 2])),
-                        abs($this->s[$k])), abs($e[$k]));
+                    $scale = max(max(max(max(abs($this->s[$p - 1]), abs($this->s[$p - 2])), abs($e[$p - 2])), abs($this->s[$k])), abs($e[$k]));
                     $sp = $this->s[$p - 1] / $scale;
                     $spm1 = $this->s[$p - 2] / $scale;
                     $epm1 = $e[$p - 2] / $scale;

@@ -98,7 +98,7 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
         return true;
     }
 
-        /**
+    /**
      * Return the parent worksheet for this cell collection
      *
      * @return    PHPExcel_Worksheet
@@ -108,7 +108,7 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
         return $this->_parent;
     }    //	function isDataSet()
 
-/**
+    /**
      * Is a value set in the current PHPExcel_CachedObjectStorage_ICache for an indexed cell?
      *
      * @param    string $pCoord Coordinate address of the cell to check
@@ -124,7 +124,7 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
         return isset($this->_cellCache[$pCoord]);
     }    //	function moveCell()
 
-/**
+    /**
      * Move a cell object from one address to another
      *
      * @param    string $fromAddress Current address of the cell to move
@@ -147,7 +147,7 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
         return TRUE;
     }    //	function updateCacheData()
 
-/**
+    /**
      * Add or Update a cell in cache
      *
      * @param    PHPExcel_Cell $cell Cell to update
@@ -159,7 +159,7 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
         return $this->addCacheData($cell->getCoordinate(), $cell);
     }    //	function deleteCacheData()
 
-/**
+    /**
      * Delete a cell in cache identified by coordinate address
      *
      * @param    string $pCoord Coordinate address of the cell to delete
@@ -181,7 +181,7 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
         $this->_currentCellIsDirty = false;
     }    //	function getCellList()
 
-/**
+    /**
      * Sort the list of all cell addresses currently held in cache by row and column
      *
      * @return    void
@@ -199,7 +199,7 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
         return array_values($sortKeys);
     }    //	function sortCellList()
 
-/**
+    /**
      * Get a list of all cell addresses currently held in cache
      *
      * @return    array of string
@@ -292,9 +292,7 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
             $highestColumn = substr(max($col), 1);
         }
 
-        return array('row' => $highestRow,
-            'column' => $highestColumn
-        );
+        return array('row' => $highestRow, 'column' => $highestColumn);
     }
 
     /**
@@ -354,7 +352,8 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
         if (function_exists('posix_getpid'))
         {
             $baseUnique = posix_getpid();
-        } else
+        }
+        else
         {
             $baseUnique = mt_rand();
         }

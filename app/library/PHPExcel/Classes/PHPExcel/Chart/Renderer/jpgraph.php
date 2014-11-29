@@ -43,29 +43,15 @@ class PHPExcel_Chart_Renderer_jpgraph
 
     private static $_height = 480;
 
-    private static $_colourSet = array('mediumpurple1', 'palegreen3', 'gold1', 'cadetblue1',
-        'darkmagenta', 'coral', 'dodgerblue3', 'eggplant',
-        'mediumblue', 'magenta', 'sandybrown', 'cyan',
-        'firebrick1', 'forestgreen', 'deeppink4', 'darkolivegreen',
-        'goldenrod2'
-    );
+    private static $_colourSet = array('mediumpurple1', 'palegreen3', 'gold1', 'cadetblue1', 'darkmagenta', 'coral', 'dodgerblue3', 'eggplant', 'mediumblue', 'magenta', 'sandybrown', 'cyan', 'firebrick1', 'forestgreen', 'deeppink4', 'darkolivegreen', 'goldenrod2');
 
-    private static $_markSet = array('diamond' => MARK_DIAMOND,
-        'square' => MARK_SQUARE,
-        'triangle' => MARK_UTRIANGLE,
-        'x' => MARK_X,
-        'star' => MARK_STAR,
-        'dot' => MARK_FILLEDCIRCLE,
-        'dash' => MARK_DTRIANGLE,
-        'circle' => MARK_CIRCLE,
-        'plus' => MARK_CROSS
-    );
+    private static $_markSet = array('diamond' => MARK_DIAMOND, 'square' => MARK_SQUARE, 'triangle' => MARK_UTRIANGLE, 'x' => MARK_X, 'star' => MARK_STAR, 'dot' => MARK_FILLEDCIRCLE, 'dash' => MARK_DTRIANGLE, 'circle' => MARK_CIRCLE, 'plus' => MARK_CROSS);
     private static $_plotColour = 0;
     private static $_plotMark = 0;
     private $_chart = null;
     private $_graph = null;
 
-/**
+    /**
      * Create a new PHPExcel_Chart_Renderer_jpgraph
      */
     public function __construct(PHPExcel_Chart $chart)
@@ -74,7 +60,7 @@ class PHPExcel_Chart_Renderer_jpgraph
         $this->_chart = $chart;
     }    //	function _formatPointMarker()
 
-public function render($outputDestination)
+    public function render($outputDestination)
     {
         self::$_plotColour = 0;
 
@@ -84,7 +70,8 @@ public function render($outputDestination)
         if ($groupCount == 1)
         {
             $chartType = $this->_chart->getPlotArea()->getPlotGroupByIndex(0)->getPlotType();
-        } else
+        }
+        else
         {
             $chartTypes = array();
             for ($i = 0; $i < $groupCount; ++$i)
@@ -95,11 +82,13 @@ public function render($outputDestination)
             if (count($chartTypes) == 1)
             {
                 $chartType = array_pop($chartTypes);
-            } elseif (count($chartTypes) == 0)
+            }
+            elseif (count($chartTypes) == 0)
             {
                 echo 'Chart is not yet implemented<br />';
                 return false;
-            } else
+            }
+            else
             {
                 return $this->_renderCombinationChart($groupCount, $dimensions, $outputDestination);
             }
@@ -159,7 +148,7 @@ public function render($outputDestination)
         return true;
     }    //	function _formatDataSetLabels()
 
-private function _renderCombinationChart($groupCount, $dimensions, $outputDestination)
+    private function _renderCombinationChart($groupCount, $dimensions, $outputDestination)
     {
         require_once('jpgraph_line.php');
         require_once('jpgraph_bar.php');
@@ -208,7 +197,7 @@ private function _renderCombinationChart($groupCount, $dimensions, $outputDestin
         return true;
     }    //	function _percentageSumCalculation()
 
-private function _renderCartesianPlotArea($type = 'textlin')
+    private function _renderCartesianPlotArea($type = 'textlin')
     {
         $this->_graph = new Graph(self::$_width, self::$_height);
         $this->_graph->SetScale($type);
@@ -251,7 +240,7 @@ private function _renderCartesianPlotArea($type = 'textlin')
         }
     }    //	function _percentageAdjustValues()
 
-private function _renderTitle()
+    private function _renderTitle()
     {
         $title = $this->_getCaption($this->_chart->getTitle());
         if (!is_null($title))
@@ -260,7 +249,7 @@ private function _renderTitle()
         }
     }    //	function _getCaption()
 
-private function _getCaption($captionElement)
+    private function _getCaption($captionElement)
     {
         //	Read any caption
         $caption = (!is_null($captionElement)) ? $captionElement->getCaption() : NULL;
@@ -277,7 +266,7 @@ private function _getCaption($captionElement)
         return $caption;
     }    //	function _renderTitle()
 
-private function _renderPlotLine($groupID, $filled = false, $combination = false, $dimensions = '2d')
+    private function _renderPlotLine($groupID, $filled = false, $combination = false, $dimensions = '2d')
     {
         $grouping = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotGrouping();
 
@@ -330,7 +319,8 @@ private function _renderPlotLine($groupID, $filled = false, $combination = false
                 $seriesPlot->SetFilled(true);
                 $seriesPlot->SetColor('black');
                 $seriesPlot->SetFillColor(self::$_colourSet[self::$_plotColour++]);
-            } else
+            }
+            else
             {
                 //	Set the appropriate plot marker
                 $this->_formatPointMarker($seriesPlot, $marker);
@@ -344,14 +334,15 @@ private function _renderPlotLine($groupID, $filled = false, $combination = false
         if ($grouping == 'standard')
         {
             $groupPlot = $seriesPlots;
-        } else
+        }
+        else
         {
             $groupPlot = new AccLinePlot($seriesPlots);
         }
         $this->_graph->Add($groupPlot);
     }    //	function _renderLegend()
 
-private function _formatDataSetLabels($groupID, $datasetLabels, $labelCount, $rotation = '')
+    private function _formatDataSetLabels($groupID, $datasetLabels, $labelCount, $rotation = '')
     {
         $datasetLabelFormatCode = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotCategoryByIndex(0)->getFormatCode();
         if (!is_null($datasetLabelFormatCode))
@@ -368,12 +359,14 @@ private function _formatDataSetLabels($groupID, $datasetLabels, $labelCount, $ro
                 if ($rotation == 'bar')
                 {
                     $datasetLabels[$i] = implode(" ", $datasetLabel);
-                } else
+                }
+                else
                 {
                     $datasetLabel = array_reverse($datasetLabel);
                     $datasetLabels[$i] = implode("\n", $datasetLabel);
                 }
-            } else
+            }
+            else
             {
                 //	Format labels according to any formatting code
                 if (!is_null($datasetLabelFormatCode))
@@ -387,7 +380,7 @@ private function _formatDataSetLabels($groupID, $datasetLabels, $labelCount, $ro
         return $datasetLabels;
     }    //	function _renderCartesianPlotArea()
 
-private function _percentageSumCalculation($groupID, $seriesCount)
+    private function _percentageSumCalculation($groupID, $seriesCount)
     {
         //	Adjust our values to a percentage value across all series in the group
         for ($i = 0; $i < $seriesCount; ++$i)
@@ -395,7 +388,8 @@ private function _percentageSumCalculation($groupID, $seriesCount)
             if ($i == 0)
             {
                 $sumValues = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotValuesByIndex($i)->getDataValues();
-            } else
+            }
+            else
             {
                 $nextValues = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotValuesByIndex($i)->getDataValues();
                 foreach ($nextValues as $k => $value)
@@ -403,7 +397,8 @@ private function _percentageSumCalculation($groupID, $seriesCount)
                     if (isset($sumValues[$k]))
                     {
                         $sumValues[$k] += $value;
-                    } else
+                    }
+                    else
                     {
                         $sumValues[$k] = $value;
                     }
@@ -414,7 +409,7 @@ private function _percentageSumCalculation($groupID, $seriesCount)
         return $sumValues;
     }    //	function _renderPiePlotArea()
 
-private function _percentageAdjustValues($dataValues, $sumValues)
+    private function _percentageAdjustValues($dataValues, $sumValues)
     {
         foreach ($dataValues as $k => $dataValue)
         {
@@ -424,7 +419,7 @@ private function _percentageAdjustValues($dataValues, $sumValues)
         return $dataValues;
     }    //	function _renderRadarPlotArea()
 
-private function _formatPointMarker($seriesPlot, $markerID)
+    private function _formatPointMarker($seriesPlot, $markerID)
     {
         $plotMarkKeys = array_keys(self::$_markSet);
         if (is_null($markerID))
@@ -432,19 +427,22 @@ private function _formatPointMarker($seriesPlot, $markerID)
             //	Use default plot marker (next marker in the series)
             self::$_plotMark %= count(self::$_markSet);
             $seriesPlot->mark->SetType(self::$_markSet[$plotMarkKeys[self::$_plotMark++]]);
-        } elseif ($markerID !== 'none')
+        }
+        elseif ($markerID !== 'none')
         {
             //	Use specified plot marker (if it exists)
             if (isset(self::$_markSet[$markerID]))
             {
                 $seriesPlot->mark->SetType(self::$_markSet[$markerID]);
-            } else
+            }
+            else
             {
                 //	If the specified plot marker doesn't exist, use default plot marker (next marker in the series)
                 self::$_plotMark %= count(self::$_markSet);
                 $seriesPlot->mark->SetType(self::$_markSet[$plotMarkKeys[self::$_plotMark++]]);
             }
-        } else
+        }
+        else
         {
             //	Hide plot marker
             $seriesPlot->mark->Hide();
@@ -456,7 +454,7 @@ private function _formatPointMarker($seriesPlot, $markerID)
         return $seriesPlot;
     }    //	function _renderPlotLine()
 
-private function _renderPlotBar($groupID, $dimensions = '2d')
+    private function _renderPlotBar($groupID, $dimensions = '2d')
     {
         $rotation = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotDirection();
         //	Rotate for bar rather than column chart
@@ -526,7 +524,8 @@ private function _renderPlotBar($groupID, $dimensions = '2d')
             if (!$this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotLabelByIndex($j))
             {
                 $dataLabel = '';
-            } else
+            }
+            else
             {
                 $dataLabel = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotLabelByIndex($j)->getDataValue();
             }
@@ -543,10 +542,12 @@ private function _renderPlotBar($groupID, $dimensions = '2d')
         if ($grouping == 'clustered')
         {
             $groupPlot = new GroupBarPlot($seriesPlots);
-        } elseif ($grouping == 'standard')
+        }
+        elseif ($grouping == 'standard')
         {
             $groupPlot = new GroupBarPlot($seriesPlots);
-        } else
+        }
+        else
         {
             $groupPlot = new AccBarPlot($seriesPlots);
             if ($dimensions == '3d')
@@ -583,7 +584,8 @@ private function _renderPlotBar($groupID, $dimensions = '2d')
             {
                 $seriesPlot->SetLinkPoints();
                 $seriesPlot->link->SetColor(self::$_colourSet[self::$_plotColour]);
-            } elseif ($scatterStyle == 'smoothMarker')
+            }
+            elseif ($scatterStyle == 'smoothMarker')
             {
                 $spline = new Spline($dataValuesY, $dataValuesX);
                 list($splineDataY, $splineDataX) = $spline->Get(count($dataValuesX) * self::$_width / 20);
@@ -598,7 +600,8 @@ private function _renderPlotBar($groupID, $dimensions = '2d')
                 $this->_formatPointMarker($seriesPlot, 'dot');
                 $seriesPlot->mark->SetColor('black');
                 $seriesPlot->mark->SetSize($bubbleSize);
-            } else
+            }
+            else
             {
                 $marker = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotValuesByIndex($i)->getPointMarker();
                 $this->_formatPointMarker($seriesPlot, $marker);
@@ -610,7 +613,7 @@ private function _renderPlotBar($groupID, $dimensions = '2d')
         }
     }    //	function _renderPlotScatter()
 
-private function _renderLegend()
+    private function _renderLegend()
     {
         $legend = $this->_chart->getLegend();
         if (!is_null($legend))
@@ -638,13 +641,14 @@ private function _renderLegend()
                     $this->_graph->legend->SetColumns(1);
                     break;
             }
-        } else
+        }
+        else
         {
             $this->_graph->legend->Hide();
         }
     }    //	function _renderPlotRadar()
 
-private function _renderAreaChart($groupCount, $dimensions = '2d')
+    private function _renderAreaChart($groupCount, $dimensions = '2d')
     {
         require_once('jpgraph_line.php');
 
@@ -656,7 +660,7 @@ private function _renderAreaChart($groupCount, $dimensions = '2d')
         }
     }    //	function _renderPlotContour()
 
-private function _renderBarChart($groupCount, $dimensions = '2d')
+    private function _renderBarChart($groupCount, $dimensions = '2d')
     {
         require_once('jpgraph_bar.php');
 
@@ -668,7 +672,7 @@ private function _renderBarChart($groupCount, $dimensions = '2d')
         }
     }    //	function _renderPlotStock()
 
-private function _renderLineChart($groupCount, $dimensions = '2d')
+    private function _renderLineChart($groupCount, $dimensions = '2d')
     {
         require_once('jpgraph_line.php');
 
@@ -680,7 +684,7 @@ private function _renderLineChart($groupCount, $dimensions = '2d')
         }
     }    //	function _renderAreaChart()
 
-private function _renderPieChart($groupCount, $dimensions = '2d', $doughnut = False, $multiplePlots = False)
+    private function _renderPieChart($groupCount, $dimensions = '2d', $doughnut = False, $multiplePlots = False)
     {
         require_once('jpgraph_pie.php');
         if ($dimensions == '3d')
@@ -729,12 +733,14 @@ private function _renderPieChart($groupCount, $dimensions = '2d', $doughnut = Fa
                 if ($dimensions == '3d')
                 {
                     $seriesPlot = new PiePlot3D($dataValues);
-                } else
+                }
+                else
                 {
                     if ($doughnut)
                     {
                         $seriesPlot = new PiePlotC($dataValues);
-                    } else
+                    }
+                    else
                     {
                         $seriesPlot = new PiePlot($dataValues);
                     }
@@ -771,14 +777,14 @@ private function _renderPieChart($groupCount, $dimensions = '2d', $doughnut = Fa
         }
     }    //	function _renderLineChart()
 
-private function _renderPiePlotArea($doughnut = False)
+    private function _renderPiePlotArea($doughnut = False)
     {
         $this->_graph = new PieGraph(self::$_width, self::$_height);
 
         $this->_renderTitle();
     }    //	function _renderBarChart()
 
-private function _renderScatterChart($groupCount)
+    private function _renderScatterChart($groupCount)
     {
         require_once('jpgraph_scatter.php');
         require_once('jpgraph_regstat.php');
@@ -805,7 +811,7 @@ private function _renderScatterChart($groupCount)
         }
     }    //	function _renderBubbleChart()
 
-private function _renderRadarChart($groupCount)
+    private function _renderRadarChart($groupCount)
     {
         require_once('jpgraph_radar.php');
 
@@ -817,7 +823,7 @@ private function _renderRadarChart($groupCount)
         }
     }    //	function _renderPieChart()
 
-private function _renderRadarPlotArea()
+    private function _renderRadarPlotArea()
     {
         $this->_graph = new RadarGraph(self::$_width, self::$_height);
         $this->_graph->SetScale('lin');
@@ -825,7 +831,7 @@ private function _renderRadarPlotArea()
         $this->_renderTitle();
     }    //	function _renderRadarChart()
 
-private function _renderPlotRadar($groupID)
+    private function _renderPlotRadar($groupID)
     {
         $radarStyle = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotStyle();
 
@@ -866,7 +872,7 @@ private function _renderPlotRadar($groupID)
         }
     }    //	function _renderStockChart()
 
-private function _renderContourChart($groupCount, $dimensions)
+    private function _renderContourChart($groupCount, $dimensions)
     {
         require_once('jpgraph_contour.php');
 
@@ -878,7 +884,7 @@ private function _renderContourChart($groupCount, $dimensions)
         }
     }    //	function _renderContourChart()
 
-private function _renderPlotContour($groupID)
+    private function _renderPlotContour($groupID)
     {
         $contourStyle = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotStyle();
 
@@ -899,7 +905,7 @@ private function _renderPlotContour($groupID)
         $this->_graph->Add($seriesPlot);
     }    //	function _renderCombinationChart()
 
-private function _renderStockChart($groupCount)
+    private function _renderStockChart($groupCount)
     {
         require_once('jpgraph_stock.php');
 
@@ -911,7 +917,7 @@ private function _renderStockChart($groupCount)
         }
     }    //	function render()
 
-private function _renderPlotStock($groupID)
+    private function _renderPlotStock($groupID)
     {
         $seriesCount = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotSeriesCount();
         $plotOrder = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotOrder();

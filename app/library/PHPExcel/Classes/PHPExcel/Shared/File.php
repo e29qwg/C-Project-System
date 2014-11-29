@@ -43,7 +43,7 @@ class PHPExcel_Shared_File
      */
     protected static $_useUploadTempDirectory = FALSE;
 
-/**
+    /**
      * Get the flag indicating whether the File Upload Temp directory should be used for temporary files
      *
      * @return     boolean    Use File Upload Temporary directory (true or false)
@@ -53,7 +53,7 @@ class PHPExcel_Shared_File
         return self::$_useUploadTempDirectory;
     }    //	function setUseUploadTempDirectory()
 
-/**
+    /**
      * Set the flag indicating whether the File Upload Temp directory should be used for temporary files
      *
      * @param     boolean $useUploadTempDir Use File Upload Temporary directory (true or false)
@@ -86,11 +86,13 @@ class PHPExcel_Shared_File
                 $returnValue = ($zip->getFromName($archiveFile) !== false);
                 $zip->close();
                 return $returnValue;
-            } else
+            }
+            else
             {
                 return false;
             }
-        } else
+        }
+        else
         {
             // Regular file_exists
             return file_exists($pFilename);

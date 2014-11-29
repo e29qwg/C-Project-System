@@ -318,12 +318,14 @@ class PHPExcel_DocumentProperties
         if ($pValue === NULL)
         {
             $pValue = time();
-        } elseif (is_string($pValue))
+        }
+        elseif (is_string($pValue))
         {
             if (is_numeric($pValue))
             {
                 $pValue = intval($pValue);
-            } else
+            }
+            else
             {
                 $pValue = strtotime($pValue);
             }
@@ -354,12 +356,14 @@ class PHPExcel_DocumentProperties
         if ($pValue === NULL)
         {
             $pValue = time();
-        } elseif (is_string($pValue))
+        }
+        elseif (is_string($pValue))
         {
             if (is_numeric($pValue))
             {
                 $pValue = intval($pValue);
-            } else
+            }
+            else
             {
                 $pValue = strtotime($pValue);
             }
@@ -589,26 +593,26 @@ class PHPExcel_DocumentProperties
      */
     public function setCustomProperty($propertyName, $propertyValue = '', $propertyType = NULL)
     {
-        if (($propertyType === NULL) || (!in_array($propertyType, array(self::PROPERTY_TYPE_INTEGER,
-                self::PROPERTY_TYPE_FLOAT,
-                self::PROPERTY_TYPE_STRING,
-                self::PROPERTY_TYPE_DATE,
-                self::PROPERTY_TYPE_BOOLEAN)))
+        if (($propertyType === NULL) || (!in_array($propertyType, array(self::PROPERTY_TYPE_INTEGER, self::PROPERTY_TYPE_FLOAT, self::PROPERTY_TYPE_STRING, self::PROPERTY_TYPE_DATE, self::PROPERTY_TYPE_BOOLEAN)))
         )
         {
             if ($propertyValue === NULL)
             {
                 $propertyType = self::PROPERTY_TYPE_STRING;
-            } elseif (is_float($propertyValue))
+            }
+            elseif (is_float($propertyValue))
             {
                 $propertyType = self::PROPERTY_TYPE_FLOAT;
-            } elseif (is_int($propertyValue))
+            }
+            elseif (is_int($propertyValue))
             {
                 $propertyType = self::PROPERTY_TYPE_INTEGER;
-            } elseif (is_bool($propertyValue))
+            }
+            elseif (is_bool($propertyValue))
             {
                 $propertyType = self::PROPERTY_TYPE_BOOLEAN;
-            } else
+            }
+            else
             {
                 $propertyType = self::PROPERTY_TYPE_STRING;
             }
@@ -629,7 +633,8 @@ class PHPExcel_DocumentProperties
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

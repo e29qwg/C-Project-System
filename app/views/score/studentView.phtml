@@ -9,14 +9,8 @@ $auth = $this->session->get('auth');
 $user_id = $auth['id'];
 $student = User::findFirst("id='$user_id'");
 
-$scorePrepares = ScorePrepare::find(array(
-    "user_id='$user_id'",
-    "order" => "project_id ASC, is_midterm DESC"
-));
-$scoreProjects = ScoreProject::find(array(
-    "conditions" => "user_id='$user_id'",
-    "order" => "project_id ASC, is_midterm DESC"
-));
+$scorePrepares = ScorePrepare::find(array("user_id='$user_id'", "order" => "project_id ASC, is_midterm DESC"));
+$scoreProjects = ScoreProject::find(array("conditions" => "user_id='$user_id'", "order" => "project_id ASC, is_midterm DESC"));
 
 ?>
 <table class="table" width="100%">
@@ -32,7 +26,8 @@ $scoreProjects = ScoreProject::find(array(
         if ($scorePrepare->is_midterm)
         {
             $str = ' (midterm)';
-        } else
+        }
+        else
         {
             $str = ' (final)';
         }
@@ -81,7 +76,8 @@ $scoreProjects = ScoreProject::find(array(
         if ($scoreProject->is_midterm)
         {
             $str = ' (midterm)';
-        } else
+        }
+        else
         {
             $str = ' (final)';
         }

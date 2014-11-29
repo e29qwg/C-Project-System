@@ -131,14 +131,9 @@ class PHPExcel_CalcEngine_Logger
             $cellReference = implode(' -> ', $this->_cellStack->showStack());
             if ($this->_echoDebugLog)
             {
-                echo $cellReference,
-                ($this->_cellStack->count() > 0 ? ' => ' : ''),
-                $message,
-                PHP_EOL;
+                echo $cellReference, ($this->_cellStack->count() > 0 ? ' => ' : ''), $message, PHP_EOL;
             }
-            $this->_debugLog[] = $cellReference .
-                ($this->_cellStack->count() > 0 ? ' => ' : '') .
-                $message;
+            $this->_debugLog[] = $cellReference . ($this->_cellStack->count() > 0 ? ' => ' : '') . $message;
         }
     }    //	function _writeDebug()
 

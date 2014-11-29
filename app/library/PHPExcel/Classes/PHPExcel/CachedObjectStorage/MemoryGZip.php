@@ -58,7 +58,7 @@ class PHPExcel_CachedObjectStorage_MemoryGZip extends PHPExcel_CachedObjectStora
         return $cell;
     }    //	function _storeData()
 
-/**
+    /**
      * Store cell data in cache for the current cell object if it's "dirty",
      *     and the 'nullify' the current cell object
      *
@@ -77,7 +77,7 @@ class PHPExcel_CachedObjectStorage_MemoryGZip extends PHPExcel_CachedObjectStora
         $this->_currentObjectID = $this->_currentObject = null;
     }    //	function addCacheData()
 
-/**
+    /**
      * Get cell at a specific coordinate
      *
      * @param    string $pCoord Coordinate of the cell

@@ -52,7 +52,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
      */
     private $_cacheTime = 600;
 
-/**
+    /**
      * Initialise this new cell collection
      *
      * @param  PHPExcel_Worksheet $parent The worksheet for this cell collection
@@ -92,7 +92,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
         return TRUE;
     }    //    function addCacheData()
 
-/**
+    /**
      * Add or Update a cell in cache identified by coordinate address
      *
      * @access  public
@@ -116,7 +116,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
         return $cell;
     }    //    function isDataSet()
 
-/**
+    /**
      * Store cell data in cache for the current cell object if it's "dirty",
      *     and the 'nullify' the current cell object
      *
@@ -140,7 +140,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
         $this->_currentObjectID = $this->_currentObject = null;
     }    //    function getCacheData()
 
-/**
+    /**
      * Destroy this cell collection
      */
     public function __destruct()
@@ -167,7 +167,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
         return parent::getCellList();
     }    //    function deleteCacheData()
 
-/**
+    /**
      * Is a value set in the current PHPExcel_CachedObjectStorage_ICache for an indexed cell?
      *
      * @access  public
@@ -197,7 +197,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
         return false;
     }    //    function copyCellCollection()
 
-/**
+    /**
      * Get cell at a specific coordinate
      *
      * @access  public
@@ -223,7 +223,8 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
                 parent::deleteCacheData($pCoord);
                 throw new PHPExcel_Exception('Cell entry ' . $pCoord . ' no longer exists in APC cache');
             }
-        } else
+        }
+        else
         {
             //    Return null if requested entry doesn't exist in cache
             return null;
@@ -239,7 +240,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
         return $this->_currentObject;
     }    //    function unsetWorksheetCells()
 
-/**
+    /**
      * Delete a cell in cache identified by coordinate address
      *
      * @access  public
@@ -255,7 +256,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
         parent::deleteCacheData($pCoord);
     }    //    function __construct()
 
-/**
+    /**
      * Clone the cell collection
      *
      * @access  public
@@ -291,7 +292,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
         $this->_cachePrefix = $newCachePrefix;
     }    //    function __destruct()
 
-/**
+    /**
      * Clear the cell collection and disconnect from our parent
      *
      * @return  void

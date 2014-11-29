@@ -123,41 +123,7 @@ class PHPExcel_Shared_String
      */
     private static function _buildSYLKCharacters()
     {
-        self::$_SYLKCharacters = array(
-            "\x1B 0" => chr(0),
-            "\x1B 1" => chr(1),
-            "\x1B 2" => chr(2),
-            "\x1B 3" => chr(3),
-            "\x1B 4" => chr(4),
-            "\x1B 5" => chr(5),
-            "\x1B 6" => chr(6),
-            "\x1B 7" => chr(7),
-            "\x1B 8" => chr(8),
-            "\x1B 9" => chr(9),
-            "\x1B :" => chr(10),
-            "\x1B ;" => chr(11),
-            "\x1B <" => chr(12),
-            "\x1B :" => chr(13),
-            "\x1B >" => chr(14),
-            "\x1B ?" => chr(15),
-            "\x1B!0" => chr(16),
-            "\x1B!1" => chr(17),
-            "\x1B!2" => chr(18),
-            "\x1B!3" => chr(19),
-            "\x1B!4" => chr(20),
-            "\x1B!5" => chr(21),
-            "\x1B!6" => chr(22),
-            "\x1B!7" => chr(23),
-            "\x1B!8" => chr(24),
-            "\x1B!9" => chr(25),
-            "\x1B!:" => chr(26),
-            "\x1B!;" => chr(27),
-            "\x1B!<" => chr(28),
-            "\x1B!=" => chr(29),
-            "\x1B!>" => chr(30),
-            "\x1B!?" => chr(31),
-            "\x1B'?" => chr(127),
-            "\x1B(0" => '€', // 128 in CP1252
+        self::$_SYLKCharacters = array("\x1B 0" => chr(0), "\x1B 1" => chr(1), "\x1B 2" => chr(2), "\x1B 3" => chr(3), "\x1B 4" => chr(4), "\x1B 5" => chr(5), "\x1B 6" => chr(6), "\x1B 7" => chr(7), "\x1B 8" => chr(8), "\x1B 9" => chr(9), "\x1B :" => chr(10), "\x1B ;" => chr(11), "\x1B <" => chr(12), "\x1B :" => chr(13), "\x1B >" => chr(14), "\x1B ?" => chr(15), "\x1B!0" => chr(16), "\x1B!1" => chr(17), "\x1B!2" => chr(18), "\x1B!3" => chr(19), "\x1B!4" => chr(20), "\x1B!5" => chr(21), "\x1B!6" => chr(22), "\x1B!7" => chr(23), "\x1B!8" => chr(24), "\x1B!9" => chr(25), "\x1B!:" => chr(26), "\x1B!;" => chr(27), "\x1B!<" => chr(28), "\x1B!=" => chr(29), "\x1B!>" => chr(30), "\x1B!?" => chr(31), "\x1B'?" => chr(127), "\x1B(0" => '€', // 128 in CP1252
             "\x1B(2" => '‚', // 130 in CP1252
             "\x1B(3" => 'ƒ', // 131 in CP1252
             "\x1B(4" => '„', // 132 in CP1252
@@ -380,9 +346,7 @@ class PHPExcel_Shared_String
         }
 
         // CUSTOM: IBM AIX iconv() does not work
-        if (defined('PHP_OS') && @stristr(PHP_OS, 'AIX')
-                && defined('ICONV_IMPL') && (@strcasecmp(ICONV_IMPL, 'unknown') == 0)
-                && defined('ICONV_VERSION') && (@strcasecmp(ICONV_VERSION, 'unknown') == 0)
+        if (defined('PHP_OS') && @stristr(PHP_OS, 'AIX') && defined('ICONV_IMPL') && (@strcasecmp(ICONV_IMPL, 'unknown') == 0) && defined('ICONV_VERSION') && (@strcasecmp(ICONV_VERSION, 'unknown') == 0)
         )
         {
             self::$_isIconvEnabled = false;
@@ -406,8 +370,7 @@ class PHPExcel_Shared_String
             return self::$_isMbstringEnabled;
         }
 
-        self::$_isMbstringEnabled = function_exists('mb_convert_encoding') ?
-            true : false;
+        self::$_isMbstringEnabled = function_exists('mb_convert_encoding') ? true : false;
 
         return self::$_isMbstringEnabled;
     }
@@ -457,12 +420,12 @@ class PHPExcel_Shared_String
         // option flags
         if (empty($arrcRuns))
         {
-            $opt = (self::getIsIconvEnabled() || self::getIsMbstringEnabled()) ?
-                0x0001 : 0x0000;
+            $opt = (self::getIsIconvEnabled() || self::getIsMbstringEnabled()) ? 0x0001 : 0x0000;
             $data = pack('CC', $ln, $opt);
             // characters
             $data .= self::ConvertEncoding($value, 'UTF-16LE', 'UTF-8');
-        } else
+        }
+        else
         {
             $data = pack('vC', $ln, 0x09);
             $data .= pack('v', count($arrcRuns));
@@ -523,7 +486,8 @@ class PHPExcel_Shared_String
         if ($from == 'UTF-16LE')
         {
             return self::utf16_decode($value, false);
-        } else if ($from == 'UTF-16BE')
+        }
+        else if ($from == 'UTF-16BE')
         {
             return self::utf16_decode($value);
         }
@@ -548,13 +512,15 @@ class PHPExcel_Shared_String
      */
     public static function utf16_decode($str, $bom_be = TRUE)
     {
-        if (strlen($str) < 2) return $str;
+        if (strlen($str) < 2)
+            return $str;
         $c0 = ord($str{0});
         $c1 = ord($str{1});
         if ($c0 == 0xfe && $c1 == 0xff)
         {
             $str = substr($str, 2);
-        } elseif ($c0 == 0xff && $c1 == 0xfe)
+        }
+        elseif ($c0 == 0xff && $c1 == 0xfe)
         {
             $str = substr($str, 2);
             $bom_be = false;
@@ -567,7 +533,8 @@ class PHPExcel_Shared_String
             {
                 $val = ord($str{$i}) << 4;
                 $val += ord($str{$i + 1});
-            } else
+            }
+            else
             {
                 $val = ord($str{$i + 1}) << 4;
                 $val += ord($str{$i});
@@ -593,8 +560,7 @@ class PHPExcel_Shared_String
         $ln = self::CountCharacters($value, 'UTF-8');
 
         // option flags
-        $opt = (self::getIsIconvEnabled() || self::getIsMbstringEnabled()) ?
-            0x0001 : 0x0000;
+        $opt = (self::getIsIconvEnabled() || self::getIsMbstringEnabled()) ? 0x0001 : 0x0000;
 
         // characters
         $chars = self::ConvertEncoding($value, 'UTF-16LE', 'UTF-8');
@@ -703,8 +669,7 @@ class PHPExcel_Shared_String
         if (!isset(self::$_decimalSeparator))
         {
             $localeconv = localeconv();
-            self::$_decimalSeparator = ($localeconv['decimal_point'] != '')
-                ? $localeconv['decimal_point'] : $localeconv['mon_decimal_point'];
+            self::$_decimalSeparator = ($localeconv['decimal_point'] != '') ? $localeconv['decimal_point'] : $localeconv['mon_decimal_point'];
 
             if (self::$_decimalSeparator == '')
             {
@@ -737,8 +702,7 @@ class PHPExcel_Shared_String
         if (!isset(self::$_thousandsSeparator))
         {
             $localeconv = localeconv();
-            self::$_thousandsSeparator = ($localeconv['thousands_sep'] != '')
-                ? $localeconv['thousands_sep'] : $localeconv['mon_thousands_sep'];
+            self::$_thousandsSeparator = ($localeconv['thousands_sep'] != '') ? $localeconv['thousands_sep'] : $localeconv['mon_thousands_sep'];
 
             if (self::$_thousandsSeparator == '')
             {
@@ -771,8 +735,7 @@ class PHPExcel_Shared_String
         if (!isset(self::$_currencyCode))
         {
             $localeconv = localeconv();
-            self::$_currencyCode = ($localeconv['currency_symbol'] != '')
-                ? $localeconv['currency_symbol'] : $localeconv['int_curr_symbol'];
+            self::$_currencyCode = ($localeconv['currency_symbol'] != '') ? $localeconv['currency_symbol'] : $localeconv['int_curr_symbol'];
 
             if (self::$_currencyCode == '')
             {

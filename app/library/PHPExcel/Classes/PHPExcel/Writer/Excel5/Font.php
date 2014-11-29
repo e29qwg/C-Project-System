@@ -40,12 +40,7 @@ class PHPExcel_Writer_Excel5_Font
      * @static    array of int
      *
      */
-    private static $_mapUnderline = array(PHPExcel_Style_Font::UNDERLINE_NONE => 0x00,
-        PHPExcel_Style_Font::UNDERLINE_SINGLE => 0x01,
-        PHPExcel_Style_Font::UNDERLINE_DOUBLE => 0x02,
-        PHPExcel_Style_Font::UNDERLINE_SINGLEACCOUNTING => 0x21,
-        PHPExcel_Style_Font::UNDERLINE_DOUBLEACCOUNTING => 0x22,
-    );
+    private static $_mapUnderline = array(PHPExcel_Style_Font::UNDERLINE_NONE => 0x00, PHPExcel_Style_Font::UNDERLINE_SINGLE => 0x01, PHPExcel_Style_Font::UNDERLINE_DOUBLE => 0x02, PHPExcel_Style_Font::UNDERLINE_SINGLEACCOUNTING => 0x21, PHPExcel_Style_Font::UNDERLINE_DOUBLEACCOUNTING => 0x22,);
     /**
      * Color index
      *
@@ -94,10 +89,12 @@ class PHPExcel_Writer_Excel5_Font
         if ($this->_font->getSuperScript())
         {
             $sss = 1;
-        } else if ($this->_font->getSubScript())
+        }
+        else if ($this->_font->getSubScript())
         {
             $sss = 2;
-        } else
+        }
+        else
         {
             $sss = 0;
         }
@@ -124,17 +121,11 @@ class PHPExcel_Writer_Excel5_Font
             $grbit |= 0x20;
         }
 
-        $data = pack("vvvvvCCCC",
-            $this->_font->getSize() * 20,                        //	Fontsize (in twips)
-            $grbit,
-            $icv,                                                //	Colour
+        $data = pack("vvvvvCCCC", $this->_font->getSize() * 20,                        //	Fontsize (in twips)
+            $grbit, $icv,                                                //	Colour
             self::_mapBold($this->_font->getBold()),            //	Font weight
             $sss,                                                //	Superscript/Subscript
-            self::_mapUnderline($this->_font->getUnderline()),
-            $bFamily,
-            $bCharSet,
-            $reserved
-        );
+            self::_mapUnderline($this->_font->getUnderline()), $bFamily, $bCharSet, $reserved);
         $data .= PHPExcel_Shared_String::UTF8toBIFF8UnicodeShort($this->_font->getName());
 
         $length = strlen($data);

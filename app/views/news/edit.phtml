@@ -16,11 +16,7 @@ $news = News::findFirst("id='$id'");
 
         <div class="col-sm-10">
             <?=
-            $this->tag->textField(array(
-                'news',
-                'class' => 'form-control',
-                'value' => $news->news
-            ));
+            $this->tag->textField(array('news', 'class' => 'form-control', 'value' => $news->news));
             ?>
         </div>
     </div>

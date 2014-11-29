@@ -99,13 +99,14 @@ class PHPExcel_Shared_JAMA_QRDecomposition
                 }
                 $this->Rdiag[$k] = -$nrm;
             }
-        } else
+        }
+        else
         {
             throw new PHPExcel_Calculation_Exception(PHPExcel_Shared_JAMA_Matrix::ArgumentTypeException);
         }
     }    //	function __construct()
 
-/**
+    /**
      *    Return the Householder vectors
      *
      * @return Matrix Lower trapezoidal matrix whose columns define the reflections
@@ -119,7 +120,8 @@ class PHPExcel_Shared_JAMA_QRDecomposition
                 if ($i >= $j)
                 {
                     $H[$i][$j] = $this->QR[$i][$j];
-                } else
+                }
+                else
                 {
                     $H[$i][$j] = 0.0;
                 }
@@ -128,7 +130,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition
         return new PHPExcel_Shared_JAMA_Matrix($H);
     }    //	function isFullRank()
 
-/**
+    /**
      *    Return the upper triangular factor
      *
      * @return Matrix upper triangular factor
@@ -142,10 +144,12 @@ class PHPExcel_Shared_JAMA_QRDecomposition
                 if ($i < $j)
                 {
                     $R[$i][$j] = $this->QR[$i][$j];
-                } elseif ($i == $j)
+                }
+                elseif ($i == $j)
                 {
                     $R[$i][$j] = $this->Rdiag[$i];
-                } else
+                }
+                else
                 {
                     $R[$i][$j] = 0.0;
                 }
@@ -154,7 +158,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition
         return new PHPExcel_Shared_JAMA_Matrix($R);
     }    //	function getH()
 
-/**
+    /**
      *    Generate and return the (economy-sized) orthogonal factor
      *
      * @return Matrix orthogonal factor
@@ -197,7 +201,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition
         return new PHPExcel_Shared_JAMA_Matrix($Q);
     }    //	function getR()
 
-/**
+    /**
      *    Least squares solution of A*X = B
      *
      * @param Matrix $B A Matrix with as many rows as A and any number of columns.
@@ -246,17 +250,19 @@ class PHPExcel_Shared_JAMA_QRDecomposition
                 }
                 $X = new PHPExcel_Shared_JAMA_Matrix($X);
                 return ($X->getMatrix(0, $this->n - 1, 0, $nx));
-            } else
+            }
+            else
             {
                 throw new PHPExcel_Calculation_Exception(self::MatrixRankException);
             }
-        } else
+        }
+        else
         {
             throw new PHPExcel_Calculation_Exception(PHPExcel_Shared_JAMA_Matrix::MatrixDimensionException);
         }
     }    //	function getQ()
 
-/**
+    /**
      *    Is the matrix full rank?
      *
      * @return boolean true if R, and hence A, has full rank, else false.

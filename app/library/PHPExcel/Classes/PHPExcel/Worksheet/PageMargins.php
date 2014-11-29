@@ -227,7 +227,8 @@ class PHPExcel_Worksheet_PageMargins
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

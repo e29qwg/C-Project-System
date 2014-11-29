@@ -87,7 +87,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
         return true;
     }    //	function addCacheData()
 
-/**
+    /**
      * Add or Update a cell in cache identified by coordinate address
      *
      * @param    string $pCoord Coordinate address of the cell to update
@@ -109,7 +109,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
         return $cell;
     }    //	function getCacheData()
 
-/**
+    /**
      * Store cell data in cache for the current cell object if it's "dirty",
      *     and the 'nullify' the current cell object
      *
@@ -129,7 +129,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
         $this->_currentObjectID = $this->_currentObject = null;
     }    //	function isDataSet()
 
-/**
+    /**
      * Get cell at a specific coordinate
      *
      * @param    string $pCoord Coordinate of the cell
@@ -149,7 +149,8 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
         if ($cellResultSet === false)
         {
             throw new PHPExcel_Exception(sqlite_error_string($this->_DBHandle->lastError()));
-        } elseif ($cellResultSet->numRows() == 0)
+        }
+        elseif ($cellResultSet->numRows() == 0)
         {
             //	Return null if requested entry doesn't exist in cache
             return null;
@@ -167,7 +168,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
         return $this->_currentObject;
     }    //	function deleteCacheData()
 
-/**
+    /**
      * Is a value set for an indexed cell?
      *
      * @param    string $pCoord Coordinate address of the cell to check
@@ -186,7 +187,8 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
         if ($cellResultSet === false)
         {
             throw new PHPExcel_Exception(sqlite_error_string($this->_DBHandle->lastError()));
-        } elseif ($cellResultSet->numRows() == 0)
+        }
+        elseif ($cellResultSet->numRows() == 0)
         {
             //	Return null if requested entry doesn't exist in cache
             return false;
@@ -194,7 +196,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
         return true;
     }    //	function moveCell()
 
-/**
+    /**
      * Delete a cell in cache identified by coordinate address
      *
      * @param    string $pCoord Coordinate address of the cell to delete
@@ -216,7 +218,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
         $this->_currentCellIsDirty = false;
     }    //	function getCellList()
 
-/**
+    /**
      * Move a cell object from one address to another
      *
      * @param    string $fromAddress Current address of the cell to move
@@ -243,7 +245,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
         return TRUE;
     }    //	function copyCellCollection()
 
-/**
+    /**
      * Get a list of all cell addresses currently held in cache
      *
      * @return    array of string
@@ -269,7 +271,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
         return $cellKeys;
     }    //	function unsetWorksheetCells()
 
-/**
+    /**
      * Clone the cell collection
      *
      * @param    PHPExcel_Worksheet $parent The new worksheet
@@ -291,7 +293,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
         $this->_TableName = $tableName;
     }    //	function __construct()
 
-/**
+    /**
      * Clear the cell collection and disconnect from our parent
      *
      * @return    void
@@ -310,7 +312,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
         $this->__destruct();
     }    //	function __destruct()
 
-/**
+    /**
      * Destroy this cell collection
      */
     public function __destruct()

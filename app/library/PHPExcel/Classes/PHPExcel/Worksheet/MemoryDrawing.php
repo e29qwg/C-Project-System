@@ -184,13 +184,7 @@ class PHPExcel_Worksheet_MemoryDrawing extends PHPExcel_Worksheet_BaseDrawing im
      */
     public function getHashCode()
     {
-        return md5(
-            $this->_renderingFunction
-            . $this->_mimeType
-            . $this->_uniqueName
-            . parent::getHashCode()
-            . __CLASS__
-        );
+        return md5($this->_renderingFunction . $this->_mimeType . $this->_uniqueName . parent::getHashCode() . __CLASS__);
     }
 
     /**
@@ -204,7 +198,8 @@ class PHPExcel_Worksheet_MemoryDrawing extends PHPExcel_Worksheet_BaseDrawing im
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

@@ -17,11 +17,13 @@ function hypo($a, $b)
     {
         $r = $b / $a;
         $r = abs($a) * sqrt(1 + $r * $r);
-    } elseif ($b != 0)
+    }
+    elseif ($b != 0)
     {
         $r = $a / $b;
         $r = abs($b) * sqrt(1 + $r * $r);
-    } else
+    }
+    else
     {
         $r = 0.0;
     }

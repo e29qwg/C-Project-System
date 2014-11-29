@@ -273,7 +273,8 @@ class PHPExcel_Worksheet_ColumnDimension
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

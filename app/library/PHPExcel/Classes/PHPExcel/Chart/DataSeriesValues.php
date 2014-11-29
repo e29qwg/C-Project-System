@@ -39,10 +39,7 @@ class PHPExcel_Chart_DataSeriesValues
     const DATASERIES_TYPE_STRING = 'String';
     const DATASERIES_TYPE_NUMBER = 'Number';
 
-    private static $_dataTypeValues = array(
-        self::DATASERIES_TYPE_STRING,
-        self::DATASERIES_TYPE_NUMBER,
-    );
+    private static $_dataTypeValues = array(self::DATASERIES_TYPE_STRING, self::DATASERIES_TYPE_NUMBER,);
 
     /**
      * Series Data Type
@@ -287,7 +284,8 @@ class PHPExcel_Chart_DataSeriesValues
         if ($count == 0)
         {
             return null;
-        } elseif ($count == 1)
+        }
+        elseif ($count == 1)
         {
             return $this->_dataValues[0];
         }
@@ -299,13 +297,7 @@ class PHPExcel_Chart_DataSeriesValues
         if ($this->_dataSource !== NULL)
         {
             $calcEngine = PHPExcel_Calculation::getInstance($worksheet->getParent());
-            $newDataValues = PHPExcel_Calculation::_unwrapResult(
-                $calcEngine->_calculateFormulaValue(
-                    '=' . $this->_dataSource,
-                    NULL,
-                    $worksheet->getCell('A1')
-                )
-            );
+            $newDataValues = PHPExcel_Calculation::_unwrapResult($calcEngine->_calculateFormulaValue('=' . $this->_dataSource, NULL, $worksheet->getCell('A1')));
             if ($flatten)
             {
                 $this->_dataValues = PHPExcel_Calculation_Functions::flattenArray($newDataValues);
@@ -317,7 +309,8 @@ class PHPExcel_Chart_DataSeriesValues
                     }
                 }
                 unset($dataValue);
-            } else
+            }
+            else
             {
                 $cellRange = explode('!', $this->_dataSource);
                 if (count($cellRange) > 1)
@@ -329,7 +322,8 @@ class PHPExcel_Chart_DataSeriesValues
                 if (($dimensions[0] == 1) || ($dimensions[1] == 1))
                 {
                     $this->_dataValues = PHPExcel_Calculation_Functions::flattenArray($newDataValues);
-                } else
+                }
+                else
                 {
                     $newArray = array_values(array_shift($newDataValues));
                     foreach ($newArray as $i => $newDataSet)

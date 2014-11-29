@@ -88,7 +88,7 @@ class PHPExcel_Calculation_DateTime
         return $retValue;
     }    //	function _isLeapYear()
 
-/**
+    /**
      * DATENOW
      *
      * Returns the current date.
@@ -130,7 +130,7 @@ class PHPExcel_Calculation_DateTime
         return $retValue;
     }    //	function _dateDiff360()
 
-/**
+    /**
      * DATE
      *
      * The DATE function returns a value that represents a particular date.
@@ -199,9 +199,7 @@ class PHPExcel_Calculation_DateTime
         $year = ($year !== NULL) ? PHPExcel_Shared_String::testStringAsNumeric($year) : 0;
         $month = ($month !== NULL) ? PHPExcel_Shared_String::testStringAsNumeric($month) : 0;
         $day = ($day !== NULL) ? PHPExcel_Shared_String::testStringAsNumeric($day) : 0;
-        if ((!is_numeric($year)) ||
-            (!is_numeric($month)) ||
-            (!is_numeric($day))
+        if ((!is_numeric($year)) || (!is_numeric($month)) || (!is_numeric($day))
         )
         {
             return PHPExcel_Calculation_Functions::VALUE();
@@ -232,7 +230,8 @@ class PHPExcel_Calculation_DateTime
             --$month;
             $year += ceil($month / 12) - 1;
             $month = 13 - abs($month % 12);
-        } elseif ($month > 12)
+        }
+        elseif ($month > 12)
         {
             //	Handle year/month adjustment if month > 12
             $year += floor($month / 12);
@@ -258,7 +257,7 @@ class PHPExcel_Calculation_DateTime
         }
     }    //	function _getDateValue()
 
-/**
+    /**
      * TIME
      *
      * The TIME function returns a value that represents a particular time.
@@ -320,7 +319,8 @@ class PHPExcel_Calculation_DateTime
             {
                 $second = 0;
             }
-        } elseif ($second >= 60)
+        }
+        elseif ($second >= 60)
         {
             $minute += floor($second / 60);
             $second = $second % 60;
@@ -333,7 +333,8 @@ class PHPExcel_Calculation_DateTime
             {
                 $minute = 0;
             }
-        } elseif ($minute >= 60)
+        }
+        elseif ($minute >= 60)
         {
             $hour += floor($minute / 60);
             $minute = $minute % 60;
@@ -342,7 +343,8 @@ class PHPExcel_Calculation_DateTime
         if ($hour > 23)
         {
             $hour = $hour % 24;
-        } elseif ($hour < 0)
+        }
+        elseif ($hour < 0)
         {
             return PHPExcel_Calculation_Functions::NaN();
         }
@@ -370,7 +372,8 @@ class PHPExcel_Calculation_DateTime
                     {
                         $hour = 0;
                     }
-                } elseif ($hour >= 24)
+                }
+                elseif ($hour >= 24)
                 {
                     $dayAdjust = floor($hour / 24);
                     $hour = $hour % 24;
@@ -384,7 +387,7 @@ class PHPExcel_Calculation_DateTime
         }
     }    //	function _getTimeValue()
 
-/**
+    /**
      * YEARFRAC
      *
      * Calculates the fraction of the year represented by the number of whole days between two dates
@@ -443,14 +446,14 @@ class PHPExcel_Calculation_DateTime
                             $startMonth = self::MONTHOFYEAR($startDate);
                             $endMonth = self::MONTHOFYEAR($endDate);
                             $endDay = self::DAYOFMONTH($endDate);
-                            if (($startMonth < 3) ||
-                                (($endMonth * 100 + $endDay) >= (2 * 100 + 29))
+                            if (($startMonth < 3) || (($endMonth * 100 + $endDay) >= (2 * 100 + 29))
                             )
                             {
                                 $leapDays += 1;
                             }
                         }
-                    } else
+                    }
+                    else
                     {
                         for ($year = $startYear; $year <= $endYear; ++$year)
                         {
@@ -462,7 +465,8 @@ class PHPExcel_Calculation_DateTime
                                 {
                                     $leapDays += (self::_isLeapYear($year)) ? 1 : 0;
                                 }
-                            } elseif ($year == $endYear)
+                            }
+                            elseif ($year == $endYear)
                             {
                                 $endMonth = self::MONTHOFYEAR($endDate);
                                 $endDay = self::DAYOFMONTH($endDate);
@@ -470,7 +474,8 @@ class PHPExcel_Calculation_DateTime
                                 {
                                     $leapDays += (self::_isLeapYear($year)) ? 1 : 0;
                                 }
-                            } else
+                            }
+                            else
                             {
                                 $leapDays += (self::_isLeapYear($year)) ? 1 : 0;
                             }
@@ -480,7 +485,8 @@ class PHPExcel_Calculation_DateTime
                             if (($leapDays == 0) && (self::_isLeapYear($startYear)) && ($days > 365))
                             {
                                 $leapDays = 1;
-                            } elseif ($days < 366)
+                            }
+                            elseif ($days < 366)
                             {
                                 $years = 1;
                             }
@@ -499,7 +505,7 @@ class PHPExcel_Calculation_DateTime
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function _adjustDateByMonths()
 
-/**
+    /**
      * _getDateValue
      *
      * @param    string $dateValue
@@ -509,8 +515,7 @@ class PHPExcel_Calculation_DateTime
     {
         if (!is_numeric($dateValue))
         {
-            if ((is_string($dateValue)) &&
-                (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_GNUMERIC)
+            if ((is_string($dateValue)) && (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_GNUMERIC)
             )
             {
                 return PHPExcel_Calculation_Functions::VALUE();
@@ -518,7 +523,8 @@ class PHPExcel_Calculation_DateTime
             if ((is_object($dateValue)) && ($dateValue instanceof DateTime))
             {
                 $dateValue = PHPExcel_Shared_Date::PHPToExcel($dateValue);
-            } else
+            }
+            else
             {
                 $saveReturnDateType = PHPExcel_Calculation_Functions::getReturnDateType();
                 PHPExcel_Calculation_Functions::setReturnDateType(PHPExcel_Calculation_Functions::RETURNDATE_EXCEL);
@@ -529,7 +535,7 @@ class PHPExcel_Calculation_DateTime
         return $dateValue;
     }    //	function DATETIMENOW()
 
-/**
+    /**
      * DATEVALUE
      *
      * Returns a value that represents a particular date.
@@ -572,7 +578,8 @@ class PHPExcel_Calculation_DateTime
                 if ($yearFound)
                 {
                     return PHPExcel_Calculation_Functions::VALUE();
-                } else
+                }
+                else
                 {
                     if ($t < 100)
                     {
@@ -586,13 +593,15 @@ class PHPExcel_Calculation_DateTime
         {
             //	We've been fed a time value without any date
             return 0.0;
-        } elseif (count($t1) == 2)
+        }
+        elseif (count($t1) == 2)
         {
             //	We only have two parts of the date: either day/month or month/year
             if ($yearFound)
             {
                 array_unshift($t1, 1);
-            } else
+            }
+            else
             {
                 array_push($t1, date('Y'));
             }
@@ -614,11 +623,13 @@ class PHPExcel_Calculation_DateTime
                     {
                         $testVal3 = strftime('%Y');
                     }
-                } else
+                }
+                else
                 {
                     return PHPExcel_Calculation_Functions::VALUE();
                 }
-            } else
+            }
+            else
             {
                 return PHPExcel_Calculation_Functions::VALUE();
             }
@@ -665,7 +676,7 @@ class PHPExcel_Calculation_DateTime
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function DATENOW()
 
-/**
+    /**
      * DAYS360
      *
      * Returns the number of days between two dates based on a 360-day year (twelve 30-day months),
@@ -727,7 +738,7 @@ class PHPExcel_Calculation_DateTime
         return self::_dateDiff360($startDay, $startMonth, $startYear, $endDay, $endMonth, $endYear, !$method);
     }    //	function DATE()
 
-/**
+    /**
      * Return the number of days between two dates based on a 360 day calendar
      *
      * @param    integer $startDay Day of month of the start date
@@ -744,7 +755,8 @@ class PHPExcel_Calculation_DateTime
         if ($startDay == 31)
         {
             --$startDay;
-        } elseif ($methodUS && ($startMonth == 2 && ($startDay == 29 || ($startDay == 28 && !self::_isLeapYear($startYear)))))
+        }
+        elseif ($methodUS && ($startMonth == 2 && ($startDay == 29 || ($startDay == 28 && !self::_isLeapYear($startYear)))))
         {
             $startDay = 30;
         }
@@ -757,11 +769,13 @@ class PHPExcel_Calculation_DateTime
                 {
                     ++$endYear;
                     $endMonth = 1;
-                } else
+                }
+                else
                 {
                     ++$endMonth;
                 }
-            } else
+            }
+            else
             {
                 $endDay = 30;
             }
@@ -770,7 +784,7 @@ class PHPExcel_Calculation_DateTime
         return $endDay + $endMonth * 30 + $endYear * 360 - $startDay - $startMonth * 30 - $startYear * 360;
     }    //	function TIME()
 
-/**
+    /**
      * Identify if a year is a leap year or not
      *
      * @param    integer $year The year to test
@@ -781,7 +795,7 @@ class PHPExcel_Calculation_DateTime
         return ((($year % 4) == 0) && (($year % 100) != 0) || (($year % 400) == 0));
     }    //	function DATEVALUE()
 
-/**
+    /**
      * DATEDIF
      *
      * @param    mixed $startDate Excel date serial value, PHP date/time stamp, PHP DateTime object
@@ -845,7 +859,8 @@ class PHPExcel_Calculation_DateTime
                 if ($endMonths < $startMonths)
                 {
                     --$retVal;
-                } elseif (($endMonths == $startMonths) && ($endDays < $startDays))
+                }
+                elseif (($endMonths == $startMonths) && ($endDays < $startDays))
                 {
                     --$retVal;
                 }
@@ -860,14 +875,16 @@ class PHPExcel_Calculation_DateTime
                     {
                         $retVal += ($adjustDays - $startDays);
                     }
-                } else
+                }
+                else
                 {
                     $retVal = $endDays - $startDays;
                 }
                 break;
             case 'YM':
                 $retVal = intval($endMonths - $startMonths);
-                if ($retVal < 0) $retVal = 12 + $retVal;
+                if ($retVal < 0)
+                    $retVal = 12 + $retVal;
                 //	We're only interested in full months
                 if ($endDays < $startDays)
                 {
@@ -896,7 +913,7 @@ class PHPExcel_Calculation_DateTime
         return $retVal;
     }    //	function TIMEVALUE()
 
-/**
+    /**
      * YEAR
      *
      * Returns the year corresponding to a date.
@@ -916,7 +933,8 @@ class PHPExcel_Calculation_DateTime
         if (is_string($dateValue = self::_getDateValue($dateValue)))
         {
             return PHPExcel_Calculation_Functions::VALUE();
-        } elseif ($dateValue < 0.0)
+        }
+        elseif ($dateValue < 0.0)
         {
             return PHPExcel_Calculation_Functions::NaN();
         }
@@ -927,7 +945,7 @@ class PHPExcel_Calculation_DateTime
         return (int)$PHPDateObject->format('Y');
     }    //	function DATEDIF()
 
-/**
+    /**
      * MONTHOFYEAR
      *
      * Returns the month of a date represented by a serial number.
@@ -947,7 +965,8 @@ class PHPExcel_Calculation_DateTime
         if (is_string($dateValue = self::_getDateValue($dateValue)))
         {
             return PHPExcel_Calculation_Functions::VALUE();
-        } elseif ($dateValue < 0.0)
+        }
+        elseif ($dateValue < 0.0)
         {
             return PHPExcel_Calculation_Functions::NaN();
         }
@@ -958,7 +977,7 @@ class PHPExcel_Calculation_DateTime
         return (int)$PHPDateObject->format('n');
     }    //	function DAYS360()
 
-/**
+    /**
      * DAYOFMONTH
      *
      * Returns the day of the month, for a specified date. The day is given as an integer
@@ -978,10 +997,12 @@ class PHPExcel_Calculation_DateTime
         if (is_string($dateValue = self::_getDateValue($dateValue)))
         {
             return PHPExcel_Calculation_Functions::VALUE();
-        } elseif ($dateValue == 0.0)
+        }
+        elseif ($dateValue == 0.0)
         {
             return 0;
-        } elseif ($dateValue < 0.0)
+        }
+        elseif ($dateValue < 0.0)
         {
             return PHPExcel_Calculation_Functions::NaN();
         }
@@ -992,7 +1013,7 @@ class PHPExcel_Calculation_DateTime
         return (int)$PHPDateObject->format('j');
     }    //	function YEARFRAC()
 
-/**
+    /**
      * NETWORKDAYS
      *
      * Returns the number of whole working days between start_date and end_date. Working days
@@ -1087,7 +1108,7 @@ class PHPExcel_Calculation_DateTime
         return $wholeWeekDays + $partWeekDays;
     }    //	function NETWORKDAYS()
 
-/**
+    /**
      * DAYOFWEEK
      *
      * Returns the day of the week for a specified date. The day is given as an integer
@@ -1112,7 +1133,8 @@ class PHPExcel_Calculation_DateTime
         if (!is_numeric($style))
         {
             return PHPExcel_Calculation_Functions::VALUE();
-        } elseif (($style < 1) || ($style > 3))
+        }
+        elseif (($style < 1) || ($style > 3))
         {
             return PHPExcel_Calculation_Functions::NaN();
         }
@@ -1121,7 +1143,8 @@ class PHPExcel_Calculation_DateTime
         if (is_string($dateValue = self::_getDateValue($dateValue)))
         {
             return PHPExcel_Calculation_Functions::VALUE();
-        } elseif ($dateValue < 0.0)
+        }
+        elseif ($dateValue < 0.0)
         {
             return PHPExcel_Calculation_Functions::NaN();
         }
@@ -1167,7 +1190,7 @@ class PHPExcel_Calculation_DateTime
         return (int)$DoW;
     }    //	function WORKDAY()
 
-/**
+    /**
      * WORKDAY
      *
      * Returns the date that is the indicated number of working days before or after a date (the
@@ -1256,7 +1279,8 @@ class PHPExcel_Calculation_DateTime
             if ($decrementing)
             {
                 rsort($holidayDates, SORT_NUMERIC);
-            } else
+            }
+            else
             {
                 sort($holidayDates, SORT_NUMERIC);
             }
@@ -1272,7 +1296,8 @@ class PHPExcel_Calculation_DateTime
                             $holidayCountedArray[] = $holidayDate;
                         }
                     }
-                } else
+                }
+                else
                 {
                     if (($holidayDate >= $startDate) && ($holidayDate <= $endDate))
                     {
@@ -1304,7 +1329,7 @@ class PHPExcel_Calculation_DateTime
         }
     }    //	function DAYOFMONTH()
 
-/**
+    /**
      * WEEKOFYEAR
      *
      * Returns the week of the year for a specified date.
@@ -1332,7 +1357,8 @@ class PHPExcel_Calculation_DateTime
         if (!is_numeric($method))
         {
             return PHPExcel_Calculation_Functions::VALUE();
-        } elseif (($method < 1) || ($method > 2))
+        }
+        elseif (($method < 1) || ($method > 2))
         {
             return PHPExcel_Calculation_Functions::NaN();
         }
@@ -1341,7 +1367,8 @@ class PHPExcel_Calculation_DateTime
         if (is_string($dateValue = self::_getDateValue($dateValue)))
         {
             return PHPExcel_Calculation_Functions::VALUE();
-        } elseif ($dateValue < 0.0)
+        }
+        elseif ($dateValue < 0.0)
         {
             return PHPExcel_Calculation_Functions::NaN();
         }
@@ -1359,7 +1386,7 @@ class PHPExcel_Calculation_DateTime
         return (int)$weekOfYear;
     }    //	function DAYOFWEEK()
 
-/**
+    /**
      * HOUROFDAY
      *
      * Returns the hour of a time value.
@@ -1396,7 +1423,8 @@ class PHPExcel_Calculation_DateTime
         if ($timeValue >= 1)
         {
             $timeValue = fmod($timeValue, 1);
-        } elseif ($timeValue < 0.0)
+        }
+        elseif ($timeValue < 0.0)
         {
             return PHPExcel_Calculation_Functions::NaN();
         }
@@ -1405,7 +1433,7 @@ class PHPExcel_Calculation_DateTime
         return (int)gmdate('G', $timeValue);
     }    //	function WEEKOFYEAR()
 
-/**
+    /**
      * _getTimeValue
      *
      * @param    string $timeValue
@@ -1420,7 +1448,7 @@ class PHPExcel_Calculation_DateTime
         return $timeValue;
     }    //	function MONTHOFYEAR()
 
-/**
+    /**
      * TIMEVALUE
      *
      * Returns a value that represents a particular time.
@@ -1453,7 +1481,8 @@ class PHPExcel_Calculation_DateTime
             if (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE)
             {
                 $excelDateValue = PHPExcel_Shared_Date::FormattedPHPToExcel($PHPDateArray['year'], $PHPDateArray['month'], $PHPDateArray['day'], $PHPDateArray['hour'], $PHPDateArray['minute'], $PHPDateArray['second']);
-            } else
+            }
+            else
             {
                 $excelDateValue = PHPExcel_Shared_Date::FormattedPHPToExcel(1900, 1, 1, $PHPDateArray['hour'], $PHPDateArray['minute'], $PHPDateArray['second']) - 1;
             }
@@ -1471,7 +1500,7 @@ class PHPExcel_Calculation_DateTime
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function YEAR()
 
-/**
+    /**
      * MINUTEOFHOUR
      *
      * Returns the minutes of a time value.
@@ -1508,7 +1537,8 @@ class PHPExcel_Calculation_DateTime
         if ($timeValue >= 1)
         {
             $timeValue = fmod($timeValue, 1);
-        } elseif ($timeValue < 0.0)
+        }
+        elseif ($timeValue < 0.0)
         {
             return PHPExcel_Calculation_Functions::NaN();
         }
@@ -1517,7 +1547,7 @@ class PHPExcel_Calculation_DateTime
         return (int)gmdate('i', $timeValue);
     }    //	function HOUROFDAY()
 
-/**
+    /**
      * SECONDOFMINUTE
      *
      * Returns the seconds of a time value.
@@ -1554,7 +1584,8 @@ class PHPExcel_Calculation_DateTime
         if ($timeValue >= 1)
         {
             $timeValue = fmod($timeValue, 1);
-        } elseif ($timeValue < 0.0)
+        }
+        elseif ($timeValue < 0.0)
         {
             return PHPExcel_Calculation_Functions::NaN();
         }
@@ -1563,7 +1594,7 @@ class PHPExcel_Calculation_DateTime
         return (int)gmdate('s', $timeValue);
     }    //	function MINUTEOFHOUR()
 
-/**
+    /**
      * EDATE
      *
      * Returns the serial number that represents the date that is the indicated number of months
@@ -1612,7 +1643,7 @@ class PHPExcel_Calculation_DateTime
         }
     }    //	function SECONDOFMINUTE()
 
-private static function _adjustDateByMonths($dateValue = 0, $adjustmentMonths = 0)
+    private static function _adjustDateByMonths($dateValue = 0, $adjustmentMonths = 0)
     {
         // Execute function
         $PHPDateObject = PHPExcel_Shared_Date::ExcelToPHPObject($dateValue);
@@ -1641,7 +1672,7 @@ private static function _adjustDateByMonths($dateValue = 0, $adjustmentMonths = 
         return $PHPDateObject;
     }    //	function EDATE()
 
-/**
+    /**
      * EOMONTH
      *
      * Returns the date value for the last day of the month that is the indicated number of months

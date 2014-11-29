@@ -118,7 +118,8 @@ class PHPExcel_Cell
             if ($pDataType == PHPExcel_Cell_DataType::TYPE_STRING2)
                 $pDataType = PHPExcel_Cell_DataType::TYPE_STRING;
             $this->_dataType = $pDataType;
-        } else
+        }
+        else
         {
             if (!self::getValueBinder()->bindValue($this, $pValue))
             {
@@ -180,13 +181,15 @@ class PHPExcel_Cell
             {
                 list($worksheet, $pCoordinateString) = $cellAddress;
             }
-            if ($worksheet > '') $worksheet .= '!';
+            if ($worksheet > '')
+                $worksheet .= '!';
 
             // Create absolute coordinate
             if (ctype_digit($pCoordinateString))
             {
                 return $worksheet . '$' . $pCoordinateString;
-            } elseif (ctype_alpha($pCoordinateString))
+            }
+            elseif (ctype_alpha($pCoordinateString))
             {
                 return $worksheet . '$' . strtoupper($pCoordinateString);
             }
@@ -214,7 +217,8 @@ class PHPExcel_Cell
             {
                 list($worksheet, $pCoordinateString) = $cellAddress;
             }
-            if ($worksheet > '') $worksheet .= '!';
+            if ($worksheet > '')
+                $worksheet .= '!';
 
             // Create absolute coordinate
             list($column, $row) = self::coordinateFromString($pCoordinateString);
@@ -289,7 +293,8 @@ class PHPExcel_Cell
         if (strpos($pRange, ':') === FALSE)
         {
             $rangeA = $rangeB = $pRange;
-        } else
+        }
+        else
         {
             list($rangeA, $rangeB) = explode(':', $pRange);
         }
@@ -316,15 +321,14 @@ class PHPExcel_Cell
             if ($pColumnIndex < 26)
             {
                 $_indexCache[$pColumnIndex] = chr(65 + $pColumnIndex);
-            } elseif ($pColumnIndex < 702)
+            }
+            elseif ($pColumnIndex < 702)
             {
-                $_indexCache[$pColumnIndex] = chr(64 + ($pColumnIndex / 26)) .
-                    chr(65 + $pColumnIndex % 26);
-            } else
+                $_indexCache[$pColumnIndex] = chr(64 + ($pColumnIndex / 26)) . chr(65 + $pColumnIndex % 26);
+            }
+            else
             {
-                $_indexCache[$pColumnIndex] = chr(64 + (($pColumnIndex - 26) / 676)) .
-                    chr(65 + ((($pColumnIndex - 26) % 676) / 26)) .
-                    chr(65 + $pColumnIndex % 26);
+                $_indexCache[$pColumnIndex] = chr(64 + (($pColumnIndex - 26) / 676)) . chr(65 + ((($pColumnIndex - 26) % 676) / 26)) . chr(65 + $pColumnIndex % 26);
             }
         }
         return $_indexCache[$pColumnIndex];
@@ -437,13 +441,16 @@ class PHPExcel_Cell
         if ($a->getRow() < $b->getRow())
         {
             return -1;
-        } elseif ($a->getRow() > $b->getRow())
+        }
+        elseif ($a->getRow() > $b->getRow())
         {
             return 1;
-        } elseif (self::columnIndexFromString($a->getColumn()) < self::columnIndexFromString($b->getColumn()))
+        }
+        elseif (self::columnIndexFromString($a->getColumn()) < self::columnIndexFromString($b->getColumn()))
         {
             return -1;
-        } else
+        }
+        else
         {
             return 1;
         }
@@ -468,11 +475,7 @@ class PHPExcel_Cell
      */
     public function getFormattedValue()
     {
-        return (string)PHPExcel_Style_NumberFormat::toFormattedString(
-            $this->getCalculatedValue(),
-            $this->getWorksheet()->getParent()->getCellXfByIndex($this->getXfIndex())
-                ->getNumberFormat()->getFormatCode()
-        );
+        return (string)PHPExcel_Style_NumberFormat::toFormattedString($this->getCalculatedValue(), $this->getWorksheet()->getParent()->getCellXfByIndex($this->getXfIndex())->getNumberFormat()->getFormatCode());
     }
 
     /**
@@ -486,16 +489,14 @@ class PHPExcel_Cell
      */
     public function getCalculatedValue($resetLog = TRUE)
     {
-//echo 'Cell '.$this->getCoordinate().' value is a '.$this->_dataType.' with a value of '.$this->getValue().PHP_EOL;
+        //echo 'Cell '.$this->getCoordinate().' value is a '.$this->_dataType.' with a value of '.$this->getValue().PHP_EOL;
         if ($this->_dataType == PHPExcel_Cell_DataType::TYPE_FORMULA)
         {
             try
             {
-//echo 'Cell value for '.$this->getCoordinate().' is a formula: Calculating value'.PHP_EOL;
-                $result = PHPExcel_Calculation::getInstance(
-                    $this->getWorksheet()->getParent()
-                )->calculateCellValue($this, $resetLog);
-//echo $this->getCoordinate().' calculation result is '.$result.PHP_EOL;
+                //echo 'Cell value for '.$this->getCoordinate().' is a formula: Calculating value'.PHP_EOL;
+                $result = PHPExcel_Calculation::getInstance($this->getWorksheet()->getParent())->calculateCellValue($this, $resetLog);
+                //echo $this->getCoordinate().' calculation result is '.$result.PHP_EOL;
                 //	We don't yet handle array returns
                 if (is_array($result))
                 {
@@ -508,29 +509,28 @@ class PHPExcel_Cell
             {
                 if (($ex->getMessage() === 'Unable to access External Workbook') && ($this->_calculatedValue !== NULL))
                 {
-//echo 'Returning fallback value of '.$this->_calculatedValue.' for cell '.$this->getCoordinate().PHP_EOL;
+                    //echo 'Returning fallback value of '.$this->_calculatedValue.' for cell '.$this->getCoordinate().PHP_EOL;
                     return $this->_calculatedValue; // Fallback for calculations referencing external files.
                 }
-//echo 'Calculation Exception: '.$ex->getMessage().PHP_EOL;
+                //echo 'Calculation Exception: '.$ex->getMessage().PHP_EOL;
                 $result = '#N/A';
-                throw new PHPExcel_Calculation_Exception(
-                    $this->getWorksheet()->getTitle() . '!' . $this->getCoordinate() . ' -> ' . $ex->getMessage()
-                );
+                throw new PHPExcel_Calculation_Exception($this->getWorksheet()->getTitle() . '!' . $this->getCoordinate() . ' -> ' . $ex->getMessage());
             }
 
             if ($result === '#Not Yet Implemented')
             {
-//echo 'Returning fallback value of '.$this->_calculatedValue.' for cell '.$this->getCoordinate().PHP_EOL;
+                //echo 'Returning fallback value of '.$this->_calculatedValue.' for cell '.$this->getCoordinate().PHP_EOL;
                 return $this->_calculatedValue; // Fallback if calculation engine does not support the formula.
             }
-//echo 'Returning calculated value of '.$result.' for cell '.$this->getCoordinate().PHP_EOL;
+            //echo 'Returning calculated value of '.$result.' for cell '.$this->getCoordinate().PHP_EOL;
             return $result;
-        } elseif ($this->_value instanceof PHPExcel_RichText)
+        }
+        elseif ($this->_value instanceof PHPExcel_RichText)
         {
-//		echo 'Cell value for '.$this->getCoordinate().' is rich text: Returning data value of '.$this->_value.'<br />';
+            //		echo 'Cell value for '.$this->getCoordinate().' is rich text: Returning data value of '.$this->_value.'<br />';
             return $this->_value->getPlainText();
         }
-//		echo 'Cell value for '.$this->getCoordinate().' is not a formula: Returning data value of '.$this->_value.'<br />';
+        //		echo 'Cell value for '.$this->getCoordinate().' is not a formula: Returning data value of '.$this->_value.'<br />';
         return $this->_value;
     }
 
@@ -851,9 +851,7 @@ class PHPExcel_Cell
         $myRow = $this->getRow();
 
         // Verify if cell is in range
-        return (($rangeStart[0] <= $myColumn) && ($rangeEnd[0] >= $myColumn) &&
-            ($rangeStart[1] <= $myRow) && ($rangeEnd[1] >= $myRow)
-        );
+        return (($rangeStart[0] <= $myColumn) && ($rangeEnd[0] >= $myColumn) && ($rangeStart[1] <= $myRow) && ($rangeEnd[1] >= $myRow));
     }
 
     /**
@@ -878,7 +876,8 @@ class PHPExcel_Cell
         if (strpos($pRange, ':') === FALSE)
         {
             $rangeA = $rangeB = $pRange;
-        } else
+        }
+        else
         {
             list($rangeA, $rangeB) = explode(':', $pRange);
         }
@@ -906,10 +905,12 @@ class PHPExcel_Cell
         if (preg_match("/^([$]?[A-Z]{1,3})([$]?\d{1,7})$/", $pCoordinateString, $matches))
         {
             return array($matches[1], $matches[2]);
-        } elseif ((strpos($pCoordinateString, ':') !== FALSE) || (strpos($pCoordinateString, ',') !== FALSE))
+        }
+        elseif ((strpos($pCoordinateString, ':') !== FALSE) || (strpos($pCoordinateString, ',') !== FALSE))
         {
             throw new PHPExcel_Exception('Cell coordinate string can not be a range of cells');
-        } elseif ($pCoordinateString == '')
+        }
+        elseif ($pCoordinateString == '')
         {
             throw new PHPExcel_Exception('Cell coordinate can not be zero-length string');
         }
@@ -936,12 +937,7 @@ class PHPExcel_Cell
         //	It's surprising how costly the strtoupper() and ord() calls actually are, so we use a lookup array rather than use ord()
         //		and make it case insensitive to get rid of the strtoupper() as well. Because it's a static, there's no significant
         //		memory overhead either
-        static $_columnLookup = array(
-            'A' => 1, 'B' => 2, 'C' => 3, 'D' => 4, 'E' => 5, 'F' => 6, 'G' => 7, 'H' => 8, 'I' => 9, 'J' => 10, 'K' => 11, 'L' => 12, 'M' => 13,
-            'N' => 14, 'O' => 15, 'P' => 16, 'Q' => 17, 'R' => 18, 'S' => 19, 'T' => 20, 'U' => 21, 'V' => 22, 'W' => 23, 'X' => 24, 'Y' => 25, 'Z' => 26,
-            'a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5, 'f' => 6, 'g' => 7, 'h' => 8, 'i' => 9, 'j' => 10, 'k' => 11, 'l' => 12, 'm' => 13,
-            'n' => 14, 'o' => 15, 'p' => 16, 'q' => 17, 'r' => 18, 's' => 19, 't' => 20, 'u' => 21, 'v' => 22, 'w' => 23, 'x' => 24, 'y' => 25, 'z' => 26
-        );
+        static $_columnLookup = array('A' => 1, 'B' => 2, 'C' => 3, 'D' => 4, 'E' => 5, 'F' => 6, 'G' => 7, 'H' => 8, 'I' => 9, 'J' => 10, 'K' => 11, 'L' => 12, 'M' => 13, 'N' => 14, 'O' => 15, 'P' => 16, 'Q' => 17, 'R' => 18, 'S' => 19, 'T' => 20, 'U' => 21, 'V' => 22, 'W' => 23, 'X' => 24, 'Y' => 25, 'Z' => 26, 'a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5, 'f' => 6, 'g' => 7, 'h' => 8, 'i' => 9, 'j' => 10, 'k' => 11, 'l' => 12, 'm' => 13, 'n' => 14, 'o' => 15, 'p' => 16, 'q' => 17, 'r' => 18, 's' => 19, 't' => 20, 'u' => 21, 'v' => 22, 'w' => 23, 'x' => 24, 'y' => 25, 'z' => 26);
 
         //	We also use the language construct isset() rather than the more costly strlen() function to match the length of $pString
         //		for improved performance
@@ -951,11 +947,13 @@ class PHPExcel_Cell
             {
                 $_indexCache[$pString] = $_columnLookup[$pString];
                 return $_indexCache[$pString];
-            } elseif (!isset($pString{2}))
+            }
+            elseif (!isset($pString{2}))
             {
                 $_indexCache[$pString] = $_columnLookup[$pString{0}] * 26 + $_columnLookup[$pString{1}];
                 return $_indexCache[$pString];
-            } elseif (!isset($pString{3}))
+            }
+            elseif (!isset($pString{3}))
             {
                 $_indexCache[$pString] = $_columnLookup[$pString{0}] * 676 + $_columnLookup[$pString{1}] * 26 + $_columnLookup[$pString{2}];
                 return $_indexCache[$pString];
@@ -995,7 +993,8 @@ class PHPExcel_Cell
             if ((is_object($value)) && ($key != '_parent'))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

@@ -314,7 +314,8 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
                 }
                 $this->_formats['P' . $this->_format++] = $formatArray;
                 //	Read cell value data
-            } elseif ($dataType == 'C')
+            }
+            elseif ($dataType == 'C')
             {
                 $hasCalculatedValue = false;
                 $cellData = $cellDataFormula = '';
@@ -354,14 +355,18 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
                                     {
                                         $rowReference = $cellReference[2][0];
                                         //	Empty R reference is the current row
-                                        if ($rowReference == '') $rowReference = $row;
+                                        if ($rowReference == '')
+                                            $rowReference = $row;
                                         //	Bracketed R references are relative to the current row
-                                        if ($rowReference{0} == '[') $rowReference = $row + trim($rowReference, '[]');
+                                        if ($rowReference{0} == '[')
+                                            $rowReference = $row + trim($rowReference, '[]');
                                         $columnReference = $cellReference[4][0];
                                         //	Empty C reference is the current column
-                                        if ($columnReference == '') $columnReference = $column;
+                                        if ($columnReference == '')
+                                            $columnReference = $column;
                                         //	Bracketed C references are relative to the current column
-                                        if ($columnReference{0} == '[') $columnReference = $column + trim($columnReference, '[]');
+                                        if ($columnReference{0} == '[')
+                                            $columnReference = $column + trim($columnReference, '[]');
                                         $A1CellReference = PHPExcel_Cell::stringFromColumnIndex($columnReference - 1) . $rowReference;
 
                                         $value = substr_replace($value, $A1CellReference, $cellReference[0][1], strlen($cellReference[0][0]));
@@ -386,7 +391,8 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
                     $objPHPExcel->getActiveSheet()->getCell($columnLetter . $row)->setCalculatedValue($cellData);
                 }
                 //	Read cell formatting
-            } elseif ($dataType == 'F')
+            }
+            elseif ($dataType == 'F')
             {
                 $formatStyle = $columnWidth = $styleSettings = '';
                 $styleData = array();
@@ -456,7 +462,8 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
                     {
                         $startCol = PHPExcel_Cell::stringFromColumnIndex($startCol - 1);
                         $objPHPExcel->getActiveSheet()->getColumnDimension($startCol)->setWidth($columnWidth);
-                    } else
+                    }
+                    else
                     {
                         $startCol = PHPExcel_Cell::stringFromColumnIndex($startCol - 1);
                         $endCol = PHPExcel_Cell::stringFromColumnIndex($endCol - 1);
@@ -467,7 +474,8 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
                         } while ($startCol != $endCol);
                     }
                 }
-            } else
+            }
+            else
             {
                 foreach ($rowData as $rowDatum)
                 {

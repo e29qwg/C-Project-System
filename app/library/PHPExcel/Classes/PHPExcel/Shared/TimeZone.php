@@ -44,7 +44,7 @@ class PHPExcel_Shared_TimeZone
      */
     protected static $_timezone = 'UTC';
 
-/**
+    /**
      * Return the Default Timezone used for date/time conversions
      *
      * @return     string        Timezone (e.g. 'Europe/London')
@@ -102,7 +102,8 @@ class PHPExcel_Shared_TimeZone
             {
                 throw new PHPExcel_Exception("Invalid timezone " . $timezone);
             }
-        } else
+        }
+        else
         {
             $timezone = self::$_timezone;
         }
@@ -116,7 +117,8 @@ class PHPExcel_Shared_TimeZone
         if (version_compare(PHP_VERSION, '5.3.0') >= 0)
         {
             $transitions = $objTimezone->getTransitions($timestamp, $timestamp);
-        } else
+        }
+        else
         {
             $transitions = self::_getTimezoneTransitions($objTimezone, $timestamp);
         }

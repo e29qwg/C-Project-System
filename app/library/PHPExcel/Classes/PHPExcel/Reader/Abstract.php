@@ -149,8 +149,7 @@ abstract class PHPExcel_Reader_Abstract implements PHPExcel_Reader_IReader
      */
     public function setLoadSheetsOnly($value = NULL)
     {
-        $this->_loadSheetsOnly = is_array($value) ?
-            $value : array($value);
+        $this->_loadSheetsOnly = is_array($value) ? $value : array($value);
         return $this;
     }
 

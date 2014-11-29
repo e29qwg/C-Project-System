@@ -66,18 +66,13 @@ class PHPExcel_Writer_Excel2007_StringTable extends PHPExcel_Writer_Excel2007_Wr
             {
                 $cell = $pSheet->getCell($cellID);
                 $cellValue = $cell->getValue();
-                if (!is_object($cellValue) &&
-                    ($cellValue !== NULL) &&
-                    $cellValue !== '' &&
-                    !isset($aFlippedStringTable[$cellValue]) &&
-                    ($cell->getDataType() == PHPExcel_Cell_DataType::TYPE_STRING || $cell->getDataType() == PHPExcel_Cell_DataType::TYPE_STRING2 || $cell->getDataType() == PHPExcel_Cell_DataType::TYPE_NULL)
+                if (!is_object($cellValue) && ($cellValue !== NULL) && $cellValue !== '' && !isset($aFlippedStringTable[$cellValue]) && ($cell->getDataType() == PHPExcel_Cell_DataType::TYPE_STRING || $cell->getDataType() == PHPExcel_Cell_DataType::TYPE_STRING2 || $cell->getDataType() == PHPExcel_Cell_DataType::TYPE_NULL)
                 )
                 {
                     $aStringTable[] = $cellValue;
                     $aFlippedStringTable[$cellValue] = true;
-                } elseif ($cellValue instanceof PHPExcel_RichText &&
-                    ($cellValue !== NULL) &&
-                    !isset($aFlippedStringTable[$cellValue->getHashCode()])
+                }
+                elseif ($cellValue instanceof PHPExcel_RichText && ($cellValue !== NULL) && !isset($aFlippedStringTable[$cellValue->getHashCode()])
                 )
                 {
                     $aStringTable[] = $cellValue;
@@ -87,7 +82,8 @@ class PHPExcel_Writer_Excel2007_StringTable extends PHPExcel_Writer_Excel2007_Wr
 
             // Return
             return $aStringTable;
-        } else
+        }
+        else
         {
             throw new PHPExcel_Writer_Exception("Invalid PHPExcel_Worksheet object passed.");
         }
@@ -110,7 +106,8 @@ class PHPExcel_Writer_Excel2007_StringTable extends PHPExcel_Writer_Excel2007_Wr
             if (!$value instanceof PHPExcel_RichText)
             {
                 $returnValue[$value] = $key;
-            } else if ($value instanceof PHPExcel_RichText)
+            }
+            else if ($value instanceof PHPExcel_RichText)
             {
                 $returnValue[$value->getHashCode()] = $key;
             }
@@ -136,7 +133,8 @@ class PHPExcel_Writer_Excel2007_StringTable extends PHPExcel_Writer_Excel2007_Wr
             if ($this->getParentWriter()->getUseDiskCaching())
             {
                 $objWriter = new PHPExcel_Shared_XMLWriter(PHPExcel_Shared_XMLWriter::STORAGE_DISK, $this->getParentWriter()->getDiskCachingDirectory());
-            } else
+            }
+            else
             {
                 $objWriter = new PHPExcel_Shared_XMLWriter(PHPExcel_Shared_XMLWriter::STORAGE_MEMORY);
             }
@@ -164,7 +162,8 @@ class PHPExcel_Writer_Excel2007_StringTable extends PHPExcel_Writer_Excel2007_Wr
                     }
                     $objWriter->writeRawData($textToWrite);
                     $objWriter->endElement();
-                } else if ($textElement instanceof PHPExcel_RichText)
+                }
+                else if ($textElement instanceof PHPExcel_RichText)
                 {
                     $this->writeRichText($objWriter, $textElement);
                 }
@@ -176,7 +175,8 @@ class PHPExcel_Writer_Excel2007_StringTable extends PHPExcel_Writer_Excel2007_Wr
 
             // Return
             return $objWriter->getData();
-        } else
+        }
+        else
         {
             throw new PHPExcel_Writer_Exception("Invalid string table array passed.");
         }
@@ -229,7 +229,8 @@ class PHPExcel_Writer_Excel2007_StringTable extends PHPExcel_Writer_Excel2007_Wr
                     if ($element->getFont()->getSuperScript())
                     {
                         $objWriter->writeAttribute('val', 'superscript');
-                    } else if ($element->getFont()->getSubScript())
+                    }
+                    else if ($element->getFont()->getSubScript())
                     {
                         $objWriter->writeAttribute('val', 'subscript');
                     }
@@ -323,21 +324,21 @@ class PHPExcel_Writer_Excel2007_StringTable extends PHPExcel_Writer_Excel2007_Wr
             $objWriter->endElement();
 
             // Superscript / subscript
-//					if ($element->getFont()->getSuperScript() || $element->getFont()->getSubScript()) {
-//						$objWriter->startElement($prefix.'vertAlign');
-//						if ($element->getFont()->getSuperScript()) {
-//							$objWriter->writeAttribute('val', 'superscript');
-//						} else if ($element->getFont()->getSubScript()) {
-//							$objWriter->writeAttribute('val', 'subscript');
-//						}
-//						$objWriter->endElement();
-//					}
-//
+            //					if ($element->getFont()->getSuperScript() || $element->getFont()->getSubScript()) {
+            //						$objWriter->startElement($prefix.'vertAlign');
+            //						if ($element->getFont()->getSuperScript()) {
+            //							$objWriter->writeAttribute('val', 'superscript');
+            //						} else if ($element->getFont()->getSubScript()) {
+            //							$objWriter->writeAttribute('val', 'subscript');
+            //						}
+            //						$objWriter->endElement();
+            //					}
+            //
             $objWriter->endElement();
 
             // t
             $objWriter->startElement($prefix . 't');
-//					$objWriter->writeAttribute('xml:space', 'preserve');	//	Excel2010 accepts, Excel2007 complains
+            //					$objWriter->writeAttribute('xml:space', 'preserve');	//	Excel2010 accepts, Excel2007 complains
             $objWriter->writeRawData(PHPExcel_Shared_String::ControlCharacterPHP2OOXML($element->getText()));
             $objWriter->endElement();
 

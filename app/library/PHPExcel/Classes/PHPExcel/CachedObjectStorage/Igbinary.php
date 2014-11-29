@@ -36,7 +36,7 @@
 class PHPExcel_CachedObjectStorage_Igbinary extends PHPExcel_CachedObjectStorage_CacheBase implements PHPExcel_CachedObjectStorage_ICache
 {
 
-        /**
+    /**
      * Identify whether the caching method is currently available
      * Some methods are dependent on the availability of certain extensions being enabled in the PHP build
      *
@@ -52,7 +52,7 @@ class PHPExcel_CachedObjectStorage_Igbinary extends PHPExcel_CachedObjectStorage
         return true;
     }    //	function _storeData()
 
-/**
+    /**
      * Add or Update a cell in cache identified by coordinate address
      *
      * @param    string $pCoord Coordinate address of the cell to update
@@ -74,7 +74,7 @@ class PHPExcel_CachedObjectStorage_Igbinary extends PHPExcel_CachedObjectStorage
         return $cell;
     }    //	function addCacheData()
 
-/**
+    /**
      * Store cell data in cache for the current cell object if it's "dirty",
      *     and the 'nullify' the current cell object
      *
@@ -93,7 +93,7 @@ class PHPExcel_CachedObjectStorage_Igbinary extends PHPExcel_CachedObjectStorage
         $this->_currentObjectID = $this->_currentObject = null;
     }    //	function getCacheData()
 
-/**
+    /**
      * Get cell at a specific coordinate
      *
      * @param    string $pCoord Coordinate of the cell
@@ -140,7 +140,7 @@ class PHPExcel_CachedObjectStorage_Igbinary extends PHPExcel_CachedObjectStorage
         return parent::getCellList();
     }    //	function unsetWorksheetCells()
 
-/**
+    /**
      * Clear the cell collection and disconnect from our parent
      *
      * @return    void

@@ -75,9 +75,7 @@ class PHPExcel_Autoloader
             return FALSE;
         }
 
-        $pClassFilePath = PHPEXCEL_ROOT .
-            str_replace('_', DIRECTORY_SEPARATOR, $pClassName) .
-            '.php';
+        $pClassFilePath = PHPEXCEL_ROOT . str_replace('_', DIRECTORY_SEPARATOR, $pClassName) . '.php';
 
         if ((file_exists($pClassFilePath) === FALSE) || (is_readable($pClassFilePath) === FALSE))
         {

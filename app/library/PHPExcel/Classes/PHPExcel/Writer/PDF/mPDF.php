@@ -31,7 +31,8 @@ $pdfRendererClassFile = PHPExcel_Settings::getPdfRendererPath() . '/mpdf.php';
 if (file_exists($pdfRendererClassFile))
 {
     require_once $pdfRendererClassFile;
-} else
+}
+else
 {
     throw new PHPExcel_Writer_Exception('Unable to load PDF Rendering library');
 }
@@ -71,18 +72,13 @@ class PHPExcel_Writer_PDF_mPDF extends PHPExcel_Writer_PDF_Core implements PHPEx
         //  Check for paper size and page orientation
         if (is_null($this->getSheetIndex()))
         {
-            $orientation = ($this->_phpExcel->getSheet(0)->getPageSetup()->getOrientation()
-                == PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE)
-                ? 'L'
-                : 'P';
+            $orientation = ($this->_phpExcel->getSheet(0)->getPageSetup()->getOrientation() == PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE) ? 'L' : 'P';
             $printPaperSize = $this->_phpExcel->getSheet(0)->getPageSetup()->getPaperSize();
             $printMargins = $this->_phpExcel->getSheet(0)->getPageMargins();
-        } else
+        }
+        else
         {
-            $orientation = ($this->_phpExcel->getSheet($this->getSheetIndex())->getPageSetup()->getOrientation()
-                == PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE)
-                ? 'L'
-                : 'P';
+            $orientation = ($this->_phpExcel->getSheet($this->getSheetIndex())->getPageSetup()->getOrientation() == PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE) ? 'L' : 'P';
             $printPaperSize = $this->_phpExcel->getSheet($this->getSheetIndex())->getPageSetup()->getPaperSize();
             $printMargins = $this->_phpExcel->getSheet($this->getSheetIndex())->getPageMargins();
         }
@@ -91,9 +87,7 @@ class PHPExcel_Writer_PDF_mPDF extends PHPExcel_Writer_PDF_Core implements PHPEx
         //  Override Page Orientation
         if (!is_null($this->getOrientation()))
         {
-            $orientation = ($this->getOrientation() == PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT)
-                ? PHPExcel_Worksheet_PageSetup::ORIENTATION_PORTRAIT
-                : $this->getOrientation();
+            $orientation = ($this->getOrientation() == PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT) ? PHPExcel_Worksheet_PageSetup::ORIENTATION_PORTRAIT : $this->getOrientation();
         }
         $orientation = strtoupper($orientation);
 
@@ -122,11 +116,7 @@ class PHPExcel_Writer_PDF_mPDF extends PHPExcel_Writer_PDF_Core implements PHPEx
         $pdf->SetKeywords($this->_phpExcel->getProperties()->getKeywords());
         $pdf->SetCreator($this->_phpExcel->getProperties()->getCreator());
 
-        $pdf->WriteHTML(
-            $this->generateHTMLHeader(FALSE) .
-            $this->generateSheetData() .
-            $this->generateHTMLFooter()
-        );
+        $pdf->WriteHTML($this->generateHTMLHeader(FALSE) . $this->generateSheetData() . $this->generateHTMLFooter());
 
         //  Write to file
         fwrite($fileHandle, $pdf->Output('', 'S'));

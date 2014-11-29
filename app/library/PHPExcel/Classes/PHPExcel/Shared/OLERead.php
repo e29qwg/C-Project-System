@@ -25,8 +25,7 @@
  * @version    1.8.0, 2014-03-02
  */
 
-defined('IDENTIFIER_OLE') ||
-define('IDENTIFIER_OLE', pack('CCCCCCCC', 0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1));
+defined('IDENTIFIER_OLE') || define('IDENTIFIER_OLE', pack('CCCCCCCC', 0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1));
 
 class PHPExcel_Shared_OLERead
 {
@@ -188,7 +187,8 @@ class PHPExcel_Shared_OLERead
         {
             // negative number
             $_ord_24 = -abs((256 - $_or_24) << 24);
-        } else
+        }
+        else
         {
             $_ord_24 = ($_or_24 & 127) << 24;
         }
@@ -244,11 +244,7 @@ class PHPExcel_Shared_OLERead
             $name = str_replace("\x00", "", substr($d, 0, $nameSize));
 
 
-            $this->props[] = array(
-                'name' => $name,
-                'type' => $type,
-                'startBlock' => $startBlock,
-                'size' => $size);
+            $this->props[] = array('name' => $name, 'type' => $type, 'startBlock' => $startBlock, 'size' => $size);
 
             // tmp helper to simplify checks
             $upName = strtoupper($name);
@@ -257,7 +253,8 @@ class PHPExcel_Shared_OLERead
             if (($upName === 'WORKBOOK') || ($upName === 'BOOK'))
             {
                 $this->wrkbook = count($this->props) - 1;
-            } else if ($upName === 'ROOT ENTRY' || $upName === 'R')
+            }
+            else if ($upName === 'ROOT ENTRY' || $upName === 'R')
             {
                 // Root entry
                 $this->rootentry = count($this->props) - 1;
@@ -266,14 +263,14 @@ class PHPExcel_Shared_OLERead
             // Summary information
             if ($name == chr(5) . 'SummaryInformation')
             {
-//				echo 'Summary Information<br />';
+                //				echo 'Summary Information<br />';
                 $this->summaryInformation = count($this->props) - 1;
             }
 
             // Additional Document Summary information
             if ($name == chr(5) . 'DocumentSummaryInformation')
             {
-//				echo 'Document Summary Information<br />';
+                //				echo 'Document Summary Information<br />';
                 $this->documentSummaryInformation = count($this->props) - 1;
             }
 
@@ -311,7 +308,8 @@ class PHPExcel_Shared_OLERead
             }
 
             return $streamData;
-        } else
+        }
+        else
         {
             $numBlocks = $this->props[$stream]['size'] / self::BIG_BLOCK_SIZE;
             if ($this->props[$stream]['size'] % self::BIG_BLOCK_SIZE != 0)
@@ -319,7 +317,8 @@ class PHPExcel_Shared_OLERead
                 ++$numBlocks;
             }
 
-            if ($numBlocks == 0) return '';
+            if ($numBlocks == 0)
+                return '';
 
             $block = $this->props[$stream]['startBlock'];
 

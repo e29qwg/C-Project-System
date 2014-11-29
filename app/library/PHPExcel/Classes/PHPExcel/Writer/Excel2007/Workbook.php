@@ -50,7 +50,8 @@ class PHPExcel_Writer_Excel2007_Workbook extends PHPExcel_Writer_Excel2007_Write
         if ($this->getParentWriter()->getUseDiskCaching())
         {
             $objWriter = new PHPExcel_Shared_XMLWriter(PHPExcel_Shared_XMLWriter::STORAGE_DISK, $this->getParentWriter()->getDiskCachingDirectory());
-        } else
+        }
+        else
         {
             $objWriter = new PHPExcel_Shared_XMLWriter(PHPExcel_Shared_XMLWriter::STORAGE_MEMORY);
         }
@@ -205,13 +206,7 @@ class PHPExcel_Writer_Excel2007_Workbook extends PHPExcel_Writer_Excel2007_Write
         for ($i = 0; $i < $sheetCount; ++$i)
         {
             // sheet
-            $this->_writeSheet(
-                $objWriter,
-                $pPHPExcel->getSheet($i)->getTitle(),
-                ($i + 1),
-                ($i + 1 + 3),
-                $pPHPExcel->getSheet($i)->getSheetState()
-            );
+            $this->_writeSheet($objWriter, $pPHPExcel->getSheet($i)->getTitle(), ($i + 1), ($i + 1 + 3), $pPHPExcel->getSheet($i)->getSheetState());
         }
 
         $objWriter->endElement();
@@ -241,7 +236,8 @@ class PHPExcel_Writer_Excel2007_Workbook extends PHPExcel_Writer_Excel2007_Write
             }
             $objWriter->writeAttribute('r:id', 'rId' . $pRelId);
             $objWriter->endElement();
-        } else
+        }
+        else
         {
             throw new PHPExcel_Writer_Exception("Invalid parameters passed.");
         }

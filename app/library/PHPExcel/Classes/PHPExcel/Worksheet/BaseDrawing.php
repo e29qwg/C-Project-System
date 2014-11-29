@@ -217,7 +217,8 @@ class PHPExcel_Worksheet_BaseDrawing implements PHPExcel_IComparable
             $this->_worksheet = $pValue;
             $this->_worksheet->getCell($this->_coordinates);
             $this->_worksheet->getDrawingCollection()->append($this);
-        } else
+        }
+        else
         {
             if ($pOverrideOld)
             {
@@ -236,7 +237,8 @@ class PHPExcel_Worksheet_BaseDrawing implements PHPExcel_IComparable
 
                 // Set new PHPExcel_Worksheet
                 $this->setWorksheet($pValue);
-            } else
+            }
+            else
             {
                 throw new PHPExcel_Exception("A PHPExcel_Worksheet has already been assigned. Drawings can only exist on one PHPExcel_Worksheet.");
             }
@@ -251,19 +253,7 @@ class PHPExcel_Worksheet_BaseDrawing implements PHPExcel_IComparable
      */
     public function getHashCode()
     {
-        return md5(
-            $this->_name
-            . $this->_description
-            . $this->_worksheet->getHashCode()
-            . $this->_coordinates
-            . $this->_offsetX
-            . $this->_offsetY
-            . $this->_width
-            . $this->_height
-            . $this->_rotation
-            . $this->_shadow->getHashCode()
-            . __CLASS__
-        );
+        return md5($this->_name . $this->_description . $this->_worksheet->getHashCode() . $this->_coordinates . $this->_offsetX . $this->_offsetY . $this->_width . $this->_height . $this->_rotation . $this->_shadow->getHashCode() . __CLASS__);
     }
 
     /**
@@ -417,7 +407,8 @@ class PHPExcel_Worksheet_BaseDrawing implements PHPExcel_IComparable
             {
                 $this->_height = ceil($xratio * $this->_height);
                 $this->_width = $width;
-            } else
+            }
+            else
             {
                 $this->_width = ceil($yratio * $this->_width);
                 $this->_height = $height;
@@ -504,7 +495,8 @@ class PHPExcel_Worksheet_BaseDrawing implements PHPExcel_IComparable
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

@@ -120,7 +120,7 @@ class PHPExcel_Calculation_Financial
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function _lastDayOfMonth()
 
-/**
+    /**
      * ACCRINTM
      *
      * Returns the accrued interest for a security that pays interest at maturity.
@@ -171,7 +171,7 @@ class PHPExcel_Calculation_Financial
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function _firstDayOfMonth()
 
-/**
+    /**
      * AMORDEGRC
      *
      * Returns the depreciation for each accounting period.
@@ -222,13 +222,16 @@ class PHPExcel_Calculation_Financial
         if ($fUsePer < 3.0)
         {
             $amortiseCoeff = 1.0;
-        } elseif ($fUsePer < 5.0)
+        }
+        elseif ($fUsePer < 5.0)
         {
             $amortiseCoeff = 1.5;
-        } elseif ($fUsePer <= 6.0)
+        }
+        elseif ($fUsePer <= 6.0)
         {
             $amortiseCoeff = 2.0;
-        } else
+        }
+        else
         {
             $amortiseCoeff = 2.5;
         }
@@ -261,7 +264,7 @@ class PHPExcel_Calculation_Financial
         return $fNRate;
     }    //	function _coupFirstPeriodDate()
 
-/**
+    /**
      * AMORLINC
      *
      * Returns the depreciation for each accounting period.
@@ -314,19 +317,22 @@ class PHPExcel_Calculation_Financial
         if ($period == 0)
         {
             return $f0Rate;
-        } elseif ($period <= $nNumOfFullPeriods)
+        }
+        elseif ($period <= $nNumOfFullPeriods)
         {
             return $fOneRate;
-        } elseif ($period == ($nNumOfFullPeriods + 1))
+        }
+        elseif ($period == ($nNumOfFullPeriods + 1))
         {
             return ($fCostDelta - $fOneRate * $nNumOfFullPeriods - $f0Rate);
-        } else
+        }
+        else
         {
             return 0.0;
         }
     }    //	function _validFrequency()
 
-/**
+    /**
      * COUPNCD
      *
      * Returns the next coupon date after the settlement date.
@@ -375,9 +381,7 @@ class PHPExcel_Calculation_Financial
             return PHPExcel_Calculation_Functions::VALUE();
         }
 
-        if (($settlement > $maturity) ||
-            (!self::_validFrequency($frequency)) ||
-            (($basis < 0) || ($basis > 4))
+        if (($settlement > $maturity) || (!self::_validFrequency($frequency)) || (($basis < 0) || ($basis > 4))
         )
         {
             return PHPExcel_Calculation_Functions::NaN();
@@ -386,14 +390,13 @@ class PHPExcel_Calculation_Financial
         return self::_coupFirstPeriodDate($settlement, $maturity, $frequency, True);
     }    //	function _daysPerYear()
 
-private static function _validFrequency($frequency)
+    private static function _validFrequency($frequency)
     {
         if (($frequency == 1) || ($frequency == 2) || ($frequency == 4))
         {
             return true;
         }
-        if ((PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_GNUMERIC) &&
-            (($frequency == 6) || ($frequency == 12))
+        if ((PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_GNUMERIC) && (($frequency == 6) || ($frequency == 12))
         )
         {
             return true;
@@ -401,7 +404,7 @@ private static function _validFrequency($frequency)
         return false;
     }    //	function _interestAndPrincipal()
 
-private static function _coupFirstPeriodDate($settlement, $maturity, $frequency, $next)
+    private static function _coupFirstPeriodDate($settlement, $maturity, $frequency, $next)
     {
         $months = 12 / $frequency;
 
@@ -425,7 +428,7 @@ private static function _coupFirstPeriodDate($settlement, $maturity, $frequency,
         return PHPExcel_Shared_Date::PHPToExcel($result);
     }    //	function ACCRINT()
 
-/**
+    /**
      * _lastDayOfMonth
      *
      * Returns a boolean TRUE/FALSE indicating if this date is the last date of the month
@@ -438,7 +441,7 @@ private static function _coupFirstPeriodDate($settlement, $maturity, $frequency,
         return ($testDate->format('d') == $testDate->format('t'));
     }    //	function ACCRINTM()
 
-/**
+    /**
      * COUPPCD
      *
      * Returns the previous coupon date before the settlement date.
@@ -487,9 +490,7 @@ private static function _coupFirstPeriodDate($settlement, $maturity, $frequency,
             return PHPExcel_Calculation_Functions::VALUE();
         }
 
-        if (($settlement > $maturity) ||
-            (!self::_validFrequency($frequency)) ||
-            (($basis < 0) || ($basis > 4))
+        if (($settlement > $maturity) || (!self::_validFrequency($frequency)) || (($basis < 0) || ($basis > 4))
         )
         {
             return PHPExcel_Calculation_Functions::NaN();
@@ -498,7 +499,7 @@ private static function _coupFirstPeriodDate($settlement, $maturity, $frequency,
         return self::_coupFirstPeriodDate($settlement, $maturity, $frequency, False);
     }    //	function AMORDEGRC()
 
-/**
+    /**
      * CUMIPMT
      *
      * Returns the cumulative interest paid on a loan between the start and end periods.
@@ -548,7 +549,7 @@ private static function _coupFirstPeriodDate($settlement, $maturity, $frequency,
         return $interest;
     }    //	function AMORLINC()
 
-/**
+    /**
      * IPMT
      *
      * Returns the interest payment for a given period for an investment based on periodic, constant payments and a constant interest rate.
@@ -588,7 +589,7 @@ private static function _coupFirstPeriodDate($settlement, $maturity, $frequency,
         return $interestAndPrincipal[0];
     }    //	function COUPDAYBS()
 
-private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $pv = 0, $fv = 0, $type = 0)
+    private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $pv = 0, $fv = 0, $type = 0)
     {
         $pmt = self::PMT($rate, $nper, $pv, $fv, $type);
         $capital = $pv;
@@ -601,7 +602,7 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         return array($interest, $principal);
     }    //	function COUPDAYS()
 
-/**
+    /**
      * PMT
      *
      * Returns the constant payment (annuity) for a cash flow with a constant interest rate.
@@ -631,13 +632,14 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         if (!is_null($rate) && $rate != 0)
         {
             return (-$fv - $pv * pow(1 + $rate, $nper)) / (1 + $rate * $type) / ((pow(1 + $rate, $nper) - 1) / $rate);
-        } else
+        }
+        else
         {
             return (-$pv - $fv) / $nper;
         }
     }    //	function COUPDAYSNC()
 
-/**
+    /**
      * CUMPRINC
      *
      * Returns the cumulative principal paid on a loan between the start and end periods.
@@ -687,7 +689,7 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         return $principal;
     }    //	function COUPNCD()
 
-/**
+    /**
      * PPMT
      *
      * Returns the interest payment for a given period for an investment based on periodic, constant payments and a constant interest rate.
@@ -724,7 +726,7 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         return $interestAndPrincipal[1];
     }    //	function COUPNUM()
 
-/**
+    /**
      * DB
      *
      * Returns the depreciation of an asset for a specified period using the
@@ -769,7 +771,8 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
             if ($cost == 0)
             {
                 return 0.0;
-            } elseif (($cost < 0) || (($salvage / $cost) < 0) || ($life <= 0) || ($period < 1) || ($month < 1))
+            }
+            elseif (($cost < 0) || (($salvage / $cost) < 0) || ($life <= 0) || ($period < 1) || ($month < 1))
             {
                 return PHPExcel_Calculation_Functions::NaN();
             }
@@ -784,10 +787,12 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
                 if ($per == 1)
                 {
                     $depreciation = $cost * $fixedDepreciationRate * $month / 12;
-                } elseif ($per == ($life + 1))
+                }
+                elseif ($per == ($life + 1))
                 {
                     $depreciation = ($cost - $previousDepreciation) * $fixedDepreciationRate * (12 - $month) / 12;
-                } else
+                }
+                else
                 {
                     $depreciation = ($cost - $previousDepreciation) * $fixedDepreciationRate;
                 }
@@ -802,7 +807,7 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function COUPPCD()
 
-/**
+    /**
      * DDB
      *
      * Returns the depreciation of an asset for a specified period using the
@@ -865,7 +870,7 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function CUMIPMT()
 
-/**
+    /**
      * DISC
      *
      * Returns the discount rate for a security.
@@ -920,7 +925,7 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function CUMPRINC()
 
-/**
+    /**
      * DOLLARDE
      *
      * Converts a dollar price expressed as an integer part and a fraction
@@ -958,7 +963,7 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         return $dollars + $cents;
     }    //	function DB()
 
-/**
+    /**
      * DOLLARFR
      *
      * Converts a dollar price expressed as a decimal number into a dollar price
@@ -996,7 +1001,7 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         return $dollars + $cents;
     }    //	function DDB()
 
-/**
+    /**
      * EFFECT
      *
      * Returns the effective interest rate given the nominal rate and the number of
@@ -1025,7 +1030,7 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         return pow((1 + $nominal_rate / $npery), $npery) - 1;
     }    //	function DISC()
 
-/**
+    /**
      * FV
      *
      * Returns the Future Value of a cash flow with constant payments and interest rate (annuities).
@@ -1065,13 +1070,14 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         if (!is_null($rate) && $rate != 0)
         {
             return -$pv * pow(1 + $rate, $nper) - $pmt * (1 + $rate * $type) * (pow(1 + $rate, $nper) - 1) / $rate;
-        } else
+        }
+        else
         {
             return -$pv - $pmt * $nper;
         }
     }    //	function DOLLARDE()
 
-/**
+    /**
      * FVSCHEDULE
      *
      * Returns the future value of an initial principal after applying a series of compound interest rates.
@@ -1097,7 +1103,7 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         return $principal;
     }    //	function DOLLARFR()
 
-/**
+    /**
      * INTRATE
      *
      * Returns the interest rate for a fully invested security.
@@ -1149,7 +1155,7 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function EFFECT()
 
-/**
+    /**
      * IRR
      *
      * Returns the internal rate of return for a series of cash flows represented by the numbers in values.
@@ -1170,7 +1176,8 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
      */
     public static function IRR($values, $guess = 0.1)
     {
-        if (!is_array($values)) return PHPExcel_Calculation_Functions::VALUE();
+        if (!is_array($values))
+            return PHPExcel_Calculation_Functions::VALUE();
         $values = PHPExcel_Calculation_Functions::flattenArray($values);
         $guess = PHPExcel_Calculation_Functions::flattenSingleValue($guess);
 
@@ -1181,23 +1188,27 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         $f2 = self::NPV($x2, $values);
         for ($i = 0; $i < FINANCIAL_MAX_ITERATIONS; ++$i)
         {
-            if (($f1 * $f2) < 0.0) break;
+            if (($f1 * $f2) < 0.0)
+                break;
             if (abs($f1) < abs($f2))
             {
                 $f1 = self::NPV($x1 += 1.6 * ($x1 - $x2), $values);
-            } else
+            }
+            else
             {
                 $f2 = self::NPV($x2 += 1.6 * ($x2 - $x1), $values);
             }
         }
-        if (($f1 * $f2) > 0.0) return PHPExcel_Calculation_Functions::VALUE();
+        if (($f1 * $f2) > 0.0)
+            return PHPExcel_Calculation_Functions::VALUE();
 
         $f = self::NPV($x1, $values);
         if ($f < 0.0)
         {
             $rtb = $x1;
             $dx = $x2 - $x1;
-        } else
+        }
+        else
         {
             $rtb = $x2;
             $dx = $x1 - $x2;
@@ -1216,7 +1227,7 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function FV()
 
-/**
+    /**
      * NPV
      *
      * Returns the Net Present Value of a cash flow series given a discount rate.
@@ -1246,7 +1257,7 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         return $returnValue;
     }    //	function FVSCHEDULE()
 
-/**
+    /**
      * ISPMT
      *
      * Returns the interest payment for an investment based on an interest rate and a constant payment schedule.
@@ -1289,7 +1300,7 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         return ($returnValue);
     }    //	function INTRATE()
 
-/**
+    /**
      * MIRR
      *
      * Returns the modified internal rate of return for a series of periodic cash flows. MIRR considers both
@@ -1307,7 +1318,8 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
      */
     public static function MIRR($values, $finance_rate, $reinvestment_rate)
     {
-        if (!is_array($values)) return PHPExcel_Calculation_Functions::VALUE();
+        if (!is_array($values))
+            return PHPExcel_Calculation_Functions::VALUE();
         $values = PHPExcel_Calculation_Functions::flattenArray($values);
         $finance_rate = PHPExcel_Calculation_Functions::flattenSingleValue($finance_rate);
         $reinvestment_rate = PHPExcel_Calculation_Functions::flattenSingleValue($reinvestment_rate);
@@ -1322,7 +1334,8 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
             if ($v >= 0)
             {
                 $npv_pos += $v / pow($rr, $i);
-            } else
+            }
+            else
             {
                 $npv_neg += $v / pow($fr, $i);
             }
@@ -1333,8 +1346,7 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
             return PHPExcel_Calculation_Functions::VALUE();
         }
 
-        $mirr = pow((-$npv_pos * pow($rr, $n))
-                / ($npv_neg * ($rr)), (1.0 / ($n - 1))) - 1.0;
+        $mirr = pow((-$npv_pos * pow($rr, $n)) / ($npv_neg * ($rr)), (1.0 / ($n - 1))) - 1.0;
 
         return (is_finite($mirr) ? $mirr : PHPExcel_Calculation_Functions::VALUE());
     }    //	function IPMT()
@@ -1363,7 +1375,7 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         return $npery * (pow($effect_rate + 1, 1 / $npery) - 1);
     }    //	function IRR()
 
-/**
+    /**
      * NPER
      *
      * Returns the number of periods for a cash flow with constant periodic payments (annuities), and interest rate.
@@ -1397,7 +1409,8 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
                 return PHPExcel_Calculation_Functions::NaN();
             }
             return log(($pmt * (1 + $rate * $type) / $rate - $fv) / ($pv + $pmt * (1 + $rate * $type) / $rate)) / log(1 + $rate);
-        } else
+        }
+        else
         {
             if ($pmt == 0)
             {
@@ -1407,7 +1420,7 @@ private static function _interestAndPrincipal($rate = 0, $per = 0, $nper = 0, $p
         }
     }    //	function ISPMT()
 
-public static function PRICE($settlement, $maturity, $rate, $yield, $redemption, $frequency, $basis = 0)
+    public static function PRICE($settlement, $maturity, $rate, $yield, $redemption, $frequency, $basis = 0)
     {
         $settlement = PHPExcel_Calculation_Functions::flattenSingleValue($settlement);
         $maturity = PHPExcel_Calculation_Functions::flattenSingleValue($maturity);
@@ -1426,9 +1439,7 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
             return PHPExcel_Calculation_Functions::VALUE();
         }
 
-        if (($settlement > $maturity) ||
-            (!self::_validFrequency($frequency)) ||
-            (($basis < 0) || ($basis > 4))
+        if (($settlement > $maturity) || (!self::_validFrequency($frequency)) || (($basis < 0) || ($basis > 4))
         )
         {
             return PHPExcel_Calculation_Functions::NaN();
@@ -1453,7 +1464,7 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
         return $result;
     }    //	function MIRR()
 
-/**
+    /**
      * COUPDAYSNC
      *
      * Returns the number of days from the settlement date to the next coupon date.
@@ -1501,9 +1512,7 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
             return PHPExcel_Calculation_Functions::VALUE();
         }
 
-        if (($settlement > $maturity) ||
-            (!self::_validFrequency($frequency)) ||
-            (($basis < 0) || ($basis > 4))
+        if (($settlement > $maturity) || (!self::_validFrequency($frequency)) || (($basis < 0) || ($basis > 4))
         )
         {
             return PHPExcel_Calculation_Functions::NaN();
@@ -1515,7 +1524,7 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
         return PHPExcel_Calculation_DateTime::YEARFRAC($settlement, $next, $basis) * $daysPerYear;
     }    //	function NOMINAL()
 
-/**
+    /**
      * _daysPerYear
      *
      * Returns the number of days in a specified year, as defined by the "basis" value
@@ -1598,9 +1607,7 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
             return PHPExcel_Calculation_Functions::VALUE();
         }
 
-        if (($settlement > $maturity) ||
-            (!self::_validFrequency($frequency)) ||
-            (($basis < 0) || ($basis > 4))
+        if (($settlement > $maturity) || (!self::_validFrequency($frequency)) || (($basis < 0) || ($basis > 4))
         )
         {
             return PHPExcel_Calculation_Functions::NaN();
@@ -1615,7 +1622,8 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
                 {
                     $daysPerYear = self::_daysPerYear(PHPExcel_Calculation_DateTime::YEAR($maturity), $basis);
                     return ($daysPerYear / $frequency);
-                } else
+                }
+                else
                 {
                     $prev = self::_coupFirstPeriodDate($settlement, $maturity, $frequency, False);
                     $next = self::_coupFirstPeriodDate($settlement, $maturity, $frequency, True);
@@ -1676,9 +1684,7 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
             return PHPExcel_Calculation_Functions::VALUE();
         }
 
-        if (($settlement > $maturity) ||
-            (!self::_validFrequency($frequency)) ||
-            (($basis < 0) || ($basis > 4))
+        if (($settlement > $maturity) || (!self::_validFrequency($frequency)) || (($basis < 0) || ($basis > 4))
         )
         {
             return PHPExcel_Calculation_Functions::NaN();
@@ -1703,7 +1709,7 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function PMT()
 
-/**
+    /**
      * COUPDAYBS
      *
      * Returns the number of days from the beginning of the coupon period to the settlement date.
@@ -1751,9 +1757,7 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
             return PHPExcel_Calculation_Functions::VALUE();
         }
 
-        if (($settlement > $maturity) ||
-            (!self::_validFrequency($frequency)) ||
-            (($basis < 0) || ($basis > 4))
+        if (($settlement > $maturity) || (!self::_validFrequency($frequency)) || (($basis < 0) || ($basis > 4))
         )
         {
             return PHPExcel_Calculation_Functions::NaN();
@@ -1765,7 +1769,7 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
         return PHPExcel_Calculation_DateTime::YEARFRAC($prev, $settlement, $basis) * $daysPerYear;
     }    //	function PPMT()
 
-/**
+    /**
      * PRICEDISC
      *
      * Returns the price per $100 face value of a discounted security.
@@ -1811,7 +1815,7 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function PRICE()
 
-/**
+    /**
      * PRICEMAT
      *
      * Returns the price per $100 face value of a security that pays interest at maturity.
@@ -1874,14 +1878,12 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
             }
             $daysBetweenSettlementAndMaturity *= $daysPerYear;
 
-            return ((100 + (($daysBetweenIssueAndMaturity / $daysPerYear) * $rate * 100)) /
-                (1 + (($daysBetweenSettlementAndMaturity / $daysPerYear) * $yield)) -
-                (($daysBetweenIssueAndSettlement / $daysPerYear) * $rate * 100));
+            return ((100 + (($daysBetweenIssueAndMaturity / $daysPerYear) * $rate * 100)) / (1 + (($daysBetweenSettlementAndMaturity / $daysPerYear) * $yield)) - (($daysBetweenIssueAndSettlement / $daysPerYear) * $rate * 100));
         }
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function PRICEDISC()
 
-/**
+    /**
      * PV
      *
      * Returns the Present Value of a cash flow with constant payments and interest rate (annuities).
@@ -1911,13 +1913,14 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
         if (!is_null($rate) && $rate != 0)
         {
             return (-$pmt * (1 + $rate * $type) * ((pow(1 + $rate, $nper) - 1) / $rate) - $fv) / pow(1 + $rate, $nper);
-        } else
+        }
+        else
         {
             return -$fv - $pmt * $nper;
         }
     }    //	function PRICEMAT()
 
-/**
+    /**
      * RATE
      *
      * Returns the interest rate per period of an annuity.
@@ -1960,7 +1963,8 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
         if (abs($rate) < FINANCIAL_PRECISION)
         {
             $y = $pv * (1 + $nper * $rate) + $pmt * (1 + $rate * $type) * $nper + $fv;
-        } else
+        }
+        else
         {
             $f = exp($nper * log(1 + $rate));
             $y = $pv * $f + $pmt * (1 / $rate + $type) * ($f - 1) + $fv;
@@ -1982,7 +1986,8 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
             if (abs($rate) < FINANCIAL_PRECISION)
             {
                 $y = $pv * (1 + $nper * $rate) + $pmt * (1 + $rate * $type) * $nper + $fv;
-            } else
+            }
+            else
             {
                 $f = exp($nper * log(1 + $rate));
                 $y = $pv * $f + $pmt * (1 / $rate + $type) * ($f - 1) + $fv;
@@ -1995,7 +2000,7 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
         return $rate;
     }    //	function PV()
 
-/**
+    /**
      * RECEIVED
      *
      * Returns the price per $100 face value of a discounted security.
@@ -2041,7 +2046,7 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function RATE()
 
-/**
+    /**
      * SLN
      *
      * Returns the straight-line depreciation of an asset for one period
@@ -2069,7 +2074,7 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function RECEIVED()
 
-/**
+    /**
      * SYD
      *
      * Returns the sum-of-years' digits depreciation of an asset for a specified period.
@@ -2099,7 +2104,7 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function SLN()
 
-/**
+    /**
      * TBILLEQ
      *
      * Returns the bond-equivalent yield for a Treasury bill.
@@ -2133,7 +2138,8 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
         {
             ++$maturity;
             $daysBetweenSettlementAndMaturity = PHPExcel_Calculation_DateTime::YEARFRAC($settlement, $maturity) * 360;
-        } else
+        }
+        else
         {
             $daysBetweenSettlementAndMaturity = (PHPExcel_Calculation_DateTime::_getDateValue($maturity) - PHPExcel_Calculation_DateTime::_getDateValue($settlement));
         }
@@ -2141,7 +2147,7 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
         return (365 * $discount) / (360 - $discount * $daysBetweenSettlementAndMaturity);
     }    //	function SYD()
 
-/**
+    /**
      * TBILLPRICE
      *
      * Returns the yield for a Treasury bill.
@@ -2181,7 +2187,8 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
                     //	return date error
                     return $daysBetweenSettlementAndMaturity;
                 }
-            } else
+            }
+            else
             {
                 $daysBetweenSettlementAndMaturity = (PHPExcel_Calculation_DateTime::_getDateValue($maturity) - PHPExcel_Calculation_DateTime::_getDateValue($settlement));
             }
@@ -2201,7 +2208,7 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function TBILLEQ()
 
-/**
+    /**
      * TBILLYIELD
      *
      * Returns the yield for a Treasury bill.
@@ -2236,7 +2243,8 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
                     //	return date error
                     return $daysBetweenSettlementAndMaturity;
                 }
-            } else
+            }
+            else
             {
                 $daysBetweenSettlementAndMaturity = (PHPExcel_Calculation_DateTime::_getDateValue($maturity) - PHPExcel_Calculation_DateTime::_getDateValue($settlement));
             }
@@ -2253,11 +2261,13 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
 
     public static function XIRR($values, $dates, $guess = 0.1)
     {
-        if ((!is_array($values)) && (!is_array($dates))) return PHPExcel_Calculation_Functions::VALUE();
+        if ((!is_array($values)) && (!is_array($dates)))
+            return PHPExcel_Calculation_Functions::VALUE();
         $values = PHPExcel_Calculation_Functions::flattenArray($values);
         $dates = PHPExcel_Calculation_Functions::flattenArray($dates);
         $guess = PHPExcel_Calculation_Functions::flattenSingleValue($guess);
-        if (count($values) != count($dates)) return PHPExcel_Calculation_Functions::NaN();
+        if (count($values) != count($dates))
+            return PHPExcel_Calculation_Functions::NaN();
 
         // create an initial range, with a root somewhere between 0 and guess
         $x1 = 0.0;
@@ -2266,23 +2276,27 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
         $f2 = self::XNPV($x2, $values, $dates);
         for ($i = 0; $i < FINANCIAL_MAX_ITERATIONS; ++$i)
         {
-            if (($f1 * $f2) < 0.0) break;
+            if (($f1 * $f2) < 0.0)
+                break;
             if (abs($f1) < abs($f2))
             {
                 $f1 = self::XNPV($x1 += 1.6 * ($x1 - $x2), $values, $dates);
-            } else
+            }
+            else
             {
                 $f2 = self::XNPV($x2 += 1.6 * ($x2 - $x1), $values, $dates);
             }
         }
-        if (($f1 * $f2) > 0.0) return PHPExcel_Calculation_Functions::VALUE();
+        if (($f1 * $f2) > 0.0)
+            return PHPExcel_Calculation_Functions::VALUE();
 
         $f = self::XNPV($x1, $values, $dates);
         if ($f < 0.0)
         {
             $rtb = $x1;
             $dx = $x2 - $x1;
-        } else
+        }
+        else
         {
             $rtb = $x2;
             $dx = $x1 - $x2;
@@ -2293,13 +2307,15 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
             $dx *= 0.5;
             $x_mid = $rtb + $dx;
             $f_mid = self::XNPV($x_mid, $values, $dates);
-            if ($f_mid <= 0.0) $rtb = $x_mid;
-            if ((abs($f_mid) < FINANCIAL_PRECISION) || (abs($dx) < FINANCIAL_PRECISION)) return $x_mid;
+            if ($f_mid <= 0.0)
+                $rtb = $x_mid;
+            if ((abs($f_mid) < FINANCIAL_PRECISION) || (abs($dx) < FINANCIAL_PRECISION))
+                return $x_mid;
         }
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function TBILLYIELD()
 
-/**
+    /**
      * XNPV
      *
      * Returns the net present value for a schedule of cash flows that is not necessarily periodic.
@@ -2316,24 +2332,29 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
     public static function XNPV($rate, $values, $dates)
     {
         $rate = PHPExcel_Calculation_Functions::flattenSingleValue($rate);
-        if (!is_numeric($rate)) return PHPExcel_Calculation_Functions::VALUE();
-        if ((!is_array($values)) || (!is_array($dates))) return PHPExcel_Calculation_Functions::VALUE();
+        if (!is_numeric($rate))
+            return PHPExcel_Calculation_Functions::VALUE();
+        if ((!is_array($values)) || (!is_array($dates)))
+            return PHPExcel_Calculation_Functions::VALUE();
         $values = PHPExcel_Calculation_Functions::flattenArray($values);
         $dates = PHPExcel_Calculation_Functions::flattenArray($dates);
         $valCount = count($values);
-        if ($valCount != count($dates)) return PHPExcel_Calculation_Functions::NaN();
-        if ((min($values) > 0) || (max($values) < 0)) return PHPExcel_Calculation_Functions::VALUE();
+        if ($valCount != count($dates))
+            return PHPExcel_Calculation_Functions::NaN();
+        if ((min($values) > 0) || (max($values) < 0))
+            return PHPExcel_Calculation_Functions::VALUE();
 
         $xnpv = 0.0;
         for ($i = 0; $i < $valCount; ++$i)
         {
-            if (!is_numeric($values[$i])) return PHPExcel_Calculation_Functions::VALUE();
+            if (!is_numeric($values[$i]))
+                return PHPExcel_Calculation_Functions::VALUE();
             $xnpv += $values[$i] / pow(1 + $rate, PHPExcel_Calculation_DateTime::DATEDIF($dates[0], $dates[$i], 'd') / 365);
         }
         return (is_finite($xnpv)) ? $xnpv : PHPExcel_Calculation_Functions::VALUE();
     }
 
-/**
+    /**
      * YIELDDISC
      *
      * Returns the annual yield of a security that pays interest at maturity.
@@ -2385,7 +2406,7 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function XNPV()
 
-/**
+    /**
      * YIELDMAT
      *
      * Returns the annual yield of a security that pays interest at maturity.
@@ -2448,14 +2469,12 @@ public static function PRICE($settlement, $maturity, $rate, $yield, $redemption,
             }
             $daysBetweenSettlementAndMaturity *= $daysPerYear;
 
-            return ((1 + (($daysBetweenIssueAndMaturity / $daysPerYear) * $rate) - (($price / 100) + (($daysBetweenIssueAndSettlement / $daysPerYear) * $rate))) /
-                (($price / 100) + (($daysBetweenIssueAndSettlement / $daysPerYear) * $rate))) *
-            ($daysPerYear / $daysBetweenSettlementAndMaturity);
+            return ((1 + (($daysBetweenIssueAndMaturity / $daysPerYear) * $rate) - (($price / 100) + (($daysBetweenIssueAndSettlement / $daysPerYear) * $rate))) / (($price / 100) + (($daysBetweenIssueAndSettlement / $daysPerYear) * $rate))) * ($daysPerYear / $daysBetweenSettlementAndMaturity);
         }
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function YIELDDISC()
 
-/**
+    /**
      * _firstDayOfMonth
      *
      * Returns a boolean TRUE/FALSE indicating if this date is the first date of the month

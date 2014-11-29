@@ -51,7 +51,8 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
         if ($this->getParentWriter()->getUseDiskCaching())
         {
             $objWriter = new PHPExcel_Shared_XMLWriter(PHPExcel_Shared_XMLWriter::STORAGE_DISK, $this->getParentWriter()->getDiskCachingDirectory());
-        } else
+        }
+        else
         {
             $objWriter = new PHPExcel_Shared_XMLWriter(PHPExcel_Shared_XMLWriter::STORAGE_MEMORY);
         }
@@ -185,23 +186,23 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
 
             $objWriter->endElement();
 
-//						// a:solidFill
-//						$objWriter->startElement('a:solidFill');
+            //						// a:solidFill
+            //						$objWriter->startElement('a:solidFill');
 
-//							// a:srgbClr
-//							$objWriter->startElement('a:srgbClr');
-//							$objWriter->writeAttribute('val', 'FFFFFF');
+            //							// a:srgbClr
+            //							$objWriter->startElement('a:srgbClr');
+            //							$objWriter->writeAttribute('val', 'FFFFFF');
 
-///* SHADE
-//								// a:shade
-//								$objWriter->startElement('a:shade');
-//								$objWriter->writeAttribute('val', '85000');
-//								$objWriter->endElement();
-//*/
+            ///* SHADE
+            //								// a:shade
+            //								$objWriter->startElement('a:shade');
+            //								$objWriter->writeAttribute('val', '85000');
+            //								$objWriter->endElement();
+            //*/
 
-//							$objWriter->endElement();
+            //							$objWriter->endElement();
 
-//						$objWriter->endElement();
+            //						$objWriter->endElement();
             /*
                                     // a:ln
                                     $objWriter->startElement('a:ln');
@@ -310,7 +311,8 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
             $objWriter->writeElement('xdr:clientData', null);
 
             $objWriter->endElement();
-        } else
+        }
+        else
         {
             throw new PHPExcel_Writer_Exception("Invalid parameters passed.");
         }
@@ -402,7 +404,8 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
         if ($this->getParentWriter()->getUseDiskCaching())
         {
             $objWriter = new PHPExcel_Shared_XMLWriter(PHPExcel_Shared_XMLWriter::STORAGE_DISK, $this->getParentWriter()->getDiskCachingDirectory());
-        } else
+        }
+        else
         {
             $objWriter = new PHPExcel_Shared_XMLWriter(PHPExcel_Shared_XMLWriter::STORAGE_MEMORY);
         }

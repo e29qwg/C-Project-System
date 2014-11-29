@@ -49,7 +49,8 @@ class PHPExcel_Writer_Excel2007_RelsRibbon extends PHPExcel_Writer_Excel2007_Wri
         if ($this->getParentWriter()->getUseDiskCaching())
         {
             $objWriter = new PHPExcel_Shared_XMLWriter(PHPExcel_Shared_XMLWriter::STORAGE_DISK, $this->getParentWriter()->getDiskCachingDirectory());
-        } else
+        }
+        else
         {
             $objWriter = new PHPExcel_Shared_XMLWriter(PHPExcel_Shared_XMLWriter::STORAGE_MEMORY);
         }

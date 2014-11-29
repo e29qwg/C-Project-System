@@ -35,7 +35,8 @@ $e = new Phalcon\Escaper();
 
             if ($project->project_status == 'Accept')
             {
-            } else
+            }
+            else
             {
                 ?>
                 <a href="<?= $this->url->get('projects/addmember/'); ?><?= $params[0] ?>"
@@ -65,7 +66,8 @@ $e = new Phalcon\Escaper();
                         $imgSrc = "https://graph.facebook.com/";
                         $imgSrc .= $user->facebook;
                         $imgSrc .= "/picture?type=square&width=150&height=150";
-                    } else
+                    }
+                    else
                         $imgSrc = $this->url->get("profilePicture/$user->user_id.img");
                     echo '<tr>';
                     echo '<td class="active">';
@@ -84,7 +86,8 @@ $e = new Phalcon\Escaper();
                     echo '<td class="active">';
                     if ($project->project_status == "Accept" || $user->id == $user_id)
                     {
-                    } else
+                    }
+                    else
                     {
                         echo '<a href="' . $this->url->get('projects/deletemember/');
                         echo $params[0] . '/' . $projectMap->project_map_id;

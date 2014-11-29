@@ -53,17 +53,7 @@ $project = Project::findFirst("project_id='$params[0]'");
                 <div class="col-sm-2">
                     <?php
 
-                    echo $this->tag->selectStatic(
-                        array(
-                            "project_type",
-                            "class" => "form-control",
-                            "required" => "",
-                            array(
-                                "Software" => "Software",
-                                "Hardware" => "Hardware"
-                            )
-                        )
-                    );
+                    echo $this->tag->selectStatic(array("project_type", "class" => "form-control", "required" => "", array("Software" => "Software", "Hardware" => "Hardware")));
 
                     ?>
                 </div>
@@ -187,11 +177,7 @@ $project = Project::findFirst("project_id='$params[0]'");
                 <form method="post" action="<?= $this->url->get('projects/delete'); ?>">
                     <input type="hidden" value="<?= $params[0]; ?>" name="pid">
                     <?=
-                    $this->tag->textField(array(
-                        'comment',
-                        'class' => 'form-control',
-                        'placeholder' => 'เหตุผลที่ลบ'
-                    ));
+                    $this->tag->textField(array('comment', 'class' => 'form-control', 'placeholder' => 'เหตุผลที่ลบ'));
                     ?>
                     <br>
                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('ยืนยันการลบโครงงาน');">

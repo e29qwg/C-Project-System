@@ -46,9 +46,9 @@ class PHPExcel_Shared_Font
     const CHARSET_ANSI_JAPANESE_SHIFTJIS = 0x80;
     const CHARSET_ANSI_KOREAN_HANGUL = 0x81;
     const CHARSET_ANSI_KOREAN_JOHAB = 0x82;
-const CHARSET_ANSI_CHINESE_SIMIPLIFIED = 0x86;
+    const CHARSET_ANSI_CHINESE_SIMIPLIFIED = 0x86;
     const CHARSET_ANSI_CHINESE_TRADITIONAL = 0x88;        //	gb2312
-        const CHARSET_ANSI_GREEK = 0xA1;        //	big5
+    const CHARSET_ANSI_GREEK = 0xA1;        //	big5
     const CHARSET_ANSI_TURKISH = 0xA2;
     const CHARSET_ANSI_VIETNAMESE = 0xA3;
     const CHARSET_ANSI_HEBREW = 0xB1;
@@ -113,49 +113,8 @@ const CHARSET_ANSI_CHINESE_SIMIPLIFIED = 0x86;
      *
      * @var array
      */
-    public static $defaultColumnWidths = array(
-        'Arial' => array(
-            1 => array('px' => 24, 'width' => 12.00000000),
-            2 => array('px' => 24, 'width' => 12.00000000),
-            3 => array('px' => 32, 'width' => 10.66406250),
-            4 => array('px' => 32, 'width' => 10.66406250),
-            5 => array('px' => 40, 'width' => 10.00000000),
-            6 => array('px' => 48, 'width' => 9.59765625),
-            7 => array('px' => 48, 'width' => 9.59765625),
-            8 => array('px' => 56, 'width' => 9.33203125),
-            9 => array('px' => 64, 'width' => 9.14062500),
-            10 => array('px' => 64, 'width' => 9.14062500),
-        ),
-        'Calibri' => array(
-            1 => array('px' => 24, 'width' => 12.00000000),
-            2 => array('px' => 24, 'width' => 12.00000000),
-            3 => array('px' => 32, 'width' => 10.66406250),
-            4 => array('px' => 32, 'width' => 10.66406250),
-            5 => array('px' => 40, 'width' => 10.00000000),
-            6 => array('px' => 48, 'width' => 9.59765625),
-            7 => array('px' => 48, 'width' => 9.59765625),
-            8 => array('px' => 56, 'width' => 9.33203125),
-            9 => array('px' => 56, 'width' => 9.33203125),
-            10 => array('px' => 64, 'width' => 9.14062500),
-            11 => array('px' => 64, 'width' => 9.14062500),
-        ),
-        'Verdana' => array(
-            1 => array('px' => 24, 'width' => 12.00000000),
-            2 => array('px' => 24, 'width' => 12.00000000),
-            3 => array('px' => 32, 'width' => 10.66406250),
-            4 => array('px' => 32, 'width' => 10.66406250),
-            5 => array('px' => 40, 'width' => 10.00000000),
-            6 => array('px' => 48, 'width' => 9.59765625),
-            7 => array('px' => 48, 'width' => 9.59765625),
-            8 => array('px' => 64, 'width' => 9.14062500),
-            9 => array('px' => 72, 'width' => 9.00000000),
-            10 => array('px' => 72, 'width' => 9.00000000),
-        ),
-    );
-    private static $_autoSizeMethods = array(
-        self::AUTOSIZE_METHOD_APPROX,
-        self::AUTOSIZE_METHOD_EXACT,
-    );
+    public static $defaultColumnWidths = array('Arial' => array(1 => array('px' => 24, 'width' => 12.00000000), 2 => array('px' => 24, 'width' => 12.00000000), 3 => array('px' => 32, 'width' => 10.66406250), 4 => array('px' => 32, 'width' => 10.66406250), 5 => array('px' => 40, 'width' => 10.00000000), 6 => array('px' => 48, 'width' => 9.59765625), 7 => array('px' => 48, 'width' => 9.59765625), 8 => array('px' => 56, 'width' => 9.33203125), 9 => array('px' => 64, 'width' => 9.14062500), 10 => array('px' => 64, 'width' => 9.14062500),), 'Calibri' => array(1 => array('px' => 24, 'width' => 12.00000000), 2 => array('px' => 24, 'width' => 12.00000000), 3 => array('px' => 32, 'width' => 10.66406250), 4 => array('px' => 32, 'width' => 10.66406250), 5 => array('px' => 40, 'width' => 10.00000000), 6 => array('px' => 48, 'width' => 9.59765625), 7 => array('px' => 48, 'width' => 9.59765625), 8 => array('px' => 56, 'width' => 9.33203125), 9 => array('px' => 56, 'width' => 9.33203125), 10 => array('px' => 64, 'width' => 9.14062500), 11 => array('px' => 64, 'width' => 9.14062500),), 'Verdana' => array(1 => array('px' => 24, 'width' => 12.00000000), 2 => array('px' => 24, 'width' => 12.00000000), 3 => array('px' => 32, 'width' => 10.66406250), 4 => array('px' => 32, 'width' => 10.66406250), 5 => array('px' => 40, 'width' => 10.00000000), 6 => array('px' => 48, 'width' => 9.59765625), 7 => array('px' => 48, 'width' => 9.59765625), 8 => array('px' => 64, 'width' => 9.14062500), 9 => array('px' => 72, 'width' => 9.00000000), 10 => array('px' => 72, 'width' => 9.00000000),),);
+    private static $_autoSizeMethods = array(self::AUTOSIZE_METHOD_APPROX, self::AUTOSIZE_METHOD_EXACT,);
     /**
      * AutoSize method
      *
@@ -342,37 +301,23 @@ const CHARSET_ANSI_CHINESE_SIMIPLIFIED = 0x86;
         switch ($name)
         {
             case 'Arial':
-                $fontFile = (
-                $bold ? ($italic ? self::ARIAL_BOLD_ITALIC : self::ARIAL_BOLD)
-                    : ($italic ? self::ARIAL_ITALIC : self::ARIAL)
-                );
+                $fontFile = ($bold ? ($italic ? self::ARIAL_BOLD_ITALIC : self::ARIAL_BOLD) : ($italic ? self::ARIAL_ITALIC : self::ARIAL));
                 break;
 
             case 'Calibri':
-                $fontFile = (
-                $bold ? ($italic ? self::CALIBRI_BOLD_ITALIC : self::CALIBRI_BOLD)
-                    : ($italic ? self::CALIBRI_ITALIC : self::CALIBRI)
-                );
+                $fontFile = ($bold ? ($italic ? self::CALIBRI_BOLD_ITALIC : self::CALIBRI_BOLD) : ($italic ? self::CALIBRI_ITALIC : self::CALIBRI));
                 break;
 
             case 'Courier New':
-                $fontFile = (
-                $bold ? ($italic ? self::COURIER_NEW_BOLD_ITALIC : self::COURIER_NEW_BOLD)
-                    : ($italic ? self::COURIER_NEW_ITALIC : self::COURIER_NEW)
-                );
+                $fontFile = ($bold ? ($italic ? self::COURIER_NEW_BOLD_ITALIC : self::COURIER_NEW_BOLD) : ($italic ? self::COURIER_NEW_ITALIC : self::COURIER_NEW));
                 break;
 
             case 'Comic Sans MS':
-                $fontFile = (
-                $bold ? self::COMIC_SANS_MS_BOLD : self::COMIC_SANS_MS
-                );
+                $fontFile = ($bold ? self::COMIC_SANS_MS_BOLD : self::COMIC_SANS_MS);
                 break;
 
             case 'Georgia':
-                $fontFile = (
-                $bold ? ($italic ? self::GEORGIA_BOLD_ITALIC : self::GEORGIA_BOLD)
-                    : ($italic ? self::GEORGIA_ITALIC : self::GEORGIA)
-                );
+                $fontFile = ($bold ? ($italic ? self::GEORGIA_BOLD_ITALIC : self::GEORGIA_BOLD) : ($italic ? self::GEORGIA_ITALIC : self::GEORGIA));
                 break;
 
             case 'Impact':
@@ -380,10 +325,7 @@ const CHARSET_ANSI_CHINESE_SIMIPLIFIED = 0x86;
                 break;
 
             case 'Liberation Sans':
-                $fontFile = (
-                $bold ? ($italic ? self::LIBERATION_SANS_BOLD_ITALIC : self::LIBERATION_SANS_BOLD)
-                    : ($italic ? self::LIBERATION_SANS_ITALIC : self::LIBERATION_SANS)
-                );
+                $fontFile = ($bold ? ($italic ? self::LIBERATION_SANS_BOLD_ITALIC : self::LIBERATION_SANS_BOLD) : ($italic ? self::LIBERATION_SANS_ITALIC : self::LIBERATION_SANS));
                 break;
 
             case 'Lucida Console':
@@ -399,10 +341,7 @@ const CHARSET_ANSI_CHINESE_SIMIPLIFIED = 0x86;
                 break;
 
             case 'Palatino Linotype':
-                $fontFile = (
-                $bold ? ($italic ? self::PALATINO_LINOTYPE_BOLD_ITALIC : self::PALATINO_LINOTYPE_BOLD)
-                    : ($italic ? self::PALATINO_LINOTYPE_ITALIC : self::PALATINO_LINOTYPE)
-                );
+                $fontFile = ($bold ? ($italic ? self::PALATINO_LINOTYPE_BOLD_ITALIC : self::PALATINO_LINOTYPE_BOLD) : ($italic ? self::PALATINO_LINOTYPE_ITALIC : self::PALATINO_LINOTYPE));
                 break;
 
             case 'Symbol':
@@ -410,30 +349,19 @@ const CHARSET_ANSI_CHINESE_SIMIPLIFIED = 0x86;
                 break;
 
             case 'Tahoma':
-                $fontFile = (
-                $bold ? self::TAHOMA_BOLD : self::TAHOMA
-                );
+                $fontFile = ($bold ? self::TAHOMA_BOLD : self::TAHOMA);
                 break;
 
             case 'Times New Roman':
-                $fontFile = (
-                $bold ? ($italic ? self::TIMES_NEW_ROMAN_BOLD_ITALIC : self::TIMES_NEW_ROMAN_BOLD)
-                    : ($italic ? self::TIMES_NEW_ROMAN_ITALIC : self::TIMES_NEW_ROMAN)
-                );
+                $fontFile = ($bold ? ($italic ? self::TIMES_NEW_ROMAN_BOLD_ITALIC : self::TIMES_NEW_ROMAN_BOLD) : ($italic ? self::TIMES_NEW_ROMAN_ITALIC : self::TIMES_NEW_ROMAN));
                 break;
 
             case 'Trebuchet MS':
-                $fontFile = (
-                $bold ? ($italic ? self::TREBUCHET_MS_BOLD_ITALIC : self::TREBUCHET_MS_BOLD)
-                    : ($italic ? self::TREBUCHET_MS_ITALIC : self::TREBUCHET_MS)
-                );
+                $fontFile = ($bold ? ($italic ? self::TREBUCHET_MS_BOLD_ITALIC : self::TREBUCHET_MS_BOLD) : ($italic ? self::TREBUCHET_MS_ITALIC : self::TREBUCHET_MS));
                 break;
 
             case 'Verdana':
-                $fontFile = (
-                $bold ? ($italic ? self::VERDANA_BOLD_ITALIC : self::VERDANA_BOLD)
-                    : ($italic ? self::VERDANA_ITALIC : self::VERDANA)
-                );
+                $fontFile = ($bold ? ($italic ? self::VERDANA_BOLD_ITALIC : self::VERDANA_BOLD) : ($italic ? self::VERDANA_ITALIC : self::VERDANA));
                 break;
 
             default:
@@ -500,11 +428,11 @@ const CHARSET_ANSI_CHINESE_SIMIPLIFIED = 0x86;
             {
                 // stacked text
                 $columnWidth = 4; // approximation
-            } else
+            }
+            else
             {
                 // rotated text
-                $columnWidth = $columnWidth * cos(deg2rad($rotation))
-                    + $fontSize * abs(sin(deg2rad($rotation))) / 5; // approximation
+                $columnWidth = $columnWidth * cos(deg2rad($rotation)) + $fontSize * abs(sin(deg2rad($rotation))) / 5; // approximation
             }
         }
 
@@ -583,17 +511,14 @@ const CHARSET_ANSI_CHINESE_SIMIPLIFIED = 0x86;
         if (isset(self::$defaultColumnWidths[$font->getName()][$font->getSize()]))
         {
             // Exact width can be determined
-            $columnWidth = $pPixels ?
-                self::$defaultColumnWidths[$font->getName()][$font->getSize()]['px']
-                : self::$defaultColumnWidths[$font->getName()][$font->getSize()]['width'];
+            $columnWidth = $pPixels ? self::$defaultColumnWidths[$font->getName()][$font->getSize()]['px'] : self::$defaultColumnWidths[$font->getName()][$font->getSize()]['width'];
 
-        } else
+        }
+        else
         {
             // We don't have data for this particular font and size, use approximation by
             // extrapolating from Calibri 11
-            $columnWidth = $pPixels ?
-                self::$defaultColumnWidths['Calibri'][11]['px']
-                : self::$defaultColumnWidths['Calibri'][11]['width'];
+            $columnWidth = $pPixels ? self::$defaultColumnWidths['Calibri'][11]['px'] : self::$defaultColumnWidths['Calibri'][11]['width'];
             $columnWidth = $columnWidth * $font->getSize() / 11;
 
             // Round pixels to closest integer

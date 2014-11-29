@@ -100,7 +100,8 @@ class PHPExcel_Style_Protection extends PHPExcel_Style_Supervisor implements PHP
             if ($this->_isSupervisor)
             {
                 $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($this->getStyleArray($pStyles));
-            } else
+            }
+            else
             {
                 if (isset($pStyles['locked']))
                 {
@@ -111,7 +112,8 @@ class PHPExcel_Style_Protection extends PHPExcel_Style_Supervisor implements PHP
                     $this->setHidden($pStyles['hidden']);
                 }
             }
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception("Invalid style array passed.");
         }
@@ -155,7 +157,8 @@ class PHPExcel_Style_Protection extends PHPExcel_Style_Supervisor implements PHP
         {
             $styleArray = $this->getStyleArray(array('locked' => $pValue));
             $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
-        } else
+        }
+        else
         {
             $this->_locked = $pValue;
         }
@@ -199,7 +202,8 @@ class PHPExcel_Style_Protection extends PHPExcel_Style_Supervisor implements PHP
         {
             $styleArray = $this->getStyleArray(array('hidden' => $pValue));
             $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
-        } else
+        }
+        else
         {
             $this->_hidden = $pValue;
         }
@@ -217,11 +221,7 @@ class PHPExcel_Style_Protection extends PHPExcel_Style_Supervisor implements PHP
         {
             return $this->getSharedComponent()->getHashCode();
         }
-        return md5(
-            $this->_locked
-            . $this->_hidden
-            . __CLASS__
-        );
+        return md5($this->_locked . $this->_hidden . __CLASS__);
     }
 
 }

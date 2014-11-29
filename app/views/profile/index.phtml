@@ -23,7 +23,8 @@ $projectMaps = ProjectMap::find("user_id='$params[0]'");
             $imgSrc = "https://graph.facebook.com/";
             $imgSrc .= $user->facebook;
             $imgSrc .= "/picture?type=square&width=150&height=150";
-        } else
+        }
+        else
             $imgSrc = $this->url->get("profilePicture/$user->user_id.img");
 
         ?>
@@ -104,7 +105,8 @@ $projectMaps = ProjectMap::find("user_id='$params[0]'");
                 </div>
             </div>
         <?php
-        } else
+        }
+        else
         {
             ?>
             <div class="row">

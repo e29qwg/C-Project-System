@@ -85,7 +85,8 @@ class PHPExcel_Writer_Excel5_Escher
                 {
                     $writer = new PHPExcel_Writer_Excel5_Escher($dggContainer);
                     $this->_data = $writer->close();
-                } else if ($dgContainer = $this->_object->getDgContainer())
+                }
+                else if ($dgContainer = $this->_object->getDgContainer())
                 {
                     $writer = new PHPExcel_Writer_Excel5_Escher($dgContainer);
                     $this->_data = $writer->close();
@@ -109,13 +110,10 @@ class PHPExcel_Writer_Excel5_Escher
                 $recVerInstance |= $recInstance << 4;
 
                 // dgg data
-                $dggData =
-                    pack('VVVV'
-                        , $this->_object->getSpIdMax() // maximum shape identifier increased by one
-                        , $this->_object->getCDgSaved() + 1 // number of file identifier clusters increased by one
-                        , $this->_object->getCSpSaved()
-                        , $this->_object->getCDgSaved() // count total number of drawings saved
-                    );
+                $dggData = pack('VVVV', $this->_object->getSpIdMax() // maximum shape identifier increased by one
+                    , $this->_object->getCDgSaved() + 1 // number of file identifier clusters increased by one
+                    , $this->_object->getCSpSaved(), $this->_object->getCDgSaved() // count total number of drawings saved
+                );
 
                 // add file identifier clusters (one per drawing)
                 $IDCLs = $this->_object->getIDCLs();
@@ -480,9 +478,7 @@ class PHPExcel_Writer_Excel5_Escher
                     // end offsetY
                     $endOffsetY = $this->_object->getEndOffsetY();
 
-                    $clientAnchorData = pack('vvvvvvvvv', $this->_object->getSpFlag(),
-                        $c1, $startOffsetX, $r1, $startOffsetY,
-                        $c2, $endOffsetX, $r2, $endOffsetY);
+                    $clientAnchorData = pack('vvvvvvvvv', $this->_object->getSpFlag(), $c1, $startOffsetX, $r1, $startOffsetY, $c2, $endOffsetX, $r2, $endOffsetY);
 
                     $length = strlen($clientAnchorData);
 

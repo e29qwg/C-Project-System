@@ -118,19 +118,23 @@ class PHPExcel_Calculation_Logical
             if (is_bool($arg))
             {
                 $returnValue = $returnValue && $arg;
-            } elseif ((is_numeric($arg)) && (!is_string($arg)))
+            }
+            elseif ((is_numeric($arg)) && (!is_string($arg)))
             {
                 $returnValue = $returnValue && ($arg != 0);
-            } elseif (is_string($arg))
+            }
+            elseif (is_string($arg))
             {
                 $arg = strtoupper($arg);
                 if (($arg == 'TRUE') || ($arg == PHPExcel_Calculation::getTRUE()))
                 {
                     $arg = TRUE;
-                } elseif (($arg == 'FALSE') || ($arg == PHPExcel_Calculation::getFALSE()))
+                }
+                elseif (($arg == 'FALSE') || ($arg == PHPExcel_Calculation::getFALSE()))
                 {
                     $arg = FALSE;
-                } else
+                }
+                else
                 {
                     return PHPExcel_Calculation_Functions::VALUE();
                 }
@@ -182,19 +186,23 @@ class PHPExcel_Calculation_Logical
             if (is_bool($arg))
             {
                 $returnValue = $returnValue || $arg;
-            } elseif ((is_numeric($arg)) && (!is_string($arg)))
+            }
+            elseif ((is_numeric($arg)) && (!is_string($arg)))
             {
                 $returnValue = $returnValue || ($arg != 0);
-            } elseif (is_string($arg))
+            }
+            elseif (is_string($arg))
             {
                 $arg = strtoupper($arg);
                 if (($arg == 'TRUE') || ($arg == PHPExcel_Calculation::getTRUE()))
                 {
                     $arg = TRUE;
-                } elseif (($arg == 'FALSE') || ($arg == PHPExcel_Calculation::getFALSE()))
+                }
+                elseif (($arg == 'FALSE') || ($arg == PHPExcel_Calculation::getFALSE()))
                 {
                     $arg = FALSE;
-                } else
+                }
+                else
                 {
                     return PHPExcel_Calculation_Functions::VALUE();
                 }
@@ -240,10 +248,12 @@ class PHPExcel_Calculation_Logical
             if (($logical == 'TRUE') || ($logical == PHPExcel_Calculation::getTRUE()))
             {
                 return FALSE;
-            } elseif (($logical == 'FALSE') || ($logical == PHPExcel_Calculation::getFALSE()))
+            }
+            elseif (($logical == 'FALSE') || ($logical == PHPExcel_Calculation::getFALSE()))
             {
                 return TRUE;
-            } else
+            }
+            else
             {
                 return PHPExcel_Calculation_Functions::VALUE();
             }
@@ -272,7 +282,7 @@ class PHPExcel_Calculation_Logical
         return self::STATEMENT_IF(PHPExcel_Calculation_Functions::IS_ERROR($testValue), $errorpart, $testValue);
     }    //	function STATEMENT_IF()
 
-/**
+    /**
      * STATEMENT_IF
      *
      * Returns one value if a condition you specify evaluates to TRUE and another value if it evaluates to FALSE.

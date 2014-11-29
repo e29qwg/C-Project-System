@@ -101,10 +101,7 @@ class PHPExcel_Shared_ZipArchive
         fwrite($handle, $contents);
         fclose($handle);
 
-        $res = $this->_zip->add($this->_tempDir . '/' . $filenameParts["basename"],
-            PCLZIP_OPT_REMOVE_PATH, $this->_tempDir,
-            PCLZIP_OPT_ADD_PATH, $filenameParts["dirname"]
-        );
+        $res = $this->_zip->add($this->_tempDir . '/' . $filenameParts["basename"], PCLZIP_OPT_REMOVE_PATH, $this->_tempDir, PCLZIP_OPT_ADD_PATH, $filenameParts["dirname"]);
         if ($res == 0)
         {
             throw new PHPExcel_Writer_Exception("Error zipping files : " . $this->_zip->errorInfo(true));
@@ -126,8 +123,7 @@ class PHPExcel_Shared_ZipArchive
         $list_index = -1;
         for ($i = 0; $i < $listCount; ++$i)
         {
-            if (strtolower($list[$i]["filename"]) == strtolower($fileName) ||
-                strtolower($list[$i]["stored_filename"]) == strtolower($fileName)
+            if (strtolower($list[$i]["filename"]) == strtolower($fileName) || strtolower($list[$i]["stored_filename"]) == strtolower($fileName)
             )
             {
                 $list_index = $i;
@@ -150,8 +146,7 @@ class PHPExcel_Shared_ZipArchive
         $list_index = -1;
         for ($i = 0; $i < $listCount; ++$i)
         {
-            if (strtolower($list[$i]["filename"]) == strtolower($fileName) ||
-                strtolower($list[$i]["stored_filename"]) == strtolower($fileName)
+            if (strtolower($list[$i]["filename"]) == strtolower($fileName) || strtolower($list[$i]["stored_filename"]) == strtolower($fileName)
             )
             {
                 $list_index = $i;
@@ -163,14 +158,14 @@ class PHPExcel_Shared_ZipArchive
         if ($list_index != -1)
         {
             $extracted = $this->_zip->extractByIndex($list_index, PCLZIP_OPT_EXTRACT_AS_STRING);
-        } else
+        }
+        else
         {
             $filename = substr($fileName, 1);
             $list_index = -1;
             for ($i = 0; $i < $listCount; ++$i)
             {
-                if (strtolower($list[$i]["filename"]) == strtolower($fileName) ||
-                    strtolower($list[$i]["stored_filename"]) == strtolower($fileName)
+                if (strtolower($list[$i]["filename"]) == strtolower($fileName) || strtolower($list[$i]["stored_filename"]) == strtolower($fileName)
                 )
                 {
                     $list_index = $i;

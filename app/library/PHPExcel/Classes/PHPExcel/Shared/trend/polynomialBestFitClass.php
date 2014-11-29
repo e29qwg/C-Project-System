@@ -55,7 +55,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
      **/
     protected $_order = 0;
 
-/**
+    /**
      * Define the regression and calculate the goodness of fit for a set of X and Y data values
      *
      * @param    int $order Order of Polynomial for this regression
@@ -76,14 +76,15 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
                 {
                     $this->_error = True;
                 }
-            } else
+            }
+            else
             {
                 $this->_error = True;
             }
         }
     }    //	function getOrder()
 
-/**
+    /**
      * Execute the regression and calculate the goodness of fit for a set of X and Y data values
      *
      * @param    int $order Order of Polynomial for this regression
@@ -147,7 +148,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
         }
     }    //	function getValueOfYForX()
 
-/**
+    /**
      * Return the Y-Value for a specified value of X
      *
      * @param     float $xValue X-Value
@@ -167,7 +168,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
         return $retVal;
     }    //	function getValueOfXForY()
 
-/**
+    /**
      * Return the order of this polynomial
      *
      * @return     int
@@ -177,7 +178,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
         return $this->_order;
     }    //	function getEquation()
 
-/**
+    /**
      * Return the X-Value for a specified value of Y
      *
      * @param     float $yValue Y-Value
@@ -188,7 +189,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
         return ($yValue - $this->getIntersect()) / $this->getSlope();
     }    //	function getSlope()
 
-/**
+    /**
      * Return the Slope of the line
      *
      * @param     int $dp Number of places of decimal precision to display
@@ -208,7 +209,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
         return $this->_slope;
     }    //	function getCoefficients()
 
-/**
+    /**
      * Return the Equation of the best-fit line
      *
      * @param     int $dp Number of places of decimal precision to display
@@ -234,7 +235,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
         return $equation;
     }    //	function _polynomial_regression()
 
-public function getCoefficients($dp = 0)
+    public function getCoefficients($dp = 0)
     {
         return array_merge(array($this->getIntersect($dp)), $this->getSlope($dp));
     }    //	function __construct()

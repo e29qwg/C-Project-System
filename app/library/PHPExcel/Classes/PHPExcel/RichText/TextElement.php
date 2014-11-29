@@ -90,10 +90,7 @@ class PHPExcel_RichText_TextElement implements PHPExcel_RichText_ITextElement
      */
     public function getHashCode()
     {
-        return md5(
-            $this->_text
-            . __CLASS__
-        );
+        return md5($this->_text . __CLASS__);
     }
 
     /**
@@ -107,7 +104,8 @@ class PHPExcel_RichText_TextElement implements PHPExcel_RichText_ITextElement
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

@@ -123,10 +123,6 @@ class PHPExcel_Cell_Hyperlink
      */
     public function getHashCode()
     {
-        return md5(
-            $this->_url
-            . $this->_tooltip
-            . __CLASS__
-        );
+        return md5($this->_url . $this->_tooltip . __CLASS__);
     }
 }

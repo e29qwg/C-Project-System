@@ -184,7 +184,8 @@ class PHPExcel_Shared_ZipStreamWrapper
                 {
                     $this->_position = $offset;
                     return true;
-                } else
+                }
+                else
                 {
                     return false;
                 }
@@ -195,7 +196,8 @@ class PHPExcel_Shared_ZipStreamWrapper
                 {
                     $this->_position += $offset;
                     return true;
-                } else
+                }
+                else
                 {
                     return false;
                 }
@@ -206,7 +208,8 @@ class PHPExcel_Shared_ZipStreamWrapper
                 {
                     $this->_position = strlen($this->_data) + $offset;
                     return true;
-                } else
+                }
+                else
                 {
                     return false;
                 }

@@ -41,11 +41,7 @@ class PHPExcel_Worksheet_SheetView
     const SHEETVIEW_PAGE_LAYOUT = 'pageLayout';
     const SHEETVIEW_PAGE_BREAK_PREVIEW = 'pageBreakPreview';
 
-    private static $_sheetViewTypes = array(
-        self::SHEETVIEW_NORMAL,
-        self::SHEETVIEW_PAGE_LAYOUT,
-        self::SHEETVIEW_PAGE_BREAK_PREVIEW,
-    );
+    private static $_sheetViewTypes = array(self::SHEETVIEW_NORMAL, self::SHEETVIEW_PAGE_LAYOUT, self::SHEETVIEW_PAGE_BREAK_PREVIEW,);
 
     /**
      * ZoomScale
@@ -107,7 +103,8 @@ class PHPExcel_Worksheet_SheetView
         if (($pValue >= 1) || is_null($pValue))
         {
             $this->_zoomScale = $pValue;
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception("Scale must be greater than or equal to 1.");
         }
@@ -138,7 +135,8 @@ class PHPExcel_Worksheet_SheetView
         if (($pValue >= 1) || is_null($pValue))
         {
             $this->_zoomScaleNormal = $pValue;
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception("Scale must be greater than or equal to 1.");
         }
@@ -176,7 +174,8 @@ class PHPExcel_Worksheet_SheetView
         if (in_array($pValue, self::$_sheetViewTypes))
         {
             $this->_sheetviewType = $pValue;
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception("Invalid sheetview layout type.");
         }
@@ -195,7 +194,8 @@ class PHPExcel_Worksheet_SheetView
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

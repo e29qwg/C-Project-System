@@ -10,15 +10,10 @@ class Exam extends Phalcon\Mvc\User\Component
         $excel = PHPExcel_IOFactory::createReader('Excel2007');
         $obj = $excel->load('./excel/exam.xlsx');
 
-        $records = $this->modelsManager->createBuilder()
-            ->from(array("Project", "ProjectMap"))
-            ->where("
+        $records = $this->modelsManager->createBuilder()->from(array("Project", "ProjectMap"))->where("
                 Project.project_id = ProjectMap.project_id AND 
                 ProjectMap.map_type='advisor' AND 
-                Project.project_status='Accept'")
-            ->orderBy("ProjectMap.user_id ASC")
-            ->getQuery()
-            ->execute();
+                Project.project_status='Accept'")->orderBy("ProjectMap.user_id ASC")->getQuery()->execute();
 
         $row = array(0, 5, 5, 5);
 

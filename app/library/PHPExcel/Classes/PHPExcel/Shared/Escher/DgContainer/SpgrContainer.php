@@ -101,7 +101,8 @@ class PHPExcel_Shared_Escher_DgContainer_SpgrContainer
             if ($child instanceof PHPExcel_Shared_Escher_DgContainer_SpgrContainer)
             {
                 $allSpContainers = array_merge($allSpContainers, $child->getAllSpContainers());
-            } else
+            }
+            else
             {
                 $allSpContainers[] = $child;
             }

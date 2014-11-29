@@ -210,7 +210,8 @@ class PHPExcel_Style_Borders extends PHPExcel_Style_Supervisor implements PHPExc
             if ($this->_isSupervisor)
             {
                 $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($this->getStyleArray($pStyles));
-            } else
+            }
+            else
             {
                 if (array_key_exists('left', $pStyles))
                 {
@@ -244,7 +245,8 @@ class PHPExcel_Style_Borders extends PHPExcel_Style_Supervisor implements PHPExc
                     $this->getBottom()->applyFromArray($pStyles['allborders']);
                 }
             }
-        } else
+        }
+        else
         {
             throw new PHPExcel_Exception("Invalid style array passed.");
         }
@@ -398,15 +400,7 @@ class PHPExcel_Style_Borders extends PHPExcel_Style_Supervisor implements PHPExc
         {
             return $this->getSharedComponent()->getHashcode();
         }
-        return md5(
-            $this->getLeft()->getHashCode()
-            . $this->getRight()->getHashCode()
-            . $this->getTop()->getHashCode()
-            . $this->getBottom()->getHashCode()
-            . $this->getDiagonal()->getHashCode()
-            . $this->getDiagonalDirection()
-            . __CLASS__
-        );
+        return md5($this->getLeft()->getHashCode() . $this->getRight()->getHashCode() . $this->getTop()->getHashCode() . $this->getBottom()->getHashCode() . $this->getDiagonal()->getHashCode() . $this->getDiagonalDirection() . __CLASS__);
     }
 
     /**
@@ -450,7 +444,8 @@ class PHPExcel_Style_Borders extends PHPExcel_Style_Supervisor implements PHPExc
         {
             $styleArray = $this->getStyleArray(array('diagonaldirection' => $pValue));
             $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
-        } else
+        }
+        else
         {
             $this->_diagonalDirection = $pValue;
         }

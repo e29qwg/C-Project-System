@@ -64,7 +64,7 @@ class PHPExcel_Calculation_Statistical
 {
 
 
-        private static $_logBetaCache_p = 0.0;    //	function _checkTrendArrays()
+    private static $_logBetaCache_p = 0.0;    //	function _checkTrendArrays()
     private static $_logBetaCache_q = 0.0;    //	function _beta()
     private static $_logBetaCache_result = 0.0;    //	function _incompleteBeta()
 
@@ -74,7 +74,7 @@ class PHPExcel_Calculation_Statistical
     private static $_logGammaCache_result = 0.0;
     private static $_logGammaCache_x = 0.0;
 
-/**
+    /**
      * AVEDEV
      *
      * Returns the average of the absolute deviations of data points from their mean.
@@ -101,8 +101,7 @@ class PHPExcel_Calculation_Statistical
             $aCount = 0;
             foreach ($aArgs as $k => $arg)
             {
-                if ((is_bool($arg)) &&
-                    ((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))
+                if ((is_bool($arg)) && ((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))
                 )
                 {
                     $arg = (integer)$arg;
@@ -113,7 +112,8 @@ class PHPExcel_Calculation_Statistical
                     if (is_null($returnValue))
                     {
                         $returnValue = abs($arg - $aMean);
-                    } else
+                    }
+                    else
                     {
                         $returnValue += abs($arg - $aMean);
                     }
@@ -151,8 +151,7 @@ class PHPExcel_Calculation_Statistical
         // Loop through arguments
         foreach (PHPExcel_Calculation_Functions::flattenArrayIndexed(func_get_args()) as $k => $arg)
         {
-            if ((is_bool($arg)) &&
-                ((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))
+            if ((is_bool($arg)) && ((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))
             )
             {
                 $arg = (integer)$arg;
@@ -163,7 +162,8 @@ class PHPExcel_Calculation_Statistical
                 if (is_null($returnValue))
                 {
                     $returnValue = $arg;
-                } else
+                }
+                else
                 {
                     $returnValue += $arg;
                 }
@@ -175,13 +175,14 @@ class PHPExcel_Calculation_Statistical
         if ($aCount > 0)
         {
             return $returnValue / $aCount;
-        } else
+        }
+        else
         {
             return PHPExcel_Calculation_Functions::DIV0();
         }
     }    //	function _logBeta()
 
-/**
+    /**
      * AVERAGEIF
      *
      * Returns the average value from a range of cells that contain numbers within the list of arguments
@@ -231,7 +232,8 @@ class PHPExcel_Calculation_Statistical
         if ($aCount > 0)
         {
             return $returnValue / $aCount;
-        } else
+        }
+        else
         {
             return PHPExcel_Calculation_Functions::DIV0();
         }
@@ -282,7 +284,7 @@ class PHPExcel_Calculation_Statistical
      */
 
     // Function cache for logGamma
-/**
+    /**
      * BETAINV
      *
      * Returns the inverse of the beta distribution.
@@ -327,10 +329,12 @@ class PHPExcel_Calculation_Statistical
                 if (($result == $probability) || ($result == 0))
                 {
                     $b = $a;
-                } elseif ($result > $probability)
+                }
+                elseif ($result > $probability)
                 {
                     $b = $guess;
-                } else
+                }
+                else
                 {
                     $a = $guess;
                 }
@@ -344,7 +348,7 @@ class PHPExcel_Calculation_Statistical
         return PHPExcel_Calculation_Functions::VALUE();
     }
 
-/**
+    /**
      * BETADIST
      *
      * Returns the beta distribution.
@@ -400,10 +404,12 @@ class PHPExcel_Calculation_Statistical
         if ($x <= 0.0)
         {
             return 0.0;
-        } elseif ($x >= 1.0)
+        }
+        elseif ($x >= 1.0)
         {
             return 1.0;
-        } elseif (($p <= 0.0) || ($q <= 0.0) || (($p + $q) > LOG_GAMMA_X_MAX_VALUE))
+        }
+        elseif (($p <= 0.0) || ($q <= 0.0) || (($p + $q) > LOG_GAMMA_X_MAX_VALUE))
         {
             return 0.0;
         }
@@ -411,7 +417,8 @@ class PHPExcel_Calculation_Statistical
         if ($x < ($p + 1.0) / ($p + $q + 2.0))
         {
             return $beta_gam * self::_betaFraction($x, $p, $q) / $p;
-        } else
+        }
+        else
         {
             return 1.0 - ($beta_gam * self::_betaFraction(1 - $x, $q, $p) / $q);
         }
@@ -422,7 +429,7 @@ class PHPExcel_Calculation_Statistical
     //	Private implementation of the incomplete Gamma function
     //
 
-/**
+    /**
      * Evaluates of continued fraction part of incomplete beta function.
      * Based on an idea from Numerical Recipes (W.H. Press et al, 1992).
      * @author Jaco van Kooten
@@ -484,7 +491,7 @@ class PHPExcel_Calculation_Statistical
     //	Private implementation of the Gamma function
     //
 
-/**
+    /**
      * BINOMDIST
      *
      * Returns the individual term binomial distribution probability. Use BINOMDIST in problems with
@@ -528,7 +535,8 @@ class PHPExcel_Calculation_Statistical
                         $summer += PHPExcel_Calculation_MathTrig::COMBIN($trials, $i) * pow($probability, $i) * pow(1 - $probability, $trials - $i);
                     }
                     return $summer;
-                } else
+                }
+                else
                 {
                     return PHPExcel_Calculation_MathTrig::COMBIN($trials, $value) * pow($probability, $value) * pow(1 - $probability, $trials - $value);
                 }
@@ -537,7 +545,7 @@ class PHPExcel_Calculation_Statistical
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function _gamma()
 
-/**
+    /**
      * CHIINV
      *
      * Returns the one-tailed probability of the chi-squared distribution.
@@ -569,10 +577,12 @@ class PHPExcel_Calculation_Statistical
                 if ($error == 0.0)
                 {
                     $dx = 0;
-                } elseif ($error < 0.0)
+                }
+                elseif ($error < 0.0)
                 {
                     $xLo = $x;
-                } else
+                }
+                else
                 {
                     $xHi = $x;
                 }
@@ -601,7 +611,7 @@ class PHPExcel_Calculation_Statistical
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function _inverse_ncdf()
 
-/**
+    /**
      * CHIDIST
      *
      * Returns the one-tailed probability of the chi-squared distribution.
@@ -634,7 +644,7 @@ class PHPExcel_Calculation_Statistical
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function _inverse_ncdf2()
 
-private static function _incompleteGamma($a, $x)
+    private static function _incompleteGamma($a, $x)
     {
         static $max = 32;
         $summer = 0;
@@ -650,18 +660,13 @@ private static function _incompleteGamma($a, $x)
         return pow($x, $a) * exp(0 - $x) * $summer;
     }    //	function _inverse_ncdf3()
 
-private static function _gamma($data)
+    private static function _gamma($data)
     {
-        if ($data == 0.0) return 0;
+        if ($data == 0.0)
+            return 0;
 
         static $p0 = 1.000000000190015;
-        static $p = array(1 => 76.18009172947146,
-            2 => -86.50532032941677,
-            3 => 24.01409824083091,
-            4 => -1.231739572450155,
-            5 => 1.208650973866179e-3,
-            6 => -5.395239384953e-6
-        );
+        static $p = array(1 => 76.18009172947146, 2 => -86.50532032941677, 3 => 24.01409824083091, 4 => -1.231739572450155, 5 => 1.208650973866179e-3, 6 => -5.395239384953e-6);
 
         $y = $x = $data;
         $tmp = $x + 5.5;
@@ -675,7 +680,7 @@ private static function _gamma($data)
         return exp(0 - $tmp + log(SQRT2PI * $summer / $x));
     }    //	function AVEDEV()
 
-/**
+    /**
      * CONFIDENCE
      *
      * Returns the confidence interval for a population mean
@@ -707,7 +712,7 @@ private static function _gamma($data)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function AVERAGE()
 
-/**
+    /**
      * NORMSINV
      *
      * Returns the inverse of the standard normal cumulative distribution
@@ -720,7 +725,7 @@ private static function _gamma($data)
         return self::NORMINV($value, 0, 1);
     }    //	function AVERAGEA()
 
-/**
+    /**
      * NORMINV
      *
      * Returns the inverse of the normal cumulative distribution for the specified mean and standard deviation.
@@ -752,7 +757,7 @@ private static function _gamma($data)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function AVERAGEIF()
 
-/***************************************************************************
+    /***************************************************************************
      *                                inverse_ncdf.php
      *                            -------------------
      *    begin                : Friday, January 16, 2004
@@ -775,34 +780,13 @@ private static function _gamma($data)
         //	Input paramater is $p - probability - where 0 < p < 1.
 
         //	Coefficients in rational approximations
-        static $a = array(1 => -3.969683028665376e+01,
-            2 => 2.209460984245205e+02,
-            3 => -2.759285104469687e+02,
-            4 => 1.383577518672690e+02,
-            5 => -3.066479806614716e+01,
-            6 => 2.506628277459239e+00
-        );
+        static $a = array(1 => -3.969683028665376e+01, 2 => 2.209460984245205e+02, 3 => -2.759285104469687e+02, 4 => 1.383577518672690e+02, 5 => -3.066479806614716e+01, 6 => 2.506628277459239e+00);
 
-        static $b = array(1 => -5.447609879822406e+01,
-            2 => 1.615858368580409e+02,
-            3 => -1.556989798598866e+02,
-            4 => 6.680131188771972e+01,
-            5 => -1.328068155288572e+01
-        );
+        static $b = array(1 => -5.447609879822406e+01, 2 => 1.615858368580409e+02, 3 => -1.556989798598866e+02, 4 => 6.680131188771972e+01, 5 => -1.328068155288572e+01);
 
-        static $c = array(1 => -7.784894002430293e-03,
-            2 => -3.223964580411365e-01,
-            3 => -2.400758277161838e+00,
-            4 => -2.549732539343734e+00,
-            5 => 4.374664141464968e+00,
-            6 => 2.938163982698783e+00
-        );
+        static $c = array(1 => -7.784894002430293e-03, 2 => -3.223964580411365e-01, 3 => -2.400758277161838e+00, 4 => -2.549732539343734e+00, 5 => 4.374664141464968e+00, 6 => 2.938163982698783e+00);
 
-        static $d = array(1 => 7.784695709041462e-03,
-            2 => 3.224671290700398e-01,
-            3 => 2.445134137142996e+00,
-            4 => 3.754408661907416e+00
-        );
+        static $d = array(1 => 7.784695709041462e-03, 2 => 3.224671290700398e-01, 3 => 2.445134137142996e+00, 4 => 3.754408661907416e+00);
 
         //	Define lower and upper region break-points.
         $p_low = 0.02425;            //Use lower region approx. below this
@@ -812,27 +796,26 @@ private static function _gamma($data)
         {
             //	Rational approximation for lower region.
             $q = sqrt(-2 * log($p));
-            return ((((($c[1] * $q + $c[2]) * $q + $c[3]) * $q + $c[4]) * $q + $c[5]) * $q + $c[6]) /
-            (((($d[1] * $q + $d[2]) * $q + $d[3]) * $q + $d[4]) * $q + 1);
-        } elseif ($p_low <= $p && $p <= $p_high)
+            return ((((($c[1] * $q + $c[2]) * $q + $c[3]) * $q + $c[4]) * $q + $c[5]) * $q + $c[6]) / (((($d[1] * $q + $d[2]) * $q + $d[3]) * $q + $d[4]) * $q + 1);
+        }
+        elseif ($p_low <= $p && $p <= $p_high)
         {
             //	Rational approximation for central region.
             $q = $p - 0.5;
             $r = $q * $q;
-            return ((((($a[1] * $r + $a[2]) * $r + $a[3]) * $r + $a[4]) * $r + $a[5]) * $r + $a[6]) * $q /
-            ((((($b[1] * $r + $b[2]) * $r + $b[3]) * $r + $b[4]) * $r + $b[5]) * $r + 1);
-        } elseif ($p_high < $p && $p < 1)
+            return ((((($a[1] * $r + $a[2]) * $r + $a[3]) * $r + $a[4]) * $r + $a[5]) * $r + $a[6]) * $q / ((((($b[1] * $r + $b[2]) * $r + $b[3]) * $r + $b[4]) * $r + $b[5]) * $r + 1);
+        }
+        elseif ($p_high < $p && $p < 1)
         {
             //	Rational approximation for upper region.
             $q = sqrt(-2 * log(1 - $p));
-            return -((((($c[1] * $q + $c[2]) * $q + $c[3]) * $q + $c[4]) * $q + $c[5]) * $q + $c[6]) /
-            (((($d[1] * $q + $d[2]) * $q + $d[3]) * $q + $d[4]) * $q + 1);
+            return -((((($c[1] * $q + $c[2]) * $q + $c[3]) * $q + $c[4]) * $q + $c[5]) * $q + $c[6]) / (((($d[1] * $q + $d[2]) * $q + $d[3]) * $q + $d[4]) * $q + 1);
         }
         //	If 0 < p < 1, return a null value
         return PHPExcel_Calculation_Functions::NULL();
     }    //	function BETADIST()
 
-/**
+    /**
      * CORREL
      *
      * Returns covariance, the average of the products of deviations for each data point pair.
@@ -857,7 +840,8 @@ private static function _gamma($data)
         if (($yValueCount == 0) || ($yValueCount != $xValueCount))
         {
             return PHPExcel_Calculation_Functions::NA();
-        } elseif ($yValueCount == 1)
+        }
+        elseif ($yValueCount == 1)
         {
             return PHPExcel_Calculation_Functions::DIV0();
         }
@@ -866,7 +850,7 @@ private static function _gamma($data)
         return $bestFitLinear->getCorrelation();
     }    //	function BETAINV()
 
-private static function _checkTrendArrays(&$array1, &$array2)
+    private static function _checkTrendArrays(&$array1, &$array2)
     {
         if (!is_array($array1))
         {
@@ -901,7 +885,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return True;
     }    //	function BINOMDIST()
 
-/**
+    /**
      * COUNTA
      *
      * Counts the number of cells that are not empty within the list of arguments
@@ -934,7 +918,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return $returnValue;
     }    //	function CHIDIST()
 
-/**
+    /**
      * COUNTBLANK
      *
      * Counts the number of empty cells within the list of arguments
@@ -967,7 +951,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return $returnValue;
     }    //	function CHIINV()
 
-/**
+    /**
      * COUNTIF
      *
      * Counts the number of cells that contain numbers within the list of arguments
@@ -1007,7 +991,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return $returnValue;
     }    //	function CONFIDENCE()
 
-/**
+    /**
      * COVAR
      *
      * Returns covariance, the average of the products of deviations for each data point pair.
@@ -1028,7 +1012,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
         if (($yValueCount == 0) || ($yValueCount != $xValueCount))
         {
             return PHPExcel_Calculation_Functions::NA();
-        } elseif ($yValueCount == 1)
+        }
+        elseif ($yValueCount == 1)
         {
             return PHPExcel_Calculation_Functions::DIV0();
         }
@@ -1037,7 +1022,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return $bestFitLinear->getCovariance();
     }    //	function CORREL()
 
-/**
+    /**
      * CRITBINOM
      *
      * Returns the smallest value for which the cumulative binomial distribution is greater
@@ -1080,7 +1065,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
             {
                 $t = sqrt(log(1 / ($alpha * $alpha)));
                 $trialsApprox = 0 - ($t + (2.515517 + 0.802853 * $t + 0.010328 * $t * $t) / (1 + 1.432788 * $t + 0.189269 * $t * $t + 0.001308 * $t * $t * $t));
-            } else
+            }
+            else
             {
                 $t = sqrt(log(1 / pow(1 - $alpha, 2)));
                 $trialsApprox = $t - (2.515517 + 0.802853 * $t + 0.010328 * $t * $t) / (1 + 1.432788 * $t + 0.189269 * $t * $t + 0.001308 * $t * $t * $t);
@@ -1089,7 +1075,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
             if ($Guess < 0)
             {
                 $Guess = 0;
-            } elseif ($Guess > $trials)
+            }
+            elseif ($Guess > $trials)
             {
                 $Guess = $trials;
             }
@@ -1157,7 +1144,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
             $PGuess = $UnscaledPGuess / $TotalUnscaledProbability;
             $CumPGuess = $UnscaledCumPGuess / $TotalUnscaledProbability;
 
-//			$CumPGuessMinus1 = $CumPGuess - $PGuess;
+            //			$CumPGuessMinus1 = $CumPGuess - $PGuess;
             $CumPGuessMinus1 = $CumPGuess - 1;
 
             while (True)
@@ -1165,14 +1152,16 @@ private static function _checkTrendArrays(&$array1, &$array2)
                 if (($CumPGuessMinus1 < $alpha) && ($CumPGuess >= $alpha))
                 {
                     return $Guess;
-                } elseif (($CumPGuessMinus1 < $alpha) && ($CumPGuess < $alpha))
+                }
+                elseif (($CumPGuessMinus1 < $alpha) && ($CumPGuess < $alpha))
                 {
                     $PGuessPlus1 = $PGuess * ($trials - $Guess) * $probability / $Guess / (1 - $probability);
                     $CumPGuessMinus1 = $CumPGuess;
                     $CumPGuess = $CumPGuess + $PGuessPlus1;
                     $PGuess = $PGuessPlus1;
                     ++$Guess;
-                } elseif (($CumPGuessMinus1 >= $alpha) && ($CumPGuess >= $alpha))
+                }
+                elseif (($CumPGuessMinus1 >= $alpha) && ($CumPGuess >= $alpha))
                 {
                     $PGuessMinus1 = $PGuess * $Guess * (1 - $probability) / ($trials - $Guess + 1) / $probability;
                     $CumPGuess = $CumPGuessMinus1;
@@ -1185,7 +1174,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function COUNT()
 
-/**
+    /**
      * DEVSQ
      *
      * Returns the sum of squares of deviations of data points from their sample mean.
@@ -1212,8 +1201,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
             foreach ($aArgs as $k => $arg)
             {
                 // Is it a numeric value?
-                if ((is_bool($arg)) &&
-                    ((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))
+                if ((is_bool($arg)) && ((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))
                 )
                 {
                     $arg = (integer)$arg;
@@ -1223,7 +1211,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
                     if (is_null($returnValue))
                     {
                         $returnValue = pow(($arg - $aMean), 2);
-                    } else
+                    }
+                    else
                     {
                         $returnValue += pow(($arg - $aMean), 2);
                     }
@@ -1235,7 +1224,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
             if (is_null($returnValue))
             {
                 return PHPExcel_Calculation_Functions::NaN();
-            } else
+            }
+            else
             {
                 return $returnValue;
             }
@@ -1243,7 +1233,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return self::NA();
     }    //	function COUNTA()
 
-/**
+    /**
      * EXPONDIST
      *
      *    Returns the exponential distribution. Use EXPONDIST to model the time between events,
@@ -1272,7 +1262,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
                 if ($cumulative)
                 {
                     return 1 - exp(0 - $value * $lambda);
-                } else
+                }
+                else
                 {
                     return $lambda * exp(0 - $value * $lambda);
                 }
@@ -1281,7 +1272,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function COUNTBLANK()
 
-/**
+    /**
      * FISHER
      *
      * Returns the Fisher transformation at x. This transformation produces a function that
@@ -1306,7 +1297,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function COUNTIF()
 
-/**
+    /**
      * FISHERINV
      *
      * Returns the inverse of the Fisher transformation. Use this transformation when
@@ -1327,7 +1318,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function COVAR()
 
-/**
+    /**
      * FORECAST
      *
      * Calculates, or predicts, a future value by using existing values. The predicted value is a y-value for a given x-value.
@@ -1355,7 +1346,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
         if (($yValueCount == 0) || ($yValueCount != $xValueCount))
         {
             return PHPExcel_Calculation_Functions::NA();
-        } elseif ($yValueCount == 1)
+        }
+        elseif ($yValueCount == 1)
         {
             return PHPExcel_Calculation_Functions::DIV0();
         }
@@ -1364,7 +1356,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return $bestFitLinear->getValueOfYForX($xValue);
     }    //	function CRITBINOM()
 
-/**
+    /**
      * GAMMAINV
      *
      * Returns the inverse of the beta distribution.
@@ -1403,7 +1395,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
                 if ($error < 0.0)
                 {
                     $xLo = $x;
-                } else
+                }
+                else
                 {
                     $xHi = $x;
                 }
@@ -1433,7 +1426,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function DEVSQ()
 
-/**
+    /**
      * GAMMADIST
      *
      * Returns the gamma distribution.
@@ -1462,7 +1455,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
                 if ($cumulative)
                 {
                     return self::_incompleteGamma($a, $value / $b) / self::_gamma($a);
-                } else
+                }
+                else
                 {
                     return (1 / (pow($b, $a) * self::_gamma($a))) * pow($value, $a - 1) * exp(0 - ($value / $b));
                 }
@@ -1471,7 +1465,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function EXPONDIST()
 
-/**
+    /**
      * GAMMALN
      *
      * Returns the natural logarithm of the gamma function.
@@ -1494,7 +1488,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function FISHER()
 
-/**
+    /**
      * GEOMEAN
      *
      * Returns the geometric mean of an array or range of positive data. For example, you
@@ -1525,7 +1519,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return PHPExcel_Calculation_Functions::NaN();
     }    //	function FISHERINV()
 
-/**
+    /**
      * COUNT
      *
      * Counts the number of cells that contain numbers within the list of arguments
@@ -1547,8 +1541,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         $aArgs = PHPExcel_Calculation_Functions::flattenArrayIndexed(func_get_args());
         foreach ($aArgs as $k => $arg)
         {
-            if ((is_bool($arg)) &&
-                ((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))
+            if ((is_bool($arg)) && ((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))
             )
             {
                 $arg = (integer)$arg;
@@ -1564,7 +1557,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return $returnValue;
     }    //	function FORECAST()
 
-/**
+    /**
      * MIN
      *
      * MIN returns the value of the element of the values passed that has the smallest value,
@@ -1605,7 +1598,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return $returnValue;
     }    //	function GAMMADIST()
 
-/**
+    /**
      * GROWTH
      *
      * Returns values along a predicted emponential trend
@@ -1638,7 +1631,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return $returnArray;
     }    //	function GAMMAINV()
 
-/**
+    /**
      * HARMEAN
      *
      * Returns the harmonic mean of a data set. The harmonic mean is the reciprocal of the
@@ -1676,7 +1669,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
                 if (is_null($returnValue))
                 {
                     $returnValue = (1 / $arg);
-                } else
+                }
+                else
                 {
                     $returnValue += (1 / $arg);
                 }
@@ -1688,13 +1682,14 @@ private static function _checkTrendArrays(&$array1, &$array2)
         if ($aCount > 0)
         {
             return 1 / ($returnValue / $aCount);
-        } else
+        }
+        else
         {
             return $returnValue;
         }
     }    //	function GAMMALN()
 
-/**
+    /**
      * HYPGEOMDIST
      *
      * Returns the hypergeometric distribution. HYPGEOMDIST returns the probability of a given number of
@@ -1728,14 +1723,12 @@ private static function _checkTrendArrays(&$array1, &$array2)
             {
                 return PHPExcel_Calculation_Functions::NaN();
             }
-            return PHPExcel_Calculation_MathTrig::COMBIN($populationSuccesses, $sampleSuccesses) *
-            PHPExcel_Calculation_MathTrig::COMBIN($populationNumber - $populationSuccesses, $sampleNumber - $sampleSuccesses) /
-            PHPExcel_Calculation_MathTrig::COMBIN($populationNumber, $sampleNumber);
+            return PHPExcel_Calculation_MathTrig::COMBIN($populationSuccesses, $sampleSuccesses) * PHPExcel_Calculation_MathTrig::COMBIN($populationNumber - $populationSuccesses, $sampleNumber - $sampleSuccesses) / PHPExcel_Calculation_MathTrig::COMBIN($populationNumber, $sampleNumber);
         }
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	GEOMEAN()
 
-/**
+    /**
      * INTERCEPT
      *
      * Calculates the point at which a line will intersect the y-axis by using existing x-values and y-values.
@@ -1756,7 +1749,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
         if (($yValueCount == 0) || ($yValueCount != $xValueCount))
         {
             return PHPExcel_Calculation_Functions::NA();
-        } elseif ($yValueCount == 1)
+        }
+        elseif ($yValueCount == 1)
         {
             return PHPExcel_Calculation_Functions::DIV0();
         }
@@ -1765,7 +1759,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return $bestFitLinear->getIntersect();
     }    //	function GROWTH()
 
-/**
+    /**
      * KURT
      *
      * Returns the kurtosis of a data set. Kurtosis characterizes the relative peakedness
@@ -1788,11 +1782,11 @@ private static function _checkTrendArrays(&$array1, &$array2)
             // Loop through arguments
             foreach ($aArgs as $k => $arg)
             {
-                if ((is_bool($arg)) &&
-                    (!PHPExcel_Calculation_Functions::isMatrixValue($k))
+                if ((is_bool($arg)) && (!PHPExcel_Calculation_Functions::isMatrixValue($k))
                 )
                 {
-                } else
+                }
+                else
                 {
                     // Is it a numeric value?
                     if ((is_numeric($arg)) && (!is_string($arg)))
@@ -1812,7 +1806,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return PHPExcel_Calculation_Functions::DIV0();
     }    //	function HARMEAN()
 
-/**
+    /**
      * STDEV
      *
      * Estimates standard deviation based on a sample. The standard deviation is a measure of how
@@ -1839,8 +1833,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
             $aCount = -1;
             foreach ($aArgs as $k => $arg)
             {
-                if ((is_bool($arg)) &&
-                    ((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))
+                if ((is_bool($arg)) && ((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))
                 )
                 {
                     $arg = (integer)$arg;
@@ -1851,7 +1844,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
                     if (is_null($returnValue))
                     {
                         $returnValue = pow(($arg - $aMean), 2);
-                    } else
+                    }
+                    else
                     {
                         $returnValue += pow(($arg - $aMean), 2);
                     }
@@ -1868,7 +1862,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return PHPExcel_Calculation_Functions::DIV0();
     }    //	function HYPGEOMDIST()
 
-/**
+    /**
      * LARGE
      *
      * Returns the nth largest value in a data set. You can use this function to
@@ -1914,7 +1908,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function INTERCEPT()
 
-/**
+    /**
      * LINEST
      *
      * Calculates the statistics for a line by using the "least squares" method to calculate a straight line that best fits your data,
@@ -1930,7 +1924,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
     {
         $const = (is_null($const)) ? TRUE : (boolean)PHPExcel_Calculation_Functions::flattenSingleValue($const);
         $stats = (is_null($stats)) ? FALSE : (boolean)PHPExcel_Calculation_Functions::flattenSingleValue($stats);
-        if (is_null($xValues)) $xValues = range(1, count(PHPExcel_Calculation_Functions::flattenArray($yValues)));
+        if (is_null($xValues))
+            $xValues = range(1, count(PHPExcel_Calculation_Functions::flattenArray($yValues)));
 
         if (!self::_checkTrendArrays($yValues, $xValues))
         {
@@ -1943,7 +1938,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
         if (($yValueCount == 0) || ($yValueCount != $xValueCount))
         {
             return PHPExcel_Calculation_Functions::NA();
-        } elseif ($yValueCount == 1)
+        }
+        elseif ($yValueCount == 1)
         {
             return 0;
         }
@@ -1951,28 +1947,15 @@ private static function _checkTrendArrays(&$array1, &$array2)
         $bestFitLinear = trendClass::calculate(trendClass::TREND_LINEAR, $yValues, $xValues, $const);
         if ($stats)
         {
-            return array(array($bestFitLinear->getSlope(),
-                $bestFitLinear->getSlopeSE(),
-                $bestFitLinear->getGoodnessOfFit(),
-                $bestFitLinear->getF(),
-                $bestFitLinear->getSSRegression(),
-            ),
-                array($bestFitLinear->getIntersect(),
-                    $bestFitLinear->getIntersectSE(),
-                    $bestFitLinear->getStdevOfResiduals(),
-                    $bestFitLinear->getDFResiduals(),
-                    $bestFitLinear->getSSResiduals()
-                )
-            );
-        } else
+            return array(array($bestFitLinear->getSlope(), $bestFitLinear->getSlopeSE(), $bestFitLinear->getGoodnessOfFit(), $bestFitLinear->getF(), $bestFitLinear->getSSRegression(),), array($bestFitLinear->getIntersect(), $bestFitLinear->getIntersectSE(), $bestFitLinear->getStdevOfResiduals(), $bestFitLinear->getDFResiduals(), $bestFitLinear->getSSResiduals()));
+        }
+        else
         {
-            return array($bestFitLinear->getSlope(),
-                $bestFitLinear->getIntersect()
-            );
+            return array($bestFitLinear->getSlope(), $bestFitLinear->getIntersect());
         }
     }    //	function KURT()
 
-/**
+    /**
      * LOGEST
      *
      * Calculates an exponential curve that best fits the X and Y data series,
@@ -1988,7 +1971,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
     {
         $const = (is_null($const)) ? True : (boolean)PHPExcel_Calculation_Functions::flattenSingleValue($const);
         $stats = (is_null($stats)) ? False : (boolean)PHPExcel_Calculation_Functions::flattenSingleValue($stats);
-        if (is_null($xValues)) $xValues = range(1, count(PHPExcel_Calculation_Functions::flattenArray($yValues)));
+        if (is_null($xValues))
+            $xValues = range(1, count(PHPExcel_Calculation_Functions::flattenArray($yValues)));
 
         if (!self::_checkTrendArrays($yValues, $xValues))
         {
@@ -2009,7 +1993,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
         if (($yValueCount == 0) || ($yValueCount != $xValueCount))
         {
             return PHPExcel_Calculation_Functions::NA();
-        } elseif ($yValueCount == 1)
+        }
+        elseif ($yValueCount == 1)
         {
             return 1;
         }
@@ -2017,28 +2002,15 @@ private static function _checkTrendArrays(&$array1, &$array2)
         $bestFitExponential = trendClass::calculate(trendClass::TREND_EXPONENTIAL, $yValues, $xValues, $const);
         if ($stats)
         {
-            return array(array($bestFitExponential->getSlope(),
-                $bestFitExponential->getSlopeSE(),
-                $bestFitExponential->getGoodnessOfFit(),
-                $bestFitExponential->getF(),
-                $bestFitExponential->getSSRegression(),
-            ),
-                array($bestFitExponential->getIntersect(),
-                    $bestFitExponential->getIntersectSE(),
-                    $bestFitExponential->getStdevOfResiduals(),
-                    $bestFitExponential->getDFResiduals(),
-                    $bestFitExponential->getSSResiduals()
-                )
-            );
-        } else
+            return array(array($bestFitExponential->getSlope(), $bestFitExponential->getSlopeSE(), $bestFitExponential->getGoodnessOfFit(), $bestFitExponential->getF(), $bestFitExponential->getSSRegression(),), array($bestFitExponential->getIntersect(), $bestFitExponential->getIntersectSE(), $bestFitExponential->getStdevOfResiduals(), $bestFitExponential->getDFResiduals(), $bestFitExponential->getSSResiduals()));
+        }
+        else
         {
-            return array($bestFitExponential->getSlope(),
-                $bestFitExponential->getIntersect()
-            );
+            return array($bestFitExponential->getSlope(), $bestFitExponential->getIntersect());
         }
     }    //	function LARGE()
 
-/**
+    /**
      * LOGINV
      *
      * Returns the inverse of the normal cumulative distribution
@@ -2069,7 +2041,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function LINEST()
 
-/**
+    /**
      * LOGNORMDIST
      *
      * Returns the cumulative lognormal distribution of x, where ln(x) is normally distributed
@@ -2097,7 +2069,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function LOGEST()
 
-/**
+    /**
      * NORMSDIST
      *
      * Returns the standard normal cumulative distribution function. The distribution has
@@ -2114,7 +2086,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return self::NORMDIST($value, 0, 1, True);
     }    //	function LOGINV()
 
-/**
+    /**
      * NORMDIST
      *
      * Returns the normal distribution for the specified mean and standard deviation. This
@@ -2145,7 +2117,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
                 if ($cumulative)
                 {
                     return 0.5 * (1 + PHPExcel_Calculation_Engineering::_erfVal(($value - $mean) / ($stdDev * sqrt(2))));
-                } else
+                }
+                else
                 {
                     return (1 / (SQRT2PI * $stdDev)) * exp(0 - (pow($value - $mean, 2) / (2 * ($stdDev * $stdDev))));
                 }
@@ -2154,7 +2127,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function LOGNORMDIST()
 
-/**
+    /**
      * MAX
      *
      * MAX returns the value of the element of the values passed that has the highest value,
@@ -2224,7 +2197,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
                 if (is_bool($arg))
                 {
                     $arg = (integer)$arg;
-                } elseif (is_string($arg))
+                }
+                elseif (is_string($arg))
                 {
                     $arg = 0;
                 }
@@ -2330,7 +2304,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
             if ($mValueCount == floor($mValueCount))
             {
                 $returnValue = ($mArgs[$mValueCount--] + $mArgs[$mValueCount]) / 2;
-            } else
+            }
+            else
             {
                 $mValueCount == floor($mValueCount);
                 $returnValue = $mArgs[$mValueCount];
@@ -2341,7 +2316,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return $returnValue;
     }    //	function MEDIAN()
 
-/**
+    /**
      * MINA
      *
      * Returns the smallest value in a list of arguments, including numbers, text, and logical values
@@ -2369,7 +2344,8 @@ private static function _checkTrendArrays(&$array1, &$array2)
                 if (is_bool($arg))
                 {
                     $arg = (integer)$arg;
-                } elseif (is_string($arg))
+                }
+                elseif (is_string($arg))
                 {
                     $arg = 0;
                 }
@@ -2388,7 +2364,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return $returnValue;
     }    //	function MIN()
 
-/**
+    /**
      * MINIF
      *
      * Returns the minimum value within a range of cells that contain numbers within the list of arguments
@@ -2435,7 +2411,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
         return $returnValue;
     }    //	function MINA()
 
-/**
+    /**
      * MODE
      *
      * Returns the most frequently occurring, or repetitive, value in an array or range of data
@@ -2481,7 +2457,7 @@ private static function _checkTrendArrays(&$array1, &$array2)
     //		but can work with floating point numbers as values
     //
 
-private static function _modeCalc($data)
+    private static function _modeCalc($data)
     {
         $frequencyArray = array();
         foreach ($data as $datum)
@@ -2498,8 +2474,7 @@ private static function _modeCalc($data)
             }
             if (!$found)
             {
-                $frequencyArray[] = array('value' => $datum,
-                    'frequency' => 1);
+                $frequencyArray[] = array('value' => $datum, 'frequency' => 1);
             }
         }
 
@@ -2517,7 +2492,7 @@ private static function _modeCalc($data)
         return $frequencyArray[0]['value'];
     }    //	function _modeCalc()
 
-/**
+    /**
      * NEGBINOMDIST
      *
      * Returns the negative binomial distribution. NEGBINOMDIST returns the probability that
@@ -2560,7 +2535,7 @@ private static function _modeCalc($data)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function MODE()
 
-/**
+    /**
      * PERCENTRANK
      *
      * Returns the rank of a value in a data set as a percentage of the data set.
@@ -2612,7 +2587,7 @@ private static function _modeCalc($data)
         return round($pos / $valueAdjustor, $significance);
     }    //	function NEGBINOMDIST()
 
-/**
+    /**
      * PERMUT
      *
      * Returns the number of permutations for a given number of objects that can be
@@ -2642,7 +2617,7 @@ private static function _modeCalc($data)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function NORMDIST()
 
-/**
+    /**
      * POISSON
      *
      * Returns the Poisson distribution. A common application of the Poisson distribution
@@ -2676,7 +2651,8 @@ private static function _modeCalc($data)
                         $summer += pow($mean, $i) / PHPExcel_Calculation_MathTrig::FACT($i);
                     }
                     return exp(0 - $mean) * $summer;
-                } else
+                }
+                else
                 {
                     return (exp(0 - $mean) * pow($mean, $value)) / PHPExcel_Calculation_MathTrig::FACT($value);
                 }
@@ -2685,7 +2661,7 @@ private static function _modeCalc($data)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function NORMINV()
 
-/**
+    /**
      * QUARTILE
      *
      * Returns the quartile of a data set.
@@ -2718,7 +2694,7 @@ private static function _modeCalc($data)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function NORMSDIST()
 
-/**
+    /**
      * PERCENTILE
      *
      * Returns the nth percentile of values in a range..
@@ -2764,7 +2740,8 @@ private static function _modeCalc($data)
                 if ($index == $iBase)
                 {
                     return $mArgs[$index];
-                } else
+                }
+                else
                 {
                     $iNext = $iBase + 1;
                     $iProportion = $index - $iBase;
@@ -2775,7 +2752,7 @@ private static function _modeCalc($data)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function NORMSINV()
 
-/**
+    /**
      * RANK
      *
      * Returns the rank of a number in a list of numbers.
@@ -2802,7 +2779,8 @@ private static function _modeCalc($data)
         if ($order == 0)
         {
             rsort($valueSet, SORT_NUMERIC);
-        } else
+        }
+        else
         {
             sort($valueSet, SORT_NUMERIC);
         }
@@ -2815,7 +2793,7 @@ private static function _modeCalc($data)
         return ++$pos;
     }    //	function PERCENTILE()
 
-/**
+    /**
      * RSQ
      *
      * Returns the square of the Pearson product moment correlation coefficient through data points in known_y's and known_x's.
@@ -2836,7 +2814,8 @@ private static function _modeCalc($data)
         if (($yValueCount == 0) || ($yValueCount != $xValueCount))
         {
             return PHPExcel_Calculation_Functions::NA();
-        } elseif ($yValueCount == 1)
+        }
+        elseif ($yValueCount == 1)
         {
             return PHPExcel_Calculation_Functions::DIV0();
         }
@@ -2845,7 +2824,7 @@ private static function _modeCalc($data)
         return $bestFitLinear->getGoodnessOfFit();
     }    //	function PERCENTRANK()
 
-/**
+    /**
      * SKEW
      *
      * Returns the skewness of a distribution. Skewness characterizes the degree of asymmetry
@@ -2866,11 +2845,11 @@ private static function _modeCalc($data)
         // Loop through arguments
         foreach ($aArgs as $k => $arg)
         {
-            if ((is_bool($arg)) &&
-                (!PHPExcel_Calculation_Functions::isMatrixValue($k))
+            if ((is_bool($arg)) && (!PHPExcel_Calculation_Functions::isMatrixValue($k))
             )
             {
-            } else
+            }
+            else
             {
                 // Is it a numeric value?
                 if ((is_numeric($arg)) && (!is_string($arg)))
@@ -2889,7 +2868,7 @@ private static function _modeCalc($data)
         return PHPExcel_Calculation_Functions::DIV0();
     }    //	function PERMUT()
 
-/**
+    /**
      * SLOPE
      *
      * Returns the slope of the linear regression line through data points in known_y's and known_x's.
@@ -2910,7 +2889,8 @@ private static function _modeCalc($data)
         if (($yValueCount == 0) || ($yValueCount != $xValueCount))
         {
             return PHPExcel_Calculation_Functions::NA();
-        } elseif ($yValueCount == 1)
+        }
+        elseif ($yValueCount == 1)
         {
             return PHPExcel_Calculation_Functions::DIV0();
         }
@@ -2919,7 +2899,7 @@ private static function _modeCalc($data)
         return $bestFitLinear->getSlope();
     }    //	function POISSON()
 
-/**
+    /**
      * SMALL
      *
      * Returns the nth smallest value in a data set. You can use this function to
@@ -2964,7 +2944,7 @@ private static function _modeCalc($data)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function QUARTILE()
 
-/**
+    /**
      * STANDARDIZE
      *
      * Returns a normalized value from a distribution characterized by mean and standard_dev.
@@ -2991,7 +2971,7 @@ private static function _modeCalc($data)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function RANK()
 
-/**
+    /**
      * STDEVA
      *
      * Estimates standard deviation based on a sample, including numbers, text, and logical values
@@ -3017,11 +2997,11 @@ private static function _modeCalc($data)
             $aCount = -1;
             foreach ($aArgs as $k => $arg)
             {
-                if ((is_bool($arg)) &&
-                    (!PHPExcel_Calculation_Functions::isMatrixValue($k))
+                if ((is_bool($arg)) && (!PHPExcel_Calculation_Functions::isMatrixValue($k))
                 )
                 {
-                } else
+                }
+                else
                 {
                     // Is it a numeric value?
                     if ((is_numeric($arg)) || (is_bool($arg)) || ((is_string($arg) & ($arg != ''))))
@@ -3029,14 +3009,16 @@ private static function _modeCalc($data)
                         if (is_bool($arg))
                         {
                             $arg = (integer)$arg;
-                        } elseif (is_string($arg))
+                        }
+                        elseif (is_string($arg))
                         {
                             $arg = 0;
                         }
                         if (is_null($returnValue))
                         {
                             $returnValue = pow(($arg - $aMean), 2);
-                        } else
+                        }
+                        else
                         {
                             $returnValue += pow(($arg - $aMean), 2);
                         }
@@ -3054,7 +3036,7 @@ private static function _modeCalc($data)
         return PHPExcel_Calculation_Functions::DIV0();
     }    //	function RSQ()
 
-/**
+    /**
      * AVERAGEA
      *
      * Returns the average of its arguments, including numbers, text, and logical values
@@ -3076,25 +3058,27 @@ private static function _modeCalc($data)
         // Loop through arguments
         foreach (PHPExcel_Calculation_Functions::flattenArrayIndexed(func_get_args()) as $k => $arg)
         {
-            if ((is_bool($arg)) &&
-                (!PHPExcel_Calculation_Functions::isMatrixValue($k))
+            if ((is_bool($arg)) && (!PHPExcel_Calculation_Functions::isMatrixValue($k))
             )
             {
-            } else
+            }
+            else
             {
                 if ((is_numeric($arg)) || (is_bool($arg)) || ((is_string($arg) && ($arg != ''))))
                 {
                     if (is_bool($arg))
                     {
                         $arg = (integer)$arg;
-                    } elseif (is_string($arg))
+                    }
+                    elseif (is_string($arg))
                     {
                         $arg = 0;
                     }
                     if (is_null($returnValue))
                     {
                         $returnValue = $arg;
-                    } else
+                    }
+                    else
                     {
                         $returnValue += $arg;
                     }
@@ -3107,13 +3091,14 @@ private static function _modeCalc($data)
         if ($aCount > 0)
         {
             return $returnValue / $aCount;
-        } else
+        }
+        else
         {
             return PHPExcel_Calculation_Functions::DIV0();
         }
     }    //	function SKEW()
 
-/**
+    /**
      * STDEVP
      *
      * Calculates standard deviation based on the entire population
@@ -3139,8 +3124,7 @@ private static function _modeCalc($data)
             $aCount = 0;
             foreach ($aArgs as $k => $arg)
             {
-                if ((is_bool($arg)) &&
-                    ((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))
+                if ((is_bool($arg)) && ((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))
                 )
                 {
                     $arg = (integer)$arg;
@@ -3151,7 +3135,8 @@ private static function _modeCalc($data)
                     if (is_null($returnValue))
                     {
                         $returnValue = pow(($arg - $aMean), 2);
-                    } else
+                    }
+                    else
                     {
                         $returnValue += pow(($arg - $aMean), 2);
                     }
@@ -3168,7 +3153,7 @@ private static function _modeCalc($data)
         return PHPExcel_Calculation_Functions::DIV0();
     }    //	function SLOPE()
 
-/**
+    /**
      * STDEVPA
      *
      * Calculates standard deviation based on the entire population, including numbers, text, and logical values
@@ -3194,11 +3179,11 @@ private static function _modeCalc($data)
             $aCount = 0;
             foreach ($aArgs as $k => $arg)
             {
-                if ((is_bool($arg)) &&
-                    (!PHPExcel_Calculation_Functions::isMatrixValue($k))
+                if ((is_bool($arg)) && (!PHPExcel_Calculation_Functions::isMatrixValue($k))
                 )
                 {
-                } else
+                }
+                else
                 {
                     // Is it a numeric value?
                     if ((is_numeric($arg)) || (is_bool($arg)) || ((is_string($arg) & ($arg != ''))))
@@ -3206,14 +3191,16 @@ private static function _modeCalc($data)
                         if (is_bool($arg))
                         {
                             $arg = (integer)$arg;
-                        } elseif (is_string($arg))
+                        }
+                        elseif (is_string($arg))
                         {
                             $arg = 0;
                         }
                         if (is_null($returnValue))
                         {
                             $returnValue = pow(($arg - $aMean), 2);
-                        } else
+                        }
+                        else
                         {
                             $returnValue += pow(($arg - $aMean), 2);
                         }
@@ -3231,7 +3218,7 @@ private static function _modeCalc($data)
         return PHPExcel_Calculation_Functions::DIV0();
     }    //	function SMALL()
 
-/**
+    /**
      * STEYX
      *
      * Returns the standard error of the predicted y-value for each x in the regression.
@@ -3252,7 +3239,8 @@ private static function _modeCalc($data)
         if (($yValueCount == 0) || ($yValueCount != $xValueCount))
         {
             return PHPExcel_Calculation_Functions::NA();
-        } elseif ($yValueCount == 1)
+        }
+        elseif ($yValueCount == 1)
         {
             return PHPExcel_Calculation_Functions::DIV0();
         }
@@ -3261,7 +3249,7 @@ private static function _modeCalc($data)
         return $bestFitLinear->getStdevOfResiduals();
     }    //	function STANDARDIZE()
 
-/**
+    /**
      * TINV
      *
      * Returns the one-tailed probability of the chi-squared distribution.
@@ -3292,10 +3280,12 @@ private static function _modeCalc($data)
                 if ($error == 0.0)
                 {
                     $dx = 0;
-                } elseif ($error < 0.0)
+                }
+                elseif ($error < 0.0)
                 {
                     $xLo = $x;
-                } else
+                }
+                else
                 {
                     $xHi = $x;
                 }
@@ -3324,7 +3314,7 @@ private static function _modeCalc($data)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function STDEV()
 
-/**
+    /**
      * TDIST
      *
      * Returns the probability of Student's T distribution.
@@ -3365,7 +3355,8 @@ private static function _modeCalc($data)
             {
                 $ti = 3;
                 $tterm = $tc;
-            } else
+            }
+            else
             {
                 $ti = 2;
                 $tterm = 1;
@@ -3387,7 +3378,8 @@ private static function _modeCalc($data)
             if ($tails == 1)
             {
                 return 1 - abs($tValue);
-            } else
+            }
+            else
             {
                 return 1 - abs((1 - $tValue) - $tValue);
             }
@@ -3395,7 +3387,7 @@ private static function _modeCalc($data)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function STDEVA()
 
-/**
+    /**
      * TREND
      *
      * Returns values along a linear trend
@@ -3428,7 +3420,7 @@ private static function _modeCalc($data)
         return $returnArray;
     }    //	function STDEVP()
 
-/**
+    /**
      * TRIMMEAN
      *
      * Returns the mean of the interior of a data set. TRIMMEAN calculates the mean
@@ -3478,7 +3470,7 @@ private static function _modeCalc($data)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function STDEVPA()
 
-/**
+    /**
      * VARFunc
      *
      * Estimates variance based on a sample.
@@ -3526,7 +3518,7 @@ private static function _modeCalc($data)
         return $returnValue;
     }    //	function STEYX()
 
-/**
+    /**
      * VARA
      *
      * Estimates variance based on a sample, including numbers, text, and logical values
@@ -3551,16 +3543,16 @@ private static function _modeCalc($data)
         $aCount = 0;
         foreach ($aArgs as $k => $arg)
         {
-            if ((is_string($arg)) &&
-                (PHPExcel_Calculation_Functions::isValue($k))
+            if ((is_string($arg)) && (PHPExcel_Calculation_Functions::isValue($k))
             )
             {
                 return PHPExcel_Calculation_Functions::VALUE();
-            } elseif ((is_string($arg)) &&
-                (!PHPExcel_Calculation_Functions::isMatrixValue($k))
+            }
+            elseif ((is_string($arg)) && (!PHPExcel_Calculation_Functions::isMatrixValue($k))
             )
             {
-            } else
+            }
+            else
             {
                 // Is it a numeric value?
                 if ((is_numeric($arg)) || (is_bool($arg)) || ((is_string($arg) & ($arg != ''))))
@@ -3568,7 +3560,8 @@ private static function _modeCalc($data)
                     if (is_bool($arg))
                     {
                         $arg = (integer)$arg;
-                    } elseif (is_string($arg))
+                    }
+                    elseif (is_string($arg))
                     {
                         $arg = 0;
                     }
@@ -3589,7 +3582,7 @@ private static function _modeCalc($data)
         return $returnValue;
     }    //	function TDIST()
 
-/**
+    /**
      * VARP
      *
      * Calculates variance based on the entire population
@@ -3637,7 +3630,7 @@ private static function _modeCalc($data)
         return $returnValue;
     }    //	function TINV()
 
-/**
+    /**
      * VARPA
      *
      * Calculates variance based on the entire population, including numbers, text, and logical values
@@ -3662,16 +3655,16 @@ private static function _modeCalc($data)
         $aCount = 0;
         foreach ($aArgs as $k => $arg)
         {
-            if ((is_string($arg)) &&
-                (PHPExcel_Calculation_Functions::isValue($k))
+            if ((is_string($arg)) && (PHPExcel_Calculation_Functions::isValue($k))
             )
             {
                 return PHPExcel_Calculation_Functions::VALUE();
-            } elseif ((is_string($arg)) &&
-                (!PHPExcel_Calculation_Functions::isMatrixValue($k))
+            }
+            elseif ((is_string($arg)) && (!PHPExcel_Calculation_Functions::isMatrixValue($k))
             )
             {
-            } else
+            }
+            else
             {
                 // Is it a numeric value?
                 if ((is_numeric($arg)) || (is_bool($arg)) || ((is_string($arg) & ($arg != ''))))
@@ -3679,7 +3672,8 @@ private static function _modeCalc($data)
                     if (is_bool($arg))
                     {
                         $arg = (integer)$arg;
-                    } elseif (is_string($arg))
+                    }
+                    elseif (is_string($arg))
                     {
                         $arg = 0;
                     }
@@ -3700,7 +3694,7 @@ private static function _modeCalc($data)
         return $returnValue;
     }    //	function TREND()
 
-/**
+    /**
      * WEIBULL
      *
      * Returns the Weibull distribution. Use this distribution in reliability
@@ -3730,7 +3724,8 @@ private static function _modeCalc($data)
                 if ($cumulative)
                 {
                     return 1 - exp(0 - pow($value / $beta, $alpha));
-                } else
+                }
+                else
                 {
                     return ($alpha / pow($beta, $alpha)) * pow($value, $alpha - 1) * exp(0 - pow($value / $beta, $alpha));
                 }
@@ -3739,7 +3734,7 @@ private static function _modeCalc($data)
         return PHPExcel_Calculation_Functions::VALUE();
     }    //	function TRIMMEAN()
 
-/**
+    /**
      * ZTEST
      *
      * Returns the Weibull distribution. Use this distribution in reliability
@@ -3767,7 +3762,7 @@ private static function _modeCalc($data)
         return 1 - self::NORMSDIST((self::AVERAGE($dataSet) - $m0) / ($sigma / SQRT($n)));
     }    //	function VARFunc()
 
-/**
+    /**
      * Beta function.
      *
      * @author Jaco van Kooten
@@ -3781,13 +3776,14 @@ private static function _modeCalc($data)
         if ($p <= 0.0 || $q <= 0.0 || ($p + $q) > LOG_GAMMA_X_MAX_VALUE)
         {
             return 0.0;
-        } else
+        }
+        else
         {
             return exp(self::_logBeta($p, $q));
         }
     }    //	function VARA()
 
-/**
+    /**
      * The natural logarithm of the beta function.
      *
      * @param p require p>0
@@ -3804,7 +3800,8 @@ private static function _modeCalc($data)
             if (($p <= 0.0) || ($q <= 0.0) || (($p + $q) > LOG_GAMMA_X_MAX_VALUE))
             {
                 self::$_logBetaCache_result = 0.0;
-            } else
+            }
+            else
             {
                 self::$_logBetaCache_result = self::_logGamma($p) + self::_logGamma($q) - self::_logGamma($p + $q);
             }
@@ -3812,70 +3809,22 @@ private static function _modeCalc($data)
         return self::$_logBetaCache_result;
     }    //	function VARP()
 
-private static function _logGamma($x)
+    private static function _logGamma($x)
     {
         // Log Gamma related constants
         static $lg_d1 = -0.5772156649015328605195174;
         static $lg_d2 = 0.4227843350984671393993777;
         static $lg_d4 = 1.791759469228055000094023;
 
-        static $lg_p1 = array(4.945235359296727046734888,
-            201.8112620856775083915565,
-            2290.838373831346393026739,
-            11319.67205903380828685045,
-            28557.24635671635335736389,
-            38484.96228443793359990269,
-            26377.48787624195437963534,
-            7225.813979700288197698961);
-        static $lg_p2 = array(4.974607845568932035012064,
-            542.4138599891070494101986,
-            15506.93864978364947665077,
-            184793.2904445632425417223,
-            1088204.76946882876749847,
-            3338152.967987029735917223,
-            5106661.678927352456275255,
-            3074109.054850539556250927);
-        static $lg_p4 = array(14745.02166059939948905062,
-            2426813.369486704502836312,
-            121475557.4045093227939592,
-            2663432449.630976949898078,
-            29403789566.34553899906876,
-            170266573776.5398868392998,
-            492612579337.743088758812,
-            560625185622.3951465078242);
+        static $lg_p1 = array(4.945235359296727046734888, 201.8112620856775083915565, 2290.838373831346393026739, 11319.67205903380828685045, 28557.24635671635335736389, 38484.96228443793359990269, 26377.48787624195437963534, 7225.813979700288197698961);
+        static $lg_p2 = array(4.974607845568932035012064, 542.4138599891070494101986, 15506.93864978364947665077, 184793.2904445632425417223, 1088204.76946882876749847, 3338152.967987029735917223, 5106661.678927352456275255, 3074109.054850539556250927);
+        static $lg_p4 = array(14745.02166059939948905062, 2426813.369486704502836312, 121475557.4045093227939592, 2663432449.630976949898078, 29403789566.34553899906876, 170266573776.5398868392998, 492612579337.743088758812, 560625185622.3951465078242);
 
-        static $lg_q1 = array(67.48212550303777196073036,
-            1113.332393857199323513008,
-            7738.757056935398733233834,
-            27639.87074403340708898585,
-            54993.10206226157329794414,
-            61611.22180066002127833352,
-            36351.27591501940507276287,
-            8785.536302431013170870835);
-        static $lg_q2 = array(183.0328399370592604055942,
-            7765.049321445005871323047,
-            133190.3827966074194402448,
-            1136705.821321969608938755,
-            5267964.117437946917577538,
-            13467014.54311101692290052,
-            17827365.30353274213975932,
-            9533095.591844353613395747);
-        static $lg_q4 = array(2690.530175870899333379843,
-            639388.5654300092398984238,
-            41355999.30241388052042842,
-            1120872109.61614794137657,
-            14886137286.78813811542398,
-            101680358627.2438228077304,
-            341747634550.7377132798597,
-            446315818741.9713286462081);
+        static $lg_q1 = array(67.48212550303777196073036, 1113.332393857199323513008, 7738.757056935398733233834, 27639.87074403340708898585, 54993.10206226157329794414, 61611.22180066002127833352, 36351.27591501940507276287, 8785.536302431013170870835);
+        static $lg_q2 = array(183.0328399370592604055942, 7765.049321445005871323047, 133190.3827966074194402448, 1136705.821321969608938755, 5267964.117437946917577538, 13467014.54311101692290052, 17827365.30353274213975932, 9533095.591844353613395747);
+        static $lg_q4 = array(2690.530175870899333379843, 639388.5654300092398984238, 41355999.30241388052042842, 1120872109.61614794137657, 14886137286.78813811542398, 101680358627.2438228077304, 341747634550.7377132798597, 446315818741.9713286462081);
 
-        static $lg_c = array(-0.001910444077728,
-            8.4171387781295e-4,
-            -5.952379913043012e-4,
-            7.93650793500350248e-4,
-            -0.002777777777777681622553,
-            0.08333333333333333331554247,
-            0.0057083835261);
+        static $lg_c = array(-0.001910444077728, 8.4171387781295e-4, -5.952379913043012e-4, 7.93650793500350248e-4, -0.002777777777777681622553, 0.08333333333333333331554247, 0.0057083835261);
 
         // Rough estimate of the fourth root of logGamma_xBig
         static $lg_frtbig = 2.25e76;
@@ -3892,7 +3841,8 @@ private static function _logGamma($x)
             if ($y <= EPS)
             {
                 $res = -log(y);
-            } elseif ($y <= 1.5)
+            }
+            elseif ($y <= 1.5)
             {
                 // ---------------------
                 //	EPS .LT. X .LE. 1.5
@@ -3901,7 +3851,8 @@ private static function _logGamma($x)
                 {
                     $corr = -log($y);
                     $xm1 = $y;
-                } else
+                }
+                else
                 {
                     $corr = 0.0;
                     $xm1 = $y - 1.0;
@@ -3916,7 +3867,8 @@ private static function _logGamma($x)
                         $xden = $xden * $xm1 + $lg_q1[$i];
                     }
                     $res = $corr + $xm1 * ($lg_d1 + $xm1 * ($xnum / $xden));
-                } else
+                }
+                else
                 {
                     $xm2 = $y - 1.0;
                     $xden = 1.0;
@@ -3928,7 +3880,8 @@ private static function _logGamma($x)
                     }
                     $res = $corr + $xm2 * ($lg_d2 + $xm2 * ($xnum / $xden));
                 }
-            } elseif ($y <= 4.0)
+            }
+            elseif ($y <= 4.0)
             {
                 // ---------------------
                 //	1.5 .LT. X .LE. 4.0
@@ -3942,7 +3895,8 @@ private static function _logGamma($x)
                     $xden = $xden * $xm2 + $lg_q2[$i];
                 }
                 $res = $xm2 * ($lg_d2 + $xm2 * ($xnum / $xden));
-            } elseif ($y <= 12.0)
+            }
+            elseif ($y <= 12.0)
             {
                 // ----------------------
                 //	4.0 .LT. X .LE. 12.0
@@ -3956,7 +3910,8 @@ private static function _logGamma($x)
                     $xden = $xden * $xm4 + $lg_q4[$i];
                 }
                 $res = $lg_d4 + $xm4 * ($xnum / $xden);
-            } else
+            }
+            else
             {
                 // ---------------------------------
                 //	Evaluate for argument .GE. 12.0
@@ -3974,7 +3929,8 @@ private static function _logGamma($x)
                 $res = $res + log(SQRT2PI) - 0.5 * $corr;
                 $res += $y * ($corr - 1.0);
             }
-        } else
+        }
+        else
         {
             // --------------------------
             //	Return for bad arguments
@@ -3989,7 +3945,7 @@ private static function _logGamma($x)
         return $res;
     }    //	function VARPA()
 
-private static function _inverse_ncdf2($prob)
+    private static function _inverse_ncdf2($prob)
     {
         //	Approximation of inverse standard normal CDF developed by
         //	B. Moro, "The Full Monte," Risk 8(2), Feb 1995, 57-58.
@@ -4019,12 +3975,14 @@ private static function _inverse_ncdf2($prob)
         {
             $z = ($y * $y);
             $z = $y * ((($a4 * $z + $a3) * $z + $a2) * $z + $a1) / (((($b4 * $z + $b3) * $z + $b2) * $z + $b1) * $z + 1);
-        } else
+        }
+        else
         {
             if ($y > 0)
             {
                 $z = log(-log(1 - $prob));
-            } else
+            }
+            else
             {
                 $z = log(-log($prob));
             }
@@ -4037,7 +3995,7 @@ private static function _inverse_ncdf2($prob)
         return $z;
     }    //	function WEIBULL()
 
-private static function _inverse_ncdf3($p)
+    private static function _inverse_ncdf3($p)
     {
         //	ALGORITHM AS241 APPL. STATIST. (1988) VOL. 37, NO. 3.
         //	Produces the normal deviate Z corresponding to a given lower
@@ -4110,14 +4068,15 @@ private static function _inverse_ncdf3($p)
         if (abs($q) <= split1)
         {
             $R = $const1 - $q * $q;
-            $z = $q * ((((((($a7 * $R + $a6) * $R + $a5) * $R + $a4) * $R + $a3) * $R + $a2) * $R + $a1) * $R + $a0) /
-                ((((((($b7 * $R + $b6) * $R + $b5) * $R + $b4) * $R + $b3) * $R + $b2) * $R + $b1) * $R + 1);
-        } else
+            $z = $q * ((((((($a7 * $R + $a6) * $R + $a5) * $R + $a4) * $R + $a3) * $R + $a2) * $R + $a1) * $R + $a0) / ((((((($b7 * $R + $b6) * $R + $b5) * $R + $b4) * $R + $b3) * $R + $b2) * $R + $b1) * $R + 1);
+        }
+        else
         {
             if ($q < 0)
             {
                 $R = $p;
-            } else
+            }
+            else
             {
                 $R = 1 - $p;
             }
@@ -4127,14 +4086,13 @@ private static function _inverse_ncdf3($p)
             If ($R <= $split2)
             {
                 $R = $R - $const2;
-                $z = ((((((($c7 * $R + $c6) * $R + $c5) * $R + $c4) * $R + $c3) * $R + $c2) * $R + $c1) * $R + $c0) /
-                    ((((((($d7 * $R + $d6) * $R + $d5) * $R + $d4) * $R + $d3) * $R + $d2) * $R + $d1) * $R + 1);
-            } else
+                $z = ((((((($c7 * $R + $c6) * $R + $c5) * $R + $c4) * $R + $c3) * $R + $c2) * $R + $c1) * $R + $c0) / ((((((($d7 * $R + $d6) * $R + $d5) * $R + $d4) * $R + $d3) * $R + $d2) * $R + $d1) * $R + 1);
+            }
+            else
             {
                 //	computation for p near 0 or 1.
                 $R = $R - $split2;
-                $z = ((((((($e7 * $R + $e6) * $R + $e5) * $R + $e4) * $R + $e3) * $R + $e2) * $R + $e1) * $R + $e0) /
-                    ((((((($f7 * $R + $f6) * $R + $f5) * $R + $f4) * $R + $f3) * $R + $f2) * $R + $f1) * $R + 1);
+                $z = ((((((($e7 * $R + $e6) * $R + $e5) * $R + $e4) * $R + $e3) * $R + $e2) * $R + $e1) * $R + $e0) / ((((((($f7 * $R + $f6) * $R + $f5) * $R + $f4) * $R + $f3) * $R + $f2) * $R + $f1) * $R + 1);
             }
             if ($q < 0)
             {

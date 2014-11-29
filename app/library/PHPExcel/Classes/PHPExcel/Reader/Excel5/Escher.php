@@ -433,7 +433,8 @@ class PHPExcel_Reader_Excel5_Escher
 
                 // we store string value with complex data
                 $value = $complexData;
-            } else
+            }
+            else
             {
                 // we store integer value
                 $value = $op;
@@ -522,7 +523,8 @@ class PHPExcel_Reader_Excel5_Escher
         {
             // DgContainer
             $this->_object->setSpgrContainer($spgrContainer);
-        } else
+        }
+        else
         {
             // SpgrContainer
             $this->_object->addChild($spgrContainer);

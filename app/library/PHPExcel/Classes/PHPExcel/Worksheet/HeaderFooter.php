@@ -464,12 +464,18 @@ class PHPExcel_Worksheet_HeaderFooter
     {
         // Sort array
         $images = array();
-        if (isset($this->_headerFooterImages[self::IMAGE_HEADER_LEFT])) $images[self::IMAGE_HEADER_LEFT] = $this->_headerFooterImages[self::IMAGE_HEADER_LEFT];
-        if (isset($this->_headerFooterImages[self::IMAGE_HEADER_CENTER])) $images[self::IMAGE_HEADER_CENTER] = $this->_headerFooterImages[self::IMAGE_HEADER_CENTER];
-        if (isset($this->_headerFooterImages[self::IMAGE_HEADER_RIGHT])) $images[self::IMAGE_HEADER_RIGHT] = $this->_headerFooterImages[self::IMAGE_HEADER_RIGHT];
-        if (isset($this->_headerFooterImages[self::IMAGE_FOOTER_LEFT])) $images[self::IMAGE_FOOTER_LEFT] = $this->_headerFooterImages[self::IMAGE_FOOTER_LEFT];
-        if (isset($this->_headerFooterImages[self::IMAGE_FOOTER_CENTER])) $images[self::IMAGE_FOOTER_CENTER] = $this->_headerFooterImages[self::IMAGE_FOOTER_CENTER];
-        if (isset($this->_headerFooterImages[self::IMAGE_FOOTER_RIGHT])) $images[self::IMAGE_FOOTER_RIGHT] = $this->_headerFooterImages[self::IMAGE_FOOTER_RIGHT];
+        if (isset($this->_headerFooterImages[self::IMAGE_HEADER_LEFT]))
+            $images[self::IMAGE_HEADER_LEFT] = $this->_headerFooterImages[self::IMAGE_HEADER_LEFT];
+        if (isset($this->_headerFooterImages[self::IMAGE_HEADER_CENTER]))
+            $images[self::IMAGE_HEADER_CENTER] = $this->_headerFooterImages[self::IMAGE_HEADER_CENTER];
+        if (isset($this->_headerFooterImages[self::IMAGE_HEADER_RIGHT]))
+            $images[self::IMAGE_HEADER_RIGHT] = $this->_headerFooterImages[self::IMAGE_HEADER_RIGHT];
+        if (isset($this->_headerFooterImages[self::IMAGE_FOOTER_LEFT]))
+            $images[self::IMAGE_FOOTER_LEFT] = $this->_headerFooterImages[self::IMAGE_FOOTER_LEFT];
+        if (isset($this->_headerFooterImages[self::IMAGE_FOOTER_CENTER]))
+            $images[self::IMAGE_FOOTER_CENTER] = $this->_headerFooterImages[self::IMAGE_FOOTER_CENTER];
+        if (isset($this->_headerFooterImages[self::IMAGE_FOOTER_RIGHT]))
+            $images[self::IMAGE_FOOTER_RIGHT] = $this->_headerFooterImages[self::IMAGE_FOOTER_RIGHT];
         $this->_headerFooterImages = $images;
 
         return $this->_headerFooterImages;
@@ -486,7 +492,8 @@ class PHPExcel_Worksheet_HeaderFooter
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

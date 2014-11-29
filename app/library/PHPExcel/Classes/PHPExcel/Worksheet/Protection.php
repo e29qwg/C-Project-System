@@ -168,22 +168,7 @@ class PHPExcel_Worksheet_Protection
      */
     function isProtectionEnabled()
     {
-        return $this->_sheet ||
-        $this->_objects ||
-        $this->_scenarios ||
-        $this->_formatCells ||
-        $this->_formatColumns ||
-        $this->_formatRows ||
-        $this->_insertColumns ||
-        $this->_insertRows ||
-        $this->_insertHyperlinks ||
-        $this->_deleteColumns ||
-        $this->_deleteRows ||
-        $this->_selectLockedCells ||
-        $this->_sort ||
-        $this->_autoFilter ||
-        $this->_pivotTables ||
-        $this->_selectUnlockedCells;
+        return $this->_sheet || $this->_objects || $this->_scenarios || $this->_formatCells || $this->_formatColumns || $this->_formatRows || $this->_insertColumns || $this->_insertRows || $this->_insertHyperlinks || $this->_deleteColumns || $this->_deleteRows || $this->_selectLockedCells || $this->_sort || $this->_autoFilter || $this->_pivotTables || $this->_selectUnlockedCells;
     }
 
     /**
@@ -576,7 +561,8 @@ class PHPExcel_Worksheet_Protection
             if (is_object($value))
             {
                 $this->$key = clone $value;
-            } else
+            }
+            else
             {
                 $this->$key = $value;
             }

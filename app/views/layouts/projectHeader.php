@@ -51,7 +51,8 @@ if ($auth['type'] == 'Student')
             ?>
             <a href="<?= $this->url->get('progress/evaluate/'); ?><?= $params[0] ?>">Progress</a></li>
         <?php
-        } else
+        }
+        else
         {
             ?>
             <a href="<?= $this->url->get('progress/index/'); ?><?= $params[0] ?>">Progress</a></li>
