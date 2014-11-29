@@ -1,7 +1,7 @@
 <?php
 
-class PSUService 
-{   
+class PSUService
+{
     private $_soapClient;
     private $_userDetails;
 
@@ -12,14 +12,14 @@ class PSUService
 
     public function getName()
     {
-        return $this->_userDetails[1]." ".$this->_userDetails[2];
+        return $this->_userDetails[1] . " " . $this->_userDetails[2];
     }
 
     public function getTitle()
     {
         return $this->_userDetails[12];
     }
-    
+
     public function getUsername()
     {
         return $this->_userDetails[0];

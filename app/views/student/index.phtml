@@ -1,6 +1,6 @@
 <?php echo $this->getContent(); ?>
-<?php 
-    
+<?php
+
 $auth = $this->session->get('auth');
 $user_id = $auth['id'];
 
@@ -46,36 +46,38 @@ $newss = News::find(array("order" => "id DESC", "limit" => 8));
 <br>
 <div class="row">
     <h4>News</h4>
+
     <div class="panel panel-info">
         <div class="panel-body">
             <ul>
-				<?php 
+                <?php
 
-				foreach ($newss as $news)
-				{
-					?>
-					<li><?= $news->create_date.' '.$news->news; ?></li>
-					<?php
-				}
-				?>
+                foreach ($newss as $news)
+                {
+                    ?>
+                    <li><?= $news->create_date . ' ' . $news->news; ?></li>
+                <?php
+                }
+                ?>
             </ul>
         </div>
     </div>
 </div>
 <div class="row">
     <h4>Log</h4>
+
     <div class="panel panel-info">
         <div class="panel-body">
-        <?php
-        $logs = Log::find(array("conditions" => "user_id='$user_id'", "order" => "create_date DESC"));
-        echo '<ul>';
-        foreach ($logs as $log)
-        {
-            echo '<li>'.$log->create_date.' '.$log->description.'</li>';
-        }
+            <?php
+            $logs = Log::find(array("conditions" => "user_id='$user_id'", "order" => "create_date DESC"));
+            echo '<ul>';
+            foreach ($logs as $log)
+            {
+                echo '<li>' . $log->create_date . ' ' . $log->description . '</li>';
+            }
 
-        echo '</ul>';
-        ?>
+            echo '</ul>';
+            ?>
         </div>
     </div>
 </div>

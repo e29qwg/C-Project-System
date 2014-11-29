@@ -8,7 +8,8 @@
 <div class="tab-content">
     <!-- Upload Form -->
     <div class="tab-pane fade in" id="upload">
-        <form class="form-horizontal" action="<?= $this->url->get('score/uploadScore'); ?>" method="post" enctype="multipart/form-data">
+        <form class="form-horizontal" action="<?= $this->url->get('score/uploadScore'); ?>" method="post"
+              enctype="multipart/form-data">
             <div class="form-group col-sm-offset-2 col-sm-10">
                 <?= Phalcon\Tag::filefield("scorefile"); ?>
             </div>
@@ -25,17 +26,18 @@
                 <input type="checkbox" name="all" id="all" value="all"> ทั้งหมด
             </div>
             <div class="form-group col-sm-offset-2 col-sm-10">
-            <?php 
-            $users = User::find("type='advisor'");
-            
-            foreach($users as $user)
-            {
-            ?>
-                <input type="checkbox" name="advisor[]" id="advisor[]" value="<?= $user->id ?>"> <?= $user->title.$user->name?>
-                <br>
-            <?php
-            }
-            ?>
+                <?php
+                $users = User::find("type='advisor'");
+
+                foreach ($users as $user)
+                {
+                    ?>
+                    <input type="checkbox" name="advisor[]" id="advisor[]"
+                           value="<?= $user->id ?>"> <?= $user->title . $user->name ?>
+                    <br>
+                <?php
+                }
+                ?>
             </div>
             <div class="form-group col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-success btn-sm">สร้างแบบฟอร์ม</button>

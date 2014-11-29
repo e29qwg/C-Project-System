@@ -9,6 +9,44 @@ class Security extends \Phalcon\Mvc\User\Plugin
         $this->_dependencyInjector = $dependencyInjector;
     }
 
+    public function beforeDispatch(Phalcon\Events\Event $event, Phalcon\Mvc\Dispatcher $dispatcher)
+    {
+        //TODO
+        $this->flashSession->output();
+        $auth = $this->session->get('auth');
+        $controller = $dispatcher->getControllerName();
+        $action = $dispatcher->getActionName();
+
+        if (!$auth)
+        {
+            $role = 'Guest';
+            if ($controller != 'session')
+            {
+                $this->response->redirect('session');
+            }
+            return true;
+        } else
+        {
+            $role = $auth['type'];
+        }
+
+        $acl = $this->getAcl();
+        $allowed = $acl->isAllowed($role, $controller, $action);
+
+        if ($allowed != Phalcon\Acl::ALLOW)
+        {
+            $this->flash->error("You cannot access this module");
+
+            $dispatcher->forward(array(
+                'controller' => 'index',
+                'action' => 'index'
+            ));
+
+            return false;
+        }
+
+    }
+
     public function getAcl()
     {
 
@@ -35,7 +73,7 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 'index' => array('index'),
                 'session' => array('index', 'login', 'logout')
             );
-            
+
             foreach ($publicResources as $resource => $actions)
             {
                 $acl->addResource(new Phalcon\Acl\Resource($resource), $actions);
@@ -52,18 +90,18 @@ class Security extends \Phalcon\Mvc\User\Plugin
                     }
                 }
             }
-            
+
             //Student acl
             $studentResources = array(
                 'student' => array('*'),
                 'projects' => array(
-                    'newProject', 
-                    'doNewProject', 
-                    'me', 
-                    'manage', 
-                    'delete', 
-                    'editSetting', 
-                    'member', 
+                    'newProject',
+                    'doNewProject',
+                    'me',
+                    'manage',
+                    'delete',
+                    'editSetting',
+                    'member',
                     'addmember',
                     'doAddMember',
                     'deletemember',
@@ -74,8 +112,8 @@ class Security extends \Phalcon\Mvc\User\Plugin
                     'doAddProgress',
                     'view',
                     'delete',
-					'edit',
-					'doEdit',
+                    'edit',
+                    'doEdit',
                     'exportPDF'
                 ),
                 'advisor' => array('advisorList'),
@@ -88,8 +126,8 @@ class Security extends \Phalcon\Mvc\User\Plugin
             {
                 $acl->addResource(new Phalcon\Acl\Resource($resource), $actions);
             }
-            
-            //grant access for student 
+
+            //grant access for student
             foreach ($studentResources as $resource => $actions)
             {
                 foreach ($actions as $action)
@@ -102,27 +140,27 @@ class Security extends \Phalcon\Mvc\User\Plugin
             $advisorResources = array(
                 'advisor' => array('*'),
                 'projects' => array(
-                    'manage', 
-                    'delete', 
-                    'editSetting', 
-                    'member', 
+                    'manage',
+                    'delete',
+                    'editSetting',
+                    'member',
                     'addmember',
                     'doAddMember',
                     'deletemember',
                     'proposed',
                     'accept',
-                    'reject' 
+                    'reject'
                 ),
                 'progress' => array(
                     'view',
                     'evaluate',
                     'doEvaluate',
-					'index',
-					'newProgress',
-					'doAddProgress',
-					'delete',
-					'edit',
-					'doEdit'
+                    'index',
+                    'newProgress',
+                    'doAddProgress',
+                    'delete',
+                    'edit',
+                    'doEdit'
                 ),
                 'profile' => array('*'),
                 'exam' => array('download', 'showExam'),
@@ -149,16 +187,16 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 'profile' => array('*'),
                 'score' => array('*'),
                 'exam' => array('*'),
-				'news' => array('*'),
+                'news' => array('*'),
                 'settings' => array('*')
             );
-            
+
             foreach ($adminResources as $resource => $actions)
             {
                 $acl->addResource(new Phalcon\Acl\Resource($resource), $actions);
             }
 
-            
+
             //grant access for admin
             foreach ($adminResources as $resource => $actions)
             {
@@ -172,45 +210,6 @@ class Security extends \Phalcon\Mvc\User\Plugin
         }
 
         return $this->_acl;
-    }
-
-    public function beforeDispatch(Phalcon\Events\Event $event, Phalcon\Mvc\Dispatcher $dispatcher)
-    {
-		//TODO
-        $this->flashSession->output();
-        $auth = $this->session->get('auth');
-        $controller = $dispatcher->getControllerName();
-        $action = $dispatcher->getActionName();
-
-        if (!$auth)
-        {
-            $role = 'Guest';
-            if ($controller != 'session')
-            {
-                $this->response->redirect('session');
-            }
-            return true;
-        }
-        else
-        {
-            $role = $auth['type'];
-        }
-
-        $acl = $this->getAcl();
-        $allowed = $acl->isAllowed($role, $controller, $action);
-
-        if ($allowed != Phalcon\Acl::ALLOW)
-        {
-            $this->flash->error("You cannot access this module");
-
-            $dispatcher->forward(array(
-                'controller' => 'index',
-                'action' => 'index'
-            ));
-
-            return false;
-        }
-		
     }
 }
 

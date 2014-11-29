@@ -5,18 +5,19 @@ $advisors = User::find("type='Advisor'");
 
 <div class="col-sm-3 sidebar">
     <div class="list-group">
-		<a href="#" class="list-group-item active">
-		<h4 class="list-group-item-heading">Advisors</h4>
-		</a>
+        <a href="#" class="list-group-item active">
+            <h4 class="list-group-item-heading">Advisors</h4>
+        </a>
         <?php
-        
+
         foreach ($advisors as $advisor)
-        { ?>
-			<a href="<?= $this->url->get('profile/advisorProfile/'); ?><?=$advisor->id?>" class="list-group-item">
-				<?= $advisor->title.$advisor->name ?>
-			</a>
-        <?php 
-        } 
+        {
+            ?>
+            <a href="<?= $this->url->get('profile/advisorProfile/'); ?><?= $advisor->id ?>" class="list-group-item">
+                <?= $advisor->title . $advisor->name ?>
+            </a>
+        <?php
+        }
         ?>
     </div>
 </div>

@@ -9,9 +9,9 @@ class ProfileController extends ControllerBase
         parent::initialize();
     }
 
-	public function advisorProfileAction()
-	{
-	}
+    public function advisorProfileAction()
+    {
+    }
 
     public function updateAction()
     {
@@ -19,12 +19,12 @@ class ProfileController extends ControllerBase
         $request = $this->request;
         $user_id = $auth['id'];
 
-		if ($auth['type'] == 'Admin')
-		{
-			$advisor_id = $request->getPost('advisor_id');
-			if (!empty($advisor_id))
-				$user_id = $advisor_id;
-		}
+        if ($auth['type'] == 'Admin')
+        {
+            $advisor_id = $request->getPost('advisor_id');
+            if (!empty($advisor_id))
+                $user_id = $advisor_id;
+        }
 
         $user = User::findFirst("id='$user_id'");
         $facebook = $request->getPost('facebook');
@@ -33,20 +33,20 @@ class ProfileController extends ControllerBase
         if (empty($interesting))
             $interesting = 'ยังไม่ระบุ';
 
-		if ($request->hasFiles())
-		{
-			foreach ($request->getUploadedFiles() as $file)
-			{
-				$file->moveTo('./profilePicture/'.$user->user_id.'.img');
-			}
-		}
+        if ($request->hasFiles())
+        {
+            foreach ($request->getUploadedFiles() as $file)
+            {
+                $file->moveTo('./profilePicture/' . $user->user_id . '.img');
+            }
+        }
 
         $user->facebook = $facebook;
         $user->interesting = $interesting;
 
         $user->save();
         $this->flashSession->success("Update profile success");
-        $this->response->redirect("profile/index/".$user_id);
+        $this->response->redirect("profile/index/" . $user_id);
     }
 
     public function updateProfileAction()

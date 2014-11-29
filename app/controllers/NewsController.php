@@ -9,80 +9,80 @@ class NewsController extends ControllerBase
         parent::initialize();
     }
 
-	public function doEditAction()
-	{
-		$data = $this->request->getPost('news');
-		$id = $this->request->getPost('id');
+    public function doEditAction()
+    {
+        $data = $this->request->getPost('news');
+        $id = $this->request->getPost('id');
 
-		$news = News::findFirst("id='$id'");
-		
-		if ($news)
-		{
-			$news->news = $data;
-			if ($news->save())
-			{
-				$this->flashSession->success('Edit Success');
-				return $this->response->redirect('news/manageNews');
-			}
-		}
+        $news = News::findFirst("id='$id'");
 
-		$this->flash->error('Error when edit');
-		return $this->forward('news/manageNews');
-	}
+        if ($news)
+        {
+            $news->news = $data;
+            if ($news->save())
+            {
+                $this->flashSession->success('Edit Success');
+                return $this->response->redirect('news/manageNews');
+            }
+        }
 
-	public function deleteAction()
-	{
-		$params = $this->dispatcher->getParams();
-		$id = $params[0];
+        $this->flash->error('Error when edit');
+        return $this->forward('news/manageNews');
+    }
 
-		$news = News::findFirst("id='$id'");
+    public function deleteAction()
+    {
+        $params = $this->dispatcher->getParams();
+        $id = $params[0];
 
-		if ($news)
-		{
-			if ($news->delete())
-			{
-				$this->flashSession->success('Delete Success');
-				return $this->response->redirect('news/manageNews');
-			}
-		}
+        $news = News::findFirst("id='$id'");
 
-		$this->flash->error('Error when delete');
-		return $this->forward('news/manageNews');
-	}
+        if ($news)
+        {
+            if ($news->delete())
+            {
+                $this->flashSession->success('Delete Success');
+                return $this->response->redirect('news/manageNews');
+            }
+        }
 
-	public function editAction()
-	{
-	}
+        $this->flash->error('Error when delete');
+        return $this->forward('news/manageNews');
+    }
 
-	public function doCreateAction()
-	{
-		$data = $this->request->getPost('news');
+    public function editAction()
+    {
+    }
 
-		if (empty($data))
-		{
-			$this->flash->error('Empty data');
-			return $this->forward('news/manageNews');
-		}
+    public function doCreateAction()
+    {
+        $data = $this->request->getPost('news');
 
-		$news = new News();
+        if (empty($data))
+        {
+            $this->flash->error('Empty data');
+            return $this->forward('news/manageNews');
+        }
 
-		$news->news = $data;
-		$news->save();
-		
-		$this->flashSession->success('Create news success');
-		return $this->response->redirect('news/manageNews');
-	}
+        $news = new News();
 
-	public function createAction()
-	{
-	}
+        $news->news = $data;
+        $news->save();
 
-	public function manageNewsAction()
-	{
-	}
+        $this->flashSession->success('Create news success');
+        return $this->response->redirect('news/manageNews');
+    }
+
+    public function createAction()
+    {
+    }
+
+    public function manageNewsAction()
+    {
+    }
 
     public function indexAction()
- 	{
+    {
     }
 }
 

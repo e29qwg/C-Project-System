@@ -28,23 +28,12 @@ class ScorePrepare extends \Phalcon\Mvc\Model
         $sum += $this->progress_report;
 
         if ($this->is_midterm)
-            $sum = $sum/78.0*100;        
+            $sum = $sum / 78.0 * 100;
         else
-            $sum = $sum/117.0*100;
+            $sum = $sum / 117.0 * 100;
 
         $this->grade = $this->_calGrade($sum);
 
-        $this->edit_date = date('Y-m-d H:i:s');
-    }
-
-    public function beforeValidationOnCreate()
-    {
-        $this->report_advisor = 0;
-        $this->present_advisor = 0;
-        $this->report_coadvisor = 0;
-        $this->present_coadvisor = 0;
-        $this->progress_report = 0;
-        $this->grade = ' ';
         $this->edit_date = date('Y-m-d H:i:s');
     }
 
@@ -65,6 +54,17 @@ class ScorePrepare extends \Phalcon\Mvc\Model
         if ($score < 80)
             return 'B+';
         return 'A';
+    }
+
+    public function beforeValidationOnCreate()
+    {
+        $this->report_advisor = 0;
+        $this->present_advisor = 0;
+        $this->report_coadvisor = 0;
+        $this->present_coadvisor = 0;
+        $this->progress_report = 0;
+        $this->grade = ' ';
+        $this->edit_date = date('Y-m-d H:i:s');
     }
 }
 

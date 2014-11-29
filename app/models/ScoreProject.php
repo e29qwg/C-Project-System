@@ -39,31 +39,15 @@ class ScoreProject extends \Phalcon\Mvc\Model
         $sum += $this->progress_report;
 
         if ($this->is_midterm)
-            $sum = $sum/115.0*100;
+            $sum = $sum / 115.0 * 100;
         else
-            $sum = $sum/175.0*100;
+            $sum = $sum / 175.0 * 100;
 
         $this->grade = $this->_calGrade($sum);
 
         $this->edit_date = date('Y-m-d H:i:s');
     }
 
-    public function beforeValidationOnCreate()
-    {
-        $this->report_advisor = 0;
-        $this->present_advisor = 0;
-        $this->system_advisor = 0;
-        $this->report_coadvisorI = 0;
-        $this->present_coadvisorI = 0;
-        $this->system_coadvisorI = 0;
-        $this->report_coadvisorII = 0;
-        $this->present_coadvisorII = 0;
-        $this->system_coadvisorII = 0;
-        $this->progress_report = 0;
-        $this->grade = ' ';
-        $this->edit_date = date('Y-m-d H:i:s');
-    }
-    
     public function _calGrade($score)
     {
         if ($score < 50)
@@ -81,6 +65,22 @@ class ScoreProject extends \Phalcon\Mvc\Model
         if ($score < 80)
             return 'B+';
         return 'A';
+    }
+
+    public function beforeValidationOnCreate()
+    {
+        $this->report_advisor = 0;
+        $this->present_advisor = 0;
+        $this->system_advisor = 0;
+        $this->report_coadvisorI = 0;
+        $this->present_coadvisorI = 0;
+        $this->system_coadvisorI = 0;
+        $this->report_coadvisorII = 0;
+        $this->present_coadvisorII = 0;
+        $this->system_coadvisorII = 0;
+        $this->progress_report = 0;
+        $this->grade = ' ';
+        $this->edit_date = date('Y-m-d H:i:s');
     }
 }
 

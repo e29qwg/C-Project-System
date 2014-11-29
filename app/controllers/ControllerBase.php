@@ -1,9 +1,9 @@
 <?php
-    
+
 class ControllerBase extends Phalcon\Mvc\Controller
 {
     protected function initialize()
-    {	
+    {
         $auth = $this->session->get('auth');
         if ($auth)
         {
@@ -22,26 +22,13 @@ class ControllerBase extends Phalcon\Mvc\Controller
         }
     }
 
-    protected function forward($uri)
-    {
-        $uriParts = explode('/', $uri);
-
-        if (empty($uriParts[1]))
-            $uriParts[1] = 'index';
-
-        return $this->dispatcher->forward(array (
-            'controller' => $uriParts[0],
-            'action' => $uriParts[1],
-        ));;
-    }
-
     protected function _checkAdvisorPermission($project_id)
     {
         $auth = $this->session->get('auth');
         $user_id = $auth['id'];
 
         $projectMap = ProjectMap::findFirst("user_id='$user_id' AND map_type='advisor' AND project_id='$project_id'");
-        
+
         if (!$projectMap || empty($project_id))
         {
             $this->flash->error('Access Denied');
@@ -49,11 +36,24 @@ class ControllerBase extends Phalcon\Mvc\Controller
 
             return false;
         }
-    
-     
+
+
         return true;
     }
-    
+
+    protected function forward($uri)
+    {
+        $uriParts = explode('/', $uri);
+
+        if (empty($uriParts[1]))
+            $uriParts[1] = 'index';
+
+        return $this->dispatcher->forward(array(
+            'controller' => $uriParts[0],
+            'action' => $uriParts[1],
+        ));;
+    }
+
     protected function _checkPermission($project_id)
     {
         $auth = $this->session->get('auth');

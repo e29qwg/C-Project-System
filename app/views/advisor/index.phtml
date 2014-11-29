@@ -34,36 +34,36 @@ $newss = News::find(array("order" => "id DESC", "limit" => 8));
 
 <h4>News</h4>
 <div class="panel panel-info">
-	<div class="panel-body">
-		<ul>
-			<?php
+    <div class="panel-body">
+        <ul>
+            <?php
 
-			foreach ($newss as $news)
-			{
-				?>
-				<li><?= $news->create_date.' '.$news->news; ?></li>
-				<?php
-			}
+            foreach ($newss as $news)
+            {
+                ?>
+                <li><?= $news->create_date . ' ' . $news->news; ?></li>
+            <?php
+            }
 
-			?>
-		</ul>
-	</div>
+            ?>
+        </ul>
+    </div>
 </div>
 
 <h4>Event Update</h4>
 <div class="panel panel-info">
-	<div class="panel-body">
-		<?php
+    <div class="panel-body">
+        <?php
 
-		$logs = Log::find(array("conditions" => "user_id='$user_id'", "order" => "create_date DESC", "limit" => 8));
+        $logs = Log::find(array("conditions" => "user_id='$user_id'", "order" => "create_date DESC", "limit" => 8));
 
-		echo '<ul>';
-		foreach ($logs as $log)
-		{
-			echo '<li>'.$log->create_date.' '.$log->description.'</li>';
-		}
-		echo '</ul>';
+        echo '<ul>';
+        foreach ($logs as $log)
+        {
+            echo '<li>' . $log->create_date . ' ' . $log->description . '</li>';
+        }
+        echo '</ul>';
 
-		?>
-	</div>
+        ?>
+    </div>
 </div>

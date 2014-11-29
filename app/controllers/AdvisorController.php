@@ -9,46 +9,46 @@ class AdvisorController extends ControllerBase
         parent::initialize();
     }
 
-	public function setQuotaAction()
-	{
-		$request = $this->request;
+    public function setQuotaAction()
+    {
+        $request = $this->request;
 
-		if (!$request->isPost())
-		{
-			$this->flash->error('Invalid Request');
-			return $this->forward('index');
-		}
+        if (!$request->isPost())
+        {
+            $this->flash->error('Invalid Request');
+            return $this->forward('index');
+        }
 
-		$ids = $request->getPost('id');
-		$nquotas = $request->getPost('quota');
+        $ids = $request->getPost('id');
+        $nquotas = $request->getPost('quota');
 
-		$auth = $this->session->get('auth');
-		$user_id = $auth['id'];
+        $auth = $this->session->get('auth');
+        $user_id = $auth['id'];
 
-		$count = 0;
+        $count = 0;
 
-		foreach ($nquotas as $nquota)
-		{
-			$id = $ids[$count++];
-			$quota = Quota::findFirst("advisor_id='$id'");
-			
-			if (!$quota)
-				continue;
+        foreach ($nquotas as $nquota)
+        {
+            $id = $ids[$count++];
+            $quota = Quota::findFirst("advisor_id='$id'");
 
-			if ($auth['type'] != 'Admin' && $id != $user_id)
-				continue;
+            if (!$quota)
+                continue;
 
-			$quota->quota_pp = $nquota;
-			$quota->save();
-		}
+            if ($auth['type'] != 'Admin' && $id != $user_id)
+                continue;
 
-		$this->flashSession->success('บันทึกข้อมูลสำเร็จ');
-		$this->response->redirect('advisor/quota');
-	}
+            $quota->quota_pp = $nquota;
+            $quota->save();
+        }
 
-	public function quotaAction()
-	{
-	}
+        $this->flashSession->success('บันทึกข้อมูลสำเร็จ');
+        $this->response->redirect('advisor/quota');
+    }
+
+    public function quotaAction()
+    {
+    }
 
     public function advisorListAction()
     {

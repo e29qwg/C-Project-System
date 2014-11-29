@@ -13,7 +13,7 @@ class Progress extends \Phalcon\Mvc\Model
     public $progress_summary;
     public $progress_target;
     public $create_date;
-	public $edit_date;
+    public $edit_date;
 
     public function initialize()
     {
@@ -25,10 +25,10 @@ class Progress extends \Phalcon\Mvc\Model
         $this->create_date = date('Y-m-d H:i:s');
     }
 
-	public function beforeValidationOnUpdate()
-	{
-		$this->edit_date = date('Y-m-d H:i:s');
-	}
+    public function beforeValidationOnUpdate()
+    {
+        $this->edit_date = date('Y-m-d H:i:s');
+    }
 }
 
 ?>

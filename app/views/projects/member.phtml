@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 echo $this->getContent();
 $auth = $this->session->get('auth');
@@ -23,85 +23,83 @@ $e = new Phalcon\Escaper();
 ?>
 
 <div class="row">
-    <?php require(__DIR__.'/../layouts/projectHeader.php'); ?>
-        <?php 
-            $params = $this->dispatcher->getParams();
-            $project = Project::findFirst("project_id='$params[0]'");
-        ?>
-        <div class="tab-content">
-            <div class="tab-pane fade in active" id="setting">
-                <br>
-                <?php 
-                
-                if ($project->project_status == 'Accept')
-                {
-                }
-                else
-                {
-                    ?>
-                    <a href="<?= $this->url->get('projects/addmember/'); ?><?= $params[0] ?>" class="btn btn-success btn-sm pull-right">New Project Member</a>
-                    <br>
-                    <br>
-                <?php
-                }
+    <?php require(__DIR__ . '/../layouts/projectHeader.php'); ?>
+    <?php
+    $params = $this->dispatcher->getParams();
+    $project = Project::findFirst("project_id='$params[0]'");
+    ?>
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="setting">
+            <br>
+            <?php
+
+            if ($project->project_status == 'Accept')
+            {
+            } else
+            {
                 ?>
-                <table class="table"  width="100%">
-                    <thead>
-                        <tr class="success">
-                            <th><?= $project->project_name ?> project member</th>
-                            <th width="5%"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                        
-                    $projectMaps = ProjectMap::find("project_id='$params[0]' AND map_type='owner'");
-                    foreach ($projectMaps as $projectMap)
+                <a href="<?= $this->url->get('projects/addmember/'); ?><?= $params[0] ?>"
+                   class="btn btn-success btn-sm pull-right">New Project Member</a>
+                <br>
+                <br>
+            <?php
+            }
+            ?>
+            <table class="table" width="100%">
+                <thead>
+                <tr class="success">
+                    <th><?= $project->project_name ?> project member</th>
+                    <th width="5%"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+
+                $projectMaps = ProjectMap::find("project_id='$params[0]' AND map_type='owner'");
+                foreach ($projectMaps as $projectMap)
+                {
+                    $user = User::findFirst("id='$projectMap->user_id'");
+
+                    if (!file_exists("./profilePicture/$user->user_id.img"))
                     {
-                        $user = User::findFirst("id='$projectMap->user_id'");
-		
-						if (!file_exists("./profilePicture/$user->user_id.img"))
-						{
-							$imgSrc = "https://graph.facebook.com/";
-							$imgSrc .= $user->facebook;
-							$imgSrc .= "/picture?type=square&width=150&height=150";
-						}
-						else
-							$imgSrc = $this->url->get("profilePicture/$user->user_id.img");
-                        echo '<tr>';
-                        echo '<td class="active">';
-                        echo '<div class="col-sm-1">';
+                        $imgSrc = "https://graph.facebook.com/";
+                        $imgSrc .= $user->facebook;
+                        $imgSrc .= "/picture?type=square&width=150&height=150";
+                    } else
+                        $imgSrc = $this->url->get("profilePicture/$user->user_id.img");
+                    echo '<tr>';
+                    echo '<td class="active">';
+                    echo '<div class="col-sm-1">';
 
-                        echo '<img src="'.$imgSrc;
-                        echo '" width="50px" height="50px">';
-                        echo '</div>';
+                    echo '<img src="' . $imgSrc;
+                    echo '" width="50px" height="50px">';
+                    echo '</div>';
 
-                        echo '<div class="col-sm-10">';
-                        echo '<a href="'.$this->url->get('profile/index/').$user->id.'">';
-                        echo $user->title.$user->name;
-                        echo '</a><br>'.$user->user_id;
-                        echo '</div>';
-                        echo '</td>';
-                        echo '<td class="active">';
-                        if ($project->project_status == "Accept" || $user->id == $user_id)
-                        {
-                        }
-                        else
-                        {
-                            echo '<a href="'.$this->url->get('projects/deletemember/');
-                            echo $params[0].'/'.$projectMap->project_map_id;
-                            echo '" class="btn btn-danger btn-xs" onclick="return confirm (\'ยืนยันการลบ\');">';
-                            echo 'Delete';
-                            echo '</a>';
-                        }
-                        echo '</td>';
-                        echo '</tr>';
+                    echo '<div class="col-sm-10">';
+                    echo '<a href="' . $this->url->get('profile/index/') . $user->id . '">';
+                    echo $user->title . $user->name;
+                    echo '</a><br>' . $user->user_id;
+                    echo '</div>';
+                    echo '</td>';
+                    echo '<td class="active">';
+                    if ($project->project_status == "Accept" || $user->id == $user_id)
+                    {
+                    } else
+                    {
+                        echo '<a href="' . $this->url->get('projects/deletemember/');
+                        echo $params[0] . '/' . $projectMap->project_map_id;
+                        echo '" class="btn btn-danger btn-xs" onclick="return confirm (\'ยืนยันการลบ\');">';
+                        echo 'Delete';
+                        echo '</a>';
                     }
+                    echo '</td>';
+                    echo '</tr>';
+                }
 
-                    ?>
-                    </tbody>
-                </table>
-            </div>
+                ?>
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 </div>

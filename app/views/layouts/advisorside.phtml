@@ -26,38 +26,38 @@ $projectMaps = ProjectMap::find("user_id='$user_id' AND map_type='advisor'");
         <div class="col-sm-3">
             <div class="list-group">
                 <a href="#" class="list-group-item active">
-					Prepare Project
-					<span class="badge"><?php echo countProjects($projectMaps, '1'); ?></span>
-				</a>
-                <?php
-                    showProject($projectMaps, '1', $this);
-                ?>
-                <a href="#" class="list-group-item active">
-					Project I
-					<span class="badge"><?php echo countProjects($projectMaps, '2'); ?></span>
-				</a>
-                <?php
-                    showProject($projectMaps, '2', $this);
-                ?>
-                <a href="#" class="list-group-item active">
-	                Project II
-					<span class="badge"><?php echo countProjects($projectMaps, '3'); ?></span>
+                    Prepare Project
+                    <span class="badge"><?php echo countProjects($projectMaps, '1'); ?></span>
                 </a>
                 <?php
-                    showProject($projectMaps, '3', $this);
+                showProject($projectMaps, '1', $this);
+                ?>
+                <a href="#" class="list-group-item active">
+                    Project I
+                    <span class="badge"><?php echo countProjects($projectMaps, '2'); ?></span>
+                </a>
+                <?php
+                showProject($projectMaps, '2', $this);
+                ?>
+                <a href="#" class="list-group-item active">
+                    Project II
+                    <span class="badge"><?php echo countProjects($projectMaps, '3'); ?></span>
+                </a>
+                <?php
+                showProject($projectMaps, '3', $this);
                 ?>
             </div>
-			<div class="list-group">
-				<a href="#" class="list-group-item active">
-					Menu
-				</a>
-				<a href="<?= $this->url->get(); ?>" class="list-group-item">
-					Home
-				</a>
-				<a href="<?= $this->url->get('projects/proposed'); ?>" class="list-group-item">
-					Proposed Project
-				</a>
-			</div>
+            <div class="list-group">
+                <a href="#" class="list-group-item active">
+                    Menu
+                </a>
+                <a href="<?= $this->url->get(); ?>" class="list-group-item">
+                    Home
+                </a>
+                <a href="<?= $this->url->get('projects/proposed'); ?>" class="list-group-item">
+                    Proposed Project
+                </a>
+            </div>
         </div>
         <div class="col-sm-9">
             <?php echo $this->getContent(); ?>
@@ -72,7 +72,7 @@ function countProjects($projectMaps, $level)
     $current_semester = Semester::maximum(array("column" => "semester_id"));
 
     $count = 0;
-    
+
     foreach ($projectMaps as $projectMap)
     {
         $project = Project::findFirst("project_id='$projectMap->project_id' AND project_level_id='$level' AND semester_id='$current_semester'");
@@ -105,50 +105,52 @@ function getNewProgress($projectId)
 function showProject($projectMaps, $level, $di)
 {
     $current_semester = Semester::maximum(array("column" => "semester_id"));
-	
-	$found = false;
+
+    $found = false;
     foreach ($projectMaps as $projectMap)
     {
         $project = Project::findFirst("project_id='$projectMap->project_id' AND project_level_id='$level' AND project_status='Accept' AND semester_id='$current_semester'");
         if ($project)
         {
-			 $projectMaps = ProjectMap::find("project_id='$project->project_id' AND map_type='owner'");
+            $projectMaps = ProjectMap::find("project_id='$project->project_id' AND map_type='owner'");
 
-			 $str = "";
-			 
-			 for ($i = 0 ; $i < count($projectMaps) ; $i++)
-			 {
-				 if ($i != 0)
-					$str += '<br>';
-				$tuid = $projectMaps[$i]->user_id;
-				$student = User::findFirst("id='$tuid'");
-				$str .= $student->title.$student->name;
-			 }
-        ?>
-            <a class="list-group-item" href="<?= $di->url->get('progress/evaluate/');?><?= $project->project_id?>" data-toggle="tooltip" data-placement="bottom" title="<?= $str; ?>">
-            <?= $project->project_name ?>
-				<?php 
-                    $newProgresses = getNewProgress($project->project_id);
+            $str = "";
 
-					if ($newProgresses > 0)
-						echo '<span class="badge">' . $newProgresses . '</span>';
+            for ($i = 0; $i < count($projectMaps); $i++)
+            {
+                if ($i != 0)
+                    $str += '<br>';
+                $tuid = $projectMaps[$i]->user_id;
+                $student = User::findFirst("id='$tuid'");
+                $str .= $student->title . $student->name;
+            }
+            ?>
+            <a class="list-group-item" href="<?= $di->url->get('progress/evaluate/'); ?><?= $project->project_id ?>"
+               data-toggle="tooltip" data-placement="bottom" title="<?= $str; ?>">
+                <?= $project->project_name ?>
+                <?php
+                $newProgresses = getNewProgress($project->project_id);
+
+                if ($newProgresses > 0)
+                    echo '<span class="badge">' . $newProgresses . '</span>';
                 ?>
             </a>
-        <?php
-			$found = true;
+            <?php
+            $found = true;
         }
     }
 
-	if (!$found)
-	{
-		?>
-		<a class="list-group-item" href="#">ยังไม่ระบุ</a>
-		<?php
-	}
+    if (!$found)
+    {
+        ?>
+        <a class="list-group-item" href="#">ยังไม่ระบุ</a>
+    <?php
+    }
 }
+
 ?>
 
 <script>
-	$('.list-group-item').tooltip();
+    $('.list-group-item').tooltip();
 </script>
 

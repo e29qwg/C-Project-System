@@ -15,7 +15,7 @@ class ScoreController extends ControllerBase
 //        $this->DownloadFile->download($auth['id']);
 //        $this->view->disable();
 
-		$this->flash->notice('กำลังปรับปรุงยังไม่สามารถใช้งานได้ในขณะนี้');
+        $this->flash->notice('กำลังปรับปรุงยังไม่สามารถใช้งานได้ในขณะนี้');
     }
 
     public function studentViewAction()
@@ -26,7 +26,7 @@ class ScoreController extends ControllerBase
     public function uploadScoreAction()
     {
         $request = $this->request;
-        
+
         if ($request->hasFiles())
         {
             foreach ($request->getUploadedFiles() as $file)
@@ -57,7 +57,7 @@ class ScoreController extends ControllerBase
     }
 
     public function manageScoreAction()
-    {        
+    {
     }
 }
 

@@ -4,9 +4,15 @@ class ExamController extends ControllerBase
 {
     public function initialize()
     {
-		$this->view->setTemplateAfter('main');
+        $this->view->setTemplateAfter('main');
         Phalcon\Tag::setTitle('ระบบจัดการโครงงานนักศึกษา');
         parent::initialize();
+    }
+
+    public function showExamAction()
+    {
+        $this->downloadAction();
+//		$this->flash->notice('กำลังปรับปรุงยังไม่สามารถใช้งานได้');
     }
 
     public function downloadAction()
@@ -14,12 +20,6 @@ class ExamController extends ControllerBase
         $this->DownloadFile->download("Exam");
         $this->view->disable();
     }
-
-	public function showExamAction()
-	{
-        $this->downloadAction();
-//		$this->flash->notice('กำลังปรับปรุงยังไม่สามารถใช้งานได้');
-	}
 
     public function doUploadAction()
     {
@@ -36,17 +36,17 @@ class ExamController extends ControllerBase
 
                 if ($excelFile)
                 {
-                    $excelFile->filename = $this->security->getToken().'.xlsx';
+                    $excelFile->filename = $this->security->getToken() . '.xlsx';
                     $excelFile->file = $examFile;
                     $excelFile->save();
                 }
-                
+
                 $this->flashSession->success('อัพโหลดตารางสอบสำเร็จ');
                 return $this->response->redirect('exam/manage');
             }
         }
 
-        $this->flashSession->error('ไม่พบไฟล์ที่เลือก');    
+        $this->flashSession->error('ไม่พบไฟล์ที่เลือก');
         return $this->response->redirect('exam/manage');
     }
 
@@ -61,7 +61,7 @@ class ExamController extends ControllerBase
     }
 
     public function manageAction()
-    {                
+    {
     }
 
     public function generateAction()

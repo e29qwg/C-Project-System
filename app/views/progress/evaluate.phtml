@@ -1,79 +1,84 @@
 <?php echo $this->getContent(); ?>
 
 <div class="row">
-    <?php require(__DIR__.'/../layouts/projectHeader.php'); ?>
-        <div class="tab-content">
-            <div class="tab-pane fade in active" id="progress">
-                <br>
-				<a href="<?= $this->url->get('progress/newProgress/').$project->project_id; ?>" class="btn btn-xs btn-success pull-right">New Progress</a>
-				<br>
-				<br>
-                <div>
-                    <form method="post" action="<?= $this->url->get('progress/doEvaluate'); ?>">
-                        <table class="table" width="100%">
-                            <tr class="success">
-                                <th><?= $project->project_name ?> progress</th>
-                                <th></th>
-                                <th width="20%"></th>
-                                <th width="20%"></th>
-                            </tr>
-                            <?php
-                            $progresss = Progress::find("project_id='$project->project_id'");
-							$found = false;
-                            foreach ($progresss as $progress)
-                            {
-								$found = true;
-                                $user = User::findFirst("id='$progress->user_id'");
-                            ?>
-                                <tr>
-                                    <td>
-                                        <?= $user->name ?>
-                                    </td>
-                                    <td>
-                                        <?= $progress->create_date ?>
-                                    </td>
-                                    <td>
-                                        <a href="<?= $this->url->get('progress/view/'); ?><?= $params[0] ?>/<?=$progress->progress_id ?>" class="btn btn-xs btn-success" target="popup">View</a>
-										<a href="<?= $this->url->get('progress/delete/').$params[0].'/'.$progress->progress_id; ?>" class="btn btn-xs btn-danger" onclick="return confirm('Confirm Delete');">Delete</a>
-                                    </td>
-                                    <td>
-                                        <?php 
-                                            $evaluate = ProgressEvaluate::findFirst("progress_id='$progress->progress_id'");
-                                            $this->tag->setDefault("evaluate[]", $evaluate->evaluation);
-                                        ?>
-                                        <input type="hidden" name="project_id[]" value="<?= $progress->project_id?>">
-                                        <input type="hidden" name="progress_id[]" value="<?= $progress->progress_id?>">
-                                        <?php
-                                        echo $this->tag->selectStatic(
-                                            array(
-                                                "evaluate[]",
-                                                array(
-                                                    "0" => "เลือกผลการประเมิน",
-                                                    "1" => "ต้องปรับปรุง",
-                                                    "2" => "พอใช้",
-                                                    "3" => "ดี"
-                                                )
-                                            )
-                                        );
-                                        ?>
-                                    </td>
-                                </tr>
-                            <?php
-                            }
-                            ?>
-                        </table>
-						<?php 
+    <?php require(__DIR__ . '/../layouts/projectHeader.php'); ?>
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="progress">
+            <br>
+            <a href="<?= $this->url->get('progress/newProgress/') . $project->project_id; ?>"
+               class="btn btn-xs btn-success pull-right">New Progress</a>
+            <br>
+            <br>
 
-						if ($found)
-						{
-						?>
-	                        <button type="submit" class="btn btn-success btn-sm pull-right">บันทึก</button>
-						<?php 
-						}
-						?>
-                    </form>
-                </div>
+            <div>
+                <form method="post" action="<?= $this->url->get('progress/doEvaluate'); ?>">
+                    <table class="table" width="100%">
+                        <tr class="success">
+                            <th><?= $project->project_name ?> progress</th>
+                            <th></th>
+                            <th width="20%"></th>
+                            <th width="20%"></th>
+                        </tr>
+                        <?php
+                        $progresss = Progress::find("project_id='$project->project_id'");
+                        $found = false;
+                        foreach ($progresss as $progress)
+                        {
+                            $found = true;
+                            $user = User::findFirst("id='$progress->user_id'");
+                            ?>
+                            <tr>
+                                <td>
+                                    <?= $user->name ?>
+                                </td>
+                                <td>
+                                    <?= $progress->create_date ?>
+                                </td>
+                                <td>
+                                    <a href="<?= $this->url->get('progress/view/'); ?><?= $params[0] ?>/<?= $progress->progress_id ?>"
+                                       class="btn btn-xs btn-success" target="popup">View</a>
+                                    <a href="<?= $this->url->get('progress/delete/') . $params[0] . '/' . $progress->progress_id; ?>"
+                                       class="btn btn-xs btn-danger"
+                                       onclick="return confirm('Confirm Delete');">Delete</a>
+                                </td>
+                                <td>
+                                    <?php
+                                    $evaluate = ProgressEvaluate::findFirst("progress_id='$progress->progress_id'");
+                                    $this->tag->setDefault("evaluate[]", $evaluate->evaluation);
+                                    ?>
+                                    <input type="hidden" name="project_id[]" value="<?= $progress->project_id ?>">
+                                    <input type="hidden" name="progress_id[]" value="<?= $progress->progress_id ?>">
+                                    <?php
+                                    echo $this->tag->selectStatic(
+                                        array(
+                                            "evaluate[]",
+                                            array(
+                                                "0" => "เลือกผลการประเมิน",
+                                                "1" => "ต้องปรับปรุง",
+                                                "2" => "พอใช้",
+                                                "3" => "ดี"
+                                            )
+                                        )
+                                    );
+                                    ?>
+                                </td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                    <?php
+
+                    if ($found)
+                    {
+                        ?>
+                        <button type="submit" class="btn btn-success btn-sm pull-right">บันทึก</button>
+                    <?php
+                    }
+                    ?>
+                </form>
             </div>
         </div>
     </div>
+</div>
 </div>

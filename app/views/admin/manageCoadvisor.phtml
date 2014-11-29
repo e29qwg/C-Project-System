@@ -15,63 +15,63 @@ $projects = Project::find("project_status='Accept'");
 <br>
 
 <form method="post" action="<?= $this->url->get('admin/manageCoadvisor'); ?>">
-	<table class="table" width="100%">
-		<thead>
-			<tr class="success">
-				<th>ชื่อโครงงาน</th>
-				<th>อาจารย์ที่ปรึกษา</th>
-				<th>อาจารย์ที่ปรึกษาร่วม</th>
-				<th>อาจารย์ที่ปรึกษาร่วม</th>
-			</tr>
-		</thead>
-		<tbody>
-		<?php
+    <table class="table" width="100%">
+        <thead>
+        <tr class="success">
+            <th>ชื่อโครงงาน</th>
+            <th>อาจารย์ที่ปรึกษา</th>
+            <th>อาจารย์ที่ปรึกษาร่วม</th>
+            <th>อาจารย์ที่ปรึกษาร่วม</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
 
-		foreach ($projects as $project)
-		{
-			$projectMap = ProjectMap::findFirst(array(
-				"conditions" => "project_id='$project->project_id' AND map_type = 'advisor'"
-			));
-			$projectMaps = ProjectMap::find(array(
-				"conditions" => "project_id='$project->project_id' AND map_type = 'coadvisor'"
-			));
+        foreach ($projects as $project)
+        {
+            $projectMap = ProjectMap::findFirst(array(
+                "conditions" => "project_id='$project->project_id' AND map_type = 'advisor'"
+            ));
+            $projectMaps = ProjectMap::find(array(
+                "conditions" => "project_id='$project->project_id' AND map_type = 'coadvisor'"
+            ));
 
-			$advisor = User::findFirst("id='$projectMap->user_id'");
-			?>
-			<tr>
-				<td><?= $project->project_name; ?></td>
-				<td><?= $advisor->name; ?></td>
-				<?php
+            $advisor = User::findFirst("id='$projectMap->user_id'");
+            ?>
+            <tr>
+                <td><?= $project->project_name; ?></td>
+                <td><?= $advisor->name; ?></td>
+                <?php
 
-				$coadvisors = $projectMaps->toarray();
+                $coadvisors = $projectMaps->toarray();
 
-				for ($i = 0 ; $i < 2 ; $i++)
-				{
-					echo '<td>';
-					if (!$i)
-						echo '<input type="hidden" name="project_id[]" value="'.$project->project_id.'">';
-					if (!empty($coadvisors[$i]))
-						$this->tag->setDefault("coadvisor[]", $coadvisors[$i]['user_id']);
-					else
-						$this->tag->setDefault("coadvisor[]", "");
-					echo $this->tag->select(array(
-						'coadvisor[]',
-						User::find("type='Advisor'"),
-						'using' => array('id', 'name'),
-						'class' => 'form-control',
-						'useEmpty' => true
-					));
-					echo '</td>';
-				}
+                for ($i = 0; $i < 2; $i++)
+                {
+                    echo '<td>';
+                    if (!$i)
+                        echo '<input type="hidden" name="project_id[]" value="' . $project->project_id . '">';
+                    if (!empty($coadvisors[$i]))
+                        $this->tag->setDefault("coadvisor[]", $coadvisors[$i]['user_id']);
+                    else
+                        $this->tag->setDefault("coadvisor[]", "");
+                    echo $this->tag->select(array(
+                        'coadvisor[]',
+                        User::find("type='Advisor'"),
+                        'using' => array('id', 'name'),
+                        'class' => 'form-control',
+                        'useEmpty' => true
+                    ));
+                    echo '</td>';
+                }
 
-				?>
-			</tr>
-			<?php
-		}
+                ?>
+            </tr>
+        <?php
+        }
 
-		?>
-		</tbody>
-	</table>
+        ?>
+        </tbody>
+    </table>
 
-	<button type="submit" class="btn btn-success btn-sm">บันทึก</button>
+    <button type="submit" class="btn btn-success btn-sm">บันทึก</button>
 </form>
