@@ -1513,7 +1513,12 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
      */
     public function setDefaultStyle(PHPExcel_Style $pValue)
     {
-        $this->_parent->getDefaultStyle()->applyFromArray(array('font' => array('name' => $pValue->getFont()->getName(), 'size' => $pValue->getFont()->getSize(),),));
+        $this->_parent->getDefaultStyle()->applyFromArray(array(
+                'font' => array(
+                    'name' => $pValue->getFont()->getName(),
+                    'size' => $pValue->getFont()->getSize(),
+                ),
+            ));
         return $this;
     }
 

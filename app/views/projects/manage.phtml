@@ -53,7 +53,12 @@ $project = Project::findFirst("project_id='$params[0]'");
                 <div class="col-sm-2">
                     <?php
 
-                    echo $this->tag->selectStatic(array("project_type", "class" => "form-control", "required" => "", array("Software" => "Software", "Hardware" => "Hardware")));
+                    echo $this->tag->selectStatic(array(
+                            "project_type",
+                            "class" => "form-control",
+                            "required" => "",
+                            array("Software" => "Software", "Hardware" => "Hardware")
+                        ));
 
                     ?>
                 </div>

@@ -64,14 +64,27 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
      *
      * @var array
      */
-    private $_formats = array('h1' => array('font' => array('bold' => true, 'size' => 24,),),    //	Bold, 24pt
+    private $_formats = array(
+        'h1' => array('font' => array('bold' => true, 'size' => 24,),),    //	Bold, 24pt
         'h2' => array('font' => array('bold' => true, 'size' => 18,),),    //	Bold, 18pt
         'h3' => array('font' => array('bold' => true, 'size' => 13.5,),),    //	Bold, 13.5pt
         'h4' => array('font' => array('bold' => true, 'size' => 12,),),    //	Bold, 12pt
         'h5' => array('font' => array('bold' => true, 'size' => 10,),),    //	Bold, 10pt
         'h6' => array('font' => array('bold' => true, 'size' => 7.5,),),    //	Bold, 7.5pt
-        'a' => array('font' => array('underline' => true, 'color' => array('argb' => PHPExcel_Style_Color::COLOR_BLUE,),),),    //	Blue underlined
-        'hr' => array('borders' => array('bottom' => array('style' => PHPExcel_Style_Border::BORDER_THIN, 'color' => array(PHPExcel_Style_Color::COLOR_BLACK,),),),),    //	Bottom border
+        'a' => array(
+            'font' => array(
+                'underline' => true,
+                'color' => array('argb' => PHPExcel_Style_Color::COLOR_BLUE,),
+            ),
+        ),    //	Blue underlined
+        'hr' => array(
+            'borders' => array(
+                'bottom' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                    'color' => array(PHPExcel_Style_Color::COLOR_BLACK,),
+                ),
+            ),
+        ),    //	Bottom border
     );
     private $_dataArray = array();
     private $_tableLevel = 0;

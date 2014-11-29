@@ -52,7 +52,10 @@ class SettingsController extends ControllerBase
         if (!$settingCurrentSemester)
             return $this->settingError();
 
-        $currentSemester = Semester::findFirst(array('conditions' => 'semester_id=:semester_id:', 'bind' => array('semester_id' => $settingCurrentSemester->value)));
+        $currentSemester = Semester::findFirst(array(
+                'conditions' => 'semester_id=:semester_id:',
+                'bind' => array('semester_id' => $settingCurrentSemester->value)
+            ));
 
         if (!$currentSemester)
             return $this->settingError();

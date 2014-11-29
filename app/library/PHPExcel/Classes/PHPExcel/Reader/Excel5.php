@@ -669,7 +669,12 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
             $rec_name = $string['value'];
         }
 
-        $this->_sheets[] = array('name' => $rec_name, 'offset' => $rec_offset, 'sheetState' => $sheetState, 'sheetType' => $sheetType,);
+        $this->_sheets[] = array(
+            'name' => $rec_name,
+            'offset' => $rec_offset,
+            'sheetState' => $sheetState,
+            'sheetType' => $sheetType,
+        );
     }
 
     /**
@@ -846,7 +851,10 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
         // needs to be fixed
         $value = self::_encodeUTF16(substr($subData, 1, $isCompressed ? $characterCount : 2 * $characterCount), $isCompressed);
 
-        return array('value' => $value, 'size' => $isCompressed ? 1 + $characterCount : 1 + 2 * $characterCount, // the size in bytes including the option flags
+        return array(
+            'value' => $value,
+            'size' => $isCompressed ? 1 + $characterCount : 1 + 2 * $characterCount,
+            // the size in bytes including the option flags
         );
     }
 
@@ -900,7 +908,9 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
         // offset: 1: size: var; character array (8-bit characters)
         $value = $this->_decodeCodepage(substr($subData, 1, $ln));
 
-        return array('value' => $value, 'size' => 1 + $ln, // size in bytes of data structure
+        return array(
+            'value' => $value,
+            'size' => 1 + $ln, // size in bytes of data structure
         );
     }
 
@@ -1681,7 +1691,10 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
                                         elseif ($firstRow == 1 and $lastRow == 65536)
                                         {
                                             // then we have repeating columns
-                                            $docSheet->getPageSetup()->setColumnsToRepeatAtLeft(array($firstColumn, $lastColumn));
+                                            $docSheet->getPageSetup()->setColumnsToRepeatAtLeft(array(
+                                                    $firstColumn,
+                                                    $lastColumn
+                                                ));
                                         }
                                     }
                                 }
@@ -3145,7 +3158,11 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
             }
 
             // store the record data
-            $this->_externalBooks[] = array('type' => 'external', 'encodedUrl' => $encodedUrlString['value'], 'externalSheetNames' => $externalSheetNames,);
+            $this->_externalBooks[] = array(
+                'type' => 'external',
+                'encodedUrl' => $encodedUrlString['value'],
+                'externalSheetNames' => $externalSheetNames,
+            );
 
         }
         elseif (substr($recordData, 2, 2) == pack('CC', 0x01, 0x04))
@@ -5284,9 +5301,12 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
             for ($i = 0; $i < $nm; ++$i)
             {
                 $this->_ref[] = array(// offset: 2 + 6 * $i; index to EXTERNALBOOK record
-                    'externalBookIndex' => self::_GetInt2d($recordData, 2 + 6 * $i), // offset: 4 + 6 * $i; index to first sheet in EXTERNALBOOK record
-                    'firstSheetIndex' => self::_GetInt2d($recordData, 4 + 6 * $i), // offset: 6 + 6 * $i; index to last sheet in EXTERNALBOOK record
-                    'lastSheetIndex' => self::_GetInt2d($recordData, 6 + 6 * $i),);
+                    'externalBookIndex' => self::_GetInt2d($recordData, 2 + 6 * $i),
+                    // offset: 4 + 6 * $i; index to first sheet in EXTERNALBOOK record
+                    'firstSheetIndex' => self::_GetInt2d($recordData, 4 + 6 * $i),
+                    // offset: 6 + 6 * $i; index to last sheet in EXTERNALBOOK record
+                    'lastSheetIndex' => self::_GetInt2d($recordData, 6 + 6 * $i),
+                );
             }
         }
     }
@@ -5347,7 +5367,12 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
                 $formula = '';
             }
 
-            $this->_definedname[] = array('isBuiltInName' => $isBuiltInName, 'name' => $string['value'], 'formula' => $formula, 'scope' => $scope,);
+            $this->_definedname[] = array(
+                'isBuiltInName' => $isBuiltInName,
+                'name' => $string['value'],
+                'formula' => $formula,
+                'scope' => $scope,
+            );
         }
     }
 
@@ -7080,7 +7105,9 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
         $value = $this->_decodeCodepage(substr($subData, 2));
 
         //return $string;
-        return array('value' => $value, 'size' => 2 + $ln, // size in bytes of data structure
+        return array(
+            'value' => $value,
+            'size' => 2 + $ln, // size in bytes of data structure
         );
     }
 
@@ -7319,7 +7346,13 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
         $idObjID = self::_GetInt2d($recordData, 6);
         $grbitOpts = self::_GetInt2d($recordData, 6);
 
-        $this->_objs[] = array('ftCmoType' => $ftCmoType, 'cbCmoSize' => $cbCmoSize, 'otObjType' => $otObjType, 'idObjID' => $idObjID, 'grbitOpts' => $grbitOpts);
+        $this->_objs[] = array(
+            'ftCmoType' => $ftCmoType,
+            'cbCmoSize' => $cbCmoSize,
+            'otObjType' => $otObjType,
+            'idObjID' => $idObjID,
+            'grbitOpts' => $grbitOpts
+        );
         $this->textObjRef = $idObjID;
 
         //		echo '<b>_readObj()</b><br />';
@@ -8268,7 +8301,11 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
             //			echo 'Note Object ID=',$noteObjID,'<br />';
             //			echo 'Note Author=',$noteAuthor,'<hr />';
             //
-            $this->_cellNotes[$noteObjID] = array('cellRef' => $cellAddress, 'objectID' => $noteObjID, 'author' => $noteAuthor);
+            $this->_cellNotes[$noteObjID] = array(
+                'cellRef' => $cellAddress,
+                'objectID' => $noteObjID,
+                'author' => $noteAuthor
+            );
         }
         else
         {
@@ -8301,7 +8338,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
             {
                 //	Set comment for the cell
                 $this->_phpSheet->getComment($cellAddress)//													->setAuthor( $author )
-                    ->setText($this->_parseRichText($noteText));
+                ->setText($this->_parseRichText($noteText));
             }
         }
 
@@ -8344,7 +8381,12 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
         $cbRuns = self::_GetInt2d($recordData, 12);
         $text = $this->_getSplicedRecordData();
 
-        $this->_textObjects[$this->textObjRef] = array('text' => substr($text["recordData"], $text["spliceOffsets"][0] + 1, $cchText), 'format' => substr($text["recordData"], $text["spliceOffsets"][1], $cbRuns), 'alignment' => $grbitOpts, 'rotation' => $rot);
+        $this->_textObjects[$this->textObjRef] = array(
+            'text' => substr($text["recordData"], $text["spliceOffsets"][0] + 1, $cchText),
+            'format' => substr($text["recordData"], $text["spliceOffsets"][1], $cbRuns),
+            'alignment' => $grbitOpts,
+            'rotation' => $rot
+        );
 
         //		echo '<b>_readTextObject()</b><br />';
         //		var_dump($this->_textObjects[$this->textObjRef]);

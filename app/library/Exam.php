@@ -22,7 +22,10 @@ class Exam extends Phalcon\Mvc\User\Component
             $project = $record->project;
             $obj->setActiveSheetIndex($project->project_level_id - 1);
             $projectMapOwners = ProjectMap::find("project_id='$project->project_id' AND map_type = 'owner'");
-            $advisorMaps = ProjectMap::find(array("project_id='$project->project_id' AND map_type != 'owner'", "order" => "map_type,user_id ASC"));
+            $advisorMaps = ProjectMap::find(array(
+                    "project_id='$project->project_id' AND map_type != 'owner'",
+                    "order" => "map_type,user_id ASC"
+                ));
 
             foreach ($projectMapOwners as $projectMapOwner)
             {

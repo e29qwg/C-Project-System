@@ -229,7 +229,13 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
                     $dir = dirname($rel["Target"]);
                     foreach ($xmlWorkbook->sheets->sheet as $eleSheet)
                     {
-                        $tmpInfo = array('worksheetName' => (string)$eleSheet["name"], 'lastColumnLetter' => 'A', 'lastColumnIndex' => 0, 'totalRows' => 0, 'totalColumns' => 0,);
+                        $tmpInfo = array(
+                            'worksheetName' => (string)$eleSheet["name"],
+                            'lastColumnLetter' => 'A',
+                            'lastColumnIndex' => 0,
+                            'totalRows' => 0,
+                            'totalColumns' => 0,
+                        );
 
                         $fileWorksheet = $worksheets[(string)self::array_item($eleSheet->attributes("http://schemas.openxmlformats.org/officeDocument/2006/relationships"), "id")];
 
@@ -510,7 +516,15 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
                             //$numFmt = str_replace('mm', 'i', $numFmt);
                             //$numFmt = str_replace('h', 'H', $numFmt);
 
-                            $style = (object)array("numFmt" => $numFmt, "font" => $xmlStyles->fonts->font[intval($xf["fontId"])], "fill" => $xmlStyles->fills->fill[intval($xf["fillId"])], "border" => $xmlStyles->borders->border[intval($xf["borderId"])], "alignment" => $xf->alignment, "protection" => $xf->protection, "quotePrefix" => $quotePrefix,);
+                            $style = (object)array(
+                                "numFmt" => $numFmt,
+                                "font" => $xmlStyles->fonts->font[intval($xf["fontId"])],
+                                "fill" => $xmlStyles->fills->fill[intval($xf["fillId"])],
+                                "border" => $xmlStyles->borders->border[intval($xf["borderId"])],
+                                "alignment" => $xf->alignment,
+                                "protection" => $xf->protection,
+                                "quotePrefix" => $quotePrefix,
+                            );
                             $styles[] = $style;
 
                             // add style to cellXf collection
@@ -535,7 +549,15 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
                                 }
                             }
 
-                            $cellStyle = (object)array("numFmt" => $numFmt, "font" => $xmlStyles->fonts->font[intval($xf["fontId"])], "fill" => $xmlStyles->fills->fill[intval($xf["fillId"])], "border" => $xmlStyles->borders->border[intval($xf["borderId"])], "alignment" => $xf->alignment, "protection" => $xf->protection, "quotePrefix" => $quotePrefix,);
+                            $cellStyle = (object)array(
+                                "numFmt" => $numFmt,
+                                "font" => $xmlStyles->fonts->font[intval($xf["fontId"])],
+                                "fill" => $xmlStyles->fills->fill[intval($xf["fillId"])],
+                                "border" => $xmlStyles->borders->border[intval($xf["borderId"])],
+                                "alignment" => $xf->alignment,
+                                "protection" => $xf->protection,
+                                "quotePrefix" => $quotePrefix,
+                            );
                             $cellStyles[] = $cellStyle;
 
                             // add style to cellStyleXf collection
@@ -1052,7 +1074,24 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
                                 }
                             }
 
-                            $aKeys = array("sheet", "objects", "scenarios", "formatCells", "formatColumns", "formatRows", "insertColumns", "insertRows", "insertHyperlinks", "deleteColumns", "deleteRows", "selectLockedCells", "sort", "autoFilter", "pivotTables", "selectUnlockedCells");
+                            $aKeys = array(
+                                "sheet",
+                                "objects",
+                                "scenarios",
+                                "formatCells",
+                                "formatColumns",
+                                "formatRows",
+                                "insertColumns",
+                                "insertRows",
+                                "insertHyperlinks",
+                                "deleteColumns",
+                                "deleteRows",
+                                "selectLockedCells",
+                                "sort",
+                                "autoFilter",
+                                "pivotTables",
+                                "selectUnlockedCells"
+                            );
                             if (!$this->_readDataOnly && $xmlSheet && $xmlSheet->sheetProtection)
                             {
                                 foreach ($aKeys as $key)
@@ -1102,7 +1141,14 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
                                         foreach ($filters->dateGroupItem as $dateGroupItem)
                                         {
                                             $column->createRule()->setRule(NULL,    //	Operator is undefined, but always treated as EQUAL
-                                                array('year' => (string)$dateGroupItem["year"], 'month' => (string)$dateGroupItem["month"], 'day' => (string)$dateGroupItem["day"], 'hour' => (string)$dateGroupItem["hour"], 'minute' => (string)$dateGroupItem["minute"], 'second' => (string)$dateGroupItem["second"],), (string)$dateGroupItem["dateTimeGrouping"])->setRuleType(PHPExcel_Worksheet_AutoFilter_Column_Rule::AUTOFILTER_RULETYPE_DATEGROUP);
+                                                array(
+                                                    'year' => (string)$dateGroupItem["year"],
+                                                    'month' => (string)$dateGroupItem["month"],
+                                                    'day' => (string)$dateGroupItem["day"],
+                                                    'hour' => (string)$dateGroupItem["hour"],
+                                                    'minute' => (string)$dateGroupItem["minute"],
+                                                    'second' => (string)$dateGroupItem["second"],
+                                                ), (string)$dateGroupItem["dateTimeGrouping"])->setRuleType(PHPExcel_Worksheet_AutoFilter_Column_Rule::AUTOFILTER_RULETYPE_DATEGROUP);
                                         }
                                     }
                                     //	Check for custom filters
@@ -1578,7 +1624,10 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
                                                 {
                                                     if ($this->_includeCharts)
                                                     {
-                                                        $charts[self::dir_add($fileDrawing, $ele["Target"])] = array('id' => (string)$ele["Id"], 'sheet' => $docSheet->getTitle());
+                                                        $charts[self::dir_add($fileDrawing, $ele["Target"])] = array(
+                                                            'id' => (string)$ele["Id"],
+                                                            'sheet' => $docSheet->getTitle()
+                                                        );
                                                     }
                                                 }
                                             }
@@ -1682,7 +1731,15 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
                                                     $chartRef = $graphic->graphicData->children("http://schemas.openxmlformats.org/drawingml/2006/chart")->chart;
                                                     $thisChart = (string)$chartRef->attributes("http://schemas.openxmlformats.org/officeDocument/2006/relationships");
 
-                                                    $chartDetails[$docSheet->getTitle() . '!' . $thisChart] = array('fromCoordinate' => $fromCoordinate, 'fromOffsetX' => $fromOffsetX, 'fromOffsetY' => $fromOffsetY, 'toCoordinate' => $toCoordinate, 'toOffsetX' => $toOffsetX, 'toOffsetY' => $toOffsetY, 'worksheetTitle' => $docSheet->getTitle());
+                                                    $chartDetails[$docSheet->getTitle() . '!' . $thisChart] = array(
+                                                        'fromCoordinate' => $fromCoordinate,
+                                                        'fromOffsetX' => $fromOffsetX,
+                                                        'fromOffsetY' => $fromOffsetY,
+                                                        'toCoordinate' => $toCoordinate,
+                                                        'toOffsetX' => $toOffsetX,
+                                                        'toOffsetY' => $toOffsetY,
+                                                        'worksheetTitle' => $docSheet->getTitle()
+                                                    );
                                                 }
                                             }
                                         }
@@ -1741,11 +1798,17 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
                                                     // check for repeating columns, e g. 'A:A' or 'A:D'
                                                     if (preg_match('/!?([A-Z]+)\:([A-Z]+)$/', $range, $matches))
                                                     {
-                                                        $docSheet->getPageSetup()->setColumnsToRepeatAtLeft(array($matches[1], $matches[2]));
+                                                        $docSheet->getPageSetup()->setColumnsToRepeatAtLeft(array(
+                                                                $matches[1],
+                                                                $matches[2]
+                                                            ));
                                                     } // check for repeating rows, e.g. '1:1' or '1:5'
                                                     elseif (preg_match('/!?(\d+)\:(\d+)$/', $range, $matches))
                                                     {
-                                                        $docSheet->getPageSetup()->setRowsToRepeatAtTop(array($matches[1], $matches[2]));
+                                                        $docSheet->getPageSetup()->setRowsToRepeatAtTop(array(
+                                                                $matches[1],
+                                                                $matches[2]
+                                                            ));
                                                     }
                                                 }
                                                 break;

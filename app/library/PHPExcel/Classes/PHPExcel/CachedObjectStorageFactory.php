@@ -69,7 +69,19 @@ class PHPExcel_CachedObjectStorageFactory
      *
      * @var string[]
      */
-    private static $_storageMethods = array(self::cache_in_memory, self::cache_in_memory_gzip, self::cache_in_memory_serialized, self::cache_igbinary, self::cache_to_phpTemp, self::cache_to_discISAM, self::cache_to_apc, self::cache_to_memcache, self::cache_to_wincache, self::cache_to_sqlite, self::cache_to_sqlite3,);
+    private static $_storageMethods = array(
+        self::cache_in_memory,
+        self::cache_in_memory_gzip,
+        self::cache_in_memory_serialized,
+        self::cache_igbinary,
+        self::cache_to_phpTemp,
+        self::cache_to_discISAM,
+        self::cache_to_apc,
+        self::cache_to_memcache,
+        self::cache_to_wincache,
+        self::cache_to_sqlite,
+        self::cache_to_sqlite3,
+    );
 
 
     /**
@@ -77,7 +89,19 @@ class PHPExcel_CachedObjectStorageFactory
      *
      * @var array of mixed array
      */
-    private static $_storageMethodDefaultParameters = array(self::cache_in_memory => array(), self::cache_in_memory_gzip => array(), self::cache_in_memory_serialized => array(), self::cache_igbinary => array(), self::cache_to_phpTemp => array('memoryCacheSize' => '1MB'), self::cache_to_discISAM => array('dir' => NULL), self::cache_to_apc => array('cacheTime' => 600), self::cache_to_memcache => array('memcacheServer' => 'localhost', 'memcachePort' => 11211, 'cacheTime' => 600), self::cache_to_wincache => array('cacheTime' => 600), self::cache_to_sqlite => array(), self::cache_to_sqlite3 => array(),);
+    private static $_storageMethodDefaultParameters = array(
+        self::cache_in_memory => array(),
+        self::cache_in_memory_gzip => array(),
+        self::cache_in_memory_serialized => array(),
+        self::cache_igbinary => array(),
+        self::cache_to_phpTemp => array('memoryCacheSize' => '1MB'),
+        self::cache_to_discISAM => array('dir' => NULL),
+        self::cache_to_apc => array('cacheTime' => 600),
+        self::cache_to_memcache => array('memcacheServer' => 'localhost', 'memcachePort' => 11211, 'cacheTime' => 600),
+        self::cache_to_wincache => array('cacheTime' => 600),
+        self::cache_to_sqlite => array(),
+        self::cache_to_sqlite3 => array(),
+    );
 
 
     /**

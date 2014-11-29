@@ -240,7 +240,13 @@ class PHPExcel_Reader_OOCalc extends PHPExcel_Reader_Abstract implements PHPExce
                 {
                     $worksheetNames[] = $xml->getAttribute('table:name');
 
-                    $tmpInfo = array('worksheetName' => $xml->getAttribute('table:name'), 'lastColumnLetter' => 'A', 'lastColumnIndex' => 0, 'totalRows' => 0, 'totalColumns' => 0,);
+                    $tmpInfo = array(
+                        'worksheetName' => $xml->getAttribute('table:name'),
+                        'lastColumnLetter' => 'A',
+                        'lastColumnIndex' => 0,
+                        'totalRows' => 0,
+                        'totalColumns' => 0,
+                    );
 
                     //	Loop through each child node of the table:table element reading
                     $currCells = 0;
@@ -570,7 +576,7 @@ class PHPExcel_Reader_OOCalc extends PHPExcel_Reader_Abstract implements PHPExce
                                     $text = implode("\n", $textArray);
                                     //									echo $text,'<br />';
                                     $objPHPExcel->getActiveSheet()->getComment($columnID . $rowID)//																	->setAuthor( $author )
-                                        ->setText($this->_parseRichText($text));
+                                    ->setText($this->_parseRichText($text));
                                 }
 
                                 if (isset($cellDataText->p))

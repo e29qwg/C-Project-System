@@ -1,7 +1,5 @@
 <?php
 
-use Phalcon\Mvc\Model\Validator\Uniqueness;
-
 class Progress extends \Phalcon\Mvc\Model
 {
     public $progress_id;

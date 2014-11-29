@@ -1,7 +1,5 @@
 <?php
 
-use Phalcon\Mvc\Model\Validator\Uniqueness;
-
 class ProjectLevel extends \Phalcon\Mvc\Model
 {
     public $project_level_id;

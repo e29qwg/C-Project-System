@@ -49,7 +49,15 @@
                                     <input type="hidden" name="project_id[]" value="<?= $progress->project_id ?>">
                                     <input type="hidden" name="progress_id[]" value="<?= $progress->progress_id ?>">
                                     <?php
-                                    echo $this->tag->selectStatic(array("evaluate[]", array("0" => "เลือกผลการประเมิน", "1" => "ต้องปรับปรุง", "2" => "พอใช้", "3" => "ดี")));
+                                    echo $this->tag->selectStatic(array(
+                                            "evaluate[]",
+                                            array(
+                                                "0" => "เลือกผลการประเมิน",
+                                                "1" => "ต้องปรับปรุง",
+                                                "2" => "พอใช้",
+                                                "3" => "ดี"
+                                            )
+                                        ));
                                     ?>
                                 </td>
                             </tr>

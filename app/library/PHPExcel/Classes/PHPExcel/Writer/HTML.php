@@ -404,7 +404,8 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
                         else
                         {
                             // upper-left is the base cell that should hold the colspan/rowspan attribute
-                            $this->_isBaseCell[$sheetIndex][$r][$c] = array('xlrowspan' => $lr - $fr + 1, // Excel rowspan
+                            $this->_isBaseCell[$sheetIndex][$r][$c] = array(
+                                'xlrowspan' => $lr - $fr + 1, // Excel rowspan
                                 'rowspan' => $lr - $fr + 1, // HTML rowspan, value may change
                                 'xlcolspan' => $lc - $fc + 1, // Excel colspan
                                 'colspan' => $lc - $fc + 1, // HTML colspan, value may change
@@ -1203,11 +1204,17 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
                     {
                         if ($this->_preCalculateFormulas)
                         {
-                            $cellData = PHPExcel_Style_NumberFormat::toFormattedString($cell->getCalculatedValue(), $pSheet->getParent()->getCellXfByIndex($cell->getXfIndex())->getNumberFormat()->getFormatCode(), array($this, 'formatColor'));
+                            $cellData = PHPExcel_Style_NumberFormat::toFormattedString($cell->getCalculatedValue(), $pSheet->getParent()->getCellXfByIndex($cell->getXfIndex())->getNumberFormat()->getFormatCode(), array(
+                                    $this,
+                                    'formatColor'
+                                ));
                         }
                         else
                         {
-                            $cellData = PHPExcel_Style_NumberFormat::ToFormattedString($cell->getValue(), $pSheet->getParent()->getCellXfByIndex($cell->getXfIndex())->getNumberFormat()->getFormatCode(), array($this, 'formatColor'));
+                            $cellData = PHPExcel_Style_NumberFormat::ToFormattedString($cell->getValue(), $pSheet->getParent()->getCellXfByIndex($cell->getXfIndex())->getNumberFormat()->getFormatCode(), array(
+                                    $this,
+                                    'formatColor'
+                                ));
                         }
                         $cellData = htmlspecialchars($cellData);
                         if ($pSheet->getParent()->getCellXfByIndex($cell->getXfIndex())->getFont()->getSuperScript())

@@ -43,9 +43,37 @@ class PHPExcel_Chart_Renderer_jpgraph
 
     private static $_height = 480;
 
-    private static $_colourSet = array('mediumpurple1', 'palegreen3', 'gold1', 'cadetblue1', 'darkmagenta', 'coral', 'dodgerblue3', 'eggplant', 'mediumblue', 'magenta', 'sandybrown', 'cyan', 'firebrick1', 'forestgreen', 'deeppink4', 'darkolivegreen', 'goldenrod2');
+    private static $_colourSet = array(
+        'mediumpurple1',
+        'palegreen3',
+        'gold1',
+        'cadetblue1',
+        'darkmagenta',
+        'coral',
+        'dodgerblue3',
+        'eggplant',
+        'mediumblue',
+        'magenta',
+        'sandybrown',
+        'cyan',
+        'firebrick1',
+        'forestgreen',
+        'deeppink4',
+        'darkolivegreen',
+        'goldenrod2'
+    );
 
-    private static $_markSet = array('diamond' => MARK_DIAMOND, 'square' => MARK_SQUARE, 'triangle' => MARK_UTRIANGLE, 'x' => MARK_X, 'star' => MARK_STAR, 'dot' => MARK_FILLEDCIRCLE, 'dash' => MARK_DTRIANGLE, 'circle' => MARK_CIRCLE, 'plus' => MARK_CROSS);
+    private static $_markSet = array(
+        'diamond' => MARK_DIAMOND,
+        'square' => MARK_SQUARE,
+        'triangle' => MARK_UTRIANGLE,
+        'x' => MARK_X,
+        'star' => MARK_STAR,
+        'dot' => MARK_FILLEDCIRCLE,
+        'dash' => MARK_DTRIANGLE,
+        'circle' => MARK_CIRCLE,
+        'plus' => MARK_CROSS
+    );
     private static $_plotColour = 0;
     private static $_plotMark = 0;
     private $_chart = null;

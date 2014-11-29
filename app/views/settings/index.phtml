@@ -27,7 +27,12 @@ $url = $this->url->get();
 
                 $this->tag->setDefault('current_semester', $currentSemester->semester_id);
 
-                echo $this->tag->selectStatic(array('current_semester', $allSemesters, 'required' => 'required', 'class' => 'form-control'));
+                echo $this->tag->selectStatic(array(
+                        'current_semester',
+                        $allSemesters,
+                        'required' => 'required',
+                        'class' => 'form-control'
+                    ));
 
                 ?>
             </td>

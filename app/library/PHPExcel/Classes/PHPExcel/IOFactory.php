@@ -52,7 +52,14 @@ class PHPExcel_IOFactory
      * @access    private
      * @static
      */
-    private static $_searchLocations = array(array('type' => 'IWriter', 'path' => 'PHPExcel/Writer/{0}.php', 'class' => 'PHPExcel_Writer_{0}'), array('type' => 'IReader', 'path' => 'PHPExcel/Reader/{0}.php', 'class' => 'PHPExcel_Reader_{0}'));
+    private static $_searchLocations = array(
+        array(
+            'type' => 'IWriter',
+            'path' => 'PHPExcel/Writer/{0}.php',
+            'class' => 'PHPExcel_Writer_{0}'
+        ),
+        array('type' => 'IReader', 'path' => 'PHPExcel/Reader/{0}.php', 'class' => 'PHPExcel_Reader_{0}')
+    );
 
     /**
      * Autoresolve classes
@@ -61,7 +68,16 @@ class PHPExcel_IOFactory
      * @access    private
      * @static
      */
-    private static $_autoResolveClasses = array('Excel2007', 'Excel5', 'Excel2003XML', 'OOCalc', 'SYLK', 'Gnumeric', 'HTML', 'CSV',);
+    private static $_autoResolveClasses = array(
+        'Excel2007',
+        'Excel5',
+        'Excel2003XML',
+        'OOCalc',
+        'SYLK',
+        'Gnumeric',
+        'HTML',
+        'CSV',
+    );
 
     /**
      *    Private constructor for PHPExcel_IOFactory

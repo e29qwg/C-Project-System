@@ -10,7 +10,10 @@ $user_id = $auth['id'];
 $student = User::findFirst("id='$user_id'");
 
 $scorePrepares = ScorePrepare::find(array("user_id='$user_id'", "order" => "project_id ASC, is_midterm DESC"));
-$scoreProjects = ScoreProject::find(array("conditions" => "user_id='$user_id'", "order" => "project_id ASC, is_midterm DESC"));
+$scoreProjects = ScoreProject::find(array(
+        "conditions" => "user_id='$user_id'",
+        "order" => "project_id ASC, is_midterm DESC"
+    ));
 
 ?>
 <table class="table" width="100%">

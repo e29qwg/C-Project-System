@@ -49,7 +49,14 @@ class PHPExcel_Chart_Legend
     const POSITION_TOP = 't';
     const POSITION_TOPRIGHT = 'tr';
 
-    private static $_positionXLref = array(self::xlLegendPositionBottom => self::POSITION_BOTTOM, self::xlLegendPositionCorner => self::POSITION_TOPRIGHT, self::xlLegendPositionCustom => '??', self::xlLegendPositionLeft => self::POSITION_LEFT, self::xlLegendPositionRight => self::POSITION_RIGHT, self::xlLegendPositionTop => self::POSITION_TOP);
+    private static $_positionXLref = array(
+        self::xlLegendPositionBottom => self::POSITION_BOTTOM,
+        self::xlLegendPositionCorner => self::POSITION_TOPRIGHT,
+        self::xlLegendPositionCustom => '??',
+        self::xlLegendPositionLeft => self::POSITION_LEFT,
+        self::xlLegendPositionRight => self::POSITION_RIGHT,
+        self::xlLegendPositionTop => self::POSITION_TOP
+    );
 
     /**
      * Legend position

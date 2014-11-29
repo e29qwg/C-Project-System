@@ -817,7 +817,10 @@ class PHPExcel_ReferenceHelper
     protected function _adjustPageBreaks(PHPExcel_Worksheet $pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows)
     {
         $aBreaks = $pSheet->getBreaks();
-        ($pNumCols > 0 || $pNumRows > 0) ? uksort($aBreaks, array('PHPExcel_ReferenceHelper', 'cellReverseSort')) : uksort($aBreaks, array('PHPExcel_ReferenceHelper', 'cellSort'));
+        ($pNumCols > 0 || $pNumRows > 0) ? uksort($aBreaks, array(
+                'PHPExcel_ReferenceHelper',
+                'cellReverseSort'
+            )) : uksort($aBreaks, array('PHPExcel_ReferenceHelper', 'cellSort'));
 
         foreach ($aBreaks as $key => $value)
         {
@@ -910,7 +913,10 @@ class PHPExcel_ReferenceHelper
     protected function _adjustHyperlinks($pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows)
     {
         $aHyperlinkCollection = $pSheet->getHyperlinkCollection();
-        ($pNumCols > 0 || $pNumRows > 0) ? uksort($aHyperlinkCollection, array('PHPExcel_ReferenceHelper', 'cellReverseSort')) : uksort($aHyperlinkCollection, array('PHPExcel_ReferenceHelper', 'cellSort'));
+        ($pNumCols > 0 || $pNumRows > 0) ? uksort($aHyperlinkCollection, array(
+                'PHPExcel_ReferenceHelper',
+                'cellReverseSort'
+            )) : uksort($aHyperlinkCollection, array('PHPExcel_ReferenceHelper', 'cellSort'));
 
         foreach ($aHyperlinkCollection as $key => $value)
         {
@@ -936,7 +942,10 @@ class PHPExcel_ReferenceHelper
     protected function _adjustDataValidations($pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows)
     {
         $aDataValidationCollection = $pSheet->getDataValidationCollection();
-        ($pNumCols > 0 || $pNumRows > 0) ? uksort($aDataValidationCollection, array('PHPExcel_ReferenceHelper', 'cellReverseSort')) : uksort($aDataValidationCollection, array('PHPExcel_ReferenceHelper', 'cellSort'));
+        ($pNumCols > 0 || $pNumRows > 0) ? uksort($aDataValidationCollection, array(
+                'PHPExcel_ReferenceHelper',
+                'cellReverseSort'
+            )) : uksort($aDataValidationCollection, array('PHPExcel_ReferenceHelper', 'cellSort'));
         foreach ($aDataValidationCollection as $key => $value)
         {
             $newReference = $this->updateCellReference($key, $pBefore, $pNumCols, $pNumRows);
@@ -983,7 +992,10 @@ class PHPExcel_ReferenceHelper
     protected function _adjustProtectedCells($pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows)
     {
         $aProtectedCells = $pSheet->getProtectedCells();
-        ($pNumCols > 0 || $pNumRows > 0) ? uksort($aProtectedCells, array('PHPExcel_ReferenceHelper', 'cellReverseSort')) : uksort($aProtectedCells, array('PHPExcel_ReferenceHelper', 'cellSort'));
+        ($pNumCols > 0 || $pNumRows > 0) ? uksort($aProtectedCells, array(
+                'PHPExcel_ReferenceHelper',
+                'cellReverseSort'
+            )) : uksort($aProtectedCells, array('PHPExcel_ReferenceHelper', 'cellSort'));
         foreach ($aProtectedCells as $key => $value)
         {
             $newReference = $this->updateCellReference($key, $pBefore, $pNumCols, $pNumRows);

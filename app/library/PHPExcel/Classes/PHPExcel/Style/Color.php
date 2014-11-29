@@ -209,7 +209,8 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
         // Indexed colors
         if (is_null(self::$_indexedColors))
         {
-            self::$_indexedColors = array(1 => 'FF000000',    //	System Colour #1 - Black
+            self::$_indexedColors = array(
+                1 => 'FF000000',    //	System Colour #1 - Black
                 2 => 'FFFFFFFF',    //	System Colour #2 - White
                 3 => 'FFFF0000',    //	System Colour #3 - Red
                 4 => 'FF00FF00',    //	System Colour #4 - Green

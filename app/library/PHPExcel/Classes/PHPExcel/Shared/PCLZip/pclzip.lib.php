@@ -302,8 +302,18 @@ class PclZip
             {
 
                 // ----- Parse the options
-                $v_result = $this->privParseOptions($v_arg_list, $v_size, $v_options, array(PCLZIP_OPT_REMOVE_PATH => 'optional', PCLZIP_OPT_REMOVE_ALL_PATH => 'optional', PCLZIP_OPT_ADD_PATH => 'optional', PCLZIP_CB_PRE_ADD => 'optional', PCLZIP_CB_POST_ADD => 'optional', PCLZIP_OPT_NO_COMPRESSION => 'optional', PCLZIP_OPT_COMMENT => 'optional', PCLZIP_OPT_TEMP_FILE_THRESHOLD => 'optional', PCLZIP_OPT_TEMP_FILE_ON => 'optional', PCLZIP_OPT_TEMP_FILE_OFF => 'optional'//, PCLZIP_OPT_CRYPT => 'optional'
-                    ));
+                $v_result = $this->privParseOptions($v_arg_list, $v_size, $v_options, array(
+                    PCLZIP_OPT_REMOVE_PATH => 'optional',
+                    PCLZIP_OPT_REMOVE_ALL_PATH => 'optional',
+                    PCLZIP_OPT_ADD_PATH => 'optional',
+                    PCLZIP_CB_PRE_ADD => 'optional',
+                    PCLZIP_CB_POST_ADD => 'optional',
+                    PCLZIP_OPT_NO_COMPRESSION => 'optional',
+                    PCLZIP_OPT_COMMENT => 'optional',
+                    PCLZIP_OPT_TEMP_FILE_THRESHOLD => 'optional',
+                    PCLZIP_OPT_TEMP_FILE_ON => 'optional',
+                    PCLZIP_OPT_TEMP_FILE_OFF => 'optional'//, PCLZIP_OPT_CRYPT => 'optional'
+                ));
                 if ($v_result != 1)
                 {
                     return 0;
@@ -383,7 +393,14 @@ class PclZip
         }
 
         // ----- For each file in the list check the attributes
-        $v_supported_attributes = array(PCLZIP_ATT_FILE_NAME => 'mandatory', PCLZIP_ATT_FILE_NEW_SHORT_NAME => 'optional', PCLZIP_ATT_FILE_NEW_FULL_NAME => 'optional', PCLZIP_ATT_FILE_MTIME => 'optional', PCLZIP_ATT_FILE_CONTENT => 'optional', PCLZIP_ATT_FILE_COMMENT => 'optional');
+        $v_supported_attributes = array(
+            PCLZIP_ATT_FILE_NAME => 'mandatory',
+            PCLZIP_ATT_FILE_NEW_SHORT_NAME => 'optional',
+            PCLZIP_ATT_FILE_NEW_FULL_NAME => 'optional',
+            PCLZIP_ATT_FILE_MTIME => 'optional',
+            PCLZIP_ATT_FILE_CONTENT => 'optional',
+            PCLZIP_ATT_FILE_COMMENT => 'optional'
+        );
         foreach ($v_att_list as $v_entry)
         {
             $v_result = $this->privFileDescrParseAtt($v_entry, $v_filedescr_list[], $v_options, $v_supported_attributes);
@@ -2432,8 +2449,20 @@ class PclZip
             {
 
                 // ----- Parse the options
-                $v_result = $this->privParseOptions($v_arg_list, $v_size, $v_options, array(PCLZIP_OPT_REMOVE_PATH => 'optional', PCLZIP_OPT_REMOVE_ALL_PATH => 'optional', PCLZIP_OPT_ADD_PATH => 'optional', PCLZIP_CB_PRE_ADD => 'optional', PCLZIP_CB_POST_ADD => 'optional', PCLZIP_OPT_NO_COMPRESSION => 'optional', PCLZIP_OPT_COMMENT => 'optional', PCLZIP_OPT_ADD_COMMENT => 'optional', PCLZIP_OPT_PREPEND_COMMENT => 'optional', PCLZIP_OPT_TEMP_FILE_THRESHOLD => 'optional', PCLZIP_OPT_TEMP_FILE_ON => 'optional', PCLZIP_OPT_TEMP_FILE_OFF => 'optional'//, PCLZIP_OPT_CRYPT => 'optional'
-                    ));
+                $v_result = $this->privParseOptions($v_arg_list, $v_size, $v_options, array(
+                    PCLZIP_OPT_REMOVE_PATH => 'optional',
+                    PCLZIP_OPT_REMOVE_ALL_PATH => 'optional',
+                    PCLZIP_OPT_ADD_PATH => 'optional',
+                    PCLZIP_CB_PRE_ADD => 'optional',
+                    PCLZIP_CB_POST_ADD => 'optional',
+                    PCLZIP_OPT_NO_COMPRESSION => 'optional',
+                    PCLZIP_OPT_COMMENT => 'optional',
+                    PCLZIP_OPT_ADD_COMMENT => 'optional',
+                    PCLZIP_OPT_PREPEND_COMMENT => 'optional',
+                    PCLZIP_OPT_TEMP_FILE_THRESHOLD => 'optional',
+                    PCLZIP_OPT_TEMP_FILE_ON => 'optional',
+                    PCLZIP_OPT_TEMP_FILE_OFF => 'optional'//, PCLZIP_OPT_CRYPT => 'optional'
+                ));
                 if ($v_result != 1)
                 {
                     return 0;
@@ -2510,7 +2539,14 @@ class PclZip
         }
 
         // ----- For each file in the list check the attributes
-        $v_supported_attributes = array(PCLZIP_ATT_FILE_NAME => 'mandatory', PCLZIP_ATT_FILE_NEW_SHORT_NAME => 'optional', PCLZIP_ATT_FILE_NEW_FULL_NAME => 'optional', PCLZIP_ATT_FILE_MTIME => 'optional', PCLZIP_ATT_FILE_CONTENT => 'optional', PCLZIP_ATT_FILE_COMMENT => 'optional');
+        $v_supported_attributes = array(
+            PCLZIP_ATT_FILE_NAME => 'mandatory',
+            PCLZIP_ATT_FILE_NEW_SHORT_NAME => 'optional',
+            PCLZIP_ATT_FILE_NEW_FULL_NAME => 'optional',
+            PCLZIP_ATT_FILE_MTIME => 'optional',
+            PCLZIP_ATT_FILE_CONTENT => 'optional',
+            PCLZIP_ATT_FILE_COMMENT => 'optional'
+        );
         foreach ($v_att_list as $v_entry)
         {
             $v_result = $this->privFileDescrParseAtt($v_entry, $v_filedescr_list[], $v_options, $v_supported_attributes);
@@ -3199,7 +3235,27 @@ class PclZip
             {
 
                 // ----- Parse the options
-                $v_result = $this->privParseOptions($v_arg_list, $v_size, $v_options, array(PCLZIP_OPT_PATH => 'optional', PCLZIP_OPT_REMOVE_PATH => 'optional', PCLZIP_OPT_REMOVE_ALL_PATH => 'optional', PCLZIP_OPT_ADD_PATH => 'optional', PCLZIP_CB_PRE_EXTRACT => 'optional', PCLZIP_CB_POST_EXTRACT => 'optional', PCLZIP_OPT_SET_CHMOD => 'optional', PCLZIP_OPT_BY_NAME => 'optional', PCLZIP_OPT_BY_EREG => 'optional', PCLZIP_OPT_BY_PREG => 'optional', PCLZIP_OPT_BY_INDEX => 'optional', PCLZIP_OPT_EXTRACT_AS_STRING => 'optional', PCLZIP_OPT_EXTRACT_IN_OUTPUT => 'optional', PCLZIP_OPT_REPLACE_NEWER => 'optional', PCLZIP_OPT_STOP_ON_ERROR => 'optional', PCLZIP_OPT_EXTRACT_DIR_RESTRICTION => 'optional', PCLZIP_OPT_TEMP_FILE_THRESHOLD => 'optional', PCLZIP_OPT_TEMP_FILE_ON => 'optional', PCLZIP_OPT_TEMP_FILE_OFF => 'optional'));
+                $v_result = $this->privParseOptions($v_arg_list, $v_size, $v_options, array(
+                        PCLZIP_OPT_PATH => 'optional',
+                        PCLZIP_OPT_REMOVE_PATH => 'optional',
+                        PCLZIP_OPT_REMOVE_ALL_PATH => 'optional',
+                        PCLZIP_OPT_ADD_PATH => 'optional',
+                        PCLZIP_CB_PRE_EXTRACT => 'optional',
+                        PCLZIP_CB_POST_EXTRACT => 'optional',
+                        PCLZIP_OPT_SET_CHMOD => 'optional',
+                        PCLZIP_OPT_BY_NAME => 'optional',
+                        PCLZIP_OPT_BY_EREG => 'optional',
+                        PCLZIP_OPT_BY_PREG => 'optional',
+                        PCLZIP_OPT_BY_INDEX => 'optional',
+                        PCLZIP_OPT_EXTRACT_AS_STRING => 'optional',
+                        PCLZIP_OPT_EXTRACT_IN_OUTPUT => 'optional',
+                        PCLZIP_OPT_REPLACE_NEWER => 'optional',
+                        PCLZIP_OPT_STOP_ON_ERROR => 'optional',
+                        PCLZIP_OPT_EXTRACT_DIR_RESTRICTION => 'optional',
+                        PCLZIP_OPT_TEMP_FILE_THRESHOLD => 'optional',
+                        PCLZIP_OPT_TEMP_FILE_ON => 'optional',
+                        PCLZIP_OPT_TEMP_FILE_OFF => 'optional'
+                    ));
                 if ($v_result != 1)
                 {
                     return 0;
@@ -4599,7 +4655,22 @@ class PclZip
             {
 
                 // ----- Parse the options
-                $v_result = $this->privParseOptions($v_arg_list, $v_size, $v_options, array(PCLZIP_OPT_PATH => 'optional', PCLZIP_OPT_REMOVE_PATH => 'optional', PCLZIP_OPT_REMOVE_ALL_PATH => 'optional', PCLZIP_OPT_EXTRACT_AS_STRING => 'optional', PCLZIP_OPT_ADD_PATH => 'optional', PCLZIP_CB_PRE_EXTRACT => 'optional', PCLZIP_CB_POST_EXTRACT => 'optional', PCLZIP_OPT_SET_CHMOD => 'optional', PCLZIP_OPT_REPLACE_NEWER => 'optional', PCLZIP_OPT_STOP_ON_ERROR => 'optional', PCLZIP_OPT_EXTRACT_DIR_RESTRICTION => 'optional', PCLZIP_OPT_TEMP_FILE_THRESHOLD => 'optional', PCLZIP_OPT_TEMP_FILE_ON => 'optional', PCLZIP_OPT_TEMP_FILE_OFF => 'optional'));
+                $v_result = $this->privParseOptions($v_arg_list, $v_size, $v_options, array(
+                        PCLZIP_OPT_PATH => 'optional',
+                        PCLZIP_OPT_REMOVE_PATH => 'optional',
+                        PCLZIP_OPT_REMOVE_ALL_PATH => 'optional',
+                        PCLZIP_OPT_EXTRACT_AS_STRING => 'optional',
+                        PCLZIP_OPT_ADD_PATH => 'optional',
+                        PCLZIP_CB_PRE_EXTRACT => 'optional',
+                        PCLZIP_CB_POST_EXTRACT => 'optional',
+                        PCLZIP_OPT_SET_CHMOD => 'optional',
+                        PCLZIP_OPT_REPLACE_NEWER => 'optional',
+                        PCLZIP_OPT_STOP_ON_ERROR => 'optional',
+                        PCLZIP_OPT_EXTRACT_DIR_RESTRICTION => 'optional',
+                        PCLZIP_OPT_TEMP_FILE_THRESHOLD => 'optional',
+                        PCLZIP_OPT_TEMP_FILE_ON => 'optional',
+                        PCLZIP_OPT_TEMP_FILE_OFF => 'optional'
+                    ));
                 if ($v_result != 1)
                 {
                     return 0;
@@ -4741,7 +4812,12 @@ class PclZip
             $v_arg_list = func_get_args();
 
             // ----- Parse the options
-            $v_result = $this->privParseOptions($v_arg_list, $v_size, $v_options, array(PCLZIP_OPT_BY_NAME => 'optional', PCLZIP_OPT_BY_EREG => 'optional', PCLZIP_OPT_BY_PREG => 'optional', PCLZIP_OPT_BY_INDEX => 'optional'));
+            $v_result = $this->privParseOptions($v_arg_list, $v_size, $v_options, array(
+                    PCLZIP_OPT_BY_NAME => 'optional',
+                    PCLZIP_OPT_BY_EREG => 'optional',
+                    PCLZIP_OPT_BY_PREG => 'optional',
+                    PCLZIP_OPT_BY_INDEX => 'optional'
+                ));
             if ($v_result != 1)
             {
                 return 0;
@@ -5553,7 +5629,29 @@ class PclZip
 
     function errorName($p_with_code = false)
     {
-        $v_name = array(PCLZIP_ERR_NO_ERROR => 'PCLZIP_ERR_NO_ERROR', PCLZIP_ERR_WRITE_OPEN_FAIL => 'PCLZIP_ERR_WRITE_OPEN_FAIL', PCLZIP_ERR_READ_OPEN_FAIL => 'PCLZIP_ERR_READ_OPEN_FAIL', PCLZIP_ERR_INVALID_PARAMETER => 'PCLZIP_ERR_INVALID_PARAMETER', PCLZIP_ERR_MISSING_FILE => 'PCLZIP_ERR_MISSING_FILE', PCLZIP_ERR_FILENAME_TOO_LONG => 'PCLZIP_ERR_FILENAME_TOO_LONG', PCLZIP_ERR_INVALID_ZIP => 'PCLZIP_ERR_INVALID_ZIP', PCLZIP_ERR_BAD_EXTRACTED_FILE => 'PCLZIP_ERR_BAD_EXTRACTED_FILE', PCLZIP_ERR_DIR_CREATE_FAIL => 'PCLZIP_ERR_DIR_CREATE_FAIL', PCLZIP_ERR_BAD_EXTENSION => 'PCLZIP_ERR_BAD_EXTENSION', PCLZIP_ERR_BAD_FORMAT => 'PCLZIP_ERR_BAD_FORMAT', PCLZIP_ERR_DELETE_FILE_FAIL => 'PCLZIP_ERR_DELETE_FILE_FAIL', PCLZIP_ERR_RENAME_FILE_FAIL => 'PCLZIP_ERR_RENAME_FILE_FAIL', PCLZIP_ERR_BAD_CHECKSUM => 'PCLZIP_ERR_BAD_CHECKSUM', PCLZIP_ERR_INVALID_ARCHIVE_ZIP => 'PCLZIP_ERR_INVALID_ARCHIVE_ZIP', PCLZIP_ERR_MISSING_OPTION_VALUE => 'PCLZIP_ERR_MISSING_OPTION_VALUE', PCLZIP_ERR_INVALID_OPTION_VALUE => 'PCLZIP_ERR_INVALID_OPTION_VALUE', PCLZIP_ERR_UNSUPPORTED_COMPRESSION => 'PCLZIP_ERR_UNSUPPORTED_COMPRESSION', PCLZIP_ERR_UNSUPPORTED_ENCRYPTION => 'PCLZIP_ERR_UNSUPPORTED_ENCRYPTION', PCLZIP_ERR_INVALID_ATTRIBUTE_VALUE => 'PCLZIP_ERR_INVALID_ATTRIBUTE_VALUE', PCLZIP_ERR_DIRECTORY_RESTRICTION => 'PCLZIP_ERR_DIRECTORY_RESTRICTION');
+        $v_name = array(
+            PCLZIP_ERR_NO_ERROR => 'PCLZIP_ERR_NO_ERROR',
+            PCLZIP_ERR_WRITE_OPEN_FAIL => 'PCLZIP_ERR_WRITE_OPEN_FAIL',
+            PCLZIP_ERR_READ_OPEN_FAIL => 'PCLZIP_ERR_READ_OPEN_FAIL',
+            PCLZIP_ERR_INVALID_PARAMETER => 'PCLZIP_ERR_INVALID_PARAMETER',
+            PCLZIP_ERR_MISSING_FILE => 'PCLZIP_ERR_MISSING_FILE',
+            PCLZIP_ERR_FILENAME_TOO_LONG => 'PCLZIP_ERR_FILENAME_TOO_LONG',
+            PCLZIP_ERR_INVALID_ZIP => 'PCLZIP_ERR_INVALID_ZIP',
+            PCLZIP_ERR_BAD_EXTRACTED_FILE => 'PCLZIP_ERR_BAD_EXTRACTED_FILE',
+            PCLZIP_ERR_DIR_CREATE_FAIL => 'PCLZIP_ERR_DIR_CREATE_FAIL',
+            PCLZIP_ERR_BAD_EXTENSION => 'PCLZIP_ERR_BAD_EXTENSION',
+            PCLZIP_ERR_BAD_FORMAT => 'PCLZIP_ERR_BAD_FORMAT',
+            PCLZIP_ERR_DELETE_FILE_FAIL => 'PCLZIP_ERR_DELETE_FILE_FAIL',
+            PCLZIP_ERR_RENAME_FILE_FAIL => 'PCLZIP_ERR_RENAME_FILE_FAIL',
+            PCLZIP_ERR_BAD_CHECKSUM => 'PCLZIP_ERR_BAD_CHECKSUM',
+            PCLZIP_ERR_INVALID_ARCHIVE_ZIP => 'PCLZIP_ERR_INVALID_ARCHIVE_ZIP',
+            PCLZIP_ERR_MISSING_OPTION_VALUE => 'PCLZIP_ERR_MISSING_OPTION_VALUE',
+            PCLZIP_ERR_INVALID_OPTION_VALUE => 'PCLZIP_ERR_INVALID_OPTION_VALUE',
+            PCLZIP_ERR_UNSUPPORTED_COMPRESSION => 'PCLZIP_ERR_UNSUPPORTED_COMPRESSION',
+            PCLZIP_ERR_UNSUPPORTED_ENCRYPTION => 'PCLZIP_ERR_UNSUPPORTED_ENCRYPTION',
+            PCLZIP_ERR_INVALID_ATTRIBUTE_VALUE => 'PCLZIP_ERR_INVALID_ATTRIBUTE_VALUE',
+            PCLZIP_ERR_DIRECTORY_RESTRICTION => 'PCLZIP_ERR_DIRECTORY_RESTRICTION'
+        );
 
         if (isset($v_name[$this->error_code]))
         {

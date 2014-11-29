@@ -50,7 +50,13 @@ $projects = Project::find("project_status='Accept'");
                         $this->tag->setDefault("coadvisor[]", $coadvisors[$i]['user_id']);
                     else
                         $this->tag->setDefault("coadvisor[]", "");
-                    echo $this->tag->select(array('coadvisor[]', User::find("type='Advisor'"), 'using' => array('id', 'name'), 'class' => 'form-control', 'useEmpty' => true));
+                    echo $this->tag->select(array(
+                            'coadvisor[]',
+                            User::find("type='Advisor'"),
+                            'using' => array('id', 'name'),
+                            'class' => 'form-control',
+                            'useEmpty' => true
+                        ));
                     echo '</td>';
                 }
 

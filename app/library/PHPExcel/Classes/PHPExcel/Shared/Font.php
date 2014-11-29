@@ -113,7 +113,45 @@ class PHPExcel_Shared_Font
      *
      * @var array
      */
-    public static $defaultColumnWidths = array('Arial' => array(1 => array('px' => 24, 'width' => 12.00000000), 2 => array('px' => 24, 'width' => 12.00000000), 3 => array('px' => 32, 'width' => 10.66406250), 4 => array('px' => 32, 'width' => 10.66406250), 5 => array('px' => 40, 'width' => 10.00000000), 6 => array('px' => 48, 'width' => 9.59765625), 7 => array('px' => 48, 'width' => 9.59765625), 8 => array('px' => 56, 'width' => 9.33203125), 9 => array('px' => 64, 'width' => 9.14062500), 10 => array('px' => 64, 'width' => 9.14062500),), 'Calibri' => array(1 => array('px' => 24, 'width' => 12.00000000), 2 => array('px' => 24, 'width' => 12.00000000), 3 => array('px' => 32, 'width' => 10.66406250), 4 => array('px' => 32, 'width' => 10.66406250), 5 => array('px' => 40, 'width' => 10.00000000), 6 => array('px' => 48, 'width' => 9.59765625), 7 => array('px' => 48, 'width' => 9.59765625), 8 => array('px' => 56, 'width' => 9.33203125), 9 => array('px' => 56, 'width' => 9.33203125), 10 => array('px' => 64, 'width' => 9.14062500), 11 => array('px' => 64, 'width' => 9.14062500),), 'Verdana' => array(1 => array('px' => 24, 'width' => 12.00000000), 2 => array('px' => 24, 'width' => 12.00000000), 3 => array('px' => 32, 'width' => 10.66406250), 4 => array('px' => 32, 'width' => 10.66406250), 5 => array('px' => 40, 'width' => 10.00000000), 6 => array('px' => 48, 'width' => 9.59765625), 7 => array('px' => 48, 'width' => 9.59765625), 8 => array('px' => 64, 'width' => 9.14062500), 9 => array('px' => 72, 'width' => 9.00000000), 10 => array('px' => 72, 'width' => 9.00000000),),);
+    public static $defaultColumnWidths = array(
+        'Arial' => array(
+            1 => array('px' => 24, 'width' => 12.00000000),
+            2 => array('px' => 24, 'width' => 12.00000000),
+            3 => array('px' => 32, 'width' => 10.66406250),
+            4 => array('px' => 32, 'width' => 10.66406250),
+            5 => array('px' => 40, 'width' => 10.00000000),
+            6 => array('px' => 48, 'width' => 9.59765625),
+            7 => array('px' => 48, 'width' => 9.59765625),
+            8 => array('px' => 56, 'width' => 9.33203125),
+            9 => array('px' => 64, 'width' => 9.14062500),
+            10 => array('px' => 64, 'width' => 9.14062500),
+        ),
+        'Calibri' => array(
+            1 => array('px' => 24, 'width' => 12.00000000),
+            2 => array('px' => 24, 'width' => 12.00000000),
+            3 => array('px' => 32, 'width' => 10.66406250),
+            4 => array('px' => 32, 'width' => 10.66406250),
+            5 => array('px' => 40, 'width' => 10.00000000),
+            6 => array('px' => 48, 'width' => 9.59765625),
+            7 => array('px' => 48, 'width' => 9.59765625),
+            8 => array('px' => 56, 'width' => 9.33203125),
+            9 => array('px' => 56, 'width' => 9.33203125),
+            10 => array('px' => 64, 'width' => 9.14062500),
+            11 => array('px' => 64, 'width' => 9.14062500),
+        ),
+        'Verdana' => array(
+            1 => array('px' => 24, 'width' => 12.00000000),
+            2 => array('px' => 24, 'width' => 12.00000000),
+            3 => array('px' => 32, 'width' => 10.66406250),
+            4 => array('px' => 32, 'width' => 10.66406250),
+            5 => array('px' => 40, 'width' => 10.00000000),
+            6 => array('px' => 48, 'width' => 9.59765625),
+            7 => array('px' => 48, 'width' => 9.59765625),
+            8 => array('px' => 64, 'width' => 9.14062500),
+            9 => array('px' => 72, 'width' => 9.00000000),
+            10 => array('px' => 72, 'width' => 9.00000000),
+        ),
+    );
     private static $_autoSizeMethods = array(self::AUTOSIZE_METHOD_APPROX, self::AUTOSIZE_METHOD_EXACT,);
     /**
      * AutoSize method

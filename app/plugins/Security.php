@@ -53,7 +53,13 @@ class Security extends \Phalcon\Mvc\User\Plugin
             $acl = new Phalcon\Acl\Adapter\Memory();
             $acl->setDefaultAction(Phalcon\Acl::DENY);
 
-            $roles = array('Admin' => new Phalcon\Acl\Role('Admin'), 'Student' => new Phalcon\Acl\Role('Student'), 'Advisor' => new Phalcon\Acl\Role('Advisor'), 'Staff' => new Phalcon\Acl\Role('Staff'), 'Guest' => new Phalcon\Acl\Role('Guest'));
+            $roles = array(
+                'Admin' => new Phalcon\Acl\Role('Admin'),
+                'Student' => new Phalcon\Acl\Role('Student'),
+                'Advisor' => new Phalcon\Acl\Role('Advisor'),
+                'Staff' => new Phalcon\Acl\Role('Staff'),
+                'Guest' => new Phalcon\Acl\Role('Guest')
+            );
 
             foreach ($roles as $role)
             {
@@ -81,7 +87,35 @@ class Security extends \Phalcon\Mvc\User\Plugin
             }
 
             //Student acl
-            $studentResources = array('student' => array('*'), 'projects' => array('newProject', 'doNewProject', 'me', 'manage', 'delete', 'editSetting', 'member', 'addmember', 'doAddMember', 'deletemember',), 'progress' => array('index', 'newProgress', 'doAddProgress', 'view', 'delete', 'edit', 'doEdit', 'exportPDF'), 'advisor' => array('advisorList'), 'profile' => array('*'), 'exam' => array('showExam'), 'score' => array('studentView'));
+            $studentResources = array(
+                'student' => array('*'),
+                'projects' => array(
+                    'newProject',
+                    'doNewProject',
+                    'me',
+                    'manage',
+                    'delete',
+                    'editSetting',
+                    'member',
+                    'addmember',
+                    'doAddMember',
+                    'deletemember',
+                ),
+                'progress' => array(
+                    'index',
+                    'newProgress',
+                    'doAddProgress',
+                    'view',
+                    'delete',
+                    'edit',
+                    'doEdit',
+                    'exportPDF'
+                ),
+                'advisor' => array('advisorList'),
+                'profile' => array('*'),
+                'exam' => array('showExam'),
+                'score' => array('studentView')
+            );
 
             foreach ($studentResources as $resource => $actions)
             {
@@ -98,7 +132,35 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 }
             }
 
-            $advisorResources = array('advisor' => array('*'), 'projects' => array('manage', 'delete', 'editSetting', 'member', 'addmember', 'doAddMember', 'deletemember', 'proposed', 'accept', 'reject'), 'progress' => array('view', 'evaluate', 'doEvaluate', 'index', 'newProgress', 'doAddProgress', 'delete', 'edit', 'doEdit'), 'profile' => array('*'), 'exam' => array('download', 'showExam'), 'score' => array('advisorView'));
+            $advisorResources = array(
+                'advisor' => array('*'),
+                'projects' => array(
+                    'manage',
+                    'delete',
+                    'editSetting',
+                    'member',
+                    'addmember',
+                    'doAddMember',
+                    'deletemember',
+                    'proposed',
+                    'accept',
+                    'reject'
+                ),
+                'progress' => array(
+                    'view',
+                    'evaluate',
+                    'doEvaluate',
+                    'index',
+                    'newProgress',
+                    'doAddProgress',
+                    'delete',
+                    'edit',
+                    'doEdit'
+                ),
+                'profile' => array('*'),
+                'exam' => array('download', 'showExam'),
+                'score' => array('advisorView')
+            );
 
             foreach ($advisorResources as $resource => $actions)
             {
@@ -115,7 +177,14 @@ class Security extends \Phalcon\Mvc\User\Plugin
             }
 
             //admin acl
-            $adminResources = array('admin' => array('*'), 'profile' => array('*'), 'score' => array('*'), 'exam' => array('*'), 'news' => array('*'), 'settings' => array('*'));
+            $adminResources = array(
+                'admin' => array('*'),
+                'profile' => array('*'),
+                'score' => array('*'),
+                'exam' => array('*'),
+                'news' => array('*'),
+                'settings' => array('*')
+            );
 
             foreach ($adminResources as $resource => $actions)
             {

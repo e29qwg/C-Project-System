@@ -109,7 +109,11 @@ class ProjectsController extends ControllerBase
         //TODO
         $ncoadvisor = 0;
 
-        $coadvisors = User::find(array("conditions" => "advisor_group='$advisor->advisor_group' AND id!='$advisor->id' AND type='Advisor'", "limit" => $ncoadvisor, "order" => "work_load ASC"));
+        $coadvisors = User::find(array(
+                "conditions" => "advisor_group='$advisor->advisor_group' AND id!='$advisor->id' AND type='Advisor'",
+                "limit" => $ncoadvisor,
+                "order" => "work_load ASC"
+            ));
 
         foreach ($coadvisors as $coadvisor)
         {
@@ -266,7 +270,11 @@ class ProjectsController extends ControllerBase
         if (empty($project_id) || empty($member_id))
         {
             $this->flash->error('User not found');
-            return $this->dispatcher->forward(array('controller' => 'projects', 'action' => 'addmember', 'params' => array($project_id)));
+            return $this->dispatcher->forward(array(
+                    'controller' => 'projects',
+                    'action' => 'addmember',
+                    'params' => array($project_id)
+                ));
         }
 
         //check users exists
@@ -275,7 +283,11 @@ class ProjectsController extends ControllerBase
         if (!$user)
         {
             $this->flash->error('User not found');
-            return $this->dispatcher->forward(array('controller' => 'projects', 'action' => 'addmember', 'params' => array($project_id)));
+            return $this->dispatcher->forward(array(
+                    'controller' => 'projects',
+                    'action' => 'addmember',
+                    'params' => array($project_id)
+                ));
         }
 
         //check project exists
@@ -289,7 +301,11 @@ class ProjectsController extends ControllerBase
         if ($project->project_status == 'Accept')
         {
             $this->flash->error('Access denied: Project already accepted');
-            return $this->dispatcher->forward(array('controller' => 'projects', 'action' => 'addmember', 'params' => array($project_id)));
+            return $this->dispatcher->forward(array(
+                    'controller' => 'projects',
+                    'action' => 'addmember',
+                    'params' => array($project_id)
+                ));
         }
 
         //check exists new member project
@@ -309,7 +325,11 @@ class ProjectsController extends ControllerBase
             foreach ($records as $record)
             {
                 $this->flash->error('User has only one project');
-                return $this->dispatcher->forward(array('controller' => 'projects', 'action' => 'addmember', 'params' => array($project_id)));
+                return $this->dispatcher->forward(array(
+                        'controller' => 'projects',
+                        'action' => 'addmember',
+                        'params' => array($project_id)
+                    ));
             }
         }
 
@@ -346,7 +366,11 @@ class ProjectsController extends ControllerBase
         }
 
         $this->flash->success('Add member success');
-        return $this->dispatcher->forward(array('controller' => 'projects', 'action' => 'member', 'params' => array($project_id)));
+        return $this->dispatcher->forward(array(
+                'controller' => 'projects',
+                'action' => 'member',
+                'params' => array($project_id)
+            ));
     }
 
     //show member list in current project

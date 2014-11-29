@@ -3,7 +3,15 @@
 class Elements extends Phalcon\Mvc\User\Component
 {
 
-    private $_headerMenu = array('pull-left' => array('mainmenu' => array('caption' => 'Home', 'action' => 'index', 'active' => 'index'),),);
+    private $_headerMenu = array(
+        'pull-left' => array(
+            'mainmenu' => array(
+                'caption' => 'Home',
+                'action' => 'index',
+                'active' => 'index'
+            ),
+        ),
+    );
 
 
     public function getMenu()

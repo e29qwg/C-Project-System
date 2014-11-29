@@ -1,7 +1,5 @@
 <?php
 
-use Phalcon\Mvc\Model\Validator\Uniqueness;
-
 class Project extends \Phalcon\Mvc\Model
 {
     public $project_id;

@@ -44,7 +44,11 @@ if ($auth['type'] != 'Admin')
                     <td><?= $advisor->title . $advisor->name; ?></td>
                     <td>
                         <?=
-                        $this->tag->numericField(array('quota[]', 'class' => 'form-control', 'value' => $quota->quota_pp));
+                        $this->tag->numericField(array(
+                                'quota[]',
+                                'class' => 'form-control',
+                                'value' => $quota->quota_pp
+                            ));
                         ?>
                         <input type="hidden" name="id[]" value="<?= $quota->advisor_id; ?>">
                     </td>

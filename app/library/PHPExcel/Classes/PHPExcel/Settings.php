@@ -54,7 +54,11 @@ class PHPExcel_Settings
 
     private static $_chartRenderers = array(self::CHART_RENDERER_JPGRAPH,);
 
-    private static $_pdfRenderers = array(self::PDF_RENDERER_TCPDF, self::PDF_RENDERER_DOMPDF, self::PDF_RENDERER_MPDF,);
+    private static $_pdfRenderers = array(
+        self::PDF_RENDERER_TCPDF,
+        self::PDF_RENDERER_DOMPDF,
+        self::PDF_RENDERER_MPDF,
+    );
 
 
     /**

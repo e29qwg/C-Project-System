@@ -302,9 +302,27 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
         $fromFormats = array('\-', '\ ');
         $toFormats = array('-', ' ');
 
-        $underlineStyles = array(PHPExcel_Style_Font::UNDERLINE_NONE, PHPExcel_Style_Font::UNDERLINE_DOUBLE, PHPExcel_Style_Font::UNDERLINE_DOUBLEACCOUNTING, PHPExcel_Style_Font::UNDERLINE_SINGLE, PHPExcel_Style_Font::UNDERLINE_SINGLEACCOUNTING);
-        $verticalAlignmentStyles = array(PHPExcel_Style_Alignment::VERTICAL_BOTTOM, PHPExcel_Style_Alignment::VERTICAL_TOP, PHPExcel_Style_Alignment::VERTICAL_CENTER, PHPExcel_Style_Alignment::VERTICAL_JUSTIFY);
-        $horizontalAlignmentStyles = array(PHPExcel_Style_Alignment::HORIZONTAL_GENERAL, PHPExcel_Style_Alignment::HORIZONTAL_LEFT, PHPExcel_Style_Alignment::HORIZONTAL_RIGHT, PHPExcel_Style_Alignment::HORIZONTAL_CENTER, PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, PHPExcel_Style_Alignment::HORIZONTAL_JUSTIFY);
+        $underlineStyles = array(
+            PHPExcel_Style_Font::UNDERLINE_NONE,
+            PHPExcel_Style_Font::UNDERLINE_DOUBLE,
+            PHPExcel_Style_Font::UNDERLINE_DOUBLEACCOUNTING,
+            PHPExcel_Style_Font::UNDERLINE_SINGLE,
+            PHPExcel_Style_Font::UNDERLINE_SINGLEACCOUNTING
+        );
+        $verticalAlignmentStyles = array(
+            PHPExcel_Style_Alignment::VERTICAL_BOTTOM,
+            PHPExcel_Style_Alignment::VERTICAL_TOP,
+            PHPExcel_Style_Alignment::VERTICAL_CENTER,
+            PHPExcel_Style_Alignment::VERTICAL_JUSTIFY
+        );
+        $horizontalAlignmentStyles = array(
+            PHPExcel_Style_Alignment::HORIZONTAL_GENERAL,
+            PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+            PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
+            PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS,
+            PHPExcel_Style_Alignment::HORIZONTAL_JUSTIFY
+        );
 
         $timezoneObj = new DateTimeZone('Europe/London');
         $GMT = new DateTimeZone('UTC');

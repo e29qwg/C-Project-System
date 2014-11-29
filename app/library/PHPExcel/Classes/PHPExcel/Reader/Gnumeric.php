@@ -167,7 +167,13 @@ class PHPExcel_Reader_Gnumeric extends PHPExcel_Reader_Abstract implements PHPEx
         {
             if ($xml->name == 'gnm:Sheet' && $xml->nodeType == XMLReader::ELEMENT)
             {
-                $tmpInfo = array('worksheetName' => '', 'lastColumnLetter' => 'A', 'lastColumnIndex' => 0, 'totalRows' => 0, 'totalColumns' => 0,);
+                $tmpInfo = array(
+                    'worksheetName' => '',
+                    'lastColumnLetter' => 'A',
+                    'lastColumnIndex' => 0,
+                    'totalRows' => 0,
+                    'totalColumns' => 0,
+                );
 
                 while ($xml->read())
                 {
@@ -454,7 +460,11 @@ class PHPExcel_Reader_Gnumeric extends PHPExcel_Reader_Abstract implements PHPEx
                     if (((string)$cell) > '')
                     {
 
-                        $this->_expressions[$ExprID] = array('column' => $cellAttributes->Col, 'row' => $cellAttributes->Row, 'formula' => (string)$cell);
+                        $this->_expressions[$ExprID] = array(
+                            'column' => $cellAttributes->Col,
+                            'row' => $cellAttributes->Row,
+                            'formula' => (string)$cell
+                        );
                         //						echo 'NEW EXPRESSION ',$ExprID,'<br />';
                     }
                     else

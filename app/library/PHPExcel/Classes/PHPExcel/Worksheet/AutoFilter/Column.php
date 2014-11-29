@@ -56,7 +56,11 @@ class PHPExcel_Worksheet_AutoFilter_Column
         //		colorFilter
         //		extLst
         //		iconFilter
-        self::AUTOFILTER_FILTERTYPE_FILTER, self::AUTOFILTER_FILTERTYPE_CUSTOMFILTER, self::AUTOFILTER_FILTERTYPE_DYNAMICFILTER, self::AUTOFILTER_FILTERTYPE_TOPTENFILTER,);
+        self::AUTOFILTER_FILTERTYPE_FILTER,
+        self::AUTOFILTER_FILTERTYPE_CUSTOMFILTER,
+        self::AUTOFILTER_FILTERTYPE_DYNAMICFILTER,
+        self::AUTOFILTER_FILTERTYPE_TOPTENFILTER,
+    );
     /**
      * Join options for autofilter rules
      *

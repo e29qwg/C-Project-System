@@ -50,7 +50,15 @@ class PHPExcel_Cell_DataType
      *
      * @var array
      */
-    private static $_errorCodes = array('#NULL!' => 0, '#DIV/0!' => 1, '#VALUE!' => 2, '#REF!' => 3, '#NAME?' => 4, '#NUM!' => 5, '#N/A' => 6);
+    private static $_errorCodes = array(
+        '#NULL!' => 0,
+        '#DIV/0!' => 1,
+        '#VALUE!' => 2,
+        '#REF!' => 3,
+        '#NAME?' => 4,
+        '#NUM!' => 5,
+        '#N/A' => 6
+    );
 
     /**
      * Get list of error codes

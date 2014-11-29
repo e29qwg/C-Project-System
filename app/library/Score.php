@@ -104,9 +104,15 @@ class Score extends Phalcon\Mvc\User\Component
         $currentSemester = Semester::maximum(array("column" => "semester_id"));
 
         //prepare
-        $ppprojects = $this->modelsManager->createBuilder()->from(array("Project", "ProjectMap"))->where("Project.project_id = ProjectMap.project_id")->andWhere("Project.project_level_id=1")->andWhere("Project.semester_id='$currentSemester'")->andWhere("Project.project_status='Accept'")->andWhere("ProjectMap.map_type='advisor'")->inWhere("ProjectMap.user_id", $advisor_ids)->orderBy("ProjectMap.user_id ASC")->getQuery()->execute();
+        $ppprojects = $this->modelsManager->createBuilder()->from(array(
+                "Project",
+                "ProjectMap"
+            ))->where("Project.project_id = ProjectMap.project_id")->andWhere("Project.project_level_id=1")->andWhere("Project.semester_id='$currentSemester'")->andWhere("Project.project_status='Accept'")->andWhere("ProjectMap.map_type='advisor'")->inWhere("ProjectMap.user_id", $advisor_ids)->orderBy("ProjectMap.user_id ASC")->getQuery()->execute();
 
-        $pprojects = $this->modelsManager->createBuilder()->from(array("Project", "ProjectMap"))->where("Project.project_id = ProjectMap.project_id")->andWhere("Project.project_level_id != 1")->andWhere("Project.semester_id='$currentSemester'")->andWhere("Project.project_status='Accept'")->andWhere("ProjectMap.map_type='advisor'")->inWhere("ProjectMap.user_id", $advisor_ids)->orderBy("ProjectMap.user_id ASC")->getQuery()->execute();
+        $pprojects = $this->modelsManager->createBuilder()->from(array(
+                "Project",
+                "ProjectMap"
+            ))->where("Project.project_id = ProjectMap.project_id")->andWhere("Project.project_level_id != 1")->andWhere("Project.semester_id='$currentSemester'")->andWhere("Project.project_status='Accept'")->andWhere("ProjectMap.map_type='advisor'")->inWhere("ProjectMap.user_id", $advisor_ids)->orderBy("ProjectMap.user_id ASC")->getQuery()->execute();
 
         $excel = PHPExcel_IOFactory::createReader('Excel2007');
         $obj = $excel->load('./excel/score.xlsx');
@@ -120,7 +126,10 @@ class Score extends Phalcon\Mvc\User\Component
             $advisor = User::findFirst("id='$advisor_id'");
 
             //get coadvisor
-            $coadvisorMaps = ProjectMap::find(array("conditions" => "project_id='$project_id' AND map_type='coadvisor'", "orders" => "map_type, user_id ASC"));
+            $coadvisorMaps = ProjectMap::find(array(
+                    "conditions" => "project_id='$project_id' AND map_type='coadvisor'",
+                    "orders" => "map_type, user_id ASC"
+                ));
 
             $scores = ScoreProject::find(array("conditions" => "project_id='$project_id'", "orders" => "user_id ASC"));
 
@@ -169,7 +178,10 @@ class Score extends Phalcon\Mvc\User\Component
             $advisor = User::findFirst("id='$advisor_id'");
 
             //get coadvisor
-            $coadvisorMaps = ProjectMap::find(array("conditions" => "project_id='$project_id' AND map_type='coadvisor'", "orders" => "map_type, user_id ASC"));
+            $coadvisorMaps = ProjectMap::find(array(
+                    "conditions" => "project_id='$project_id' AND map_type='coadvisor'",
+                    "orders" => "map_type, user_id ASC"
+                ));
 
             $scores = ScorePrepare::find(array("conditions" => "project_id='$project_id'", "orders" => "user_id ASC"));
 

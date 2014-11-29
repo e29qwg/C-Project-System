@@ -133,7 +133,21 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
         // Assign PHPExcel
         $this->setPHPExcel($pPHPExcel);
 
-        $writerPartsArray = array('stringtable' => 'PHPExcel_Writer_Excel2007_StringTable', 'contenttypes' => 'PHPExcel_Writer_Excel2007_ContentTypes', 'docprops' => 'PHPExcel_Writer_Excel2007_DocProps', 'rels' => 'PHPExcel_Writer_Excel2007_Rels', 'theme' => 'PHPExcel_Writer_Excel2007_Theme', 'style' => 'PHPExcel_Writer_Excel2007_Style', 'workbook' => 'PHPExcel_Writer_Excel2007_Workbook', 'worksheet' => 'PHPExcel_Writer_Excel2007_Worksheet', 'drawing' => 'PHPExcel_Writer_Excel2007_Drawing', 'comments' => 'PHPExcel_Writer_Excel2007_Comments', 'chart' => 'PHPExcel_Writer_Excel2007_Chart', 'relsvba' => 'PHPExcel_Writer_Excel2007_RelsVBA', 'relsribbonobjects' => 'PHPExcel_Writer_Excel2007_RelsRibbon');
+        $writerPartsArray = array(
+            'stringtable' => 'PHPExcel_Writer_Excel2007_StringTable',
+            'contenttypes' => 'PHPExcel_Writer_Excel2007_ContentTypes',
+            'docprops' => 'PHPExcel_Writer_Excel2007_DocProps',
+            'rels' => 'PHPExcel_Writer_Excel2007_Rels',
+            'theme' => 'PHPExcel_Writer_Excel2007_Theme',
+            'style' => 'PHPExcel_Writer_Excel2007_Style',
+            'workbook' => 'PHPExcel_Writer_Excel2007_Workbook',
+            'worksheet' => 'PHPExcel_Writer_Excel2007_Worksheet',
+            'drawing' => 'PHPExcel_Writer_Excel2007_Drawing',
+            'comments' => 'PHPExcel_Writer_Excel2007_Comments',
+            'chart' => 'PHPExcel_Writer_Excel2007_Chart',
+            'relsvba' => 'PHPExcel_Writer_Excel2007_RelsVBA',
+            'relsribbonobjects' => 'PHPExcel_Writer_Excel2007_RelsRibbon'
+        );
 
         //	Initialise writer parts
         //		and Assign their parent IWriters
@@ -142,7 +156,15 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
             $this->_writerParts[$writer] = new $class($this);
         }
 
-        $hashTablesArray = array('_stylesConditionalHashTable', '_fillHashTable', '_fontHashTable', '_bordersHashTable', '_numFmtHashTable', '_drawingHashTable', '_styleHashTable');
+        $hashTablesArray = array(
+            '_stylesConditionalHashTable',
+            '_fillHashTable',
+            '_fontHashTable',
+            '_bordersHashTable',
+            '_numFmtHashTable',
+            '_drawingHashTable',
+            '_styleHashTable'
+        );
 
         // Set HashTable variables
         foreach ($hashTablesArray as $tableName)

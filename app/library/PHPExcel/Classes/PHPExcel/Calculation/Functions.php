@@ -92,7 +92,16 @@ class PHPExcel_Calculation_Functions
      * @access    private
      * @var array
      */
-    protected static $_errorCodes = array('null' => '#NULL!', 'divisionbyzero' => '#DIV/0!', 'value' => '#VALUE!', 'reference' => '#REF!', 'name' => '#NAME?', 'num' => '#NUM!', 'na' => '#N/A', 'gettingdata' => '#GETTING_DATA');
+    protected static $_errorCodes = array(
+        'null' => '#NULL!',
+        'divisionbyzero' => '#DIV/0!',
+        'value' => '#VALUE!',
+        'reference' => '#REF!',
+        'name' => '#NAME?',
+        'num' => '#NUM!',
+        'na' => '#N/A',
+        'gettingdata' => '#GETTING_DATA'
+    );
 
     /**
      * Return the current Compatibility Mode
