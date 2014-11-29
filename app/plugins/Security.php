@@ -149,7 +149,8 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 'profile' => array('*'),
                 'score' => array('*'),
                 'exam' => array('*'),
-				'news' => array('*')
+				'news' => array('*'),
+                'settings' => array('*')
             );
             
             foreach ($adminResources as $resource => $actions)

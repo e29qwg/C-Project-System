@@ -7,6 +7,7 @@ date_default_timezone_set('Asia/Bangkok');
 try
 {
     require(__DIR__.'/../app/config/config.php');
+    require(__DIR__.'/../app/library/glib.php');
     require_once(__DIR__.'/../app/library/PHPExcel/Classes/PHPExcel.php');
     require_once(__DIR__.'/../app/library/PHPExcel/Classes/PHPExcel/IOFactory.php');
 

@@ -1,5 +1,9 @@
 <?php
+
 $auth = $this->session->get('auth');
+$action = $this->dispatcher->getActionName();
+$controller = $this->dispatcher->getControllerName();
+
 ?>
 
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -26,14 +30,15 @@ $auth = $this->session->get('auth');
 				<a class="list-group-item active" href="#">
 					<h4 class="list-group-item-heading">Menu</h4>
 				</a>
-                <a class="list-group-item" href="<?= $this->url->get('admin/summaryTopic'); ?>">สรุปหัวข้อโครงงาน</a>
-				<a class="list-group-item" href="<?= $this->url->get('exam/manage'); ?>">จัดการตารางสอบ</a>
-				<a class="list-group-item" href="<?= $this->url->get('score/manageScore'); ?>">จัดการคะแนน</a>
-				<a class="list-group-item" href="<?= $this->url->get('admin/manageCoadvisor'); ?>">จัดการอาจารย์ที่ปรึกษาร่วม</a>
-				<a class="list-group-item" href="<?= $this->url->get('advisor/quota'); ?>">จัดการโควต้า</a>
-				<a class="list-group-item" href="<?= $this->url->get('admin/advisorProfile'); ?>">เปลี่ยนสิทธิการใช้งาน</a>
-				<a class="list-group-item" href="<?= $this->url->get('news/manageNews'); ?>">จัดการข่าว</a>
-				<a class="list-group-item" href="<?= $this->url->get('admin/setView'); ?>">เปลี่ยนมุมมอง</a>
+                <a class="list-group-item <?=($controller=='admin'&& $action=='summaryTopic')?LISTSELECTED:'';?>" href="<?= $this->url->get('admin/summaryTopic'); ?>">สรุปหัวข้อโครงงาน</a>
+				<a class="list-group-item <?=($controller=='exam'&& $action=='manage')?LISTSELECTED:'';?>" href="<?= $this->url->get('exam/manage'); ?>">จัดการตารางสอบ</a>
+				<a class="list-group-item <?=($controller=='score'&& $action=='manageScore')?LISTSELECTED:'';?>" href="<?= $this->url->get('score/manageScore'); ?>">จัดการคะแนน</a>
+				<a class="list-group-item <?=($controller=='admin'&& $action=='manageCoadvisor')?LISTSELECTED:'';?>" href="<?= $this->url->get('admin/manageCoadvisor'); ?>">จัดการอาจารย์ที่ปรึกษาร่วม</a>
+				<a class="list-group-item <?=($controller=='advisor'&& $action=='quota')?LISTSELECTED:'';?>" href="<?= $this->url->get('advisor/quota'); ?>">จัดการโควต้า</a>
+				<a class="list-group-item <?=($controller=='admin'&& $action=='advisorProfile')?LISTSELECTED:'';?>" href="<?= $this->url->get('admin/advisorProfile'); ?>">เปลี่ยนสิทธิการใช้งาน</a>
+				<a class="list-group-item <?=($controller=='news'&& $action=='manageNews')?LISTSELECTED:'';?>" href="<?= $this->url->get('news/manageNews'); ?>">จัดการข่าว</a>
+				<a class="list-group-item <?=($controller=='admin'&& $action=='setView')?LISTSELECTED:'';?>" href="<?= $this->url->get('admin/setView'); ?>">เปลี่ยนมุมมอง</a>
+                <a class="list-group-item <?=($controller=='settings')?LISTSELECTED:'';?>" href="<?= $this->url->get('settings'); ?>">ตั้งค่าระบบ</a>
             </div>
         </div>
         <div class="col-sm-9">

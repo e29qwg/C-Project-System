@@ -1,5 +1,3 @@
-*.sql
-backup
 app/config/config.php
 public/excel/export*
 .htaccess
