@@ -3,15 +3,12 @@
 class Topic extends Phalcon\Mvc\User\Component
 {
     //generate excel
-    public function updateTopic()
+    public function updateTopic($projects)
     {
-        $projects = Project::find();
-
         $excel = PHPExcel_IOFactory::createReader('Excel2007');
         $obj = $excel->load('./excel/topic.xlsx');
         $obj->setActiveSheetIndex(0);
 
-        $levelRow = 3;
         $row = 2;
         $count = 0;
 

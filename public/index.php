@@ -13,15 +13,13 @@ try
 
     $loader = new \Phalcon\Loader();
 
-    $loader->registerDirs(
-        array(
-            $config->phalcon->controllersDir,
-            $config->phalcon->pluginsDir,
-            $config->phalcon->libraryDir,
-            $config->phalcon->modelsDir,
-            $config->phalcon->formsDir
-        )
-    );
+    $loader->registerDirs(array(
+        $config->phalcon->controllersDir,
+        $config->phalcon->pluginsDir,
+        $config->phalcon->libraryDir,
+        $config->phalcon->modelsDir,
+        $config->phalcon->formsDir
+    ));
 
     $loader->register();
 

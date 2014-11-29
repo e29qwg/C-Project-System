@@ -56,6 +56,7 @@ class AdminController extends ControllerBase
 
     public function summaryTopicExportAction()
     {
+        //inherit call updatetopic
         $this->DownloadFile->download('Topic');
         $this->view->disable();
     }
@@ -67,8 +68,50 @@ class AdminController extends ControllerBase
 
     public function summaryTopicAction()
     {
+        $currentSemester = Settings::findFirst("name='current_semester'");
+
+        if (!$currentSemester)
+        {
+            $this->flash->error('setting error');
+            return $this->forward('admin');
+        }
+
+        $semester = $this->request->getPost('semester');
+
+        if (empty($semester))
+        {
+            $projects = Project::find(array(
+                "conditions" => "semester_id=:semester_id:",
+                "bind" => array("semester_id" => $currentSemester->value)
+            ));
+            $this->view->setVar('semester', $currentSemester->value);
+        }
+        else
+        {
+            $projects = Project::find(array(
+                "conditions" => "semester_id=:semester_id:",
+                "bind" => array("semester_id" => $semester)
+
+            ));
+            $this->view->setVar('semester', $semester);
+        }
+
+        $this->Topic->updateTopic($projects);
+        $this->view->setVar('projects', $projects);
+
+        $semesters = Semester::find();
+        $allSemesters = array();
+
+        foreach ($semesters as $semester)
+        {
+            $allSemesters[$semester->semester_id] = $semester->semester_term . '/' . $semester->semester_year;
+        }
+
+        $this->view->setVar('allSemesters', $allSemesters);
+
         $this->view->setTemplateAfter('adminside');
     }
+
 
     public function indexAction()
     {

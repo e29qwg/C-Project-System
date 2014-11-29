@@ -1,11 +1,31 @@
 <?php
 
 echo $this->getContent();
-$this->Topic->updateTopic();
 
 ?>
 
-<a href="<?= $this->url->get('admin/summaryTopicExport'); ?>" class="btn btn-primary btn-sm">Download Excel</a>
+<form class="form" method="post" action="<?= $this->url->get('admin/summaryTopic'); ?>">
+    <div class="col-sm-2">
+        <a href="<?= $this->url->get('admin/summaryTopicExport'); ?>" class="btn btn-primary btn-sm">Save Excel</a>
+    </div>
+    <div class="col-sm-3">
+        <?php
+
+        $this->tag->setDefault('semester', $semester);
+
+        echo $this->tag->selectStatic(array(
+            'semester',
+            $allSemesters,
+            'require' => 'require',
+            'class' => 'form-control'
+        ));
+
+        ?>
+    </div>
+    <div class="col-sm-2">
+        <button type="submit" class="btn btn-primary btn-fm">Filter</button>
+    </div>
+</form>
 
 <br>
 <br>
@@ -19,6 +39,7 @@ $this->Topic->updateTopic();
         text-align: left;
     }
 </style>
+
 
 <table class="table table-bordered" width="100%">
     <thead>
@@ -34,7 +55,6 @@ $this->Topic->updateTopic();
     <tbody>
     <?php
 
-    $projects = Project::find();
     $count = 0;
 
     foreach ($projects as $project)

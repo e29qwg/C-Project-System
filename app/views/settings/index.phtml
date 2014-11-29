@@ -36,12 +36,14 @@ $url = $this->url->get();
 
                 ?>
             </td>
-            <td>
+            <td class="tcenter">
                 <a href="<?= $url . 'settings/addSemester'; ?>" class="btn btn-sm btn-primary">เพิ่ม</a>
                 <a href="#" onclick="return deleteSemester();" class="btn btn-sm btn-danger">ลบ</a>
             </td>
         </tr>
     </table>
+
+    <button type="submit" class="btn btn-sm btn-success pull-right">บันทึก</button>
 </form>
 
 <script>

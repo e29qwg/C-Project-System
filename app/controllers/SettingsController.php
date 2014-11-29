@@ -10,9 +10,56 @@ class SettingsController extends ControllerBase
         $this->view->setTemplateAfter('adminside');
     }
 
+    public function saveAction()
+    {
+        $request = $this->request;
+
+        if (!$request->isPost())
+        {
+            $this->flash->error('Invalid Request');
+            return $this->forward('settings');
+        }
+
+        $currentSemester = $request->getPost('current_semester');
+
+        $settingCurrentSemester = Settings::findFirst(array(
+            "conditions" => "name=:name:",
+            "bind" => array("name" => "current_semester")
+        ));
+
+        if (!$settingCurrentSemester)
+            return $this->settingError();
+
+        $settingCurrentSemester->value = $currentSemester;
+        if (!$settingCurrentSemester->save())
+            return $this->settingError();
+
+        $this->flashSession->success('บันทึกสำเร็จ');
+        $this->response->redirect('settings');
+    }
+
     public function deleteSemesterAction()
     {
+        $params = $this->dispatcher->getParams();
 
+        if (empty($params[0]))
+        {
+            $this->flash->error('Invalid request');
+            return $this->forward('settings');
+        }
+        $semester = Semester::findFirst(array(
+            'conditions' => 'semester_id=:semester_id:',
+            'bind' => array('semester_id' => $params[0])
+        ));
+
+        if ($semester)
+        {
+            if ($semester->delete())
+            {
+                $this->flashSession->success('ลบสำเร็จ');
+                return $this->response->redirect('settings');
+            }
+        }
     }
 
     public function addSemesterAction()
@@ -53,9 +100,9 @@ class SettingsController extends ControllerBase
             return $this->settingError();
 
         $currentSemester = Semester::findFirst(array(
-                'conditions' => 'semester_id=:semester_id:',
-                'bind' => array('semester_id' => $settingCurrentSemester->value)
-            ));
+            'conditions' => 'semester_id=:semester_id:',
+            'bind' => array('semester_id' => $settingCurrentSemester->value)
+        ));
 
         if (!$currentSemester)
             return $this->settingError();
