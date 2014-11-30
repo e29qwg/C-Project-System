@@ -3,17 +3,22 @@
 class Exam extends Phalcon\Mvc\User\Component
 {
     //generate exam
-    public function generateExam()
+    public function generateExamTable($semesterId)
     {
         $auth = $this->session->get('auth');
         $user_id = $auth['id'];
         $excel = PHPExcel_IOFactory::createReader('Excel2007');
         $obj = $excel->load('./excel/exam.xlsx');
 
-        $records = $this->modelsManager->createBuilder()->from(array("Project", "ProjectMap"))->where("
-                Project.project_id = ProjectMap.project_id AND 
-                ProjectMap.map_type='advisor' AND 
-                Project.project_status='Accept'")->orderBy("ProjectMap.user_id ASC")->getQuery()->execute();
+        $builder = $this->modelsManager->createBuilder();
+        $builder->from(array("Project", "ProjectMap"));
+        $builder->where("
+            Project.project_id=ProjectMap.project_id AND
+            ProjectMap.map_type='advisor' AND
+            Project.project_status='Accept' AND
+            Project.semester_id=:semester_id:", array("semester_id" => $semesterId));
+        $builder->orderBy("ProjectMap.user_id ASC");
+        $records = $builder->getQuery()->execute();
 
         $row = array(0, 5, 5, 5);
 
@@ -23,9 +28,9 @@ class Exam extends Phalcon\Mvc\User\Component
             $obj->setActiveSheetIndex($project->project_level_id - 1);
             $projectMapOwners = ProjectMap::find("project_id='$project->project_id' AND map_type = 'owner'");
             $advisorMaps = ProjectMap::find(array(
-                    "project_id='$project->project_id' AND map_type != 'owner'",
-                    "order" => "map_type,user_id ASC"
-                ));
+                "project_id='$project->project_id' AND map_type != 'owner'",
+                "order" => "map_type,user_id ASC"
+            ));
 
             foreach ($projectMapOwners as $projectMapOwner)
             {

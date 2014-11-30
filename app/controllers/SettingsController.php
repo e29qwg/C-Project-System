@@ -38,6 +38,12 @@ class SettingsController extends ControllerBase
         $this->response->redirect('settings');
     }
 
+    private function settingError()
+    {
+        $this->flash->error('Settings error please check database');
+        return $this->forward('admin');
+    }
+
     public function deleteSemesterAction()
     {
         $params = $this->dispatcher->getParams();
@@ -58,6 +64,13 @@ class SettingsController extends ControllerBase
             {
                 $this->flashSession->success('ลบสำเร็จ');
                 return $this->response->redirect('settings');
+            }
+            else
+            {
+                foreach ($semester->getMessages() as $mes)
+                {
+                    $this->flash->error($mes);
+                }
             }
         }
     }
@@ -119,12 +132,6 @@ class SettingsController extends ControllerBase
 
         $this->view->setVar('allSemesters', $allSemesters);
 
-    }
-
-    private function settingError()
-    {
-        $this->flash->error('Settings error please check database');
-        return $this->forward('admin');
     }
 
 }

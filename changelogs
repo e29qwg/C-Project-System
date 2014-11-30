@@ -1,3 +1,10 @@
+30/11/2014
+    - use visual foreign key in semester model
+    - use visual foreign key in project model
+    - optimize download file from database
+    - exam menu semester select available
+    - exam change ui and optimize
+    - create score form with select semester
 29/11/2014
     - add selected item list to admin menu
     - add settings page

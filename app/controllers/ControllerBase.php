@@ -5,6 +5,17 @@ class ControllerBase extends Phalcon\Mvc\Controller
     protected function initialize()
     {
         $auth = $this->session->get('auth');
+
+        $setting = Settings::findFirst("name='current_semester'");
+
+        if (!$setting)
+        {
+            $this->flash->error('Cannot read setting from database');
+            return false;
+        }
+
+        $this->view->setVar('currentSemesterId', $setting->value);
+
         if ($auth)
         {
 
@@ -20,6 +31,19 @@ class ControllerBase extends Phalcon\Mvc\Controller
                     $this->view->setTemplateAfter('main');
             }
         }
+    }
+
+    protected function _getAllSemester()
+    {
+        $semesters = Semester::find();
+        $allSemesters = array();
+
+        foreach ($semesters as $semester)
+        {
+            $allSemesters[$semester->semester_id] = $semester->semester_term . '/' . $semester->semester_year;
+        }
+
+        $this->view->setVar('allSemesters', $allSemesters);
     }
 
     protected function _checkAdvisorPermission($project_id)

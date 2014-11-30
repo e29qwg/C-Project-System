@@ -87,7 +87,7 @@ class Score extends Phalcon\Mvc\User\Component
         $auth = $this->session->get('auth');
         $user_id = $auth['id'];
 
-        if (empty($arg[0]))
+        if (empty($arg[0]) || !is_array($arg[0]))
         {
             $users = User::find("type='advisor'");
             $advisor_ids = array();
@@ -95,24 +95,43 @@ class Score extends Phalcon\Mvc\User\Component
             {
                 array_push($advisor_ids, $user->id);
             }
+            $semester_id = $arg[0];
         }
         else
         {
             $advisor_ids = $arg[0];
+            $semester_id = $arg[1];
         }
 
-        $currentSemester = Semester::maximum(array("column" => "semester_id"));
-
         //prepare
-        $ppprojects = $this->modelsManager->createBuilder()->from(array(
-                "Project",
-                "ProjectMap"
-            ))->where("Project.project_id = ProjectMap.project_id")->andWhere("Project.project_level_id=1")->andWhere("Project.semester_id='$currentSemester'")->andWhere("Project.project_status='Accept'")->andWhere("ProjectMap.map_type='advisor'")->inWhere("ProjectMap.user_id", $advisor_ids)->orderBy("ProjectMap.user_id ASC")->getQuery()->execute();
+        $ppprojects = $this->modelsManager->createBuilder();
+        $ppprojects->from(array(
+            "Project",
+            "ProjectMap"
+        ));
+        $ppprojects->where("Project.project_id = ProjectMap.project_id");
+        $ppprojects->andWhere("Project.project_level_id=1");
+        $ppprojects->andWhere("Project.semester_id=:semester_id:", array("semester_id" => $semester_id));
+        $ppprojects->andWhere("Project.project_status='Accept'");
+        $ppprojects->andWhere("ProjectMap.map_type='advisor'");
+        if (count($advisor_ids) > 0)
+            $ppprojects->inWhere("ProjectMap.user_id", $advisor_ids);
+        $ppprojects->orderBy("ProjectMap.user_id ASC");
+        $ppprojects = $ppprojects->getQuery()->execute();
 
-        $pprojects = $this->modelsManager->createBuilder()->from(array(
-                "Project",
-                "ProjectMap"
-            ))->where("Project.project_id = ProjectMap.project_id")->andWhere("Project.project_level_id != 1")->andWhere("Project.semester_id='$currentSemester'")->andWhere("Project.project_status='Accept'")->andWhere("ProjectMap.map_type='advisor'")->inWhere("ProjectMap.user_id", $advisor_ids)->orderBy("ProjectMap.user_id ASC")->getQuery()->execute();
+        $pprojects = $this->modelsManager->createBuilder();
+        $pprojects->from(array(
+            "Project",
+            "ProjectMap"
+        ));
+        $pprojects->where("Project.project_id = ProjectMap.project_id");
+        $pprojects->andWhere("Project.project_level_id != 1");
+        $pprojects->andWhere("Project.semester_id=:semester_id:", array("semester_id" => $semester_id));
+        $pprojects->andWhere("Project.project_status='Accept'");
+        $pprojects->andWhere("ProjectMap.map_type='advisor'");
+        $pprojects->inWhere("ProjectMap.user_id", $advisor_ids);
+        $pprojects->orderBy("ProjectMap.user_id ASC");
+        $pprojects = $pprojects->getQuery()->execute();
 
         $excel = PHPExcel_IOFactory::createReader('Excel2007');
         $obj = $excel->load('./excel/score.xlsx');
@@ -127,9 +146,9 @@ class Score extends Phalcon\Mvc\User\Component
 
             //get coadvisor
             $coadvisorMaps = ProjectMap::find(array(
-                    "conditions" => "project_id='$project_id' AND map_type='coadvisor'",
-                    "orders" => "map_type, user_id ASC"
-                ));
+                "conditions" => "project_id='$project_id' AND map_type='coadvisor'",
+                "orders" => "map_type, user_id ASC"
+            ));
 
             $scores = ScoreProject::find(array("conditions" => "project_id='$project_id'", "orders" => "user_id ASC"));
 
@@ -179,9 +198,9 @@ class Score extends Phalcon\Mvc\User\Component
 
             //get coadvisor
             $coadvisorMaps = ProjectMap::find(array(
-                    "conditions" => "project_id='$project_id' AND map_type='coadvisor'",
-                    "orders" => "map_type, user_id ASC"
-                ));
+                "conditions" => "project_id='$project_id' AND map_type='coadvisor'",
+                "orders" => "map_type, user_id ASC"
+            ));
 
             $scores = ScorePrepare::find(array("conditions" => "project_id='$project_id'", "orders" => "user_id ASC"));
 

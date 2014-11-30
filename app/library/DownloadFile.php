@@ -5,7 +5,11 @@ class DownloadFile extends Phalcon\Mvc\User\Component
     public function download($commonName)
     {
         $excel = ExcelFile::findFirst("common_name='$commonName'");
+        if (!$excel)
+            return false;
+
         $file = $excel->file;
+
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename=' . $excel->filename);
@@ -17,6 +21,9 @@ class DownloadFile extends Phalcon\Mvc\User\Component
         ob_clean();
         flush();
         echo $file;
+        $this->view->disable();
+
+        return true;
     }
 }
 

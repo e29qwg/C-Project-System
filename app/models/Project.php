@@ -14,12 +14,24 @@ class Project extends \Phalcon\Mvc\Model
     public function initialize()
     {
         $this->useDynamicUpdate(true);
+
+        $this->belongsTo('semester_id', 'Semester', 'semester_id', array(
+           'foreignKey' => array(
+               'message' => 'Semester not exists',
+               'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+           )
+        ));
     }
 
     public function beforeValidationOnCreate()
     {
         $this->project_status = 'Pending';
         $this->create_date = date('Y-m-d H:i:s');
+    }
+
+    public function validation()
+    {
+        return $this->validationHasFailed() != true;
     }
 }
 

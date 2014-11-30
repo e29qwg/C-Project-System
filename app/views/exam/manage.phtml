@@ -1,27 +1,62 @@
 <?php echo $this->getContent(); ?>
 
 <div class="row">
-    <table width="100%">
-        <tr>
-            <td width="30%">
-                <a href="<?= $this->url->get('exam/generate'); ?>" class="btn btn-primary btn-lg btn-block">
-                    สร้าง<br>ตารางสอบ
-                </a>
-            </td>
-            <td width="5%"></td>
-            <td width="30%">
-                <a href="<?= $this->url->get('exam/edit'); ?>" class="btn btn-primary btn-lg btn-block">
-                    ดูตารางสอบ<br>ที่เผยแพร่
-                </a>
-            </td>
-            <td width="5%"></td>
-            <td width="30%">
-                <a href="<?= $this->url->get('exam/upload'); ?>" class="btn btn-primary btn-lg btn-block">
-                    อัพโหลด<br>ตารางสอบ
-                </a>
-            </td>
-        </tr>
-    </table>
+    <form class="form-horizontal" method="post" action="<?= $this->url->get('exam/generate'); ?>">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">สร้างตารางสอบ</label>
+
+            <div class="col-sm-2">
+                <?php
+
+                $this->tag->setDefault('semester_id', $currentSemesterId);
+
+                echo $this->tag->selectStatic(array(
+                    'semester_id',
+                    $allSemesters,
+                    'class' => 'form-control',
+                    'required' => 'required'
+                ));
+
+                ?>
+            </div>
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-primary btn-sm">สร้างตารางสอบ</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="row">
+    <form class="form-horizontal" method="post" action="<?= $this->url->get('exam/edit'); ?>">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">ดูตารางสอบ</label>
+
+            <div class="col-sm-2">
+                <?php
+                echo $this->tag->selectStatic(array(
+                    'semester_id',
+                    $allSemesters,
+                    'class' => 'form-control',
+                    'required' => 'required'
+                ));
+
+                ?>
+            </div>
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-sm btn-primary">ดูตารางสอบที่เผยแพร่</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="row">
+    <form class="form-horizontal" method="post" action="<?= $this->url->get('exam/upload'); ?>">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">อัพโหลดตารางสอบ</label>
+
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-sm btn-primary">อัพโหลดตารางสอบ</button>
+            </div>
+        </div>
+    </form>
 </div>
 
 <br>

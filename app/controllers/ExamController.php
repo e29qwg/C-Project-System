@@ -12,7 +12,6 @@ class ExamController extends ControllerBase
     public function showExamAction()
     {
         $this->downloadAction();
-        //		$this->flash->notice('กำลังปรับปรุงยังไม่สามารถใช้งานได้');
     }
 
     public function downloadAction()
@@ -23,8 +22,13 @@ class ExamController extends ControllerBase
 
     public function doUploadAction()
     {
-        $auth = $this->session->get('auth');
-        $user_id = $auth['id'];
+        $request = $this->request;
+
+        if (!$request->isPost())
+        {
+            $this->flash->error('Invalid Request');
+            return $this->forward('exam/manage');
+        }
 
         if ($this->request->hasFiles())
         {
@@ -32,14 +36,22 @@ class ExamController extends ControllerBase
             {
                 $examFile = file_get_contents($file->getTempName());
                 unlink($file->getTempName());
-                $excelFile = ExcelFile::findFirst("common_name='Exam'");
+                $excelFile = ExcelFile::findFirst(array(
+                    "conditions" => "common_name=:name:",
+                    "bind" => array("name" => 'Exam' . $request->getPost('semester_id'))
+                ));
 
-                if ($excelFile)
+                if (!$excelFile)
                 {
-                    $excelFile->filename = $this->security->getToken() . '.xlsx';
-                    $excelFile->file = $examFile;
-                    $excelFile->save();
+                    $excelFile = new ExcelFile();
+                    $excelFile->common_name = 'Exam' . $request->getPost('semester_id');
                 }
+
+                $excelFile->filename = $this->security->getToken() . '.xlsx';
+                $excelFile->file = $examFile;
+                $excelFile->user_id = 0;
+                $excelFile->public = 1;
+                $excelFile->save();
 
                 $this->flashSession->success('อัพโหลดตารางสอบสำเร็จ');
                 return $this->response->redirect('exam/manage');
@@ -52,21 +64,57 @@ class ExamController extends ControllerBase
 
     public function uploadAction()
     {
+        $semesters = Semester::find();
+        $allSemesters = array();
+
+        foreach ($semesters as $semester)
+        {
+            $allSemesters[$semester->semester_id] = $semester->semester_term . '/' . $semester->semester_year;
+        }
+
+        $this->view->setVar('allSemesters', $allSemesters);
     }
 
     public function editAction()
     {
-        $this->DownloadFile->download("Exam");
-        $this->view->disable();
+        $request = $this->request;
+
+        if (!$request->isPost())
+        {
+            $this->flash->error('Invalid Request');
+            return $this->forward('exam/manage');
+        }
+
+        if (!$this->DownloadFile->download("Exam" . $request->getPost('semester_id')))
+        {
+            $this->flash->error('ไม่พบตารางสอบ');
+        }
     }
 
     public function manageAction()
     {
+        $semesters = Semester::find();
+        $allSemesters = array();
+
+        foreach ($semesters as $semester)
+        {
+            $allSemesters[$semester->semester_id] = $semester->semester_term . '/' . $semester->semester_year;
+        }
+
+        $this->view->setVar('allSemesters', $allSemesters);
     }
 
     public function generateAction()
     {
-        $this->Exam->generateExam();
+        $request = $this->request;
+
+        if (!$request->isPost())
+        {
+            $this->flash->error('Invalid Request');
+            return $this->forward('admin');
+        }
+
+        $this->Exam->generateExamTable($request->getPost('semester_id'));
         $this->DownloadFile->download("ExamDraff");
         $this->view->disable();
     }

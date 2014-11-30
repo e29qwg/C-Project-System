@@ -14,8 +14,6 @@ class ShowExcel extends Phalcon\Mvc\User\Component
         $objWriter = PHPExcel_IOFactory::createWriter($obj, 'HTML');
         $objWriter->save('php://output');
         unlink('excel/' . $file_name);
-        //TODO
-
     }
 }
 
