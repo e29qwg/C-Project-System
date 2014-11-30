@@ -11,6 +11,7 @@ class ProfileController extends ControllerBase
 
     public function advisorProfileAction()
     {
+        $this->_getAllSemester();
     }
 
     public function updateAction()

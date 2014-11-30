@@ -110,10 +110,10 @@ class ProjectsController extends ControllerBase
         $ncoadvisor = 0;
 
         $coadvisors = User::find(array(
-                "conditions" => "advisor_group='$advisor->advisor_group' AND id!='$advisor->id' AND type='Advisor'",
-                "limit" => $ncoadvisor,
-                "order" => "work_load ASC"
-            ));
+            "conditions" => "advisor_group='$advisor->advisor_group' AND id!='$advisor->id' AND type='Advisor'",
+            "limit" => $ncoadvisor,
+            "order" => "work_load ASC"
+        ));
 
         foreach ($coadvisors as $coadvisor)
         {
@@ -271,10 +271,10 @@ class ProjectsController extends ControllerBase
         {
             $this->flash->error('User not found');
             return $this->dispatcher->forward(array(
-                    'controller' => 'projects',
-                    'action' => 'addmember',
-                    'params' => array($project_id)
-                ));
+                'controller' => 'projects',
+                'action' => 'addmember',
+                'params' => array($project_id)
+            ));
         }
 
         //check users exists
@@ -284,10 +284,10 @@ class ProjectsController extends ControllerBase
         {
             $this->flash->error('User not found');
             return $this->dispatcher->forward(array(
-                    'controller' => 'projects',
-                    'action' => 'addmember',
-                    'params' => array($project_id)
-                ));
+                'controller' => 'projects',
+                'action' => 'addmember',
+                'params' => array($project_id)
+            ));
         }
 
         //check project exists
@@ -302,10 +302,10 @@ class ProjectsController extends ControllerBase
         {
             $this->flash->error('Access denied: Project already accepted');
             return $this->dispatcher->forward(array(
-                    'controller' => 'projects',
-                    'action' => 'addmember',
-                    'params' => array($project_id)
-                ));
+                'controller' => 'projects',
+                'action' => 'addmember',
+                'params' => array($project_id)
+            ));
         }
 
         //check exists new member project
@@ -317,8 +317,13 @@ class ProjectsController extends ControllerBase
         }
 
         if (count($member_project_ids))
-            $records = $this->modelsManager->createBuilder()->from(array("Project"))->inWhere("Project.project_id", $member_project_ids)->andWhere("Project.semester_id='$project->semester_id'")->getQuery()->execute();
-
+        {
+            $records = $this->modelsManager->createBuilder();
+            $records->from(array("Project"));
+            $records->inWhere("Project.project_id", $member_project_ids);
+            $records->andWhere("Project.semester_id='$project->semester_id'");
+            $records = $records->getQuery()->execute();
+        }
 
         if (count($member_project_ids))
         {
@@ -326,10 +331,10 @@ class ProjectsController extends ControllerBase
             {
                 $this->flash->error('User has only one project');
                 return $this->dispatcher->forward(array(
-                        'controller' => 'projects',
-                        'action' => 'addmember',
-                        'params' => array($project_id)
-                    ));
+                    'controller' => 'projects',
+                    'action' => 'addmember',
+                    'params' => array($project_id)
+                ));
             }
         }
 
@@ -367,10 +372,10 @@ class ProjectsController extends ControllerBase
 
         $this->flash->success('Add member success');
         return $this->dispatcher->forward(array(
-                'controller' => 'projects',
-                'action' => 'member',
-                'params' => array($project_id)
-            ));
+            'controller' => 'projects',
+            'action' => 'member',
+            'params' => array($project_id)
+        ));
     }
 
     //show member list in current project
@@ -422,10 +427,10 @@ class ProjectsController extends ControllerBase
 
         $project = Project::findFirst("project_id='$pid'");
 
-        if ($project->project_status == "Accept" && $auth['type'] != 'Advisor')
+        if ($project->project_status == "Accept" && $auth['type'] != 'Advisor' && $auth['type'] != 'Admin')
         {
             $this->flash->error('Access Denied: Contact your advisor');
-            return $this->forward('projects/me');
+            return;
         }
 
         $projectMaps = ProjectMap::find("project_id='$project->project_id'");

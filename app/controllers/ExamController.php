@@ -16,8 +16,13 @@ class ExamController extends ControllerBase
 
     public function downloadAction()
     {
-        $this->DownloadFile->download("Exam");
-        $this->view->disable();
+        if ($this->DownloadFile->download("Exam"))
+        {
+            $this->view->disable();
+            return;
+        }
+        else
+            $this->flash->error('ไม่พบข้อมูล');
     }
 
     public function doUploadAction()

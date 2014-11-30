@@ -73,7 +73,13 @@ $projectMaps = ProjectMap::find("user_id='$params[0]'");
                     {
                         if ($projectMap->map_type == 'advisor')
                         {
-                            $project = Project::findFirst("project_id='$projectMap->project_id' AND project_status='Accept'");
+                            $project = Project::findFirst(array(
+                                "conditions" => "project_id=:project_id: AND project_status='Accept' AND semester_id=:semester_id:",
+                                "bind" => array(
+                                    "project_id" => $projectMap->project_id,
+                                    "semester_id" => $currentSemesterId
+                                )
+                            ));
                             if (!$project)
                                 continue;
                             echo $project->project_name;
@@ -94,7 +100,13 @@ $projectMaps = ProjectMap::find("user_id='$params[0]'");
                     {
                         if ($projectMap->map_type == 'coadvisor')
                         {
-                            $project = Project::findFirst("project_id='$projectMap->project_id' AND project_status='Accept'");
+                            $project = Project::findFirst(array(
+                                "conditions" => "project_id=:project_id: AND project_status='Accept' AND semester_id=:semester_id:",
+                                "bind" => array(
+                                    "project_id" => $projectMap->project_id,
+                                    "semester_id" => $currentSemesterId
+                                )
+                            ));
                             if (!$project)
                                 continue;
                             echo $project->project_name;
@@ -104,6 +116,58 @@ $projectMaps = ProjectMap::find("user_id='$params[0]'");
                     ?>
                 </div>
             </div>
+
+            <a href="#" id="showhide">Show/Hide project all semester</a><br><br>
+
+            <div class="panel panel-info" id="allproject">
+                <div class="panel panel-body">
+                    <?php
+
+                    $count = 0;
+
+                    foreach ($allSemesters as $allSemester)
+                    {
+                        ?>
+                        <h3><?= $allSemester; ?></h3>
+                        <?php
+                        foreach ($projectMaps as $projectMap)
+                        {
+                            if ($projectMap->map_type == 'advisor')
+                            {
+                                $project = Project::findFirst(array(
+                                    "conditions" => "project_id=:project_id: AND project_status='Accept' AND semester_id=:semester_id:",
+                                    "bind" => array(
+                                        "project_id" => $projectMap->project_id,
+                                        "semester_id" => $allSemesterIds[$count]
+                                    )
+                                ));
+                                if (!$project)
+                                    continue;
+                                echo $project->project_name;
+                                echo '<br>';
+                            }
+                        }
+                        ?>
+                        <?php
+                        $count++;
+                    }
+
+                    ?>
+                </div>
+            </div>
+
+            <script>
+                $(document).ready(function ()
+                {
+                    $('#allproject').hide();
+
+                    $("#showhide").click(function ()
+                    {
+                        $('#allproject').toggle(1000);
+                    });
+                });
+            </script>
+
         <?php
         }
         else
@@ -130,3 +194,4 @@ $projectMaps = ProjectMap::find("user_id='$params[0]'");
         }
         ?>
     </div>
+</div>

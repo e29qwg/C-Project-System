@@ -14,11 +14,19 @@ $user_id = $auth['id'];
             </a>
             <?php
 
-            $projectMaps = ProjectMap::find("user_id='$user_id'");
+            $projectMaps = ProjectMap::find(array(
+                "conditions" => "user_id=:user_id:",
+                "order" => "project_id DESC",
+                "bind" => array("user_id" => $user_id)
+            ));
 
             foreach ($projectMaps as $projectMap)
             {
-                $project = Project::findFirst("project_id='$projectMap->project_id'");
+                $project = Project::findFirst(array(
+                    "conditions" => "project_id=:project_id:",
+                    "bind" => array("project_id" => $projectMap->project_id)
+                ));
+
                 echo '<a href="' . $this->url->get('projects/manage/') . $project->project_id . '" class="list-group-item">';
                 echo $project->project_name;
                 echo '</a>';

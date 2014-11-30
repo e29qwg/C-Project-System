@@ -114,7 +114,8 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 'advisor' => array('advisorList'),
                 'profile' => array('*'),
                 'exam' => array('showExam'),
-                'score' => array('studentView')
+                'score' => array('studentView'),
+                'userSettings' => array('*')
             );
 
             foreach ($studentResources as $resource => $actions)
@@ -159,7 +160,8 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 ),
                 'profile' => array('*'),
                 'exam' => array('download', 'showExam'),
-                'score' => array('advisorView')
+                'score' => array('advisorView'),
+                'userSettings' => array('*')
             );
 
             foreach ($advisorResources as $resource => $actions)

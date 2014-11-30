@@ -2,6 +2,16 @@
 $auth = $this->session->get('auth');
 $user_id = $auth['id'];
 $projectMaps = ProjectMap::find("user_id='$user_id' AND map_type='advisor'");
+
+$semesters = Semester::find();
+$allSemesters = array();
+
+foreach ($semesters as $semester)
+{
+    $allSemesters[$semester->semester_id] = $semester->semester_term . '/' . $semester->semester_year;
+}
+
+$this->view->setVar('allSemesters', $allSemesters);
 ?>
 
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -25,26 +35,68 @@ $projectMaps = ProjectMap::find("user_id='$user_id' AND map_type='advisor'");
     <div class="row">
         <div class="col-sm-3">
             <div class="list-group">
+                <?php
+                $userCurrentSemester = UserCurrentSemester::findfirst(array(
+                    "conditions" => "user_id=:user_id:",
+                    "bind" => array("user_id" => $user_id)
+                ));
+
+                if (!$userCurrentSemester)
+                {
+                    $lCurrentSemester = Settings::findFirst("name='current_semester'");
+                    if (!$lCurrentSemester)
+                        return $this->settingError();
+                    $lCurrentSemester = $lCurrentSemester->value;
+                }
+                else
+                    $lCurrentSemester = $userCurrentSemester->semester_id;
+
+                $this->tag->setDefault('lsemester', $lCurrentSemester);
+
+                echo $this->tag->selectStatic(array(
+                    'lsemester',
+                    $allSemesters,
+                    'required' => 'required',
+                    'class' => 'form-control'
+                ));
+
+                ?>
+            </div>
+
+            <script>
+                $(document).ready(function() {
+                    $("#lsemester").change(function()
+                    {
+                        var semester_id = $("#lsemester").val();
+                        $.get('<?= $this->url->get('userSettings/setSemester/'); ?>' + semester_id);
+                        setTimeout(function() {
+                            location.reload();
+                        },1000);
+                    });
+                });
+            </script>
+
+            <div class="list-group">
                 <a href="#" class="list-group-item active">
                     Prepare Project
                     <span class="badge"><?php echo countProjects($projectMaps, '1'); ?></span>
                 </a>
                 <?php
-                showProject($projectMaps, '1', $this);
+                showProject($projectMaps, '1', $this,$lCurrentSemester);
                 ?>
                 <a href="#" class="list-group-item active">
                     Project I
                     <span class="badge"><?php echo countProjects($projectMaps, '2'); ?></span>
                 </a>
                 <?php
-                showProject($projectMaps, '2', $this);
+                showProject($projectMaps, '2', $this, $lCurrentSemester);
                 ?>
                 <a href="#" class="list-group-item active">
                     Project II
                     <span class="badge"><?php echo countProjects($projectMaps, '3'); ?></span>
                 </a>
                 <?php
-                showProject($projectMaps, '3', $this);
+                showProject($projectMaps, '3', $this, $lCurrentSemester);
                 ?>
             </div>
             <div class="list-group">
@@ -102,14 +154,16 @@ function getNewProgress($projectId)
     return $count;
 }
 
-function showProject($projectMaps, $level, $di)
+function showProject($projectMaps, $level, $di, $currentSemesterId)
 {
-    $current_semester = Semester::maximum(array("column" => "semester_id"));
-
     $found = false;
     foreach ($projectMaps as $projectMap)
     {
-        $project = Project::findFirst("project_id='$projectMap->project_id' AND project_level_id='$level' AND project_status='Accept' AND semester_id='$current_semester'");
+        $project = Project::findFirst(array(
+            "conditions" => "project_id=:project_id: AND project_level_id=:level: AND project_status='Accept' AND semester_id=:semester_id:",
+            "bind" => array("project_id" => $projectMap->project_id, "level" => $level, "semester_id" => $currentSemesterId)
+        ));
+
         if ($project)
         {
             $projectMaps = ProjectMap::find("project_id='$project->project_id' AND map_type='owner'");

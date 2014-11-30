@@ -37,13 +37,16 @@ class ControllerBase extends Phalcon\Mvc\Controller
     {
         $semesters = Semester::find();
         $allSemesters = array();
+        $allSemesterIds = array();
 
         foreach ($semesters as $semester)
         {
             $allSemesters[$semester->semester_id] = $semester->semester_term . '/' . $semester->semester_year;
+            array_push($allSemesterIds, $semester->semester_id);
         }
 
         $this->view->setVar('allSemesters', $allSemesters);
+        $this->view->setVar('allSemesterIds', $allSemesterIds);
     }
 
     protected function _checkAdvisorPermission($project_id)

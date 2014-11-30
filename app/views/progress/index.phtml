@@ -1,4 +1,8 @@
-<?php echo $this->getContent(); ?>
+<?php
+echo $this->getContent();
+$params = $this->dispatcher->getParams();
+?>
+
 
 <div class="row">
     <?php require(__DIR__ . '/../layouts/projectHeader.php'); ?>
@@ -16,6 +20,12 @@
                     <th width="15%"></th>
                 </tr>
                 <?php
+
+                $project = Project::findFirst(array(
+                    "conditions" => "project_id=:project_id:",
+                    "bind" => array("project_id" => $params[0])
+                ));
+
                 $progresss = Progress::find("project_id='$project->project_id'");
                 foreach ($progresss as $progress)
                 {
