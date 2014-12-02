@@ -72,34 +72,62 @@ if (!$projectMap)
                     }
 
                     ?>
-                    <div class="form-group">
-                        <?php
-                        if ($auth['type'] == 'Student')
-                        {
-                            ?>
-                            <a href="<?= $this->url->get('progress/index/'); ?><?= $params[0] ?>"
-                               class="btn btn-sm btn-primary">Back</a>
-                        <?php
-                        }
-                        else
-                        {
-                            ?>
-                            <a href="<?= $this->url->get('progress/evaluate/'); ?><?= $params[0] ?>"
-                               class="btn btn-sm btn-primary">Back</a>
-                        <?php
-                        }
-                        if (($projectMap->map_type == 'owner' && $progress->user_id == $user_id) || $projectMap->map_type = 'advisor')
-                        {
-                            ?>
-                            <a href="<?= $this->url->get('progress/edit/') . $params[0] . '/' . $progress->progress_id; ?>"
-                               class="btn btn-sm btn-primary">Edit</a>
-                        <?php
-                        }
-                        ?>
-                    </div>
-                </form>
+
+                    <?php
+                    $progressEvaluate = ProgressEvaluate::findfirst(array(
+                        "conditions" => "progress_id=:progress_id:",
+                        "bind" => array("progress_id" => $progress->progress_id)
+                    ));
+
+                    if ($progressEvaluate)
+                    {
+                    ?>
+                         <div class="form-group" >
+                            <label for="evaluate"> ผลการประเมิน </label>
+                             <div class="form-control-static">
+                                 <?php
+                                 switch($progressEvaluate->evaluation)
+                                 {
+                                     case 1: echo 'ต้องปรับปรุง'; break;
+                                     case 2: echo 'พอใช้'; break;
+                                     case 3: echo 'ดี'; break;
+                                 }
+                                 ?>
+                                 </div>
+                         </div>
+
+                    <?php
+                    }
+                    ?>
+
+            <div class="form-group">
+                <?php
+                if ($auth['type'] == 'Student')
+                {
+                    ?>
+                    <a href="<?= $this->url->get('progress/index/'); ?><?= $params[0] ?>"
+                       class="btn btn-sm btn-primary">Back</a>
+                <?php
+                }
+                else
+                {
+                    ?>
+                    <a href="<?= $this->url->get('progress/evaluate/'); ?><?= $params[0] ?>"
+                       class="btn btn-sm btn-primary">Back</a>
+                <?php
+                }
+                if (($projectMap->map_type == 'owner' && $progress->user_id == $user_id) || $projectMap->map_type = 'advisor')
+                {
+                    ?>
+                    <a href="<?= $this->url->get('progress/edit/') . $params[0] . '/' . $progress->progress_id; ?>"
+                       class="btn btn-sm btn-primary">Edit</a>
+                <?php
+                }
+                ?>
             </div>
+            </form>
         </div>
     </div>
+</div>
 </div>
 </div>
