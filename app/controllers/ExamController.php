@@ -40,6 +40,7 @@ class ExamController extends ControllerBase
             foreach ($this->request->getUploadedFiles() as $file)
             {
                 $examFile = file_get_contents($file->getTempName());
+                $name = $file->getName();
                 unlink($file->getTempName());
                 $excelFile = ExcelFile::findFirst(array(
                     "conditions" => "common_name=:name:",
@@ -52,7 +53,7 @@ class ExamController extends ControllerBase
                     $excelFile->common_name = 'Exam' . $request->getPost('semester_id');
                 }
 
-                $excelFile->filename = $this->security->getToken() . '.xlsx';
+                $excelFile->filename = $name;
                 $excelFile->file = $examFile;
                 $excelFile->user_id = 0;
                 $excelFile->public = 1;
