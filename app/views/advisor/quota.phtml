@@ -6,13 +6,18 @@ $advisors = User::find("type='Advisor'");
 $auth = $this->session->get('auth');
 $user_id = $auth['id'];
 
-$currentSemester = Semester::maximum(array("column" => "semester_id"));
-
 //show all config for admin otherwise show only user
 if ($auth['type'] != 'Admin')
     $advisors = User::find("type='Advisor' AND id='$user_id'");
 
 ?>
+
+<style>
+    th, .tcenter
+    {
+        text-align: center;
+    }
+</style>
 
 <div class="row">
     <form method="post" action="<?= $this->url->get('advisor/setQuota'); ?>">
@@ -21,13 +26,13 @@ if ($auth['type'] != 'Admin')
             <tr class="success">
                 <th>อาจารย์ที่ปรึกษา</th>
                 <th width="20%">
-                    <center>จำนวนที่รับได้</center>
+                    จำนวนที่รับได้
                 </th>
                 <th width="20%">
-                    <center>จำนวนที่รับแล้ว</center>
+                    จำนวนที่รับแล้ว
                 </th>
                 <th width="20%">
-                    <center>จำนวนที่รอยืนยัน</center>
+                    จำนวนที่รอยืนยัน
                 </th>
             </tr>
             </thead>
@@ -52,17 +57,13 @@ if ($auth['type'] != 'Admin')
                         ?>
                         <input type="hidden" name="id[]" value="<?= $quota->advisor_id; ?>">
                     </td>
-                    <td>
-                        <center>
+                    <td class="tcenter">
                             <?php
-                            echo $this->CheckQuota->acceptProject($advisor->id);
+                            echo $this->CheckQuota->acceptProject($advisor->id, $currentSemesterId);
                             ?>
-                        </center>
                     </td>
-                    <td>
-                        <center>
-                            <?= $this->CheckQuota->pendingProject($advisor->id); ?>
-                        </center>
+                    <td class="tcenter">
+                            <?= $this->CheckQuota->pendingProject($advisor->id, $currentSemesterId); ?>
                     </td>
                 </tr>
             <?php

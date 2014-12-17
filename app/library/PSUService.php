@@ -24,7 +24,7 @@ class PSUService
     {
         return $this->_userDetails[0];
     }
-
+    
     public function checkLogin($username, $password)
     {
         $params = array('username' => $username, 'password' => $password);

@@ -133,9 +133,10 @@ class ProjectsController extends ControllerBase
     private function _updateWork()
     {
         $works = User::find("type='Advisor'");
+        $currentSemesterId = $this->view->getVar('currentSemesterId');
         foreach ($works as $work)
         {
-            $work->work_load = $this->CheckQuota->getLoad($work->id);
+            $work->work_load = $this->CheckQuota->getLoad($work->id, $currentSemesterId);
             $work->save();
         }
     }
@@ -599,6 +600,7 @@ class ProjectsController extends ControllerBase
 
     public function newProjectAction()
     {
+        $this->_getAllSemester();
         $this->_updateWork();
     }
 }

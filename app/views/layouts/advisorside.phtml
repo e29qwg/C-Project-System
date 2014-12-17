@@ -68,10 +68,9 @@ $this->view->setVar('allSemesters', $allSemesters);
                     $("#lsemester").change(function()
                     {
                         var semester_id = $("#lsemester").val();
-                        $.get('<?= $this->url->get('userSettings/setSemester/'); ?>' + semester_id);
-                        setTimeout(function() {
-                            location.reload();
-                        },1000);
+                        $.get('<?= $this->url->get('userSettings/setSemester/'); ?>' + semester_id, function() {
+                            location.replace('<?= $this->url->get() ?>');
+                        })
                     });
                 });
             </script>

@@ -21,7 +21,7 @@ $user_id = $auth['id'];
         image_advtab: true,
         autosave_ask_before_unload: false,
         width: "80%",
-        height: "200px",
+        height: "200px"
     });
 </script>
 
@@ -57,6 +57,7 @@ $user_id = $auth['id'];
                 <?php
 
                 $projectMaps = ProjectMap::find("user_id='$user_id'");
+
                 $semesters_id = array();
 
                 foreach ($projectMaps as $projectMap)
@@ -65,15 +66,21 @@ $user_id = $auth['id'];
                     array_push($semesters_id, $project->semester_id);
                 }
 
-                $semesters = Semester::find();
-
-                foreach ($semesters as $semester)
+                $count = -1;
+                foreach ($allSemesters as $allSemester)
                 {
-                    if (in_array($semester->semester_id, $semesters_id))
+                    $count++;
+
+                    //prevent duplicate create
+                    if (in_array($allSemesterIds[$count], $semesters_id))
                         continue;
 
-                    echo '<option value="' . $semester->semester_id . '">';
-                    echo $semester->semester_term . '/' . $semester->semester_year;
+                    //allow only new semester
+                    if ($currentSemesterId < $allSemesterIds[$count])
+                        continue;
+
+                    echo '<option value="' . $allSemesterIds[$count] . '">';
+                    echo $allSemester;
                     echo '</option>';
                 }
 
@@ -115,7 +122,7 @@ $user_id = $auth['id'];
                     $quota = Quota::findFirst("advisor_id='$advisor->id'");
                     if (!$quota)
                         continue;
-                    if ($this->CheckQuota->acceptProject($advisor->id) + 1 > $quota->quota_pp)
+                    if ($this->CheckQuota->acceptProject($advisor->id, $currentSemesterId) + 1 > $quota->quota_pp)
                         continue;
                     echo '<option value="' . $advisor->id . '">';
                     echo $advisor->title . $advisor->name;
@@ -139,7 +146,7 @@ $user_id = $auth['id'];
                         $quota = Quota::findFirst("advisor_id='$advisor->id'");
                         if (!$quota)
                             continue;
-                        if ($this->CheckQuota->acceptProject($advisor->id) + 1 > $quota->quota_pp)
+                        if ($this->CheckQuota->acceptProject($advisor->id, $currentSemesterId) + 1 > $quota->quota_pp)
                             continue;
                         echo '<option value="' . $advisor->id . '">';
                         echo $advisor->title . $advisor->name;
@@ -161,7 +168,7 @@ $user_id = $auth['id'];
                         $quota = Quota::findFirst("advisor_id='$advisor->id'");
                         if (!$quota)
                             continue;
-                        if ($this->CheckQuota->acceptProject($advisor->id) + 1 > $quota->quota_pp)
+                        if ($this->CheckQuota->acceptProject($advisor->id, $currentSemesterId) + 1 > $quota->quota_pp)
                             continue;
                         echo '<option value="' . $advisor->id . '">';
                         echo $advisor->title . $advisor->name;

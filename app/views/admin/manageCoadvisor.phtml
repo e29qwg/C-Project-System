@@ -2,15 +2,32 @@
 
 echo $this->getContent();
 
-$this->flash->notice('กำลังปรับปรุงหน้านี้ ยังไม่สามารถใช้งานด้วย Excel ได้');
-
-$currentSemester = Semester::maximum(array("column" => "semester_id"));
-
-$projects = Project::find("project_status='Accept'");
-
 ?>
 
-<a class="btn btn-success btn-sm">Download Excel</a>
+<form class="form-horizontal" method="post">
+    <div class="col-sm-3">
+        <?php
+
+        if (empty($semester_id))
+            $this->tag->setDefault('semester_id', $currentSemesterId);
+
+        echo $this->tag->selectStatic(array(
+            'semester_id',
+            $allSemesters,
+            'require' => 'require',
+            'class' => 'form-control'
+        ));
+
+        ?>
+    </div>
+    <div class="col-sm-3">
+        <button type="submit" class="btn btn-primary btn-sm" formaction="<?= $this->url->get('admin/filterCoadvisor');?>">Filter</button>
+        <button type="submit" class="btn btn-primary btn-sm" formaction="<?= $this->url->get('admin/excelCoadvisor');?>">Download Excel</button>
+    </div>
+</form>
+
+
+<!-- <a class="btn btn-success btn-sm">Download Excel</a> -->
 <br>
 <br>
 
@@ -51,12 +68,12 @@ $projects = Project::find("project_status='Accept'");
                     else
                         $this->tag->setDefault("coadvisor[]", "");
                     echo $this->tag->select(array(
-                            'coadvisor[]',
-                            User::find("type='Advisor'"),
-                            'using' => array('id', 'name'),
-                            'class' => 'form-control',
-                            'useEmpty' => true
-                        ));
+                        'coadvisor[]',
+                        User::find("type='Advisor'"),
+                        'using' => array('id', 'name'),
+                        'class' => 'form-control',
+                        'useEmpty' => true
+                    ));
                     echo '</td>';
                 }
 
