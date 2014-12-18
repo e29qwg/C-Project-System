@@ -185,7 +185,8 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 'score' => array('*'),
                 'exam' => array('*'),
                 'news' => array('*'),
-                'settings' => array('*')
+                'settings' => array('*'),
+                'enroll' => array('*')
             );
 
             foreach ($adminResources as $resource => $actions)

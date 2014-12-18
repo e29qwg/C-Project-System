@@ -46,8 +46,11 @@ $controller = $this->dispatcher->getControllerName();
                    href="<?= $this->url->get('news/manageNews'); ?>">จัดการข่าว</a>
                 <a class="list-group-item <?= ($controller == 'admin' && $action == 'setView') ? LISTSELECTED : ''; ?>"
                    href="<?= $this->url->get('admin/setView'); ?>">เปลี่ยนมุมมอง</a>
+                <a class="list-group-item <?= ($controller == 'enroll') ? LISTSELECTED: ''; ?>"
+                   href="<?= $this->url->get('enroll'); ?>">จัดการผู้เรียน</a>
                 <a class="list-group-item <?= ($controller == 'settings') ? LISTSELECTED : ''; ?>"
                    href="<?= $this->url->get('settings'); ?>">ตั้งค่าระบบ</a>
+
             </div>
         </div>
         <div class="col-sm-9">

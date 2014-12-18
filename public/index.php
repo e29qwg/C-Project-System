@@ -46,6 +46,10 @@ try
         return $dispatcher;
     });
 
+    $di->set('transactionManager', function ()
+    {
+        return new \Phalcon\Mvc\Model\Transaction\Manager();
+    });
 
     $di->set('url', function () use ($config)
     {
