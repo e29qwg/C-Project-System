@@ -21,8 +21,12 @@ echo $this->getContent();
         ?>
     </div>
     <div class="col-sm-3">
-        <button type="submit" class="btn btn-primary btn-sm" formaction="<?= $this->url->get('admin/filterCoadvisor');?>">Filter</button>
-        <button type="submit" class="btn btn-primary btn-sm" formaction="<?= $this->url->get('admin/excelCoadvisor');?>">Download Excel</button>
+        <button type="submit" class="btn btn-primary btn-sm"
+                formaction="<?= $this->url->get('admin/filterCoadvisor'); ?>">Filter
+        </button>
+        <button type="submit" class="btn btn-primary btn-sm"
+                formaction="<?= $this->url->get('admin/excelCoadvisor'); ?>">Download Excel
+        </button>
     </div>
 </form>
 
@@ -31,60 +35,85 @@ echo $this->getContent();
 <br>
 <br>
 
-<form method="post" action="<?= $this->url->get('admin/manageCoadvisor'); ?>">
-    <table class="table" width="100%">
-        <thead>
-        <tr class="success">
-            <th>ชื่อโครงงาน</th>
-            <th>อาจารย์ที่ปรึกษา</th>
-            <th>อาจารย์ที่ปรึกษาร่วม</th>
-            <th>อาจารย์ที่ปรึกษาร่วม</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php
-
-        foreach ($projects as $project)
-        {
-            $projectMap = ProjectMap::findFirst(array("conditions" => "project_id='$project->project_id' AND map_type = 'advisor'"));
-            $projectMaps = ProjectMap::find(array("conditions" => "project_id='$project->project_id' AND map_type = 'coadvisor'"));
-
-            $advisor = User::findFirst("id='$projectMap->user_id'");
-            ?>
-            <tr>
-                <td><?= $project->project_name; ?></td>
-                <td><?= $advisor->name; ?></td>
-                <?php
-
-                $coadvisors = $projectMaps->toarray();
-
-                for ($i = 0; $i < 2; $i++)
-                {
-                    echo '<td>';
-                    if (!$i)
-                        echo '<input type="hidden" name="project_id[]" value="' . $project->project_id . '">';
-                    if (!empty($coadvisors[$i]))
-                        $this->tag->setDefault("coadvisor[]", $coadvisors[$i]['user_id']);
-                    else
-                        $this->tag->setDefault("coadvisor[]", "");
-                    echo $this->tag->select(array(
-                        'coadvisor[]',
-                        User::find("type='Advisor'"),
-                        'using' => array('id', 'name'),
-                        'class' => 'form-control',
-                        'useEmpty' => true
-                    ));
-                    echo '</td>';
-                }
-
-                ?>
+<form class="form-horizontal" method="post" action="<?= $this->url->get('admin/manageCoadvisor'); ?>" enctype="multipart/form-data">
+    <div class="form-group">
+        <table class="table" width="100%">
+            <thead>
+            <tr class="success">
+                <th>ชื่อโครงงาน</th>
+                <th>อาจารย์ที่ปรึกษา</th>
+                <th>อาจารย์ที่ปรึกษาร่วม</th>
+                <th>อาจารย์ที่ปรึกษาร่วม</th>
             </tr>
-        <?php
-        }
+            </thead>
+            <tbody>
+            <?php
 
-        ?>
-        </tbody>
-    </table>
+            foreach ($records as $record)
+            {
+                $project = $record->project;
+                $projectMap = ProjectMap::findFirst(array("conditions" => "project_id='$project->project_id' AND map_type = 'advisor'"));
+                $projectMaps = ProjectMap::find(array("conditions" => "project_id='$project->project_id' AND map_type = 'coadvisor'"));
 
-    <button type="submit" class="btn btn-success btn-sm">บันทึก</button>
+                $advisor = User::findFirst("id='$projectMap->user_id'");
+                ?>
+                <tr>
+                    <td><?= $project->project_name; ?></td>
+                    <td><?= $advisor->name; ?></td>
+                    <?php
+
+                    $coadvisors = $projectMaps->toarray();
+
+                    for ($i = 0; $i < 2; $i++)
+                    {
+                        echo '<td>';
+                        if (!$i)
+                            echo '<input type="hidden" name="project_id[]" value="' . $project->project_id . '">';
+                        if (!empty($coadvisors[$i]))
+                            $this->tag->setDefault("coadvisor[]", $coadvisors[$i]['user_id']);
+                        else
+                            $this->tag->setDefault("coadvisor[]", "");
+                        echo $this->tag->select(array(
+                            'coadvisor[]',
+                            User::find("type='Advisor'"),
+                            'using' => array('id', 'name'),
+                            'class' => 'form-control',
+                            'useEmpty' => true
+                        ));
+                        echo '</td>';
+                    }
+
+                    ?>
+                </tr>
+            <?php
+            }
+
+            ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">อัพโหลดไฟล์</label>
+
+        <div class="col-sm-4">
+            <?php
+            echo \Phalcon\Tag::fileField(array(
+                "excelFile",
+            ));
+            ?>
+        </div>
+
+        <button type="submit" id="btnsave" class="btn btn-success btn-sm">บันทึก</button>
+    </div>
 </form>
+
+<script>
+    $(document).ready(function()
+    {
+       $("#btnsave").click(function()
+       {
+           $("#btnsave").attr("disabled", "disabled");
+       });
+    });
+</script>

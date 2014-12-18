@@ -51,6 +51,7 @@ class AdminController extends ControllerBase
         $sheet->setCellValue('E1', 'อาจารย์ที่ปรึกษา');
         $sheet->setCellValue('F1', 'อาจารย์ที่ปรึกษาร่วม');
         $sheet->setCellValue('G1', 'อาจารย์ที่ปรึกษาร่วม');
+        $sheet->setCellValue('H1', 'รหัสโครงงาน');
 
         $row = 2;
 
@@ -61,7 +62,7 @@ class AdminController extends ControllerBase
             array_push($arr, $ad->name);
 
         $advisors = implode(",", $arr);
-        $advisors = '"'.$advisors.'"';
+        $advisors = '"' . $advisors . '"';
 
         foreach ($records as $record)
         {
@@ -116,7 +117,7 @@ class AdminController extends ControllerBase
                 }
 
                 $sheet->setCellValue('D' . $row, $projectLevel);
-                $sheet->setCellValue('E' . $row, $advisor->title . $advisor->name);
+                $sheet->setCellValue('E' . $row, $advisor->name);
 
                 $count = 0;
 
@@ -137,6 +138,20 @@ class AdminController extends ControllerBase
                     $objValidation->setPromptTitle('Pick from list');
                     $objValidation->setPrompt('Please pick a value from the drop-down list.');
                     $objValidation->setFormula1($advisors);
+
+                    //set coadvisor if exists
+                    $coadvisor = User::findFirst(array(
+                        "conditions" => "id=:user_id:",
+                        "bind" => array("user_id" => $projectMap->user_id)
+                    ));
+
+                    if (!$count)
+                        $sheet->setCellValue('F' . $row, $coadvisor->name);
+                    else
+                        $sheet->setCellValue('G' . $row, $coadvisor->name);
+
+                    $sheet->setCellValue('H'.$row, $project->project_id);
+
                     $count++;
                 }
             }
@@ -167,12 +182,16 @@ class AdminController extends ControllerBase
 
         $semester_id = $request->getPost('semester_id');
 
-        $projects = Project::find(array(
-            "conditions" => "project_status='Accept' AND semester_id=:semester_id:",
-            "bind" => array("semester_id" => $semester_id)
-        ));
+        $records = $this->modelsManager->createBuilder();
+        $records->from(array('Project', 'ProjectMap'));
+        $records->where("Project.project_status='Accept' AND Project.semester_id=:semester_id:", array("semester_id" => $semester_id));
+        $records->andWhere("ProjectMap.map_type='advisor'");
+        $records->distinct("Project.project_id");
+        $records->andWhere("Project.project_id=ProjectMap.project_id");
+        $records->orderBy("Project.project_level_id, ProjectMap.user_id ASC");
+        $records = $records->getQuery()->execute();
 
-        $this->view->setVar('projects', $projects);
+        $this->view->setVar('records', $records);
         $this->view->setVar('semester_id', $semester_id);
     }
 
@@ -185,38 +204,175 @@ class AdminController extends ControllerBase
 
         $currentSemesterId = $this->view->getVar('currentSemesterId');
 
-        $projects = Project::find(array(
-            "conditions" => "project_status='Accept' AND semester_id=:semester_id:",
-            "bind" => array("semester_id" => $currentSemesterId)
-        ));
+        $records = $this->modelsManager->createBuilder();
+        $records->from(array('Project', 'ProjectMap'));
+        $records->where("Project.project_status='Accept' AND Project.semester_id=:semester_id:", array("semester_id" => $currentSemesterId));
+        $records->andWhere("ProjectMap.map_type='advisor'");
+        $records->distinct("Project.project_id");
+        $records->andWhere("Project.project_id=ProjectMap.project_id");
+        $records->orderBy("Project.project_level_id, ProjectMap.user_id ASC");
+        $records = $records->getQuery()->execute();
 
-        $this->view->setVar('projects', $projects);
+        $this->view->setVar('records', $records);
 
         //post request
         if ($request->isPost())
         {
-            $project_ids = $request->getPost('project_id');
-            $coadvisors = $request->getPost('coadvisor');
-
-            $count = 0;
-
-            //TODO optimize
-            foreach ($project_ids as $project_id)
+            if ($request->hasFiles())
             {
-                $projectMaps = ProjectMap::find("project_id='$project_id' AND map_type='coadvisor'");
-
-                foreach ($projectMaps as $projectMap)
+                foreach ($request->getUploadedFiles() as $file)
                 {
-                    $projectMap->delete();
+                    break;
                 }
 
-                for ($i = 0; $i < 2; $i++, $count++)
+                $filename = $file->getTempName();
+                $inputFileType = PHPExcel_IOFactory::identify($filename);
+                $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+                $objReader->setReadDataOnly(true);
+
+                $objPHPExcel = $objReader->load($filename);
+                $sheet = $objPHPExcel->setActiveSheetIndex(0);
+
+                try
                 {
-                    $projectMap = new ProjectMap();
-                    $projectMap->user_id = $coadvisors[$count];
-                    $projectMap->project_id = $project_id;
-                    $projectMap->map_type = 'coadvisor';
-                    $projectMap->save();
+                    $transactionManager = $this->transactionManager;
+                    $transaction = $transactionManager->get();
+
+                    $row = 2;
+                    while (true)
+                    {
+                        $project_id = $sheet->getCell('H' . $row)->getValue();
+
+                        if (empty($project_id))
+                            break;
+
+                        $projectMaps = ProjectMap::find(array(
+                            "conditions" => "project_id=:project_id: AND map_type='coadvisor'",
+                            "bind" => array("project_id" => $project_id)
+                        ));
+
+                        foreach ($projectMaps as $projectMap)
+                        {
+                            $projectMap->setTransaction($transaction);
+                            $projectMap->delete();
+                        }
+
+                        $coadvisor1Name = $sheet->getCell('F'.$row)->getValue();
+                        $coadvisor2Name = $sheet->getCell('G'.$row)->getValue();
+
+                        if (!empty($coadvisor1Name))
+                        {
+                            $user = User::findFirst(array(
+                                "conditions" => "name=:name: AND type='Advisor'",
+                                "bind" => array("name" => $coadvisor1Name)
+                            ));
+
+                            if (!$user)
+                            {
+                                $transaction->rollback('Coadvisor not found in cell '.'F'.$row);
+                            }
+
+                            $projectMap = new ProjectMap();
+                            $projectMap->setTransaction($transaction);
+                            $projectMap->user_id = $user->id;
+                            $projectMap->project_id = $project_id;
+                            $projectMap->map_type = 'coadvisor';
+
+                            if (!$projectMap->save())
+                            {
+                                $transaction->rollback('Error when create project map');
+                            }
+                        }
+
+                        if (!empty($coadvisor2Name))
+                        {
+                            $user = User::findFirst(array(
+                                "conditions" => "name=:name: AND type='Advisor'",
+                                "bind" => array("name" => $coadvisor2Name)
+                            ));
+
+                            if (!$user)
+                            {
+                                $transaction->rollback('Coadvisor not found in cell '.'G'.$row);
+                            }
+
+                            $projectMap = new ProjectMap();
+                            $projectMap->setTransaction($transaction);
+                            $projectMap->user_id = $user->id;
+                            $projectMap->project_id = $project_id;
+                            $projectMap->map_type = 'coadvisor';
+
+                            if (!$projectMap->save())
+                            {
+                                $transaction->rollback('Error when create project map');
+                            }
+                        }
+
+                        $row++;
+                    }
+
+                    $transaction->commit();
+                }
+                catch(Phalcon\Mvc\Model\Transaction\Failed $e)
+                {
+                    $this->flashSession->error('Transaction failure: '. $e->getMessage());
+                }
+
+                unlink($file->getTempName());
+            }
+            else
+            {
+
+                try
+                {
+                    $transactionManager = $this->transactionManager;
+                    $transaction = $transactionManager->get();
+
+                    //http raw request
+                    $project_ids = $request->getPost('project_id');
+                    $coadvisors = $request->getPost('coadvisor');
+
+                    $count = 0;
+
+                    //TODO optimize
+                    foreach ($project_ids as $project_id)
+                    {
+                        $projectMaps = ProjectMap::find(array(
+                            "conditions" => "project_id=:project_id: AND map_type='coadvisor'",
+                            "bind" => array("project_id" => $project_id)
+                        ));
+
+                        foreach ($projectMaps as $projectMap)
+                        {
+                            $projectMap->setTransaction($transaction);
+                            if (!$projectMap->delete())
+                            {
+                                $transaction->rollback("Error when delete old map");
+                            }
+                        }
+
+                        for ($i = 0; $i < 2; $i++, $count++)
+                        {
+                            if (empty($coadvisors[$count]))
+                                continue;
+                            $projectMap = new ProjectMap();
+                            $projectMap->setTransaction($transaction);
+                            $projectMap->user_id = $coadvisors[$count];
+                            $projectMap->project_id = $project_id;
+                            $projectMap->map_type = 'coadvisor';
+                            if (!$projectMap->save())
+                            {
+                                foreach ($projectMap->getMessages() as $mes);
+                                    $transaction->rollback($mes);
+                            }
+                        }
+                    }
+
+                    $transaction->commit();
+                }
+                catch(Phalcon\Mvc\Model\Transaction\Failed $e)
+                {
+                    $this->flashSession->error('Transaction failure: '. $e->getMessage());
                 }
             }
 
