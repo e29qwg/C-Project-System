@@ -1,0 +1,64 @@
+<?php
+
+echo $this->getContent();
+
+?>
+
+<form class="form-horizontal" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">ปีการศึกษา</label>
+
+        <div class="col-sm-2">
+            <?php
+            \Phalcon\Tag::setDefault("semester_id", $currentSemesterId);
+
+            echo \Phalcon\Tag::selectStatic(array(
+                'semester_id',
+                $allSemesters,
+                'class' => 'form-control',
+                'required' => 'required'
+            ));
+            ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Prepare Project</label>
+
+        <div class="col-sm-10">
+            <?php
+            echo \Phalcon\Tag::fileField(array(
+                'pp_file'
+            ));
+            ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Project I</label>
+
+        <div class="col-sm-10">
+            <?php
+            echo \Phalcon\Tag::fileField(array(
+                'p1_file'
+            ));
+            ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Project II</label>
+
+        <div class="col-sm-10">
+            <?php
+            echo \Phalcon\Tag::fileField(array(
+                'p2_file'
+            ));
+            ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" formaction="<?= $this->url->get('enroll/setUser'); ?>" class="btn btn-primary btn-sm">
+                บันทึก
+            </button>
+        </div>
+    </div>
+</form>

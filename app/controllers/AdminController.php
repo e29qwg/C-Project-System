@@ -119,9 +119,7 @@ class AdminController extends ControllerBase
                 $sheet->setCellValue('D' . $row, $projectLevel);
                 $sheet->setCellValue('E' . $row, $advisor->name);
 
-                $count = 0;
-
-                foreach ($projectMaps as $projectMap)
+                for ($count = 0; $count < 2; $count++)
                 {
                     if (!$count)
                         $objValidation = $objPHPExcel->getActiveSheet()->getCell('F' . $row)->getDataValidation();
@@ -140,19 +138,21 @@ class AdminController extends ControllerBase
                     $objValidation->setFormula1($advisors);
 
                     //set coadvisor if exists
-                    $coadvisor = User::findFirst(array(
-                        "conditions" => "id=:user_id:",
-                        "bind" => array("user_id" => $projectMap->user_id)
-                    ));
+                    if (!empty($projectMaps[$count]))
+                    {
+                        $coadvisor = User::findFirst(array(
+                            "conditions" => "id=:user_id:",
+                            "bind" => array("user_id" => $projectMaps[$count]->user_id)
+                        ));
 
-                    if (!$count)
-                        $sheet->setCellValue('F' . $row, $coadvisor->name);
-                    else
-                        $sheet->setCellValue('G' . $row, $coadvisor->name);
+                        if (!$count)
+                            $sheet->setCellValue('F' . $row, $coadvisor->name);
+                        else
+                            $sheet->setCellValue('G' . $row, $coadvisor->name);
+                    }
 
-                    $sheet->setCellValue('H'.$row, $project->project_id);
+                    $sheet->setCellValue('H' . $row, $project->project_id);
 
-                    $count++;
                 }
             }
 
@@ -257,8 +257,8 @@ class AdminController extends ControllerBase
                             $projectMap->delete();
                         }
 
-                        $coadvisor1Name = $sheet->getCell('F'.$row)->getValue();
-                        $coadvisor2Name = $sheet->getCell('G'.$row)->getValue();
+                        $coadvisor1Name = $sheet->getCell('F' . $row)->getValue();
+                        $coadvisor2Name = $sheet->getCell('G' . $row)->getValue();
 
                         if (!empty($coadvisor1Name))
                         {
@@ -269,7 +269,7 @@ class AdminController extends ControllerBase
 
                             if (!$user)
                             {
-                                $transaction->rollback('Coadvisor not found in cell '.'F'.$row);
+                                $transaction->rollback('Coadvisor not found in cell ' . 'F' . $row);
                             }
 
                             $projectMap = new ProjectMap();
@@ -293,7 +293,7 @@ class AdminController extends ControllerBase
 
                             if (!$user)
                             {
-                                $transaction->rollback('Coadvisor not found in cell '.'G'.$row);
+                                $transaction->rollback('Coadvisor not found in cell ' . 'G' . $row);
                             }
 
                             $projectMap = new ProjectMap();
@@ -312,10 +312,9 @@ class AdminController extends ControllerBase
                     }
 
                     $transaction->commit();
-                }
-                catch(Phalcon\Mvc\Model\Transaction\Failed $e)
+                } catch (Phalcon\Mvc\Model\Transaction\Failed $e)
                 {
-                    $this->flashSession->error('Transaction failure: '. $e->getMessage());
+                    $this->flashSession->error('Transaction failure: ' . $e->getMessage());
                 }
 
                 unlink($file->getTempName());
@@ -362,17 +361,16 @@ class AdminController extends ControllerBase
                             $projectMap->map_type = 'coadvisor';
                             if (!$projectMap->save())
                             {
-                                foreach ($projectMap->getMessages() as $mes);
+                                foreach ($projectMap->getMessages() as $mes)
                                     $transaction->rollback($mes);
                             }
                         }
                     }
 
                     $transaction->commit();
-                }
-                catch(Phalcon\Mvc\Model\Transaction\Failed $e)
+                } catch (Phalcon\Mvc\Model\Transaction\Failed $e)
                 {
-                    $this->flashSession->error('Transaction failure: '. $e->getMessage());
+                    $this->flashSession->error('Transaction failure: ' . $e->getMessage());
                 }
             }
 

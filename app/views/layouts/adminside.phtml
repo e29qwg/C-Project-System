@@ -36,6 +36,8 @@ $controller = $this->dispatcher->getControllerName();
                    href="<?= $this->url->get('exam/manage'); ?>">จัดการตารางสอบ</a>
                 <a class="list-group-item <?= ($controller == 'score' && $action == 'manageScore') ? LISTSELECTED : ''; ?>"
                    href="<?= $this->url->get('score/manageScore'); ?>">จัดการคะแนน</a>
+                <a class="list-group-item <?= ($controller == 'enroll') ? LISTSELECTED: ''; ?>"
+                   href="<?= $this->url->get('enroll'); ?>">จัดการผู้เรียน</a>
                 <a class="list-group-item <?= ($controller == 'admin' && $action == 'manageCoadvisor') ? LISTSELECTED : ''; ?>"
                    href="<?= $this->url->get('admin/manageCoadvisor'); ?>">จัดการอาจารย์ที่ปรึกษาร่วม</a>
                 <a class="list-group-item <?= ($controller == 'advisor' && $action == 'quota') ? LISTSELECTED : ''; ?>"
@@ -46,8 +48,6 @@ $controller = $this->dispatcher->getControllerName();
                    href="<?= $this->url->get('news/manageNews'); ?>">จัดการข่าว</a>
                 <a class="list-group-item <?= ($controller == 'admin' && $action == 'setView') ? LISTSELECTED : ''; ?>"
                    href="<?= $this->url->get('admin/setView'); ?>">เปลี่ยนมุมมอง</a>
-                <a class="list-group-item <?= ($controller == 'enroll') ? LISTSELECTED: ''; ?>"
-                   href="<?= $this->url->get('enroll'); ?>">จัดการผู้เรียน</a>
                 <a class="list-group-item <?= ($controller == 'settings') ? LISTSELECTED : ''; ?>"
                    href="<?= $this->url->get('settings'); ?>">ตั้งค่าระบบ</a>
 

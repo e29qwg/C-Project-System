@@ -534,6 +534,23 @@ class ProjectsController extends ControllerBase
             }
         }
 
+        $user = User::findFirst(array(
+            "conditions" => "id=:user_id:",
+            "bind" => array("user_id" => $user_id)
+        ));
+
+        //check enroll student
+        $enroll = Enroll::findFirst(array(
+            "conditions" => "student_id LIKE :user_id: AND semester_id=:semester_id: AND project_level_id=:project_level_id:",
+            "bind" => array("user_id" => "%".$user->user_id."%", "semester_id" => $semester, "project_level_id" => $project_level)
+        ));
+
+        if (!$enroll)
+        {
+            $this->flash->error('ข้อมูลไม่ตรงกับที่ลงทะเบียน');
+            return $this->forward('projects/newProject');
+        }
+
         $project = new Project();
         $project->project_name = $project_name;
         $project->project_type = $project_type;
