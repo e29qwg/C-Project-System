@@ -6,6 +6,7 @@ date_default_timezone_set('Asia/Bangkok');
 
 try
 {
+   /* include('/usr/share/php/libphp-phpmailer/class.phpmailer.php');*/
     require(__DIR__ . '/../app/config/config.php');
     require(__DIR__ . '/../app/library/glib.php');
     require_once(__DIR__ . '/../app/library/PHPExcel/Classes/PHPExcel.php');
@@ -24,6 +25,29 @@ try
     $loader->register();
 
     $di = new \Phalcon\DI\FactoryDefault();
+
+    $di->set('queue', function ()
+    {
+        $queue = new Phalcon\Queue\Beanstalk(array(
+            'host' => '127.0.0.1'
+        ));
+        return $queue;
+    });
+
+/*    $di->set('mail', function () use ($config)
+    {
+        $mail = new PHPMailer();
+        $mail->IsSMTP();
+        $mail->Host = 'ssl://smtp.gmail.com';
+        $mail->Port = 465;
+        $mail->SMTPAuth = true;
+        $mail->Username = $config->gmail->username;
+        $mail->Password = $config->gmail->password;
+        $mail->From = 'xcoephuket@gmail.com';
+        $mail->FromName = 'xcoephuket@gmail.com';
+
+        return $mail;
+    });*/
 
     $di->set('mode', function () use ($config)
     {

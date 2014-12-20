@@ -6,6 +6,7 @@ class User extends \Phalcon\Mvc\Model
     public $user_id;
     public $title;
     public $name;
+    public $email;
     public $facebook;
     public $type;
     public $advisor_group;

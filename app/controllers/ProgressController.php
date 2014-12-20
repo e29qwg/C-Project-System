@@ -60,10 +60,10 @@ class ProgressController extends ControllerBase
         $this->flash->success('Update Success');
 
         return $this->dispatcher->forward(array(
-                'controller' => 'progress',
-                'action' => 'index',
-                'params' => array($id)
-            ));
+            'controller' => 'progress',
+            'action' => 'index',
+            'params' => array($id)
+        ));
     }
 
     public function editAction()
@@ -91,16 +91,73 @@ class ProgressController extends ControllerBase
         $progress_ids = $request->getPost("progress_id");
         $evaluates = $request->getPost("evaluate");
 
-        for ($i = 0; $i < count($progress_ids); $i++)
-        {
-            $progress_id = $progress_ids[$i];
-            $progressEvaluate = ProgressEvaluate::findFirst("progress_id='$progress_id'");
+        $transaction = $this->transactionManager->get();
 
-            if ($progressEvaluate)
+        try
+        {
+            for ($i = 0; $i < count($progress_ids); $i++)
             {
-                $progressEvaluate->evaluation = $evaluates[$i];
-                $progressEvaluate->save();
+                $progress_id = $progress_ids[$i];
+
+                $progressEvaluate = ProgressEvaluate::findFirst("progress_id='$progress_id'");
+                $progressEvaluate->setTransaction($transaction);
+
+                if ($progressEvaluate)
+                {
+                    $progressEvaluate->evaluation = $evaluates[$i];
+                    if (!$progressEvaluate->save())
+                    {
+                        $transaction->rollback("Error when save to database");
+                    }
+                }
+                else
+                {
+                    $transaction->rollback("Data not found");
+                }
+
+                $progress = Progress::findFirst(array(
+                    "conditions" => "progress_id=:id:",
+                    "bind" => array("id" => $progress_id)
+                ));
+
+                if (!$progress)
+                    $transaction->rollback("Progress not found");
+
+                //fetch user
+                $owner = User::findFirst(array(
+                    "conditions" => "id=:id:",
+                    "bind" => array("id" => $progress->user_id)
+                ));
             }
+
+            //fetch project owner
+            if ($owner)
+            {
+                if (!empty($owner->email))
+                {
+                    $sendEmail = new SendEmail();
+                    $sendEmail->to = $owner->email;
+                    $sendEmail->subject = 'Your progress has been evaluate';
+                    $sendEmail->body = 'มีการเปลี่ยนแปลงผลการประเมินของใบรายงานความก้าวหน้าโครงงาน เวลา '.date('d-m-Y H:i:s');
+                    $sendEmail->setTransaction($transaction);
+                    if (!$sendEmail->save())
+                        $transaction->rollback('Error when send email');
+                }
+            }
+
+            $transaction->commit();
+
+            //put to beanstalkd
+            $this->queue->choose('projecttube');
+            $this->queue->put($sendEmail->id);
+        } catch (Phalcon\Mvc\Model\Transaction\Failed $e)
+        {
+            $this->flashSession->error('Transaction failure: ' . $e->getMessage());
+            return $this->dispatcher->forward(array(
+                'controller' => 'progress',
+                'action' => 'evalutate',
+                'params' => array($project_id)
+            ));
         }
 
         $this->flashSession->success("Update evaluation success");
@@ -197,10 +254,10 @@ class ProgressController extends ControllerBase
         {
             $this->flash->error('Database Failure');
             return $this->dispatcher->forward(array(
-                    'controller' => 'progress',
-                    'action' => 'newProgress',
-                    'params' => array($project_id)
-                ));
+                'controller' => 'progress',
+                'action' => 'newProgress',
+                'params' => array($project_id)
+            ));
         }
 
         $evaluate = new ProgressEvaluate();
@@ -211,10 +268,10 @@ class ProgressController extends ControllerBase
             $progress->delete();
             $this->flash->error('Database Failure');
             return $this->dispatcher->forward(array(
-                    'controller' => 'progress',
-                    'action' => 'newProgress',
-                    'params' => array($project_id)
-                ));
+                'controller' => 'progress',
+                'action' => 'newProgress',
+                'params' => array($project_id)
+            ));
         }
 
         $this->flashSession->success('Add progress success');
@@ -250,10 +307,10 @@ class ProgressController extends ControllerBase
 
         if ($auth['type'] != 'Student')
             return $this->dispatcher->forward(array(
-                    'controller' => 'progress',
-                    'action' => 'evaluate',
-                    'params' => array($params[0])
-                ));
+                'controller' => 'progress',
+                'action' => 'evaluate',
+                'params' => array($params[0])
+            ));
     }
 }
 

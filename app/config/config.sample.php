@@ -20,6 +20,10 @@ $config = new Phalcon\Config(array(
         'formsDir' => '../app/forms/',
         'baseUri' => '/'
     ),
+    'gmail' => array(
+        'username' => '',
+        'password' => ''
+    )
 ));
 
 ?>

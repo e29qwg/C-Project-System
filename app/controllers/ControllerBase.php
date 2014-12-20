@@ -33,6 +33,7 @@ class ControllerBase extends Phalcon\Mvc\Controller
         }
     }
 
+
     protected function _getAllSemester()
     {
         $semesters = Semester::find();
