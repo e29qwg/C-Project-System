@@ -30,6 +30,7 @@ class ProfileController extends ControllerBase
         $user = User::findFirst("id='$user_id'");
         $facebook = $request->getPost('facebook');
         $interesting = $request->getPost('interesting');
+        $email = $request->getPost('email');
 
         if (empty($interesting))
             $interesting = 'ยังไม่ระบุ';
@@ -44,6 +45,7 @@ class ProfileController extends ControllerBase
 
         $user->facebook = $facebook;
         $user->interesting = $interesting;
+        $user->email = $email;
 
         $user->save();
         $this->flashSession->success("Update profile success");

@@ -52,6 +52,13 @@ $projectMaps = ProjectMap::find("user_id='$params[0]'");
             </div>
         </div>
         <div class="row">
+            <label class="col-sm-3">Email: </label>
+            <div class="col-sm-9">
+                <?= $user->email; ?>
+            </div>
+        </div>
+
+        <div class="row">
             <label class="col-sm-3">Interesting: </label>
 
             <div class="col-sm-9">
