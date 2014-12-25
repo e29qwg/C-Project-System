@@ -3,8 +3,11 @@
 use Phalcon\CLI\Console as ConsoleApp;
 use Phalcon\DI\FactoryDefault\CLI as CliDI;
 
+set_time_limit(0);
+
 require(__DIR__ . '/../app/config/config.php');
-include('/usr/share/php/libphp-phpmailer/class.phpmailer.php');
+require(__DIR__ . '/../app/library/PHPMailer/PHPMailerAutoload.php');
+//include('/usr/share/php/libphp-phpmailer/class.phpmailer.php');
 
 $di = new CliDI();
 
@@ -24,13 +27,14 @@ $di->set('mail', function () use ($config)
 {
     $mail = new PHPMailer();
     $mail->IsSMTP();
-    $mail->Host = 'ssl://smtp.gmail.com';
-    $mail->Port = 465;
+    $mail->SMTPSecure = 'tls';
+    $mail->Host = 'mail.ohmcoe.com';
+    $mail->Port = 587;
     $mail->SMTPAuth = true;
     $mail->Username = $config->gmail->username;
     $mail->Password = $config->gmail->password;
-    $mail->From = 'xcoephuket@gmail.com';
-    $mail->FromName = 'xcoephuket@gmail.com';
+    $mail->From = $config->gmail->username;
+    $mail->FromName = 'CoEproject';
 
     return $mail;
 });

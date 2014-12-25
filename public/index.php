@@ -34,20 +34,9 @@ try
         return $queue;
     });
 
-/*    $di->set('mail', function () use ($config)
-    {
-        $mail = new PHPMailer();
-        $mail->IsSMTP();
-        $mail->Host = 'ssl://smtp.gmail.com';
-        $mail->Port = 465;
-        $mail->SMTPAuth = true;
-        $mail->Username = $config->gmail->username;
-        $mail->Password = $config->gmail->password;
-        $mail->From = 'xcoephuket@gmail.com';
-        $mail->FromName = 'xcoephuket@gmail.com';
-
-        return $mail;
-    });*/
+    $di->set('projecttube', function() {
+       return 'projecttube';
+    });
 
     $di->set('mode', function () use ($config)
     {

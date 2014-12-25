@@ -32,7 +32,8 @@ class MainTask extends \Phalcon\Cli\Task
                     $mail->Body     =  $sendMail->body;
                     $mail->CharSet = 'UTF-8';
                     $mail->AddAddress($sendMail->to);
-                    $mail->Send();
+                    if (!$mail->Send())
+                        continue;
                     $sendMail->delete();
                 }
 

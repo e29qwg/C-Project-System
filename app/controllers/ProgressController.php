@@ -74,61 +74,52 @@ class ProgressController extends ControllerBase
     public function doEvaluateAction()
     {
         $request = $this->request;
-        $project_ids = array_unique($this->request->getPost("project_id"));
-
-        if (count($project_ids) != 1)
-        {
-            $this->flash->error('Access Denied.');
-            return $this->forward('index');
-        }
-
-        $project_id = $project_ids[0];
-
-        //check is advisor in this project
-        if (!$this->_checkAdvisorPermission($project_id))
-            return false;
-
-        $progress_ids = $request->getPost("progress_id");
-        $evaluates = $request->getPost("evaluate");
+        $progress_id = $request->getPost('progress_id');
+        $evaluate = $request->getPost('evaluate');
+        $comment = $request->getPost('comment');
 
         $transaction = $this->transactionManager->get();
-
         try
         {
-            for ($i = 0; $i < count($progress_ids); $i++)
+            $progress = Progress::findFirst(array(
+                "conditions" => "progress_id=:progress_id:",
+                "bind" => array("progress_id" => $progress_id)
+            ));
+
+            $progress->setTransaction($transaction);
+
+            $project_id = $progress->project_id;
+
+            //check is advisor in this project
+            if (!$this->_checkAdvisorPermission($project_id))
+                return false;
+
+            $progressEvaluate = ProgressEvaluate::findFirst(array(
+                "conditions" => "progress_id=:progress_id:",
+                "bind" => array("progress_id" => $progress_id)
+            ));
+
+            $progressEvaluate->setTransaction($transaction);
+
+            if ($progressEvaluate)
             {
-                $progress_id = $progress_ids[$i];
-
-                $progressEvaluate = ProgressEvaluate::findFirst("progress_id='$progress_id'");
-                $progressEvaluate->setTransaction($transaction);
-
-                if ($progressEvaluate)
+                $progressEvaluate->evaluation = $evaluate;
+                $progressEvaluate->comment = $comment;
+                if (!$progressEvaluate->save())
                 {
-                    $progressEvaluate->evaluation = $evaluates[$i];
-                    if (!$progressEvaluate->save())
-                    {
-                        $transaction->rollback("Error when save to database");
-                    }
+                    $transaction->rollback("Error when save to database");
                 }
-                else
-                {
-                    $transaction->rollback("Data not found");
-                }
-
-                $progress = Progress::findFirst(array(
-                    "conditions" => "progress_id=:id:",
-                    "bind" => array("id" => $progress_id)
-                ));
-
-                if (!$progress)
-                    $transaction->rollback("Progress not found");
-
-                //fetch user
-                $owner = User::findFirst(array(
-                    "conditions" => "id=:id:",
-                    "bind" => array("id" => $progress->user_id)
-                ));
             }
+            else
+            {
+                $transaction->rollback("Data not found");
+            }
+
+            //fetch user
+            $owner = User::findFirst(array(
+                "conditions" => "id=:id:",
+                "bind" => array("id" => $progress->user_id)
+            ));
 
             //fetch project owner
             if ($owner)
@@ -138,7 +129,7 @@ class ProgressController extends ControllerBase
                     $sendEmail = new SendEmail();
                     $sendEmail->to = $owner->email;
                     $sendEmail->subject = 'Your progress has been evaluate';
-                    $sendEmail->body = 'มีการเปลี่ยนแปลงผลการประเมินของใบรายงานความก้าวหน้าโครงงาน เวลา '.date('d-m-Y H:i:s');
+                    $sendEmail->body = 'มีการเปลี่ยนแปลงผลการประเมินของใบรายงานความก้าวหน้าโครงงาน เวลา ' . date('d-m-Y H:i:s');
                     $sendEmail->setTransaction($transaction);
                     if (!$sendEmail->save())
                         $transaction->rollback('Error when send email');
@@ -150,7 +141,8 @@ class ProgressController extends ControllerBase
             //put to beanstalkd
             $this->queue->choose('projecttube');
             $this->queue->put($sendEmail->id);
-        } catch (Phalcon\Mvc\Model\Transaction\Failed $e)
+
+        } catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
         {
             $this->flashSession->error('Transaction failure: ' . $e->getMessage());
             return $this->dispatcher->forward(array(
@@ -168,7 +160,37 @@ class ProgressController extends ControllerBase
     public function evaluateAction()
     {
         $params = $this->dispatcher->getParams();
-        return $this->_checkAdvisorPermission($params[0]);
+        if (!$this->_checkAdvisorPermission($params[0]))
+            return;
+
+        $project_id = $params[0];
+
+        $progresss = Progress::find(array(
+            "conditions" => "project_id=:project_id:",
+            "bind" => array("project_id" => $project_id)
+        ));
+
+        $nonEvalProgresss = array();
+        $evaledProgresss = array();
+
+        foreach ($progresss as $progress)
+        {
+            $progressEvaluate = ProgressEvaluate::findFirst(array(
+                "progress_id=:progress_id:",
+                "bind" => array("progress_id" => $progress->progress_id)
+            ));
+
+            if ($progressEvaluate)
+            {
+                if ($progressEvaluate->evaluation == 0)
+                    array_push($nonEvalProgresss, $progress);
+                else
+                    array_push($evaledProgresss, $progress);
+            }
+        }
+
+        $this->view->setVar('nonEvalProgresss', $nonEvalProgresss);
+        $this->view->setVar('evaledProgresss', $evaledProgresss);
     }
 
     //delete progress
