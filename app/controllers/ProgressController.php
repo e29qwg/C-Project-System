@@ -298,8 +298,6 @@ class ProgressController extends ControllerBase
 
         $this->flashSession->success('Add progress success');
 
-        if ($type != 'Student')
-            return $this->response->redirect('progress/evaluate/' . $project_id);
 
         $projectMap = ProjectMap::findFirst("project_id='$project_id' AND map_type='advisor'");
 
@@ -308,6 +306,31 @@ class ProgressController extends ControllerBase
         $log->user_id = $projectMap->user_id;
         $log->description = $user->title . ' ' . $user->name . ' ได้บันทึกความก้าวหน้าโครงงาน ' . $project->project_name;
         $log->save();
+
+        //send email to advisor
+        $advisor = User::findFIrst(array(
+            "conditions" => "id=:user_id:",
+            "bind" => array("user_id" => $projectMap->user_id)
+        ));
+
+        if ($advisor)
+        {
+            if (!empty($advisor->email))
+            {
+                $sendEmail = new SendEmail();
+                $sendEmail->to = $advisor->email;
+                $sendEmail->subject = 'มีรายงานความก้าวหน้าโครงงาน '.$project->project_name;
+                $sendEmail->body = $user->title . ' ' . $user->name . ' ได้บันทึกความก้าวหน้าโครงงาน ' . $project->project_name.' เวลา '.date('d-m-Y H:i:s');
+                if ($sendEmail->save())
+                {
+                    $this->queue->choose($this->projecttube);
+                    $this->queue->put($sendEmail->id);
+                }
+            }
+        }
+
+        if ($type != 'Student')
+            return $this->response->redirect('progress/evaluate/' . $project_id);
 
         $this->response->redirect('progress/index/' . $project_id);
     }

@@ -704,12 +704,11 @@ class ProjectsController extends ControllerBase
             )
         ));
 
-        //TODO
-        /* if (!$enroll)
+         if (!$enroll)
          {
              $this->flash->error('ข้อมูลไม่ตรงกับที่ลงทะเบียน');
              return $this->forward('projects/newProject');
-         }*/
+         }
 
         $transaction = $this->transactionManager->get();
 
