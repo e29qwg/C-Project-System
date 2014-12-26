@@ -28,6 +28,7 @@ class MainTask extends \Phalcon\Cli\Task
                 {
                     echo "Process email id ".$sendMail->id."\n";
                     $mail = $this->mail;
+                    $mail->ClearAllRecipients();
                     $mail->Subject  = $sendMail->subject;
                     $mail->Body     =  $sendMail->body;
                     $mail->CharSet = 'UTF-8';
