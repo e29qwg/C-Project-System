@@ -23,6 +23,9 @@ $config = new Phalcon\Config(array(
     'gmail' => array(
         'username' => '',
         'password' => ''
+    ),
+    'tube' => array(
+        'tube' => ''
     )
 ));
 

@@ -204,22 +204,6 @@ if (!$projectMap)
                         ?>
                         <div class="form-group">
                             <div class="col-sm-12">
-                                <h4>ประเมินความก้าวหน้า</h4>
-
-                                <p class="form-control-static">
-                                    <?php
-                                    if ($progressEvaluate->evaluation == '1')
-                                        echo 'ต้องปรับปรุง';
-                                    else if ($progressEvaluate->evaluation == '2')
-                                        echo 'พอใช้';
-                                    else
-                                        echo 'ดี';
-                                    ?>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-12">
                                 <h4>ความคิดเห็นอาจารย์ที่ปรึกษา</h4>
 
                                 <p class="form-control-static"><?= $progressEvaluate->comment; ?></p>

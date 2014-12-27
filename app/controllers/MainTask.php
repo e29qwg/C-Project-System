@@ -5,8 +5,8 @@ class MainTask extends \Phalcon\Cli\Task
     public function mainAction()
     {
         $queue = $this->queue;
-        $queue->choose("projecttube");
-        $queue->watch("projecttube");
+        $queue->choose($this->projecttube);
+        $queue->watch($this->projecttube);
         while (true)
         {
             echo "Waiting for a job...\n";

@@ -11,6 +11,12 @@ class ProgressController extends ControllerBase
 
     public function exportPDFAction()
     {
+        $pdf = new FPDF();
+        $pdf->AddPage();
+        $pdf->AddFont('sarabun', '', 'THSarabunNew.php');
+        $pdf->SetFont('sarabun', '', 36);
+        $pdf->Cell(0, 14, iconv('UTF-8', 'TIS-620', 'บันทึกความก้าวหน้าครั้งที่ 1'), 0, 1, "C");
+        $pdf->Output("test.pdf", "D");
     }
 
     public function doEditAction()
@@ -139,7 +145,7 @@ class ProgressController extends ControllerBase
             $transaction->commit();
 
             //put to beanstalkd
-            $this->queue->choose('projecttube');
+            $this->queue->choose($this->projecttube);
             $this->queue->put($sendEmail->id);
 
         } catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
@@ -319,8 +325,8 @@ class ProgressController extends ControllerBase
             {
                 $sendEmail = new SendEmail();
                 $sendEmail->to = $advisor->email;
-                $sendEmail->subject = 'มีรายงานความก้าวหน้าโครงงาน '.$project->project_name;
-                $sendEmail->body = $user->title . ' ' . $user->name . ' ได้บันทึกความก้าวหน้าโครงงาน ' . $project->project_name.' เวลา '.date('d-m-Y H:i:s');
+                $sendEmail->subject = 'มีรายงานความก้าวหน้าโครงงาน ' . $project->project_name;
+                $sendEmail->body = $user->title . ' ' . $user->name . ' ได้บันทึกความก้าวหน้าโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s');
                 if ($sendEmail->save())
                 {
                     $this->queue->choose($this->projecttube);

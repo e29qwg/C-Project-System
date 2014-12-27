@@ -39,6 +39,11 @@ $di->set('mail', function () use ($config)
     return $mail;
 });
 
+$di->set('projecttube', function() use ($config)
+{
+   return $config->tube->tube;
+});
+
 $di->set('queue', function ()
 {
     $queue = new Phalcon\Queue\Beanstalk(array(

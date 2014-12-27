@@ -6,11 +6,11 @@ date_default_timezone_set('Asia/Bangkok');
 
 try
 {
-   /* include('/usr/share/php/libphp-phpmailer/class.phpmailer.php');*/
     require(__DIR__ . '/../app/config/config.php');
     require(__DIR__ . '/../app/library/glib.php');
     require_once(__DIR__ . '/../app/library/PHPExcel/Classes/PHPExcel.php');
     require_once(__DIR__ . '/../app/library/PHPExcel/Classes/PHPExcel/IOFactory.php');
+    require_once(__DIR__.'/../app/library/fpdf/fpdf.php');
 
     $loader = new \Phalcon\Loader();
 
@@ -34,8 +34,8 @@ try
         return $queue;
     });
 
-    $di->set('projecttube', function() {
-       return 'projecttube';
+    $di->set('projecttube', function() use ($config) {
+       return $config->tube->tube;
     });
 
     $di->set('mode', function () use ($config)
