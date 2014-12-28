@@ -11,12 +11,86 @@ class ProgressController extends ControllerBase
 
     public function exportPDFAction()
     {
-        $pdf = new FPDF();
-        $pdf->AddPage();
-        $pdf->AddFont('sarabun', '', 'THSarabunNew.php');
-        $pdf->SetFont('sarabun', '', 36);
-        $pdf->Cell(0, 14, iconv('UTF-8', 'TIS-620', 'บันทึกความก้าวหน้าครั้งที่ 1'), 0, 1, "C");
-        $pdf->Output("test.pdf", "D");
+        $project_id = $this->dispatcher->getParam(0);
+
+        if (empty($project_id))
+        {
+            $this->flash->error('Invalid Request');
+            return;
+        }
+
+        $progresss = Progress::find(array(
+            "conditions" => "project_id=:project_id:",
+            "bind" => array("project_id" => $project_id)
+        ));
+
+        try
+        {
+            $html2pdf = new HTML2PDF('P', 'A4', 'en');
+            $html2pdf->pdf->SetDisplayMode('fullpage');
+
+            $count = 1;
+
+            foreach ($progresss as $progress)
+            {
+                $txt = '<h1 style="text-align: center;">ใบรายงานความก้าวหน้าครั้งที่ ' . $count++ . '</h1>';
+                $txt .= '<h4>งานที่ทำเสร็จเรียบร้อยแล้ว</h4>';
+                $txt .= $progress->progress_finish;
+                $txt .= '<h4>งานที่อยู่ระหว่างดำเนินการ</h4>';
+                $txt .= $progress->progress_working;
+                $txt .= '<h4>งานที่ยังไม่ได้นำเนินการ</h4>';
+                $txt .= $progress->progress_todo;
+                $txt .= '<h4>สรุปผลการดำเนินการและปัญหาที่เกิดขึ้น</h4>';
+                $txt .= $progress->progress_summary;
+                $txt .= '<h4>เป้าหมายที่วางไว้เพื่อประเมิณความสำเร็จในครั้งต่อไป</h4>';
+                $txt .= $progress->progress_target;
+                $txt .= '<h4>วันที่บันทึก</h4>';
+                $txt .= $progress->create_date;
+                if (!empty($progress->edit_date))
+                {
+                    $txt .= '<h4>วันที่แก้ไข</h4>';
+                    $txt .= $progress->edit_date;
+                }
+
+                $progressEvaluate = ProgressEvaluate::findFirst(array(
+                    "conditions" => "progress_id=:progress_id:",
+                    "bind" => array("progress_id" => $progress->progress_id)
+                ));
+
+                if ($progressEvaluate)
+                {
+                    if (!empty($progressEvaluate->evaluation))
+                    {
+                        $txt .= '<h4>ผลการประเมิน</h4>';
+                        if ($progressEvaluate->evaluation == '1')
+                            $txt .= 'ต้องปรับปรุง';
+                        else if ($progressEvaluate->evaluation == '2')
+                            $txt .= 'พอใช้';
+                        else if ($progressEvaluate->evaluation == '3')
+                            $txt .= 'ดี';
+                    }
+
+                    if (!empty($progressEvaluate->comment))
+                    {
+                        $txt .= '<h4>ความคิดเห็นอาจารย์ที่ปรึกษา</h4>';
+                        $txt .= $progressEvaluate->comment;
+                    }
+                }
+
+                $txt .= '<page_footer>Create by CoE-Project Exported date: ' . date('Y-m-d H:i:s') . '</page_footer>';
+                $html2pdf->writeHTML('<page style="font-family: freeserif; font-size:16px;">' . $txt . '</page>');
+            }
+
+            $content = $html2pdf->Output('utf8.pdf', true);
+
+            $this->response->setContent($content);
+            $this->response->setHeader('Content-Type', 'application/force-download');
+            $this->response->setHeader('Content-Disposition', 'attachment;filename=progress.pdf');
+            $this->response->send();
+        } catch (HTML2PDF_exception $e)
+        {
+            echo $e;
+        }
     }
 
     public function doEditAction()
@@ -76,7 +150,6 @@ class ProgressController extends ControllerBase
     {
     }
 
-    //insert evaluate to database
     public function doEvaluateAction()
     {
         $request = $this->request;
@@ -162,7 +235,8 @@ class ProgressController extends ControllerBase
         return $this->response->redirect("progress/evaluate/" . $project_id);
     }
 
-    //show evaluate page for advisor
+    //insert evaluate to database
+
     public function evaluateAction()
     {
         $params = $this->dispatcher->getParams();
@@ -199,7 +273,8 @@ class ProgressController extends ControllerBase
         $this->view->setVar('evaledProgresss', $evaledProgresss);
     }
 
-    //delete progress
+    //show evaluate page for advisor
+
     public function deleteAction()
     {
         $auth = $this->session->get('auth');
@@ -242,12 +317,14 @@ class ProgressController extends ControllerBase
         return $this->response->redirect('progress/index/' . $params[0]);
     }
 
-    //view progress
+    //delete progress
+
     public function viewAction()
     {
     }
 
-    //add progress to db
+    //view progress
+
     public function doAddProgressAction()
     {
         $request = $this->request;
@@ -341,14 +418,16 @@ class ProgressController extends ControllerBase
         $this->response->redirect('progress/index/' . $project_id);
     }
 
-    //show add progress page
+    //add progress to db
+
     public function newProgressAction()
     {
         $params = $this->dispatcher->getParams();
         $this->_checkPermission($params[0]);
     }
 
-    //show progress page
+    //show add progress page
+
     public function indexAction()
     {
         $auth = $this->session->get('auth');
@@ -362,6 +441,13 @@ class ProgressController extends ControllerBase
                 'action' => 'evaluate',
                 'params' => array($params[0])
             ));
+    }
+
+    //show progress page
+
+    private function toUTF8($str)
+    {
+        return iconv('UTF-8', 'TIS-620', $str);
     }
 }
 

@@ -2,7 +2,7 @@
 
 class CheckQuota extends Phalcon\Mvc\User\Component
 {
-    public function acceptProject($user_id, $semester_id="")
+    public function acceptProject($user_id, $semester_id = "")
     {
         $record = $this->modelsManager->createBuilder();
         $record->from(array(
@@ -18,7 +18,7 @@ class CheckQuota extends Phalcon\Mvc\User\Component
         return count($record);
     }
 
-    public function pendingProject($user_id, $semester_id="")
+    public function pendingProject($user_id, $semester_id = "")
     {
         $record = $this->modelsManager->createBuilder();
         $record->from(array(

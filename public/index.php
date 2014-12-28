@@ -10,7 +10,8 @@ try
     require(__DIR__ . '/../app/library/glib.php');
     require_once(__DIR__ . '/../app/library/PHPExcel/Classes/PHPExcel.php');
     require_once(__DIR__ . '/../app/library/PHPExcel/Classes/PHPExcel/IOFactory.php');
-    require_once(__DIR__.'/../app/library/fpdf/fpdf.php');
+    require_once(__DIR__.'/../app/library/html2pdf/html2pdf.class.php');
+
 
     $loader = new \Phalcon\Loader();
 

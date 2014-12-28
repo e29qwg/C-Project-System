@@ -225,21 +225,21 @@ if (!$projectMap)
                             {
                                 ?>
                                 <a href="<?= $this->url->get('progress/index/'); ?><?= $params[0] ?>"
-                                   class="btn btn-sm btn-primary">Back</a>
+                                   class="btn btn-sm btn-warning">กลับ</a>
                             <?php
                             }
                             else
                             {
                                 ?>
                                 <a href="<?= $this->url->get('progress/evaluate/'); ?><?= $params[0] ?>"
-                                   class="btn btn-sm btn-primary">Back</a>
+                                   class="btn btn-sm btn-warning">กลับ</a>
                             <?php
                             }
                             if (($projectMap->map_type == 'owner' && $progress->user_id == $user_id) || $projectMap->map_type == 'advisor')
                             {
                                 ?>
                                 <a href="<?= $this->url->get('progress/edit/') . $params[0] . '/' . $progress->progress_id; ?>"
-                                   class="btn btn-sm btn-primary">Edit</a>
+                                   class="btn btn-sm btn-primary">แก้ไข</a>
                             <?php
                             }
                             if ($projectMap->map_type == 'advisor')

@@ -9,8 +9,13 @@ $params = $this->dispatcher->getParams();
     <div class="tab-content">
         <div class="tab-pane fade in active" id="progress">
             <br>
-            <a href="<?= $this->url->get('progress/newProgress/'); ?><?= $params[0] ?>"
-               class="btn btn-xs btn-success pull-right">New Progress</a>
+
+            <div class="pull-right">
+                <a href="<?= $this->url->get('progress/newProgress/'); ?><?= $params[0] ?>"
+                   class="btn btn-xs btn-success">New Progress</a>
+                <a href="<?= $this->url->get('progress/exportPDF/') . $params[0]; ?>"
+                   class="btn btn-xs btn-primary">Export PDF</a>
+            </div>
             <br>
             <br>
             <table class="table" width="100%">

@@ -69,7 +69,7 @@ $newss = News::find(array("order" => "id DESC", "limit" => 8));
     <div class="panel panel-info">
         <div class="panel-body">
             <?php
-            $logs = Log::find(array("conditions" => "user_id='$user_id'", "order" => "create_date DESC"));
+            $logs = Log::find(array("conditions" => "user_id='$user_id'", "order" => "create_date DESC", "limit" => 8));
             echo '<ul>';
             foreach ($logs as $log)
             {
