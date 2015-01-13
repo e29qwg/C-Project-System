@@ -221,6 +221,7 @@ class ProjectsController extends ControllerBase
             return false;
 
         $transaction = $this->transactionManager->get();
+        $ids = array();
 
         try
         {
@@ -284,6 +285,10 @@ class ProjectsController extends ControllerBase
                             {
                                 $transaction->rollback('Error when send email');
                             }
+                            else
+                            {
+                                array_push($ids, $sendEmail->id);
+                            }
                         }
                     }
                 }
@@ -297,8 +302,12 @@ class ProjectsController extends ControllerBase
 
             $transaction->commit();
 
-            $this->queue->choose($this->projecttube);
-            $this->queue->put($sendEmail->id);
+            foreach ($ids as $id)
+            {
+                $this->queue->choose($this->projecttube);
+                $this->queue->put($id);
+            }
+
         } catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
         {
             $this->flash->error('Transaction failure: ' . $e->getMessage());
@@ -711,6 +720,7 @@ class ProjectsController extends ControllerBase
         }
 
         $transaction = $this->transactionManager->get();
+        $ids = array();
 
         try
         {
@@ -822,15 +832,18 @@ class ProjectsController extends ControllerBase
                 }
                 else
                 {
-                    $transaction->commit();
-                    $this->queue->choose($this->projecttube);
-                    $this->queue->put($sendEmail->id);
+                    array_push($ids, $sendEmail->id);
                 }
             }
-            else
+
+            $transaction->commit();
+
+            foreach ($ids as $id)
             {
-                $transaction->commit();
+                $this->queue->choose($this->projecttube);
+                $this->queue->put($id);
             }
+
 
         } catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
         {

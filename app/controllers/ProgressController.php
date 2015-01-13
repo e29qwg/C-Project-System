@@ -158,6 +158,8 @@ class ProgressController extends ControllerBase
         $comment = $request->getPost('comment');
 
         $transaction = $this->transactionManager->get();
+        $ids = array();
+
         try
         {
             $progress = Progress::findFirst(array(
@@ -212,14 +214,19 @@ class ProgressController extends ControllerBase
                     $sendEmail->setTransaction($transaction);
                     if (!$sendEmail->save())
                         $transaction->rollback('Error when send email');
+                    else
+                        array_push($ids, $sendEmail->id);
                 }
             }
 
             $transaction->commit();
 
             //put to beanstalkd
-            $this->queue->choose($this->projecttube);
-            $this->queue->put($sendEmail->id);
+            foreach ($ids as $id)
+            {
+                $this->queue->choose($this->projecttube);
+                $this->queue->put($id);
+            }
 
         } catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
         {
@@ -380,7 +387,6 @@ class ProgressController extends ControllerBase
         }
 
         $this->flashSession->success('Add progress success');
-
 
         $projectMap = ProjectMap::findFirst("project_id='$project_id' AND map_type='advisor'");
 
