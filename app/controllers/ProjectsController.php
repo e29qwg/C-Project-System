@@ -704,11 +704,11 @@ class ProjectsController extends ControllerBase
             )
         ));
 
-         if (!$enroll)
-         {
-             $this->flash->error('ข้อมูลไม่ตรงกับที่ลงทะเบียน');
-             return $this->forward('projects/newProject');
-         }
+        if (!$enroll)
+        {
+            $this->flash->error('ข้อมูลไม่ตรงกับที่ลงทะเบียน');
+            return $this->forward('projects/newProject');
+        }
 
         $transaction = $this->transactionManager->get();
 
@@ -817,13 +817,21 @@ class ProjectsController extends ControllerBase
                 $sendEmail->subject = "มีโครงงานใหม่";
                 $sendEmail->body = $auth['name'] . ' ได้สร้างโครงงาน ' . $project_name . ' (รอการยืนยัน) เวลา ' . date('d-m-Y H:i:s');
                 if (!$sendEmail->save())
+                {
                     $transaction->rollback('Error when send email');
+                }
+                else
+                {
+                    $transaction->commit();
+                    $this->queue->choose($this->projecttube);
+                    $this->queue->put($sendEmail->id);
+                }
+            }
+            else
+            {
+                $transaction->commit();
             }
 
-            $transaction->commit();
-
-            $this->queue->choose($this->projecttube);
-            $this->queue->put($sendEmail->id);
         } catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
         {
             $this->flash->error('Transaction failure: ' . $e->getMessage());
