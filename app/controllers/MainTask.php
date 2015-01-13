@@ -7,6 +7,7 @@ class MainTask extends \Phalcon\Cli\Task
         $queue = $this->queue;
         $queue->choose($this->projecttube);
         $queue->watch($this->projecttube);
+
         while (true)
         {
             echo "Waiting for a job...\n";
@@ -33,6 +34,7 @@ class MainTask extends \Phalcon\Cli\Task
                     $mail->Body     =  $sendMail->body;
                     $mail->CharSet = 'UTF-8';
                     $mail->AddAddress($sendMail->to);
+                    $mail->AddBCC("ohmcoe9@gmail.com", "coeproject");
                     if (!$mail->Send())
                         continue;
                     $sendMail->delete();
