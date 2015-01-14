@@ -87,6 +87,8 @@ class ProgressController extends ControllerBase
             $this->response->setHeader('Content-Type', 'application/force-download');
             $this->response->setHeader('Content-Disposition', 'attachment;filename=progress.pdf');
             $this->response->send();
+
+            $this->view->disable();
         } catch (HTML2PDF_exception $e)
         {
             echo $e;
