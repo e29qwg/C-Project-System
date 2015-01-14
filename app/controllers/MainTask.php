@@ -20,6 +20,7 @@ class MainTask extends \Phalcon\Cli\Task
             else
             {
                 $body = $job->getBody();
+                $this->db->connect();
                 $sendMail = SendEmail::findFirst(array(
                     "conditions" => "id=:id:",
                     "bind" => array("id" => $body)
