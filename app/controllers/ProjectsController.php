@@ -67,6 +67,7 @@ class ProjectsController extends ControllerBase
                 foreach ($projectMaps as $projectMap)
                 {
                     $log = new Log();
+                    $log->setTransaction($transaction);
                     $log->user_id = $projectMap->user_id;
                     $log->description = $user->name . ' ยืนยันโครงงาน ' . $project->project_name;
                     if (!$log->save())

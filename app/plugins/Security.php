@@ -156,7 +156,8 @@ class Security extends \Phalcon\Mvc\User\Plugin
                     'doAddProgress',
                     'delete',
                     'edit',
-                    'doEdit'
+                    'doEdit',
+                    'exportPDF'
                 ),
                 'profile' => array('*'),
                 'exam' => array('download', 'showExam'),
