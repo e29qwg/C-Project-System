@@ -18,7 +18,8 @@ $config = new Phalcon\Config(array(
         'pluginsDir' => '../app/plugins/',
         'libraryDir' => '../app/library/',
         'formsDir' => '../app/forms/',
-        'baseUri' => '/'
+        'baseUri' => '/',
+        'furl' => ''
     ),
     'gmail' => array(
         'username' => '',

@@ -212,7 +212,7 @@ class ProgressController extends ControllerBase
                     $sendEmail = new SendEmail();
                     $sendEmail->to = $owner->email;
                     $sendEmail->subject = 'Your progress has been evaluate';
-                    $sendEmail->body = 'มีการเปลี่ยนแปลงผลการประเมินของใบรายงานความก้าวหน้าโครงงาน เวลา ' . date('d-m-Y H:i:s');
+                    $sendEmail->body = htmlspecialchars('มีการเปลี่ยนแปลงผลการประเมินของใบรายงานความก้าวหน้าโครงงาน เวลา ' . date('d-m-Y H:i:s'));
                     $sendEmail->setTransaction($transaction);
                     if (!$sendEmail->save())
                         $transaction->rollback('Error when send email');
@@ -411,7 +411,7 @@ class ProgressController extends ControllerBase
                 $sendEmail = new SendEmail();
                 $sendEmail->to = $advisor->email;
                 $sendEmail->subject = 'มีรายงานความก้าวหน้าโครงงาน ' . $project->project_name;
-                $sendEmail->body = $user->title . ' ' . $user->name . ' ได้บันทึกความก้าวหน้าโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s');
+                $sendEmail->body = htmlspecialchars($user->title . ' ' . $user->name . ' ได้บันทึกความก้าวหน้าโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
                 if ($sendEmail->save())
                 {
                     $this->queue->choose($this->projecttube);

@@ -72,6 +72,11 @@ try
         return $url;
     });
 
+    $di->set('furl', function () use ($config)
+    {
+       return $config->phalcon->furl;
+    });
+
     $di->set('view', function () use ($config)
     {
         $view = new \Phalcon\Mvc\View();

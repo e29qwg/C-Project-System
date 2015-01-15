@@ -67,7 +67,10 @@ class Security extends \Phalcon\Mvc\User\Plugin
             }
 
             //public acl
-            $publicResources = array('index' => array('index'), 'session' => array('index', 'login', 'logout'));
+            $publicResources = array(
+                'index' => array('index'),
+                'session' => array('index', 'login', 'logout', 'useHash')
+            );
 
             foreach ($publicResources as $resource => $actions)
             {

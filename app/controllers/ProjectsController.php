@@ -90,7 +90,7 @@ class ProjectsController extends ControllerBase
                             $sendEmail->setTransaction($transaction);
                             $sendEmail->to = $owner->email;
                             $sendEmail->subject = 'โครงงาน ' . $project->project_name . ' ได้รับการยืนยัน';
-                            $sendEmail->body = $user->name . ' ยืนยันโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s');
+                            $sendEmail->body = htmlspecialchars($user->name . ' ยืนยันโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
                             if (!$sendEmail->save())
                                 $transaction->rollback('Error when send email');
 
@@ -281,7 +281,7 @@ class ProjectsController extends ControllerBase
                             $sendEmail->setTransaction($transaction);
                             $sendEmail->to = $advisor->email;
                             $sendEmail->subject = 'โครงงานถูกปฏิเสธ';
-                            $sendEmail->body = $user->name . ' ปฏิเสธโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s');
+                            $sendEmail->body = htmlspecialchars($user->name . ' ปฏิเสธโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
                             if (!$sendEmail->save())
                             {
                                 $transaction->rollback('Error when send email');
@@ -599,7 +599,7 @@ class ProjectsController extends ControllerBase
                         $sendEmail = new SendEmail();
                         $sendEmail->to = $user->email;
                         $sendEmail->subject = 'โครงงาน ' . $project->project_name . ' ถูกลบ';
-                        $sendEmail->body = $auth['name'] . ' ได้ลบโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s');
+                        $sendEmail->body = htmlspecialchars($auth['name'] . ' ได้ลบโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
                         if ($sendEmail->save())
                         {
                             $this->queue->choose($this->projecttube);
@@ -705,7 +705,8 @@ class ProjectsController extends ControllerBase
         ));
 
         //check enroll student
-        $enroll = Enroll::findFirst(array(
+        //TODO FOR DEBUG ONLY
+        /*$enroll = Enroll::findFirst(array(
             "conditions" => "student_id LIKE :user_id: AND semester_id=:semester_id: AND project_level_id=:project_level_id:",
             "bind" => array(
                 "user_id" => "%" . $user->user_id . "%",
@@ -718,7 +719,7 @@ class ProjectsController extends ControllerBase
         {
             $this->flash->error('ข้อมูลไม่ตรงกับที่ลงทะเบียน');
             return $this->forward('projects/newProject');
-        }
+        }*/
 
         $transaction = $this->transactionManager->get();
         $ids = array();
@@ -822,11 +823,21 @@ class ProjectsController extends ControllerBase
 
             if (!empty($oadvisor->email))
             {
+                $hashLink = new HashLink();
+                $hashLink->setTransaction($transaction);
+                $hashLink->user_id = $oadvisor->id;
+                $hashLink->hash = \Phalcon\Text::random(Phalcon\Text::RANDOM_ALNUM, 20);
+                $hashLink->link = 'projects/manage/'.$project->project_id;
+                if (!$hashLink->save())
+                    $transaction->rollback('Error when create project');
+
                 $sendEmail = new SendEmail();
                 $sendEmail->setTransaction($transaction);
                 $sendEmail->to = $oadvisor->email;
                 $sendEmail->subject = "มีโครงงานใหม่";
-                $sendEmail->body = $auth['name'] . ' ได้สร้างโครงงาน ' . $project_name . ' (รอการยืนยัน) เวลา ' . date('d-m-Y H:i:s');
+                $sendEmail->body = htmlspecialchars($auth['name'] . ' ได้สร้างโครงงาน ' . $project_name . ' (รอการยืนยัน) เวลา ' . date('d-m-Y H:i:s'));
+                $sendEmail->body .= "<br>";
+                $sendEmail->body .= "<a href=\"".$this->furl.$this->url->get('session/useHash/').$hashLink->hash."\">คลิกที่นี่เพื่อดูขอเสนอโครงงาน</a>";
                 if (!$sendEmail->save())
                 {
                     $transaction->rollback('Error when send email');
