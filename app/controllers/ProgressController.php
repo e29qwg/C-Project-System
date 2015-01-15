@@ -408,10 +408,18 @@ class ProgressController extends ControllerBase
         {
             if (!empty($advisor->email))
             {
+                $hashLink = new HashLink();
+                $hashLink->user_id = $advisor->id;
+                $hashLink->hash = \Phalcon\Text::random(Phalcon\Text::RANDOM_ALNUM, 20);
+                $hashLink->link = '/progress/view/' . $project_id . '/' . $progress->progress_id;
+                $hashLink->save();
+
                 $sendEmail = new SendEmail();
                 $sendEmail->to = $advisor->email;
                 $sendEmail->subject = 'มีรายงานความก้าวหน้าโครงงาน ' . $project->project_name;
                 $sendEmail->body = htmlspecialchars($user->title . ' ' . $user->name . ' ได้บันทึกความก้าวหน้าโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
+                $sendEmail->body .= '<br>';
+                $sendEmail->body .= "<a href=\"" . $this->furl . $this->url->get('session/useHash/') . $hashLink->hash . "\">คลิกที่นี่เพื่อดู</a>";
                 if ($sendEmail->save())
                 {
                     $this->queue->choose($this->projecttube);
