@@ -160,10 +160,10 @@ function showProject($projectMaps, $level, $di, $currentSemesterId)
     $found = false;
     foreach ($projectMaps as $projectMap)
     {
-        $project = Project::findFirst(array(
+        /*$project = Project::findFirst(array(
             "conditions" => "project_id=:project_id: AND project_level_id=:level: AND project_status='Accept' AND semester_id=:semester_id:",
             "bind" => array("project_id" => $projectMap->project_id, "level" => $level, "semester_id" => $currentSemesterId)
-        ));
+        ));*/
 
         if ($project)
         {
