@@ -80,7 +80,7 @@ foreach ($projectMaps as $projectMap)
 
                 <div class="col-sm-offset-2 col-sm-10">
                     <a href="<?= $this->url->get('projects/accept/'); ?><?= $project->project_id ?>"
-                       class="btn btn-xs btn-success">Accept</a>
+                       class="btn btn-xs btn-success" onclick="return confirm('Confirm Accept'); ">Accept</a>
                     <a href="<?= $this->url->get('projects/reject/'); ?><?= $project->project_id ?>"
                        class="btn btn-xs btn-danger" onclick="return confirm('ยืนยันการลบโครงงาน'); ">Reject</a>
                 </div>
