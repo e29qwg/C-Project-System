@@ -156,9 +156,9 @@ $project = Project::findFirst("project_id='$params[0]'");
 
                     <div class="col-sm-10">
                         <a class="btn btn-sm btn-success"
-                           href="<?= $this->url->get('projects/accept/') . $project->project_id; ?>">Accept</a>
+                           href="<?= $this->url->get('projects/accept/') . $project->project_id; ?>" onclick="return confirm('Confirm accept');">Accept</a>
                         <a class="btn btn-sm btn-danger" onclick="return confirm('ยืนยันการลบโครงงาน');"
-                           href="<?= $this->url->get('projects/reject/') . $project->project_id; ?>">Reject</a>
+                           href="<?= $this->url->get('projects/reject/') . $project->project_id; ?>" onclick="return confirm('Confirm reject');">Reject</a>
                     </div>
                 </div>
                 <br>

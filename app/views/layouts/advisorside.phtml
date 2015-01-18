@@ -78,21 +78,21 @@ $this->view->setVar('allSemesters', $allSemesters);
             <div class="list-group">
                 <a href="#" class="list-group-item active">
                     Prepare Project
-                    <span class="badge"><?php echo countProjects($projectMaps, '1'); ?></span>
+                    <span class="badge"><?php echo countProjects($projectMaps, '1', $lCurrentSemester); ?></span>
                 </a>
                 <?php
                 showProject($projectMaps, '1', $this,$lCurrentSemester);
                 ?>
                 <a href="#" class="list-group-item active">
                     Project I
-                    <span class="badge"><?php echo countProjects($projectMaps, '2'); ?></span>
+                    <span class="badge"><?php echo countProjects($projectMaps, '2', $lCurrentSemester); ?></span>
                 </a>
                 <?php
                 showProject($projectMaps, '2', $this, $lCurrentSemester);
                 ?>
                 <a href="#" class="list-group-item active">
                     Project II
-                    <span class="badge"><?php echo countProjects($projectMaps, '3'); ?></span>
+                    <span class="badge"><?php echo countProjects($projectMaps, '3', $lCurrentSemester); ?></span>
                 </a>
                 <?php
                 showProject($projectMaps, '3', $this, $lCurrentSemester);
@@ -118,15 +118,17 @@ $this->view->setVar('allSemesters', $allSemesters);
 
 <?php
 
-function countProjects($projectMaps, $level)
+function countProjects($projectMaps, $level, $currentSemesterId)
 {
-    $current_semester = Semester::maximum(array("column" => "semester_id"));
-
     $count = 0;
 
     foreach ($projectMaps as $projectMap)
     {
-        $project = Project::findFirst("project_id='$projectMap->project_id' AND project_level_id='$level' AND semester_id='$current_semester'");
+        $project = Project::findFirst(array(
+            "conditions" => "project_id=:project_id: AND project_level_id=:level: AND semester_id=:current_semester:",
+            "bind" => array("project_id" => $projectMap->project_id, "project_level_id" => $level, "semester_id" => $currentSemesterId)
+        ));
+
         if ($project)
         {
             $count++;
