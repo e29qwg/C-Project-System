@@ -38,6 +38,8 @@ $controller = $this->dispatcher->getControllerName();
                    href="<?= $this->url->get('score/manageScore'); ?>">จัดการคะแนน</a>
                 <a class="list-group-item <?= ($controller == 'enroll') ? LISTSELECTED: ''; ?>"
                    href="<?= $this->url->get('enroll'); ?>">จัดการผู้เรียน</a>
+                <a class="list-group-item <?= ($controller == 'advisor' && $action == 'manageAdvisor') ? LISTSELECTED : ''; ?>"
+                   href="<?= $this->url->get('advisor/manageAdvisor'); ?>">จัดการอาจารย์ที่ปรึกษา</a>
                 <a class="list-group-item <?= ($controller == 'admin' && $action == 'manageCoadvisor') ? LISTSELECTED : ''; ?>"
                    href="<?= $this->url->get('admin/manageCoadvisor'); ?>">จัดการอาจารย์ที่ปรึกษาร่วม</a>
                 <a class="list-group-item <?= ($controller == 'advisor' && $action == 'quota') ? LISTSELECTED : ''; ?>"

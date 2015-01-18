@@ -31,6 +31,7 @@ class ProfileController extends ControllerBase
         $facebook = $request->getPost('facebook');
         $interesting = $request->getPost('interesting');
         $email = $request->getPost('email');
+        $title = $request->getPost('title');
 
         if (empty($interesting))
             $interesting = 'ยังไม่ระบุ';
@@ -43,6 +44,7 @@ class ProfileController extends ControllerBase
             }
         }
 
+        $user->title = $title;
         $user->facebook = $facebook;
         $user->interesting = $interesting;
         $user->email = $email;

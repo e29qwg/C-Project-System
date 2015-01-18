@@ -1,0 +1,57 @@
+<?php
+
+echo $this->getContent();
+
+$this->flash->notice('หากไม่พบรายชื่อในหน้านี้ให้ user ทำการ login ด้วย psu passport ก่อน 1 ครั้งเพื่อให้มีข้อมูลในระบบ');
+$this->flash->notice('เมื่อแก้ไข user จำเป็นต้องทำการ re-login เพื่อให้ได้สิทธิ์การใช้งานใหม่');
+
+?>
+
+<style>
+    th, .tcenter {
+        text-align: center;
+    }
+</style>
+
+<table class="table">
+    <tr class="success">
+        <th>อาจารย์ที่ปรึกษา</th>
+        <th width="10%"></th>
+    </tr>
+
+
+    <?php
+    foreach ($advisors as $advisor)
+    {
+        ?>
+        <tr>
+            <td><?= $advisor->title . $advisor->name; ?></td>
+            <td>
+                <a href="<?= $this->url->get('advisor/removeAdvisor/') . $advisor->id; ?>" class="btn btn-danger btn-sm"
+                   onclick="return confirm('ยืนยันการลย');">ลบ</a>
+            </td>
+        </tr>
+    <?php
+    }
+    ?>
+
+</table>
+
+<table class="table">
+    <tr class="success">
+        <th>อาจารย์ที่ปรึกษาและเจ้าหน้าที่ (ที่ยังไม่เป็นที่ปรึกษา)</th>
+        <th width="10%"></th>
+    </tr>
+    <?php
+    foreach ($staffs as $staff)
+    {
+        ?>
+        <tr>
+            <td><?= $staff->title . $staff->name; ?></td>
+            <td><a href="<?= $this->url->get('advisor/addAdvisor/') . $staff->id; ?>" class="btn btn-primary btn-sm">เพิ่ม</a>
+            </td>
+        </tr>
+    <?php
+    }
+    ?>
+</table>

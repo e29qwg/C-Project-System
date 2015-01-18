@@ -9,6 +9,105 @@ class AdvisorController extends ControllerBase
         parent::initialize();
     }
 
+    public function removeAdvisorAction()
+    {
+        $id = $this->dispatcher->getParam(0);
+
+        $transaction = $this->transactionManager->get();
+
+        try
+        {
+            $user = User::findFirst(array(
+                "conditions" => "id=:id:",
+                "bind" => array("id" => $id)
+            ));
+
+            $user->setTransaction($transaction);
+
+            $user->type='Staff';
+            if (!$user->save())
+                $transaction->rollback('Error when change type');
+
+            $quota = Quota::findFirst(array(
+                "conditions" => "advisor_id=:id:",
+                "bind" => array("id" => $id)
+            ));
+
+            if (!$quota)
+                $transaction->rollback('Error when delete quota');
+
+            if (!$quota->delete())
+                $transaction->rollback('Error when delete quota');
+
+            $transaction->commit();
+        }
+        catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
+        {
+            $this->flash->error('Transaction failure: '.$e);
+            return $this->forward('advisor/manageAdvisor');
+        }
+
+        $this->flashSession->success('Remove advisor success');
+        return $this->forward('advisor/manageAdvisor');
+    }
+
+    public function addAdvisorAction()
+    {
+        $id = $this->dispatcher->getParam(0);
+
+        $transaction = $this->transactionManager->get();
+
+        try
+        {
+            $user = User::findFirst(array(
+                "conditions" => "id=:id:",
+                "bind" => array("id" => $id)
+            ));
+
+            $user->setTransaction($transaction);
+
+            $user->type='Advisor';
+            if (!$user->save())
+                $transaction->rollback('Error when change type');
+
+            //create quota default by 30
+            $quota = new Quota();
+            $quota->setTransaction($transaction);
+            $quota->quota_pp = 30;
+            $quota->advisor_id = $id;
+
+            if (!$quota->save())
+                $transaction->rollback('Error when create quota');
+
+            $transaction->commit();
+        }
+        catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
+        {
+            $this->flash->error('Transaction failure: '.$e);
+            return $this->forward('advisor/manageAdvisor');
+        }
+
+        $this->flashSession->success('Add advisor success');
+        return $this->forward('advisor/manageAdvisor');
+    }
+
+    public function manageAdvisorAction()
+    {
+        $advisors = User::find(array(
+            "conditions" => "type=:type:",
+            "bind" => array("type" => "Advisor")
+        ));
+
+        $this->view->setVar('advisors', $advisors);
+
+        $staffs = User::find(array(
+            "conditions" => "type=:type:",
+            "bind" => array("type" => "Staff")
+        ));
+
+        $this->view->setVar('staffs', $staffs);
+    }
+
     public function setQuotaAction()
     {
         $request = $this->request;
