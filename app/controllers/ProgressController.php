@@ -155,6 +155,7 @@ class ProgressController extends ControllerBase
     public function doEvaluateAction()
     {
         $request = $this->request;
+        $auth = $this->session->get('auth');
         $progress_id = $request->getPost('progress_id');
         $evaluate = $request->getPost('evaluate');
         $comment = $request->getPost('comment');
@@ -207,7 +208,7 @@ class ProgressController extends ControllerBase
             //fetch project owner
             if ($owner)
             {
-                if (!empty($owner->email))
+                if (!empty($owner->email) && $owner->id != $auth['id'])
                 {
                     $sendEmail = new SendEmail();
                     $sendEmail->to = $owner->email;
@@ -406,7 +407,7 @@ class ProgressController extends ControllerBase
 
         if ($advisor)
         {
-            if (!empty($advisor->email))
+            if (!empty($advisor->email) && $advisor->id != $auth['id'])
             {
                 $hashLink = new HashLink();
                 $hashLink->user_id = $advisor->id;

@@ -84,7 +84,7 @@ class ProjectsController extends ControllerBase
                         if (!$owner)
                             $transaction->rollback('Error when send email');
 
-                        if (!empty($owner->email))
+                        if (!empty($owner->email) && $owner->id != $auth['id'])
                         {
                             $sendEmail = new SendEmail();
                             $sendEmail->setTransaction($transaction);
@@ -275,7 +275,7 @@ class ProjectsController extends ControllerBase
                             $transaction->rollback('User not found');
                         }
 
-                        if (!empty($advisor->email))
+                        if (!empty($advisor->email) && $advisor->id != $auth['id'])
                         {
                             $sendEmail = new SendEmail();
                             $sendEmail->setTransaction($transaction);
@@ -594,7 +594,7 @@ class ProjectsController extends ControllerBase
 
                 if ($user)
                 {
-                    if (!empty($user->email))
+                    if (!empty($user->email) && $user->id != $auth['id'])
                     {
                         $sendEmail = new SendEmail();
                         $sendEmail->to = $user->email;
@@ -820,7 +820,7 @@ class ProjectsController extends ControllerBase
                 $transaction->rollback('Advisor not found');
             }
 
-            if (!empty($oadvisor->email))
+            if (!empty($oadvisor->email) && $oadvisor->id != $auth['id'])
             {
                 $hashLink = new HashLink();
                 $hashLink->setTransaction($transaction);
