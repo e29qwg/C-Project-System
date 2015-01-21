@@ -26,7 +26,7 @@ class ProjectsController extends ControllerBase
             "bind" => array("user_id" => $user_id)
         ));
 
-        if ($this->CheckQuota->acceptProject($user_id) + 1 > $quota->quota_pp)
+        if ($this->CheckQuota->acceptProject($user_id, $this->view->getVar('currentSemesterId')) + 1 > $quota->quota_pp)
         {
             $this->flash->error('ไม่สามารถเพิ่มได้เนื่องจากเกินจำนวนที่อาจารย์ที่ปรึกษาจะรับได้');
             if ($auth['type'] != 'Student')
