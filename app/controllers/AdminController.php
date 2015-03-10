@@ -137,7 +137,7 @@ class AdminController extends ControllerBase
                     $objValidation->setPromptTitle('Pick from list');
                     $objValidation->setPrompt('Please pick a value from the drop-down list.');
                     //
-                    $objValidation->setFormula1('"นพพณ เลิศชูวงศา,วศิมน พาณิชพัฒนกุล,ยศวีย์ แก้วมณ,ธรรมรัฏฐ์ สมิตะลัมพะ,อภิชาติ หีดนาคราม,พัชรี เทพนิมิตร,วโรดม วีระพันธ์,กุลจรี ตันตยกุล,จักรพันธ์ สัวบุตร,อัมรินทร์ ดีมะการ,กุลวรรธน์ เชาวนวาที,เสกสรรค์ สุวรรณมณี,อมตวิทย์ คำแหง,อัศรี นาวงค์,เพ็ชรัตน์ สุริยะไชย"');
+                    $objValidation->setFormula1($advisors);
 
                     //set coadvisor if exists
                     if (!empty($projectMaps[$count]))
