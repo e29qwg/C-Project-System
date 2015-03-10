@@ -125,6 +125,7 @@ class AdminController extends ControllerBase
                         $objValidation = $objPHPExcel->getActiveSheet()->getCell('F' . $row)->getDataValidation();
                     else
                         $objValidation = $objPHPExcel->getActiveSheet()->getCell('G' . $row)->getDataValidation();
+
                     $objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
                     $objValidation->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
                     $objValidation->setAllowBlank(true);
@@ -135,7 +136,8 @@ class AdminController extends ControllerBase
                     $objValidation->setError('Value is not in list.');
                     $objValidation->setPromptTitle('Pick from list');
                     $objValidation->setPrompt('Please pick a value from the drop-down list.');
-                    $objValidation->setFormula1($advisors);
+                    //
+                    $objValidation->setFormula1('"นพพณ เลิศชูวงศา,วศิมน พาณิชพัฒนกุล,ยศวีย์ แก้วมณ,ธรรมรัฏฐ์ สมิตะลัมพะ,อภิชาติ หีดนาคราม,พัชรี เทพนิมิตร,วโรดม วีระพันธ์,กุลจรี ตันตยกุล,จักรพันธ์ สัวบุตร,อัมรินทร์ ดีมะการ,กุลวรรธน์ เชาวนวาที,เสกสรรค์ สุวรรณมณี,อมตวิทย์ คำแหง,อัศรี นาวงค์,เพ็ชรัตน์ สุริยะไชย"');
 
                     //set coadvisor if exists
                     if (!empty($projectMaps[$count]))

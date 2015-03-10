@@ -26,7 +26,7 @@ class ProgressController extends ControllerBase
 
         try
         {
-            $html2pdf = new HTML2PDF('P', 'A4', 'en');
+            $html2pdf = new HTML2PDF('P', 'A4', 'en', true, 'UTF-8', array(25.4, 12.7, 12.7, 12.7));
             $html2pdf->pdf->SetDisplayMode('fullpage');
 
             $count = 1;
