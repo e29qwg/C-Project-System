@@ -36,7 +36,6 @@ class MainTask extends \Phalcon\Cli\Task
                     $mail->CharSet = 'UTF-8';
                     $mail->IsHTML(true);
                     $mail->AddAddress($sendMail->to);
-                    $mail->AddBCC("ohmcoe9@gmail.com", "coeproject");
                     if (!$mail->Send())
                         continue;
                     $sendMail->delete();

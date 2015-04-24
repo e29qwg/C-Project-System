@@ -26,9 +26,9 @@ class AdminController extends ControllerBase
         $records->from(array('Project', 'ProjectMap'));
         $records->where("Project.project_status='Accept' AND Project.semester_id=:semester_id:", array("semester_id" => $semester_id));
         $records->andWhere("ProjectMap.map_type='advisor'");
-        $records->distinct("Project.project_id");
         $records->andWhere("Project.project_id=ProjectMap.project_id");
         $records->orderBy("Project.project_level_id, ProjectMap.user_id ASC");
+        $records->distinct(true);
         $records = $records->getQuery()->execute();
 
 
