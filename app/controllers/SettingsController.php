@@ -2,8 +2,6 @@
 
 class SettingsController extends ControllerBase
 {
-    private $auth;
-
     public function initialize()
     {
         $this->auth = $this->session->get('auth');

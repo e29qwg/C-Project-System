@@ -2,6 +2,8 @@
 
 class ControllerBase extends Phalcon\Mvc\Controller
 {
+    protected $auth;
+
     protected function initialize()
     {
         $auth = $this->session->get('auth');
@@ -31,6 +33,9 @@ class ControllerBase extends Phalcon\Mvc\Controller
                     $this->view->setTemplateAfter('main');
             }
         }
+
+
+        $this->auth = $auth;
     }
 
 
@@ -76,7 +81,10 @@ class ControllerBase extends Phalcon\Mvc\Controller
         if (empty($uriParts[1]))
             $uriParts[1] = 'index';
 
-        return $this->dispatcher->forward(array('controller' => $uriParts[0], 'action' => $uriParts[1],));;
+        return $this->dispatcher->forward(array(
+            'controller' => $uriParts[0],
+            'action' => $uriParts[1]
+        ));
     }
 
     protected function _checkPermission($project_id)
@@ -94,6 +102,18 @@ class ControllerBase extends Phalcon\Mvc\Controller
             return false;
         }
         return true;
+    }
+
+    protected function wantNotification($user_id, $noption)
+    {
+        $notification = Notification::findFirst(array(
+            "conditions" => "user_id=:user_id: AND noption=:noption:",
+            "bind" => array("user_id" => $user_id, "noption"=> $noption)
+        ));
+
+        if ($notification)
+            return true;
+        return false;
     }
 
 }

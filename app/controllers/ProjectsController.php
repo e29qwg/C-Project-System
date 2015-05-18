@@ -85,7 +85,7 @@ class ProjectsController extends ControllerBase
                         if (!$owner)
                             $transaction->rollback('Error when send email');
 
-                        if (!empty($owner->email) && $owner->id != $auth['id'])
+                        if (!empty($owner->email) && $owner->id != $auth['id'] && $this->wantNotification($owner->id, 'project_update'))
                         {
                             $sendEmail = new SendEmail();
                             $sendEmail->setTransaction($transaction);
@@ -276,7 +276,7 @@ class ProjectsController extends ControllerBase
                             $transaction->rollback('User not found');
                         }
 
-                        if (!empty($advisor->email) && $advisor->id != $auth['id'])
+                        if (!empty($advisor->email) && $advisor->id != $auth['id'] && $this->wantNotification($advisor->id, 'project_update'))
                         {
                             $sendEmail = new SendEmail();
                             $sendEmail->setTransaction($transaction);
@@ -595,7 +595,7 @@ class ProjectsController extends ControllerBase
 
                 if ($user)
                 {
-                    if (!empty($user->email) && $user->id != $auth['id'])
+                    if (!empty($user->email) && $user->id != $auth['id'] && $this->wantNotification($user->id, 'project_update'))
                     {
                         $sendEmail = new SendEmail();
                         $sendEmail->to = $user->email;
@@ -821,7 +821,7 @@ class ProjectsController extends ControllerBase
                 $transaction->rollback('Advisor not found');
             }
 
-            if (!empty($oadvisor->email) && $oadvisor->id != $auth['id'])
+            if (!empty($oadvisor->email) && $oadvisor->id != $auth['id'] && $this->wantNotification($oadvisor->id, 'project_update'))
             {
                 $hashLink = new HashLink();
                 $hashLink->setTransaction($transaction);

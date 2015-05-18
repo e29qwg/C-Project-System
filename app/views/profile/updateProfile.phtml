@@ -13,12 +13,13 @@ if ($auth['type'] == 'Admin')
         $user_id = $advisor_id;
 }
 
-$user = User::findFirst("id='$user_id'");
+$user = User::findFirst(array(
+    "conditions" => "id=:user_id:",
+    "bind" => array("user_id" => $user_id)
+));
 ?>
 
 <script type="text/javascript">
-
-
     tinymce.init({
         selector: "textarea#interesting",
         theme: "modern",
@@ -32,102 +33,167 @@ $user = User::findFirst("id='$user_id'");
         image_advtab: true,
         autosave_ask_before_unload: false,
         width: "80%",
-        height: "200px",
+        height: "200px"
     });
 
 </script>
 
-<h2>Edit User Profile</h2>
-<hr>
-<form class="form-horizontal" method="post" action="<?= $this->url->get('profile/update'); ?>"
-      enctype="multipart/form-data">
-    <input type="hidden" name="advisor_id" value="<?= $user_id ?>">
+<ul class="nav nav-tabs" id="profileTab">
+    <li role="presentation" class="active">
+        <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">
+            Update Profile
+        </a>
+    </li>
+    <li role="presentation" role="tablist">
+        <a href="#notification" aria-controls="notification" role="tab" data-toggle="tab">
+            Notification
+        </a>
+    </li>
+</ul>
 
-    <div class="form-group">
-        <label class="col-sm-2 control-label" for="title">Title</label>
 
-        <div class="col-sm-3">
-            <?php
-            \Phalcon\Tag::setDefault('title', $user->title);
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane fade in active" id="profile">
+        <br>
 
-            echo \Phalcon\Tag::textField(array(
-                'title',
-                'class' => 'form-control',
-                'required' => 'required'
-            ));
-            ?>
-        </div>
+        <form class="form-horizontal" method="post" action="<?= $this->url->get('profile/update'); ?>"
+              enctype="multipart/form-data">
+            <input type="hidden" name="advisor_id" value="<?= $user_id ?>">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="title">Title</label>
+
+                <div class="col-sm-3">
+                    <?php
+                    \Phalcon\Tag::setDefault('title', $user->title);
+
+                    echo \Phalcon\Tag::textField(array(
+                        'title',
+                        'class' => 'form-control',
+                        'required' => 'required'
+                    ));
+                    ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="name">Name</label>
+
+                <div class="col-sm-10">
+                    <p class="static-form-control"><?= $user->title . ' ' . $user->name ?></p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="facebook">Facebook</label>
+
+                <div class="col-sm-5">
+                    <input type="text" id="facebook" name="facebook" class="form-control"
+                           value="<?= $user->facebook ?>">
+
+                    <p class="help-inline">ใส่เฉพาะ id เท่านั้น เช่น https://www.facebook.com/xxx<strong>ให้ใส่เฉพาะ
+                            xxx</strong></p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="profilePicture">Profile Picture</label>
+
+                <div class="col-sm-3">
+                    <?php
+
+                    if (!file_exists("./profilePicture/$username.img"))
+                        $imgsrc = "https://graph.facebook.com/$facebook/picture/?type=square&width=150&height=150";
+                    else
+                        $imgsrc = $this->url->get("profilePicture/$username.img");
+
+                    ?>
+                    <img class="bordered" width="150" height="150" src="<?= $imgsrc; ?>">
+                </div>
+                <div class="col-sm-7">
+                    <?=
+
+                    $this->tag->fileField(array('profile_picture'));
+                    ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="email">Email</label>
+
+                <div class="col-sm-3">
+                    <?php
+                    \Phalcon\Tag::setDefault('email', $user->email);
+
+                    echo \Phalcon\Tag::emailField(array(
+                        'email',
+                        'placeholder' => 'example@example.com',
+                        'class' => 'form-control'
+                    ));
+                    ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="interesting">Interesting</label>
+
+                <div class="col-sm-10">
+                    <textarea id="interesting" name="interesting"><?= $user->interesting ?></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-8">
+                    <button type="submit" class="btn btn-success btn-md">Save</button>
+                </div>
+            </div>
+        </form>
     </div>
 
-    <div class="form-group">
-        <label class="col-sm-2 control-label" for="name">Name</label>
+    <div role="tabpanel" class="tab-pane fade" id="notification">
+        <br>
 
-        <div class="col-sm-10">
-            <p class="static-form-control"><?= $user->title . ' ' . $user->name ?></p>
-        </div>
+        <form class="form-horizontal" method="post" action="<?= $this->url->get('profile/setNotification'); ?>">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">New/Accept/Reject Project</label>
+
+                <div class="col-sm-8">
+                    <?php
+
+                    echo \Phalcon\Tag::checkField(array(
+                        'project_update',
+                        'class' => 'pull-right'
+                    ));
+
+                    ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">New/Update/Evaluate Progress</label>
+
+                <div class="col-sm-8">
+                    <?php
+
+                    echo \Phalcon\Tag::checkField(array(
+                        'progress_update',
+                        'class' => 'pull-right'
+                    ));
+
+                    ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-success btn-sm">Save</button>
+                </div>
+            </div>
+        </form>
     </div>
+</div>
 
-    <div class="form-group">
-        <label class="col-sm-2 control-label" for="facebook">Facebook</label>
 
-        <div class="col-sm-5">
-            <input type="text" id="facebook" name="facebook" class="form-control" value="<?= $user->facebook ?>">
-
-            <p class="help-inline">ใส่เฉพาะ id เท่านั้น เช่น https://www.facebook.com/xxx<strong>ให้ใส่เฉพาะ
-                    xxx</strong></p>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="col-sm-2 control-label" for="profilePicture">Profile Picture</label>
-
-        <div class="col-sm-3">
-            <?php
-
-            if (!file_exists("./profilePicture/$username.img"))
-                $imgsrc = "https://graph.facebook.com/$facebook/picture/?type=square&width=150&height=150";
-            else
-                $imgsrc = $this->url->get("profilePicture/$username.img");
-
-            ?>
-            <img class="bordered" width="150" height="150" src="<?= $imgsrc; ?>">
-        </div>
-        <div class="col-sm-7">
-            <?=
-
-            $this->tag->fileField(array('profile_picture'));
-            ?>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="col-sm-2 control-label" for="email">Email</label>
-
-        <div class="col-sm-3">
-            <?php
-            \Phalcon\Tag::setDefault('email', $user->email);
-
-            echo \Phalcon\Tag::emailField(array(
-                'email',
-                'placeholder' => 'example@example.com',
-                'class' => 'form-control'
-            ));
-            ?>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="col-sm-2 control-label" for="interesting">Interesting</label>
-
-        <div class="col-sm-10">
-            <textarea id="interesting" name="interesting"><?= $user->interesting ?></textarea>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-8">
-            <button type="submit" class="btn btn-primary btn-md">Apply</button>
-        </div>
-    </div>
-
-</form>
+<script>
+    $("#project_update, #progress_update").bootstrapSwitch();
+</script>

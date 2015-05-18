@@ -208,7 +208,7 @@ class ProgressController extends ControllerBase
             //fetch project owner
             if ($owner)
             {
-                if (!empty($owner->email) && $owner->id != $auth['id'])
+                if (!empty($owner->email) && $owner->id != $auth['id'] && $this->wantNotification($owner->id, 'progress_update'))
                 {
                     $sendEmail = new SendEmail();
                     $sendEmail->to = $owner->email;
@@ -407,7 +407,7 @@ class ProgressController extends ControllerBase
 
         if ($advisor)
         {
-            if (!empty($advisor->email) && $advisor->id != $auth['id'])
+            if (!empty($advisor->email) && $advisor->id != $auth['id'] && $this->wantNotification($advisor->id, 'progress_update'))
             {
                 $hashLink = new HashLink();
                 $hashLink->user_id = $advisor->id;
