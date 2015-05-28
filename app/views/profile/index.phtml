@@ -52,29 +52,28 @@ $projectMaps = ProjectMap::find("user_id='$params[0]'");
             </div>
         </div>
 
-        <?php
-        if ($user->type != 'Advisor')
-        {
-            ?>
-            <div class="row">
-                <label class="col-sm-3">Tel: </label>
-                <div class="col-sm-9">
-                    <?= $user->tel; ?>
-                </div>
+    
+        <div class="row">
+            <label class="col-sm-3">Tel: </label>
+
+            <div class="col-sm-9">
+                <?= $user->tel; ?>
             </div>
-            <?php
-        }
-        ?>
+        </div>
+
 
         <div class="row">
             <label class="col-sm-3">Facebook: </label>
+
             <div class="col-sm-9">
-                <a href="https://www.facebook.com/<?= $user->facebook; ?>" target="_blank">https://www.facebook.com/<?= $user->facebook; ?></a>
+                <a href="https://www.facebook.com/<?= $user->facebook; ?>"
+                   target="_blank">https://www.facebook.com/<?= $user->facebook; ?></a>
             </div>
         </div>
 
         <div class="row">
             <label class="col-sm-3">Email: </label>
+
             <div class="col-sm-9">
                 <a href="mailto:<?= $user->email; ?>"><?= $user->email; ?></a>
             </div>
@@ -186,12 +185,10 @@ $projectMaps = ProjectMap::find("user_id='$params[0]'");
             </div>
 
             <script>
-                $(document).ready(function ()
-                {
+                $(document).ready(function () {
                     $('#allproject').hide();
 
-                    $("#showhide").click(function ()
-                    {
+                    $("#showhide").click(function () {
                         $('#allproject').toggle(1000);
                     });
                 });
@@ -201,7 +198,7 @@ $projectMaps = ProjectMap::find("user_id='$params[0]'");
         }
         else
         {
-            ?>
+        ?>
             <div class="row">
                 <label class="col-sm-3">Project: </label>
 
