@@ -51,10 +51,32 @@ $projectMaps = ProjectMap::find("user_id='$params[0]'");
                 <?= $user->title ?><?= $user->name ?>
             </div>
         </div>
+
+        <?php
+        if ($user->type != 'Advisor')
+        {
+            ?>
+            <div class="row">
+                <label class="col-sm-3">Tel: </label>
+                <div class="col-sm-9">
+                    <?= $user->tel; ?>
+                </div>
+            </div>
+            <?php
+        }
+        ?>
+
+        <div class="row">
+            <label class="col-sm-3">Facebook: </label>
+            <div class="col-sm-9">
+                <a href="https://www.facebook.com/<?= $user->facebook; ?>" target="_blank">https://www.facebook.com/<?= $user->facebook; ?></a>
+            </div>
+        </div>
+
         <div class="row">
             <label class="col-sm-3">Email: </label>
             <div class="col-sm-9">
-                <?= $user->email; ?>
+                <a href="mailto:<?= $user->email; ?>"><?= $user->email; ?></a>
             </div>
         </div>
 

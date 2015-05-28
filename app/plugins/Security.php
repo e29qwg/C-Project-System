@@ -11,7 +11,6 @@ class Security extends \Phalcon\Mvc\User\Plugin
 
     public function beforeDispatch(Phalcon\Events\Event $event, Phalcon\Mvc\Dispatcher $dispatcher)
     {
-        //TODO
         $this->flashSession->output();
         $auth = $this->session->get('auth');
         $controller = $dispatcher->getControllerName();
@@ -19,7 +18,6 @@ class Security extends \Phalcon\Mvc\User\Plugin
 
         if (!$auth)
         {
-            $role = 'Guest';
             if ($controller != 'session')
             {
                 $this->response->redirect('session');
@@ -29,6 +27,17 @@ class Security extends \Phalcon\Mvc\User\Plugin
         else
         {
             $role = $auth['type'];
+
+            $gLib = new Glib();
+
+            if (!$gLib->isCompleteProfile($auth['id']) && $controller != 'profile' && $controller != 'session')
+            {
+                $this->flash->warning('Please complete your profile');
+                $this->dispatcher->forward(array(
+                    'controller' => 'profile',
+                    'action' => 'updateProfile'
+                ));
+            }
         }
 
         $acl = $this->getAcl();

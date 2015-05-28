@@ -28,26 +28,34 @@ foreach ($projectMaps as $projectMap)
 
                 <p class="col-sm-10"><?= $project->project_name ?></p>
             </div>
-            <div class="row">
-                <label class="col-sm-2">Create By</label>
+            <?php
+            $projectMaps = ProjectMap::find("project_id='$project->project_id' AND map_type='owner'");
 
-                <p class="col-sm-10">
-                    <?php
+            for ($i = 0; $i < count($projectMaps); $i++)
+            {
+                ?>
+                <div class="row">
+                    <label class="col-sm-2">Create By</label>
 
-                    $projectMaps = ProjectMap::find("project_id='$project->project_id' AND map_type='owner'");
+                    <div class="row">
 
-                    for ($i = 0; $i < count($projectMaps); $i++)
-                    {
-                        if ($i != 0)
-                            echo '<br>';
-                        $tuid = $projectMaps[$i]->user_id;
-                        $student = User::findFirst("id='$tuid'");
-                        echo $student->title . $student->name;
-                    }
+                        <p class="col-sm-8">
+                            <?php
 
-                    ?>
-                </p>
-            </div>
+                            $tuid = $projectMaps[$i]->user_id;
+                            $student = User::findFirst("id='$tuid'");
+                            echo '<a href="'.$this->url->get('profile/index/').$student->id.'" target="_blank">'.$student->title . $student->name.'</a>';
+                            echo ' ('.$student->tel.')';
+
+                            ?>
+                        </p>
+                    </div>
+
+
+                </div>
+            <?php
+            }
+            ?>
             <div class="row">
                 <label class="col-sm-2">Project Type</label>
 

@@ -85,9 +85,10 @@ $project = Project::findFirst("project_id='$params[0]'");
                         foreach ($projectMaps as $projectMap)
                         {
                             $user = User::findFirst("id='$projectMap->user_id'");
-                            echo $user->title . $user->name;
+                            ?>
+                            <a href="<?= $this->url->get('profile/index/').$user->id; ?>"><?= $user->title . $user->name; ?></a>
+                            <?php
                         }
-
                         ?>
                     </p>
                 </div>

@@ -34,8 +34,18 @@ class ControllerBase extends Phalcon\Mvc\Controller
             }
         }
 
-
         $this->auth = $auth;
+    }
+
+    protected function strDbError($model)
+    {
+        $str = '';
+
+        foreach ($model->getMessages() as $mes)
+        {
+            $str .= $mes.'<br>';
+        }
+        return $str;
     }
 
 
@@ -108,7 +118,7 @@ class ControllerBase extends Phalcon\Mvc\Controller
     {
         $notification = Notification::findFirst(array(
             "conditions" => "user_id=:user_id: AND noption=:noption:",
-            "bind" => array("user_id" => $user_id, "noption"=> $noption)
+            "bind" => array("user_id" => $user_id, "noption" => $noption)
         ));
 
         if ($notification)

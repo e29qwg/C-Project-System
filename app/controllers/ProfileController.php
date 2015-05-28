@@ -14,9 +14,6 @@ class ProfileController extends ControllerBase
         $this->_getAllSemester();
     }
 
-    /**
-     *
-     */
     public function setNotificationAction()
     {
         $request = $this->request;
@@ -35,7 +32,7 @@ class ProfileController extends ControllerBase
             $progressUpdate = ($request->getPost('progress_update') == 'on');
 
             $notifications = Notification::find(array(
-               "conditions" => "user_id=:user_id:",
+                "conditions" => "user_id=:user_id:",
                 "bind" => array("user_id" => $this->auth['id'])
             ));
 
@@ -70,7 +67,7 @@ class ProfileController extends ControllerBase
         }
         catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
         {
-            $this->flash->error('Transaction Failed: '. $e->getMessage());
+            $this->flash->error('Transaction Failed: ' . $e->getMessage());
             return $this->forward('profile/updateProfile');
         }
 
@@ -93,14 +90,21 @@ class ProfileController extends ControllerBase
                 $user_id = $advisor_id;
         }
 
-        $user = User::findFirst(array(
-            "conditions" => "id=:user_id:",
-            "bind" => array("user_id" => $user_id)
-        ));
         $facebook = $request->getPost('facebook');
         $interesting = $request->getPost('interesting');
         $email = $request->getPost('email');
         $title = $request->getPost('title');
+        $tel = $request->getPost('tel');
+
+        $user = User::findFirst(array(
+            "conditions" => "id=:user_id:",
+            "bind" => array("user_id" => $user_id)
+        ));
+
+        $user->turnOnProfileCheck();
+
+        if (!$user)
+            $this->forward('session/end');
 
         if (empty($interesting))
             $interesting = 'ยังไม่ระบุ';
@@ -113,12 +117,32 @@ class ProfileController extends ControllerBase
             }
         }
 
-        $user->title = $title;
-        $user->facebook = $facebook;
-        $user->interesting = $interesting;
-        $user->email = $email;
+        $transaction = $this->transactionManager->get();
 
-        $user->save();
+        try
+        {
+            $user->setTransaction($transaction);
+
+            $user->title = $title;
+            $user->facebook = $facebook;
+            $user->interesting = $interesting;
+            $user->email = $email;
+            $user->tel = $tel;
+
+            if (!$user->save())
+            {
+                $transaction->rollback($this->strDbError($user));
+            }
+
+            $transaction->commit();
+        }
+        catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
+        {
+            $this->flash->error('Transaction Failed: ' . $e->getMessage());
+            $this->forward('profile/updateProfile');
+            return;
+        }
+
         $this->flashSession->success("Update profile success");
         $this->response->redirect("profile/index/" . $user_id);
     }

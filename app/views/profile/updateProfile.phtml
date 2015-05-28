@@ -80,7 +80,43 @@ $user = User::findFirst(array(
                 <label class="col-sm-2 control-label" for="name">Name</label>
 
                 <div class="col-sm-10">
-                    <p class="static-form-control"><?= $user->title . ' ' . $user->name ?></p>
+                    <p class="static-form-control"><?= $user->title . $user->name ?></p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="tel">Tel</label>
+
+                <div class="col-sm-3">
+                    <?php
+
+                    \Phalcon\Tag::setDefault('tel', $user->tel);
+
+                    echo \Phalcon\Tag::textField(array(
+                        'tel',
+                        'placeholder' => 'ex. 0912345678',
+                        'class' => 'form-control',
+                        'required' => 'required'
+                    ))
+
+                    ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="email">Email</label>
+
+                <div class="col-sm-3">
+                    <?php
+                    \Phalcon\Tag::setDefault('email', $user->email);
+
+                    echo \Phalcon\Tag::emailField(array(
+                        'email',
+                        'placeholder' => 'example@example.com',
+                        'class' => 'form-control',
+                        'required' => 'required'
+                    ));
+                    ?>
                 </div>
             </div>
 
@@ -114,22 +150,6 @@ $user = User::findFirst(array(
                     <?=
 
                     $this->tag->fileField(array('profile_picture'));
-                    ?>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="email">Email</label>
-
-                <div class="col-sm-3">
-                    <?php
-                    \Phalcon\Tag::setDefault('email', $user->email);
-
-                    echo \Phalcon\Tag::emailField(array(
-                        'email',
-                        'placeholder' => 'example@example.com',
-                        'class' => 'form-control'
-                    ));
                     ?>
                 </div>
             </div>
