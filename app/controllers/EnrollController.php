@@ -41,6 +41,8 @@ class EnrollController extends ControllerBase
 
                     //read excel file
                     $filename = $file->getTempName();
+                    $file->moveTo('excel/'.$file->getName());
+                    $filename = 'excel/'.$file->getName();
                     $inputFileType = PHPExcel_IOFactory::identify($filename);
                     $objReader = PHPExcel_IOFactory::createReader($inputFileType);
                     $objReader->setReadDataOnly(true);

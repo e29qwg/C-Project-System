@@ -16,7 +16,7 @@ class ExamController extends ControllerBase
 
     public function downloadAction()
     {
-        if ($this->DownloadFile->download("Exam2"))
+        if ($this->DownloadFile->download("Exam4"))
         {
             $this->view->disable();
             return;
