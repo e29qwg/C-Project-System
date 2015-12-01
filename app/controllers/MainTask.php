@@ -36,6 +36,13 @@ class MainTask extends \Phalcon\Cli\Task
                     $mail->CharSet = 'UTF-8';
                     $mail->IsHTML(true);
                     $mail->AddAddress($sendMail->to);
+                    $mail->SMTPOptions = array(
+                        'ssl' => array(
+                            'verify_peer' => false,
+                            'verify_peer_name' => false,
+                            'allow_self_signed' => true
+                        )
+                    );
                     if (!$mail->Send())
                         continue;
                     $sendMail->delete();
