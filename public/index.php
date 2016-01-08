@@ -69,6 +69,7 @@ try
     {
         $url = new \Phalcon\Mvc\Url();
         $url->setBaseUri($config->phalcon->baseUri);
+        $url->setStaticBaseUri($config->phalcon->baseUri);
         return $url;
     });
 

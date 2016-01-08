@@ -59,7 +59,7 @@ class ProjectsController extends ControllerBase
             {
                 //save log
                 $projectMaps = ProjectMap::find(array(
-                    "conditions" => "project_id=:project_id: AND ('map_type'='advisor' OR 'map_type'='owner')",
+                    "conditions" => "project_id=:project_id: AND (map_type='advisor' OR map_type='owner')",
                     "bind" => array("project_id" => $params[0])
                 ));
 
@@ -99,6 +99,7 @@ class ProjectsController extends ControllerBase
                         }
                     }
                 }
+
 
                 //update project
                 $project->project_status = 'Accept';
