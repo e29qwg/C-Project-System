@@ -191,6 +191,7 @@ if (!$projectMap)
                             <div class="col-sm-12">
                                 <h4>ความคิดเห็นอาจารย์ที่ปรึกษา</h4>
                                 <?php
+                                \Phalcon\Tag::setDefault('comment', $progressEvaluate->comment);
                                 echo \Phalcon\Tag::textArea(array(
                                     'comment'
                                 ));

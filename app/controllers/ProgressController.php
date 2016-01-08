@@ -42,7 +42,7 @@ class ProgressController extends ControllerBase
                 $txt .= $progress->progress_todo;
                 $txt .= '<h4>สรุปผลการดำเนินการและปัญหาที่เกิดขึ้น</h4>';
                 $txt .= $progress->progress_summary;
-                $txt .= '<h4>เป้าหมายที่วางไว้เพื่อประเมิณความสำเร็จในครั้งต่อไป</h4>';
+                $txt .= '<h4>เป้าหมายที่วางไว้เพื่อประเมินความสำเร็จในครั้งต่อไป</h4>';
                 $txt .= $progress->progress_target;
                 $txt .= '<h4>วันที่บันทึก</h4>';
                 $txt .= $progress->create_date;
