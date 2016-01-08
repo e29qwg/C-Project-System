@@ -70,7 +70,12 @@ class ProjectsController extends ControllerBase
                     $log = new Log();
                     $log->setTransaction($transaction);
                     $log->user_id = $projectMap->user_id;
-                    $log->description = $user->name . ' ยืนยันโครงงาน ' . $project->project_name;
+
+                    if ($projectMap->map_type=='advisor')
+                        $log->description = $user->name . ' ยืนยันโครงงาน ' . $project->project_name;
+                    else
+                        $log->description = 'โครงงาน ' . $project->project_name. '<font style="color: red"> ได้รับการยืนยันแล้ว</font>';
+
                     if (!$log->save())
                         $transaction->rollback('Error when notification');
 
