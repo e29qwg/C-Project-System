@@ -45,7 +45,7 @@ foreach ($projectMaps as $projectMap)
                             $tuid = $projectMaps[$i]->user_id;
                             $student = User::findFirst("id='$tuid'");
                             echo '<a href="'.$this->url->get('profile/index/').$student->id.'" target="_blank">'.$student->title . $student->name.'</a>';
-                            echo ' ('.$student->tel.')';
+                            echo ' (Student Id '.$student->user_id.' Tel. '.$student->tel.')';
 
                             ?>
                         </p>

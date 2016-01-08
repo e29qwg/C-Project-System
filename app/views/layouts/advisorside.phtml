@@ -177,7 +177,7 @@ function showProject($projectMaps, $level, $di, $currentSemesterId)
                     $str += '<br>';
                 $tuid = $projectMaps[$i]->user_id;
                 $student = User::findFirst("id='$tuid'");
-                $str .= $student->title . $student->name;
+                $str .= $student->title . $student->name.' ('.$student->user_id.')';
             }
             ?>
             <a class="list-group-item" href="<?= $di->url->get('progress/evaluate/'); ?><?= $project->project_id ?>"
