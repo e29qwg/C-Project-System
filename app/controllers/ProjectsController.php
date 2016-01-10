@@ -211,21 +211,24 @@ class ProjectsController extends ControllerBase
 
     public function rejectAction()
     {
-        $params = $this->dispatcher->getParams();
         $auth = $this->session->get('auth');
         $user_id = $auth['id'];
+
+        $project_id = $this->request->getPost('project_id');
+        $reason = $this->request->getPost('reason');
+
         $user = User::findFirst(array(
             "conditions" => "id=:user_id:",
             "bind" => array("user_id" => $user_id)
         ));
 
-        if (empty($params[0]))
+        if (empty($project_id))
         {
             $this->flash->error('Invalid Request');
             return $this->forward('projects/proposed');
         }
 
-        if (!$this->_checkPermission($params[0]))
+        if (!$this->_checkPermission($project_id))
             return false;
 
         $transaction = $this->transactionManager->get();
@@ -233,10 +236,9 @@ class ProjectsController extends ControllerBase
 
         try
         {
-
             $project = Project::findFirst(array(
                 "conditions" => "project_id=:project_id:",
-                "bind" => array("project_id" => $params[0])
+                "bind" => array("project_id" =>  $project_id)
             ));
 
             $project->setTransaction($transaction);
@@ -253,7 +255,7 @@ class ProjectsController extends ControllerBase
                 //save log
                 $projectMaps = ProjectMap::find(array(
                     "conditions" => "project_id=:project_id: AND (map_type='owner' OR map_type='advisor')",
-                    "bind" => array("project_id" => $params[0])
+                    "bind" => array("project_id" => $project_id)
                 ));
 
 
@@ -263,6 +265,9 @@ class ProjectsController extends ControllerBase
                     $log->setTransaction($transaction);
                     $log->user_id = $projectMap->user_id;
                     $log->description = $user->name . ' ปฏิเสธโครงงาน ' . $project->project_name;
+
+                    if (!empty($reason))
+                        $log->description .= ' ('.$reason.')';
 
                     if (!$log->save())
                     {
@@ -289,6 +294,9 @@ class ProjectsController extends ControllerBase
                             $sendEmail->to = $advisor->email;
                             $sendEmail->subject = 'โครงงานถูกปฏิเสธ';
                             $sendEmail->body = htmlspecialchars($user->name . ' ปฏิเสธโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
+
+                            if (!empty($reason))
+                                $sendEmail->body .= htmlspecialchars("\n". $reason);
                             if (!$sendEmail->save())
                             {
                                 $transaction->rollback('Error when send email');

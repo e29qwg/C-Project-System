@@ -44,8 +44,8 @@ foreach ($projectMaps as $projectMap)
 
                             $tuid = $projectMaps[$i]->user_id;
                             $student = User::findFirst("id='$tuid'");
-                            echo '<a href="'.$this->url->get('profile/index/').$student->id.'" target="_blank">'.$student->title . $student->name.'</a>';
-                            echo ' (Student Id '.$student->user_id.' Tel. '.$student->tel.')';
+                            echo '<a href="' . $this->url->get('profile/index/') . $student->id . '" target="_blank">' . $student->title . $student->name . '</a>';
+                            echo ' (Student Id ' . $student->user_id . ' Tel. ' . $student->tel . ')';
 
                             ?>
                         </p>
@@ -53,7 +53,7 @@ foreach ($projectMaps as $projectMap)
 
 
                 </div>
-            <?php
+                <?php
             }
             ?>
             <div class="row">
@@ -86,19 +86,38 @@ foreach ($projectMaps as $projectMap)
             <div class="row">
                 <label class="col-sm-2"></label>
 
-                <div class="col-sm-offset-2 col-sm-10">
-                    <a href="<?= $this->url->get('projects/accept/'); ?><?= $project->project_id ?>"
-                       class="btn btn-xs btn-success" onclick="return confirm('Confirm Accept'); ">Accept</a>
-                    <a href="<?= $this->url->get('projects/reject/'); ?><?= $project->project_id ?>"
-                       class="btn btn-xs btn-danger" onclick="return confirm('ยืนยันการลบโครงงาน'); ">Reject</a>
-                </div>
+                <form method="post" action="<?= $this->url->get('projects/reject'); ?>">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <a href="<?= $this->url->get('projects/accept/'); ?><?= $project->project_id ?>"
+                           class="btn btn-xs btn-success" onclick="return confirm('Confirm Accept'); ">Accept</a>
+
+                        <input type="hidden" name="project_id" value="<?= $project->project_id; ?>">
+                        <input type="hidden" name="reason" id="reason" value=""">
+                        <button class="btn btn-xs btn-danger" onclick="return confirmReject(); ">Reject</button>
+
+                    </div>
+                </form>
             </div>
+
         </div>
     </div>
-<?php
+    <?php
 }
 
 if (!$found)
     $this->flash->notice('ยังไม่มีโครงงานให้เลือก');
 
 ?>
+
+<script>
+    function confirmReject() {
+        var promptBox = prompt("ยินยันการลบโครงงาน (กรอกเหตุผล optional)");
+
+        if (promptBox != null) {
+            $("#reason").attr('value', promptBox);
+            return true;
+        }
+
+        return false;
+    }
+</script>
