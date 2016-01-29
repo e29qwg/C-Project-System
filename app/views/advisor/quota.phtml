@@ -39,9 +39,11 @@ if ($auth['type'] != 'Admin')
             <tbody>
             <?php
 
+            $totalAC = 0;
+            $totalPD = 0;
+
             foreach ($advisors as $advisor)
             {
-
                 $quota = Quota::findFirst("advisor_id='$advisor->id'");
 
                 ?>
@@ -59,17 +61,35 @@ if ($auth['type'] != 'Admin')
                     </td>
                     <td class="tcenter">
                             <?php
-                            echo $this->CheckQuota->acceptProject($advisor->id, $currentSemesterId);
+
+
+                            $ac =  $this->CheckQuota->acceptProject($advisor->id, $currentSemesterId);
+                            $totalAC += $ac;
+                            echo $ac
+
                             ?>
                     </td>
                     <td class="tcenter">
-                            <?= $this->CheckQuota->pendingProject($advisor->id, $currentSemesterId); ?>
+                            <?php
+
+                            $pd = $this->CheckQuota->pendingProject($advisor->id, $currentSemesterId);
+                            $totalPD += $pd;
+                            echo $pd;
+
+                            ?>
                     </td>
                 </tr>
             <?php
             }
 
             ?>
+
+            <tr>
+                <td>รวม</td>
+                <td></td>
+                <td class="tcenter"><?= $totalAC; ?></td>
+                <td class="tcenter"><?= $totalPD; ?></td>
+            </tr>
             </tbody>
         </table>
         <button type="submit" class="btn btn-sm btn-success">บันทึก</button>
