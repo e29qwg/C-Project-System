@@ -224,7 +224,6 @@ class AdminController extends ControllerBase
             {
                 foreach ($request->getUploadedFiles() as $file)
                 {
-                    echo $file->getTempName();
                     break;
                 }
 
