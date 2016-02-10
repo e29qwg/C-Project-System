@@ -220,10 +220,11 @@ class AdminController extends ControllerBase
         //post request
         if ($request->isPost())
         {
-            if ($request->hasFiles())
+            if ($request->hasFiles(true))
             {
                 foreach ($request->getUploadedFiles() as $file)
                 {
+                    echo $file->getTempName();
                     break;
                 }
 
