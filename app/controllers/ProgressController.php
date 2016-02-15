@@ -11,6 +11,9 @@ class ProgressController extends ControllerBase
 
     public function exportPDFAction()
     {
+        ini_set('max_execution_time', 300);
+
+
         $project_id = $this->dispatcher->getParam(0);
 
         if (empty($project_id))
@@ -93,6 +96,8 @@ class ProgressController extends ControllerBase
         {
             echo $e;
         }
+        
+        ini_set('max_execution_time', 30);
     }
 
     public function doEditAction()
