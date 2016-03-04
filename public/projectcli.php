@@ -28,7 +28,7 @@ $di->set('mail', function () use ($config)
     $mail = new PHPMailer();
     $mail->IsSMTP();
     $mail->SMTPSecure = 'tls';
-    $mail->Host = 'xmail.coe.phuket.psu.ac.th';
+    $mail->Host = 'smtp.gmail.com';
     $mail->Port = 587;
     $mail->SMTPAuth = true;
     $mail->Username = $config->gmail->username;
