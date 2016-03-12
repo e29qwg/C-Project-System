@@ -166,7 +166,7 @@ class ProgressController extends ControllerBase
         $comment = $request->getPost('comment');
 
         $transaction = $this->transactionManager->get();
-        $ids = array();
+        $emails = array();
 
         try
         {
@@ -215,25 +215,25 @@ class ProgressController extends ControllerBase
             {
                 if (!empty($owner->email) && $owner->id != $auth['id'] && $this->wantNotification($owner->id, 'progress_update'))
                 {
-                    $sendEmail = new SendEmail();
-                    $sendEmail->to = $owner->email;
-                    $sendEmail->subject = 'Your progress has been evaluate';
-                    $sendEmail->body = htmlspecialchars('มีการเปลี่ยนแปลงผลการประเมินของใบรายงานความก้าวหน้าโครงงาน เวลา ' . date('d-m-Y H:i:s'));
-                    $sendEmail->setTransaction($transaction);
-                    if (!$sendEmail->save())
-                        $transaction->rollback('Error when send email');
-                    else
-                        array_push($ids, $sendEmail->id);
+                    $to = $owner->email;
+                    $subject = 'Your progress has been evaluate';
+                    $mes = htmlspecialchars('มีการเปลี่ยนแปลงผลการประเมินของใบรายงานความก้าวหน้าโครงงาน เวลา ' . date('d-m-Y H:i:s'));
+
+                    $data = array();
+                    $data['to'] = $to;
+                    $data['subject'] = $subject;
+                    $data['mes'] = $mes;
+
+                    array_push($emails, $data);
                 }
             }
 
             $transaction->commit();
 
             //put to beanstalkd
-            foreach ($ids as $id)
+            foreach ($emails as $email)
             {
-                $this->queue->choose($this->projecttube);
-                $this->queue->put($id);
+                $this->sendMail($email['subject'], $email['mes'], $email['to']);
             }
 
         } catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
@@ -420,17 +420,13 @@ class ProgressController extends ControllerBase
                 $hashLink->link = '/progress/view/' . $project_id . '/' . $progress->progress_id;
                 $hashLink->save();
 
-                $sendEmail = new SendEmail();
-                $sendEmail->to = $advisor->email;
-                $sendEmail->subject = 'มีรายงานความก้าวหน้าโครงงาน ' . $project->project_name;
-                $sendEmail->body = htmlspecialchars($user->title . ' ' . $user->name . ' ได้บันทึกความก้าวหน้าโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
-                $sendEmail->body .= '<br>';
-                $sendEmail->body .= "<a href=\"" . $this->furl . $this->url->get('session/useHash/') . $hashLink->hash . "\">คลิกที่นี่เพื่อดู</a>";
-                if ($sendEmail->save())
-                {
-                    $this->queue->choose($this->projecttube);
-                    $this->queue->put($sendEmail->id);
-                }
+                $to = $advisor->email;
+                $subject = 'มีรายงานความก้าวหน้าโครงงาน ' . $project->project_name;
+                $mes = htmlspecialchars($user->title . ' ' . $user->name . ' ได้บันทึกความก้าวหน้าโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
+                $mes .= '<br>';
+                $mes .= "<a href=\"" . $this->furl . $this->url->get('session/useHash/') . $hashLink->hash . "\">คลิกที่นี่เพื่อดู</a>";
+
+                $this->sendMail($subject, $mes, $to);
             }
         }
 

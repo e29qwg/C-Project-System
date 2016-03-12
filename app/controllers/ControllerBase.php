@@ -37,6 +37,20 @@ class ControllerBase extends Phalcon\Mvc\Controller
         $this->auth = $auth;
     }
 
+    protected function sendMail($subject, $message, $to)
+    {
+        if (empty($to))
+            return;
+
+        $this->queue->choose($this->config->queue->tube);
+        $this->queue->put(array(
+            'from' => 'CoE-Project',
+            'send_to' => $to,
+            'subject' => $subject,
+            'message' => $message
+        ));
+    }
+
     protected function strDbError($model)
     {
         $str = '';

@@ -63,7 +63,7 @@ class ProjectsController extends ControllerBase
                     "bind" => array("project_id" => $params[0])
                 ));
 
-                $sendEmailIds = array();
+                $emails = array();
 
                 foreach ($projectMaps as $projectMap)
                 {
@@ -92,15 +92,12 @@ class ProjectsController extends ControllerBase
 
                         if (!empty($owner->email) && $owner->id != $auth['id'] && $this->wantNotification($owner->id, 'project_update'))
                         {
-                            $sendEmail = new SendEmail();
-                            $sendEmail->setTransaction($transaction);
-                            $sendEmail->to = $owner->email;
-                            $sendEmail->subject = 'โครงงาน ' . $project->project_name . ' ได้รับการยืนยัน';
-                            $sendEmail->body = htmlspecialchars($user->name . ' ยืนยันโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
-                            if (!$sendEmail->save())
-                                $transaction->rollback('Error when send email');
+                            $data = array();
+                            $data['to'] = $owner->email;
+                            $data['subject']= 'โครงงาน ' . $project->project_name . ' ได้รับการยืนยัน';
+                            $data['mes'] = htmlspecialchars($user->name . ' ยืนยันโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
 
-                            array_push($sendEmailIds, $sendEmail->id);
+                            array_push($emails, $data);
                         }
                     }
                 }
@@ -116,10 +113,9 @@ class ProjectsController extends ControllerBase
                 $this->_createScore($projectMaps, $project);
                 $this->_updateWorkLoad($user, $project, NULL);
 
-                foreach ($sendEmailIds as $sendEmailId)
+                foreach ($emails as $email)
                 {
-                    $this->queue->choose($this->projecttube);
-                    $this->queue->put($sendEmailId);
+                    $this->sendMail($email['subject'], $email['mes'], $email['to']);
                 }
             }
         } catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
@@ -232,7 +228,7 @@ class ProjectsController extends ControllerBase
             return false;
 
         $transaction = $this->transactionManager->get();
-        $ids = array();
+        $emails = array();
 
         try
         {
@@ -289,22 +285,15 @@ class ProjectsController extends ControllerBase
 
                         if (!empty($advisor->email) && $advisor->id != $auth['id'] && $this->wantNotification($advisor->id, 'project_update'))
                         {
-                            $sendEmail = new SendEmail();
-                            $sendEmail->setTransaction($transaction);
-                            $sendEmail->to = $advisor->email;
-                            $sendEmail->subject = 'โครงงานถูกปฏิเสธ';
-                            $sendEmail->body = htmlspecialchars($user->name . ' ปฏิเสธโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
+                            $data = array();
+                            $data['to'] = $advisor->email;
+                            $data['subject'] = 'โครงงานถูกปฏิเสธ';
+                            $data['mes'] = htmlspecialchars($user->name . ' ปฏิเสธโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
 
                             if (!empty($reason))
-                                $sendEmail->body .= htmlspecialchars("\n". $reason);
-                            if (!$sendEmail->save())
-                            {
-                                $transaction->rollback('Error when send email');
-                            }
-                            else
-                            {
-                                array_push($ids, $sendEmail->id);
-                            }
+                                $data['mes'].= htmlspecialchars("\n". $reason);
+
+                            array_push($emails, $data);
                         }
                     }
                 }
@@ -318,10 +307,9 @@ class ProjectsController extends ControllerBase
 
             $transaction->commit();
 
-            foreach ($ids as $id)
+            foreach ($emails as $email)
             {
-                $this->queue->choose($this->projecttube);
-                $this->queue->put($id);
+                $this->sendMail($email['subject'], $email['mes'], $email['to']);
             }
 
         } catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
@@ -611,15 +599,10 @@ class ProjectsController extends ControllerBase
                 {
                     if (!empty($user->email) && $user->id != $auth['id'] && $this->wantNotification($user->id, 'project_update'))
                     {
-                        $sendEmail = new SendEmail();
-                        $sendEmail->to = $user->email;
-                        $sendEmail->subject = 'โครงงาน ' . $project->project_name . ' ถูกลบ';
-                        $sendEmail->body = htmlspecialchars($auth['name'] . ' ได้ลบโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
-                        if ($sendEmail->save())
-                        {
-                            $this->queue->choose($this->projecttube);
-                            $this->queue->put($sendEmail->id);
-                        }
+                        $to = $user->email;
+                        $subject = 'โครงงาน ' . $project->project_name . ' ถูกลบ';
+                        $mes = htmlspecialchars($auth['name'] . ' ได้ลบโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
+                        $this->sendMail($subject,$mes, $to);
                     }
                 }
             }
@@ -736,7 +719,7 @@ class ProjectsController extends ControllerBase
         }
 
         $transaction = $this->transactionManager->get();
-        $ids = array();
+        $emails = array();
 
         try
         {
@@ -845,29 +828,21 @@ class ProjectsController extends ControllerBase
                 if (!$hashLink->save())
                     $transaction->rollback('Error when create project');
 
-                $sendEmail = new SendEmail();
-                $sendEmail->setTransaction($transaction);
-                $sendEmail->to = $oadvisor->email;
-                $sendEmail->subject = "มีโครงงานใหม่";
-                $sendEmail->body = htmlspecialchars($auth['name'] . ' ได้สร้างโครงงาน ' . $project_name . ' (รอการยืนยัน) เวลา ' . date('d-m-Y H:i:s'));
-                $sendEmail->body .= "<br>";
-                $sendEmail->body .= "<a href=\"".$this->furl.$this->url->get('session/useHash/').$hashLink->hash."\">คลิกที่นี่เพื่อดูขอเสนอโครงงาน</a>";
-                if (!$sendEmail->save())
-                {
-                    $transaction->rollback('Error when send email');
-                }
-                else
-                {
-                    array_push($ids, $sendEmail->id);
-                }
+                $data = array();
+                $data['to'] = $oadvisor->email;
+                $data['subject'] = "มีโครงงานใหม่ รอการยืนยัน";
+                $data['body'] = htmlspecialchars($auth['name'] . ' ได้สร้างโครงงาน ' . $project_name . ' (รอการยืนยัน) เวลา ' . date('d-m-Y H:i:s'));
+                $data['body']  .= "<br>";
+                $data['body']  .= "<a href=\"".$this->furl.$this->url->get('session/useHash/').$hashLink->hash."\">คลิกที่นี่เพื่อดูขอเสนอโครงงาน</a>";
+
+                array_push($emails, $data);
             }
 
             $transaction->commit();
 
-            foreach ($ids as $id)
+            foreach ($emails as $email)
             {
-                $this->queue->choose($this->projecttube);
-                $this->queue->put($id);
+                $this->sendMail($email['subject'], $email['body'], $email['to']);
             }
 
 

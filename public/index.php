@@ -10,7 +10,7 @@ try
     require(__DIR__ . '/../app/library/glib.php');
     require_once(__DIR__ . '/../app/library/PHPExcel/Classes/PHPExcel.php');
     require_once(__DIR__ . '/../app/library/PHPExcel/Classes/PHPExcel/IOFactory.php');
-    require_once(__DIR__.'/../app/library/html2pdf/html2pdf.class.php');
+    require_once(__DIR__ . '/../app/library/html2pdf/html2pdf.class.php');
 
 
     $loader = new \Phalcon\Loader();
@@ -27,16 +27,18 @@ try
 
     $di = new \Phalcon\DI\FactoryDefault();
 
-    $di->set('queue', function ()
+    $di->set('queue', function () use ($config)
     {
         $queue = new Phalcon\Queue\Beanstalk(array(
-            'host' => '127.0.0.1'
+            'host' => $config->queue->host,
+            'port' => '11300'
         ));
         return $queue;
     });
 
-    $di->set('projecttube', function() use ($config) {
-       return $config->tube->tube;
+    $di->setShared('config', function () use ($config)
+    {
+        return $config;
     });
 
     $di->set('mode', function () use ($config)
@@ -75,7 +77,7 @@ try
 
     $di->set('furl', function () use ($config)
     {
-       return $config->phalcon->furl;
+        return $config->phalcon->furl;
     });
 
     $di->set('view', function () use ($config)
@@ -174,10 +176,12 @@ try
     $application->setDI($di);
 
     echo $application->handle()->getContent();
-} catch (Phalcon\Exception $e)
+}
+catch (Phalcon\Exception $e)
 {
     echo $e->getMessage();
-} catch (PDOException $e)
+}
+catch (PDOException $e)
 {
     echo $e->getMessage();
 }
