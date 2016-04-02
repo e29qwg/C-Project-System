@@ -105,10 +105,12 @@ class ControllerBase extends Phalcon\Mvc\Controller
         if (empty($uriParts[1]))
             $uriParts[1] = 'index';
 
-        return $this->dispatcher->forward(array(
+        $this->dispatcher->forward(array(
             'controller' => $uriParts[0],
             'action' => $uriParts[1]
         ));
+
+        return true;
     }
 
     protected function _checkPermission($project_id)

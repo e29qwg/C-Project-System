@@ -9,6 +9,17 @@ class AdminController extends ControllerBase
         parent::initialize();
     }
 
+    public function sendNewsAction()
+    {
+        $users = User::find();
+
+        foreach ($users as $user)
+        {
+            if (!empty($user->email))
+                $this->sendMail('System update!!!!', 'หัวข้อโครงงานถูกปรับให้มีความยาวสูงสุดเพียง 50 ตัวอักษร ทำให้บางโครงงานรายชื่อจะขาดหายไป กรุณาตรวจสอบและแก้ไขให้ตรงเงื่อนไข ขอบคุณครับ', $user->email);
+        }
+    }
+
     public function excelCoadvisorAction()
     {
         $request = $this->request;

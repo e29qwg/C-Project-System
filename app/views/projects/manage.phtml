@@ -42,9 +42,22 @@ $project = Project::findFirst("project_id='$params[0]'");
             <div class="form-group">
                 <label class="col-sm-2 control-label">Project Name</label>
 
-                <div class="col-sm-10">
-                    <input type="text" id="project_name" name="project_name" value="<?= $project->project_name ?>"
-                           class="form-control" required autofocus placeholder="Project Name">
+                <div class="col-sm-8">
+                    <?php
+
+                    \Phalcon\Tag::setDefault('name', $project->project_name);
+
+                    echo \Phalcon\Tag::textField(array(
+                        'name',
+                        'class' => 'form-control',
+                        'required' => 'required',
+                        'placeholder' => 'Project Name',
+                        'maxlength' => '50'
+                    ));
+
+                    ?>
+                    <p class="help-block">ใส่เฉพาะชื่อภาษาไทย <strong>หรือ</strong> ภาษาอังกฤษ จำกัดความยาวไม่เกิน 50
+                        ตัวอักษร</p>
                 </div>
             </div>
             <div class="form-group">
@@ -164,7 +177,8 @@ $project = Project::findFirst("project_id='$params[0]'");
                            onclick="return confirm('Confirm accept');">Accept</a>
                         <button class="btn btn-sm btn-danger"
                                 formaction="<?= $this->url->get('projects/reject'); ?>" onclick="return confirmReject();
-                        ">Reject</button>
+                        ">Reject
+                        </button>
                     </div>
                 </div>
 
@@ -225,5 +239,4 @@ $project = Project::findFirst("project_id='$params[0]'");
     }
     ?>
     </div>
-</div>
 </div>

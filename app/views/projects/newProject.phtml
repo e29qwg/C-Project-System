@@ -33,9 +33,22 @@ $user_id = $auth['id'];
     <div class="form-group">
         <label class="col-sm-2 control-label" for="project_name">Project Name</label>
 
-        <div class="col-sm-10">
-            <input placeholder="Project Name" class="form-control" style="width: 60%" name="name" id="name" required
-                   autofocus>
+        <div class="col-sm-6">
+            <!--<input placeholder="Project Name" class="form-control" style="width: 60%" name="name" id="name" required
+                   autofocus>-->
+
+            <?php
+
+            echo \Phalcon\Tag::textField(array(
+                'name',
+                'class' => 'form-control',
+                'required' => 'required',
+                'placeholder' => 'Project Name',
+                'maxlength' => '50'
+            ));
+
+            ?>
+            <p class="help-block">ใส่เฉพาะชื่อภาษาไทย <strong>หรือ</strong> ภาษาอังกฤษ จำกัดความยาวไม่เกิน 50 ตัวอักษร</p>
         </div>
     </div>
     <div class="form-group">
@@ -132,52 +145,6 @@ $user_id = $auth['id'];
             </select>
         </div>
     </div>
-    <div id="exco">
-        <div class="form-group">
-            <label class="col-sm-2 control-label">CoAdvisor</label>
-
-            <div class="col-sm-3">
-                <select class="form-control" name="coadvisor1" id="coadvisor1">
-                    <option value="">ไม่ระบุ</option>
-                    <?php
-                    foreach ($advisors as $advisor)
-                    {
-                        $quota = Quota::findFirst("advisor_id='$advisor->id'");
-                        if (!$quota)
-                            continue;
-                        if ($this->CheckQuota->acceptProject($advisor->id, $currentSemesterId) + 1 > $quota->quota_pp)
-                            continue;
-                        echo '<option value="' . $advisor->id . '">';
-                        echo $advisor->title . $advisor->name;
-                        echo '</option>';
-                    }
-                    ?>
-                </select>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">CoAdvisor</label>
-
-            <div class="col-sm-3">
-                <select class="form-control" name="coadvisor2" id="coadvisor2">
-                    <option value="">ไม่ระบุ</option>
-                    <?php
-                    foreach ($advisors as $advisor)
-                    {
-                        $quota = Quota::findFirst("advisor_id='$advisor->id'");
-                        if (!$quota)
-                            continue;
-                        if ($this->CheckQuota->acceptProject($advisor->id, $currentSemesterId) + 1 > $quota->quota_pp)
-                            continue;
-                        echo '<option value="' . $advisor->id . '">';
-                        echo $advisor->title . $advisor->name;
-                        echo '</option>';
-                    }
-                    ?>
-                </select>
-            </div>
-        </div>
-    </div>
 
     <div class="form-group">
         <label class="col-sm-2 control-label" for="description">Description</label>
@@ -192,23 +159,3 @@ $user_id = $auth['id'];
         </div>
     </div>
 </form>
-
-<script>
-    $("#project_level").change(function ()
-    {
-        check();
-    });
-
-    $(document).ready(function ()
-    {
-        check();
-    });
-
-    function check()
-    {
-        if ($("#project_level").val() != 1)
-            $("#exco").show();
-        else
-            $("#exco").hide();
-    }
-</script>
