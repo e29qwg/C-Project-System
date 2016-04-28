@@ -18,7 +18,7 @@ class Security extends \Phalcon\Mvc\User\Plugin
 
         if (!$auth)
         {
-            if ($controller != 'session')
+            if ($controller != 'session' && $controller != 'api')
             {
                 $this->response->redirect('session');
             }
@@ -78,6 +78,7 @@ class Security extends \Phalcon\Mvc\User\Plugin
             //public acl
             $publicResources = array(
                 'index' => array('index'),
+                'api' => array('getStatusProjectFarm'),
                 'session' => array('index', 'login', 'logout', 'useHash')
             );
 

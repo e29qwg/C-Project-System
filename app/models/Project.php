@@ -9,6 +9,7 @@ class Project extends \Phalcon\Mvc\Model
     public $project_status;
     public $project_description;
     public $semeter_id;
+    public $project_farm;
     public $create_date;
 
     public function initialize()
