@@ -79,7 +79,7 @@ class Security extends \Phalcon\Mvc\User\Plugin
             $publicResources = array(
                 'index' => array('index'),
                 'api' => array('getStatusProjectFarm'),
-                'session' => array('index', 'login', 'logout', 'useHash')
+                'session' => array('index', 'login', 'logout', 'useHash'),
             );
 
             foreach ($publicResources as $resource => $actions)
@@ -142,6 +142,7 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 foreach ($actions as $action)
                 {
                     $acl->allow('Student', $resource, $action);
+                    $acl->allow('Staff', $resource, $action);
                     $acl->allow('Admin', $resource, $action);
                 }
             }
