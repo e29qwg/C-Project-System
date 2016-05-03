@@ -27,6 +27,10 @@ $config = new Phalcon\Config(array(
     ),
     'tube' => array(
         'tube' => ''
+    ),
+    'oauth' => array(
+        'client_id' => '',
+        'client_secret' => ''
     )
 ));
 
