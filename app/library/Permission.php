@@ -20,22 +20,19 @@ class Permission extends \Phalcon\Mvc\User\Component
 
     public function canCreateProject($current_semester, $user_id)
     {
+        $auth = $this->session->get('auth');
         if (empty($user_id))
-            $user_id = $this->auth['id'];
-        else
-        {
-            $user = User::findFirst(array(
-                "conditions" => "id=:user_id:",
-                "bind" => array("user_id" => $user_id)
-            ));
+            $user_id = $auth['id'];
 
-            if (!$user)
-                $user_id = $this->auth['id'];
-            else
-                $username = $user->user_id;
-        }
+        $user = User::findFirst(array(
+            "conditions" => "id=:user_id:",
+            "bind" => array("user_id" => $user_id)
+        ));
+
+        $username = $user->user_id;
+        
         if (empty($username))
-            $username = $this->auth['user_id'];
+           return null;
 
         //check enroll
         $enroll = Enroll::findFirst(array(

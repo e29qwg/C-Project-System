@@ -71,10 +71,10 @@ class ProjectsController extends ControllerBase
                     $log->setTransaction($transaction);
                     $log->user_id = $projectMap->user_id;
 
-                    if ($projectMap->map_type=='advisor')
+                    if ($projectMap->map_type == 'advisor')
                         $log->description = $user->name . ' ยืนยันโครงงาน ' . $project->project_name;
                     else
-                        $log->description = 'โครงงาน ' . $project->project_name. '<font style="color: red"> ได้รับการยืนยันแล้ว</font>';
+                        $log->description = 'โครงงาน ' . $project->project_name . '<font style="color: red"> ได้รับการยืนยันแล้ว</font>';
 
                     if (!$log->save())
                         $transaction->rollback('Error when notification');
@@ -94,7 +94,7 @@ class ProjectsController extends ControllerBase
                         {
                             $data = array();
                             $data['to'] = $owner->email;
-                            $data['subject']= 'โครงงาน ' . $project->project_name . ' ได้รับการยืนยัน';
+                            $data['subject'] = 'โครงงาน ' . $project->project_name . ' ได้รับการยืนยัน';
                             $data['mes'] = htmlspecialchars($user->name . ' ยืนยันโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
 
                             array_push($emails, $data);
@@ -118,7 +118,8 @@ class ProjectsController extends ControllerBase
                     $this->sendMail($email['subject'], $email['mes'], $email['to']);
                 }
             }
-        } catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
+        }
+        catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
         {
             $this->flash->error('Transaction error: ' . $e->getMessage());
             return $this->forward('projects/proposed');
@@ -234,7 +235,7 @@ class ProjectsController extends ControllerBase
         {
             $project = Project::findFirst(array(
                 "conditions" => "project_id=:project_id:",
-                "bind" => array("project_id" =>  $project_id)
+                "bind" => array("project_id" => $project_id)
             ));
 
             $project->setTransaction($transaction);
@@ -263,7 +264,7 @@ class ProjectsController extends ControllerBase
                     $log->description = $user->name . ' ปฏิเสธโครงงาน ' . $project->project_name;
 
                     if (!empty($reason))
-                        $log->description .= ' ('.$reason.')';
+                        $log->description .= ' (' . $reason . ')';
 
                     if (!$log->save())
                     {
@@ -291,7 +292,7 @@ class ProjectsController extends ControllerBase
                             $data['mes'] = htmlspecialchars($user->name . ' ปฏิเสธโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
 
                             if (!empty($reason))
-                                $data['mes'].= htmlspecialchars("\n". $reason);
+                                $data['mes'] .= htmlspecialchars("\n" . $reason);
 
                             array_push($emails, $data);
                         }
@@ -312,7 +313,8 @@ class ProjectsController extends ControllerBase
                 $this->sendMail($email['subject'], $email['mes'], $email['to']);
             }
 
-        } catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
+        }
+        catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
         {
             $this->flash->error('Transaction failure: ' . $e->getMessage());
             return $this->forward('project/proposed');
@@ -602,7 +604,7 @@ class ProjectsController extends ControllerBase
                         $to = $user->email;
                         $subject = 'โครงงาน ' . $project->project_name . ' ถูกลบ';
                         $mes = htmlspecialchars($auth['name'] . ' ได้ลบโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
-                        $this->sendMail($subject,$mes, $to);
+                        $this->sendMail($subject, $mes, $to);
                     }
                 }
             }
@@ -656,6 +658,162 @@ class ProjectsController extends ControllerBase
     }
 
     public function doNewProjectAction()
+    {
+        //fetch student
+        $student = User::findFirst(array(
+            "conditions" => "id=:id:",
+            "bind" => array("id" => $this->auth['id'])
+        ));
+
+        if (!$student)
+        {
+            $this->flash->error('User not found');
+            return $this->forward('projects/new');
+        }
+
+        //check can create project
+
+        $project_level = $this->permission->canCreateProject($this->current_semester);
+
+
+        if (empty($project_level))
+        {
+            $this->flash->error('Error missing some condition');
+            return $this->forward('projects/new');
+        }
+
+        $request = $this->request;
+
+        $advisor_id = $request->getPost('advisor_id');
+        $project_name = $request->getPost('project_name');
+        $project_type = $request->getPost('project_type');
+        $description = $request->getPost('description');
+
+        \Phalcon\Tag::setDefaults(array(
+            'advisor_id' => $advisor_id,
+            'project_name' => $project_name,
+            'project_type' => $project_type,
+            'description' => $description,
+        ));
+
+
+        if (empty($advisor_id) || empty($project_name) || empty($project_type) || empty($description))
+        {
+            $this->flash->error('Important data missing');
+            return $this->forward('projects/new');
+        }
+
+        //check advisor quota
+        if ($this->permission->quotaAvailable($advisor_id, $this->current_semester) <= 0)
+        {
+            $this->flash->error('Advisor\' quota limit exceed');
+            return $this->forward('projects/new');
+        }
+
+        $transaction = $this->transactionManager->get();
+
+        try
+        {
+            $project = new Project();
+            $project->setTransaction($transaction);
+            $project->project_name = $project_name;
+            $project->project_type = $project_type;
+            $project->project_level_id = $project_level->project_level_id;
+            $project->project_description = $description;
+            $project->semester_id = $this->current_semester;
+
+            //save fail
+            if (!$project->save())
+            {
+                $this->dbError($project);
+                $transaction->rollback('Error when create project');
+            }
+
+            //add owner
+            $projectMap = new ProjectMap();
+            $projectMap->setTransaction($transaction);
+            $projectMap->user_id = $student->id;
+            $projectMap->project_id = $project->project_id;
+            $projectMap->map_type = 'owner';
+            if (!$projectMap->save())
+            {
+                $transaction->rollback('Error When create project');
+            }
+
+            //add advisor
+            $projectMap = new ProjectMap();
+            $projectMap->setTransaction($transaction);
+            $projectMap->user_id = $advisor_id;
+            $projectMap->project_id = $project->project_id;
+            $projectMap->map_type = 'advisor';
+            if (!$projectMap->save())
+            {
+                $transaction->rollback('Error when create project');
+            }
+
+            //insert log to advisor
+            $log = new Log();
+            $log->setTransaction($transaction);
+            $log->user_id = $student->id;
+            $log->description = 'สร้างโครงงาน ' . $project_name . ' เรียบร้อยแล้ว (รอการยืนยันจากอาจารย์ที่ปรึกษา)';
+            if (!$log->save())
+            {
+                $transaction->rollback('Error when create log');
+            }
+
+            $log = new Log();
+            $log->setTransaction($transaction);
+            $log->user_id = $advisor_id;
+            $log->description = $this->auth['name'] . 'ได้สร้างโครงงาน ' . $project_name . ' รอการยืนยัน';
+            if (!$log->save())
+            {
+                $transaction->rollback('Error when create log');
+            }
+
+            //send email to advisor
+            $advisor = User::findFirst(array(
+                "conditions" => "id=:id:",
+                "bind" => array("id" => $advisor_id)
+            ));
+
+            if (!$advisor)
+            {
+                $transaction->rollback('Advisor not found');
+            }
+
+            if (!empty($advisor->email) && $advisor->active && $advisor->id != $this->auth['id'] && $this->wantNotification($advisor->id, 'project_update'))
+            {
+                $hashLink = new HashLink();
+                $hashLink->setTransaction($transaction);
+                $hashLink->user_id = $advisor->id;
+                $hashLink->hash = \Phalcon\Text::random(Phalcon\Text::RANDOM_ALNUM, 20);
+                $hashLink->link = 'projects/manage/' . $project->project_id;
+                if (!$hashLink->save())
+                    $transaction->rollback('Error when create project');
+
+                $to = $advisor->email;
+                $subject = "มีโครงงานใหม่ รอการยืนยัน";
+                $body = htmlspecialchars($this->auth['name'] . ' ได้สร้างโครงงาน ' . $project_name . ' (รอการยืนยัน) เวลา ' . date('d-m-Y H:i:s'));
+                $body .= "<br>";
+                $body .= "<a href=\"" . $this->furl . $this->url->get('session/useHash/') . $hashLink->hash . "\">คลิกที่นี่เพื่อดูขอเสนอโครงงาน</a>";
+
+                $this->sendMail($subject, $body, $to);
+            }
+
+            $transaction->commit();
+
+        }
+        catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
+        {
+            $this->flash->error('Transaction failure: ' . $e->getMessage());
+            return $this->forward('projects/newProject');
+        }
+
+        $this->flash->success('New project success');
+        return $this->response->redirect('index');
+    }
+
+    /*public function doNewProjectAction()
     {
         $auth = $this->session->get('auth');
 
@@ -854,7 +1012,7 @@ class ProjectsController extends ControllerBase
 
         $this->flash->success('New project success');
         return $this->response->redirect('index');
-    }
+    }*/
 
     public function newProjectAction()
     {
@@ -870,7 +1028,7 @@ class ProjectsController extends ControllerBase
         $this->loadViewAdvisors();
 
         //TODO Get old project
-        
+
     }
 }
 

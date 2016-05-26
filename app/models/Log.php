@@ -27,6 +27,11 @@ class Log extends \Phalcon\Mvc\Model
      */
     public $create_date;
 
+    public function beforeValidationOnCreate()
+    {
+        $this->create_date = date('Y-m-d H:i:s');
+    }
+
     /**
      * Initialize method for model.
      */
