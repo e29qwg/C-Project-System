@@ -1,78 +1,105 @@
 <?php
 
-use \Phalcon\Mvc\Model\Validator\Email;
-use \Phalcon\Mvc\Model\Validator\Numericality;
-use \Phalcon\Mvc\Model\Validator\StringLength;
-use \Phalcon\Mvc\Model\Validator\Regex;
+use Phalcon\Mvc\Model\Validator\Email as Email;
 
 class User extends \Phalcon\Mvc\Model
 {
+
+    /**
+     *
+     * @var integer
+     */
     public $id;
+
+    /**
+     *
+     * @var string
+     */
     public $user_id;
+
+    /**
+     *
+     * @var string
+     */
     public $title;
+
+    /**
+     *
+     * @var string
+     */
     public $name;
+
+    /**
+     *
+     * @var string
+     */
     public $tel;
+
+    /**
+     *
+     * @var string
+     */
     public $email;
+
+    /**
+     *
+     * @var string
+     */
     public $facebook;
+
+    /**
+     *
+     * @var string
+     */
     public $type;
+
+    /**
+     *
+     * @var integer
+     */
     public $advisor_group;
+
+    /**
+     *
+     * @var integer
+     */
     public $work_load;
+
+    /**
+     *
+     * @var string
+     */
     public $interesting;
+
+    /**
+     *
+     * @var integer
+     */
+    public $active;
+
+    /**
+     *
+     * @var integer
+     */
+    public $activate_code;
+
+    /**
+     *
+     * @var string
+     */
     public $last_login;
+
+    /**
+     *
+     * @var string
+     */
     public $create_date;
 
-    private $checkProfile;
-
-    public function initialize()
+    public function isComplete()
     {
-        $this->useDynamicUpdate(true);
-        $this->checkProfile = false;
-    }
-
-    public function validation()
-    {
-        return $this->validationHasFailed() != true;
-    }
-
-    public function turnOnProfileCheck()
-    {
-        $this->checkProfile = true;
-    }
-
-    public function beforeValidationOnUpdate()
-    {
-        if ($this->checkProfile)
-        {
-            $this->validate(new Regex(
-                array(
-                    'field' => 'facebook',
-                    'pattern' => '(^(?!http).*$)',
-                    'message' => 'Facebook invalid format.'
-                )
-            ));
-
-            $this->validate(new StringLength(
-                array(
-                    'field' => 'tel',
-                    'max' => 10,
-                    'min' => 9
-                )
-            ));
-
-            $this->validate(new Numericality(
-                array(
-                    'field' => 'tel',
-                    'message' => 'Tel is invalid'
-                )
-            ));
-
-            $this->validate(new Email(
-                array(
-                    'field' => 'email',
-                    'message' => 'Email must have a valid e-mail format'
-                )
-            ));
-        }
+        if ($this->active == 0 || empty($this->title) || empty($this->name) || empty($this->tel) || empty($this->email))
+            return false;
+        return true;
     }
 
     public function beforeValidationOnCreate()
@@ -82,7 +109,70 @@ class User extends \Phalcon\Mvc\Model
         $this->advisor_group = 0;
         $this->create_date = date('Y-m-d H:i:s');
         $this->last_login = date('Y-m-d H:i:s');
+        $this->active = 0;
     }
-}
 
-?>
+    /**
+     * Validations and business logic
+     *
+     * @return boolean
+     */
+    public function validation()
+    {
+        if ($this->validationHasFailed() == true) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Initialize method for model.
+     */
+    public function initialize()
+    {
+        $this->hasMany('id', 'ExcelFile', 'user_id', array('alias' => 'ExcelFile'));
+        $this->hasMany('id', 'HashLink', 'user_id', array('alias' => 'HashLink'));
+        $this->hasMany('id', 'Log', 'user_id', array('alias' => 'Log'));
+        $this->hasMany('id', 'Notification', 'user_id', array('alias' => 'Notification'));
+        $this->hasMany('id', 'Progress', 'user_id', array('alias' => 'Progress'));
+        $this->hasMany('id', 'ProjectMap', 'user_id', array('alias' => 'ProjectMap'));
+        $this->hasMany('id', 'Quota', 'advisor_id', array('alias' => 'Quota'));
+        $this->hasMany('id', 'ScorePrepare', 'user_id', array('alias' => 'ScorePrepare'));
+        $this->hasMany('id', 'ScoreProject', 'user_id', array('alias' => 'ScoreProject'));
+        $this->hasMany('id', 'UserCurrentSemester', 'user_id', array('alias' => 'UserCurrentSemester'));
+    }
+
+    /**
+     * Allows to query a set of records that match the specified conditions
+     *
+     * @param mixed $parameters
+     * @return User[]
+     */
+    public static function find($parameters = null)
+    {
+        return parent::find($parameters);
+    }
+
+    /**
+     * Allows to query the first record that match the specified conditions
+     *
+     * @param mixed $parameters
+     * @return User
+     */
+    public static function findFirst($parameters = null)
+    {
+        return parent::findFirst($parameters);
+    }
+
+    /**
+     * Returns table name mapped in the model.
+     *
+     * @return string
+     */
+    public function getSource()
+    {
+        return 'user';
+    }
+
+}

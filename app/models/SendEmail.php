@@ -1,40 +1,31 @@
 <?php
 
-class ProjectMap extends \Phalcon\Mvc\Model
+class SendEmail extends \Phalcon\Mvc\Model
 {
 
     /**
      *
      * @var integer
      */
-    public $project_map_id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $user_id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $project_id;
+    public $id;
 
     /**
      *
      * @var string
      */
-    public $map_type;
+    public $to;
 
     /**
-     * Initialize method for model.
+     *
+     * @var string
      */
-    public function initialize()
-    {
-        $this->belongsTo('project_id', 'Project', 'project_id', array('alias' => 'Project'));
-        $this->belongsTo('user_id', 'User', 'id', array('alias' => 'User'));
-    }
+    public $subject;
+
+    /**
+     *
+     * @var string
+     */
+    public $body;
 
     /**
      * Returns table name mapped in the model.
@@ -43,14 +34,14 @@ class ProjectMap extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'project_map';
+        return 'send_email';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ProjectMap[]
+     * @return SendEmail[]
      */
     public static function find($parameters = null)
     {
@@ -61,7 +52,7 @@ class ProjectMap extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ProjectMap
+     * @return SendEmail
      */
     public static function findFirst($parameters = null)
     {

@@ -9,6 +9,41 @@ class AdvisorController extends ControllerBase
         parent::initialize();
     }
 
+    public function checkQuotaAction()
+    {
+        $this->view->disable();
+
+        $advisor_id = $this->dispatcher->getParam(0);
+
+        echo json_encode(array("quota" => $this->permission->quotaAvailable($advisor_id, $this->current_semester)));
+    }
+
+    public function getProjectListAction()
+    {
+        $this->view->disable();
+
+        $advisor_id = $this->dispatcher->getParam(0);
+        $semester_id = $this->dispatcher->getParam(1);
+
+        $builder = $this->modelsManager->createBuilder();
+        $builder->from("Project");
+        $builder->where("Project.semester_id=:semester_id:", array("semester_id" => $semester_id));
+        $builder->innerJoin("ProjectMap", "Project.project_id=ProjectMap.project_id");
+        $builder->andWhere("ProjectMap.user_id=:advisor_id:", array("advisor_id" => $advisor_id));
+        $builder->andWhere("ProjectMap.map_type='advisor'");
+
+        $projects = $builder->getQuery()->execute();
+
+        $datas = array();
+
+        foreach ($projects as $project)
+        {
+            array_push($datas, $project->project_name);
+        }
+
+        echo json_encode($datas);
+    }
+
     public function removeAdvisorAction()
     {
         $id = $this->dispatcher->getParam(0);
@@ -24,7 +59,7 @@ class AdvisorController extends ControllerBase
 
             $user->setTransaction($transaction);
 
-            $user->type='Staff';
+            $user->type = 'Staff';
             if (!$user->save())
                 $transaction->rollback('Error when change type');
 
@@ -43,7 +78,7 @@ class AdvisorController extends ControllerBase
         }
         catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
         {
-            $this->flash->error('Transaction failure: '.$e);
+            $this->flash->error('Transaction failure: ' . $e);
             return $this->forward('advisor/manageAdvisor');
         }
 
@@ -66,7 +101,7 @@ class AdvisorController extends ControllerBase
 
             $user->setTransaction($transaction);
 
-            $user->type='Advisor';
+            $user->type = 'Advisor';
             if (!$user->save())
                 $transaction->rollback('Error when change type');
 
@@ -83,7 +118,7 @@ class AdvisorController extends ControllerBase
         }
         catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
         {
-            $this->flash->error('Transaction failure: '.$e);
+            $this->flash->error('Transaction failure: ' . $e);
             return $this->forward('advisor/manageAdvisor');
         }
 
@@ -145,18 +180,45 @@ class AdvisorController extends ControllerBase
         $this->response->redirect('advisor/quota');
     }
 
-    public function quotaAction()
-    {
-    }
-
-    public function advisorListAction()
+    public function profileAction()
     {
         $this->view->setTemplateAfter('main');
+
+        $advisor_id = $this->dispatcher->getParam(0);
+
+        if (empty($advisor_id))
+        {
+            $this->flash->error('Invalid request');
+            return $this->forward('advisor/list');
+        }
+
+        $advisor = User::findFirst(array(
+            "conditions" => "id=:advisor_id:",
+            "bind" => array("advisor_id" => $advisor_id)
+        ));
+
+        $advisors = User::find("type='advisor'");
+        $this->view->setVar('advisors', $advisors);
+        $this->view->setVar('advisor', $advisor);
+    }
+
+    public function listAction()
+    {
+        $this->view->setTemplateAfter('main');
+
+        $advisors = User::find("type='advisor'");
+
+        $this->view->setVar('advisors', $advisors);
     }
 
     public function indexAction()
     {
     }
+
+    public function quotaAction()
+    {
+
+    }
+
 }
 
-?>

@@ -80,7 +80,7 @@ $user = User::findFirst(array(
                 <label class="col-sm-2 control-label" for="name">Name</label>
 
                 <div class="col-sm-10">
-                    <p class="static-form-control"><?= $user->title . $user->name ?></p>
+                    <p class="form-control-static"><?= $user->title . $user->name ?></p>
                 </div>
             </div>
 
@@ -116,6 +116,26 @@ $user = User::findFirst(array(
                         'class' => 'form-control',
                         'required' => 'required'
                     ));
+                    ?>
+                </div>
+                <div class="col-sm-2">
+                    <?php
+
+                    if ($user->active):
+                        ?>
+                        <span class="glyphicon glyphicon-ok form-control-static" style="color: green;"></span>
+                        <?php
+                    else:
+                        if (!empty($user->email)):
+                            ?>
+
+
+                            <span class=" glyphicon glyphicon-time form-control-static"
+                                  style="color: orangered;"> Waiting for verify</span>
+
+                            <?php
+                        endif;
+                    endif;
                     ?>
                 </div>
             </div>

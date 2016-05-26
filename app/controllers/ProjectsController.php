@@ -858,8 +858,19 @@ class ProjectsController extends ControllerBase
 
     public function newProjectAction()
     {
-        $this->_getAllSemester();
-        $this->_updateWork();
+        //check can create project
+        $project_level = $this->permission->canCreateProject($this->current_semester, $this->auth['id']);
+
+        if (empty($project_level))
+            return;
+
+        //set project level
+        $this->view->setVar('project_level_name', $project_level->project_level_name);
+
+        $this->loadViewAdvisors();
+
+        //TODO Get old project
+        
     }
 }
 

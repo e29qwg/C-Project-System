@@ -3,6 +3,9 @@
 class ControllerBase extends Phalcon\Mvc\Controller
 {
     protected $auth;
+    protected $current_semester;
+    protected $allSemester;
+    protected $userSemester;
 
     protected function initialize()
     {
@@ -20,7 +23,6 @@ class ControllerBase extends Phalcon\Mvc\Controller
 
         if ($auth)
         {
-
             if ($auth['type'] == 'Advisor')
                 $this->view->setTemplateAfter('advisorside');
             if ($auth['type'] == 'Admin')
@@ -34,7 +36,77 @@ class ControllerBase extends Phalcon\Mvc\Controller
             }
         }
 
+        $this->view->setVar('url', $this->url->get());
         $this->auth = $auth;
+
+        $this->loadUserSemester();
+        $this->loadAllSemester();
+        $this->loadCurrentSemester();
+    }
+
+    protected function loadViewAdvisors()
+    {
+        $users = User::find("type='advisor'");
+
+        $advisors = array();
+
+        foreach ($users as $user)
+        {
+            $advisors[$user->id] = $user->title . $user->name;
+        }
+
+        $this->view->setVar('advisors', $advisors);
+    }
+
+    protected function loadUserSemester()
+    {
+        $userSemester = UserCurrentSemester::findFirst(array(
+            "conditions" => "user_id=:user_id:",
+            "bind" => array("user_id" => $this->auth['id'])
+        ));
+
+        if ($userSemester)
+            $this->userSemester = $userSemester->semester_id;
+        else
+            $this->userSemester = $this->current_semester;
+    }
+
+    protected function loadCurrentSemester()
+    {
+        $setting = Settings::findFirst("name='current_semester'");
+        $this->current_semester = $setting->value;
+
+        //fetch current_semester
+
+        $semester = Semester::findFirst(array(
+            "conditions" => "semester_id=:id:",
+            "bind" => array("id" => $this->current_semester)
+        ));
+
+        $this->view->setVar('current_semester', $semester->semester_term . '/' . $semester->semester_year);
+        $this->view->setVar('current_semester_id', $semester->semester_id);
+    }
+
+
+    protected function loadAllSemester()
+    {
+        $this->allSemester = Semester::find();
+        $semesters = array();
+
+        foreach ($this->allSemester as $semester)
+        {
+            $semesters[$semester->semester_id] = $semester->semester_term . '/' . $semester->semester_year;
+        }
+
+        $this->view->setVar('allSemester', $semesters);
+    }
+
+
+    protected function _redirectBack()
+    {
+        if (isset($_SERVER['HTTP_REFERER']))
+            return $this->response->redirect($_SERVER['HTTP_REFERER']);
+        return $this->response->redirect('index');
     }
 
     protected function sendMail($subject, $message, $to)
@@ -51,13 +123,24 @@ class ControllerBase extends Phalcon\Mvc\Controller
         ));
     }
 
+    protected function dbError($model)
+    {
+        if (true)
+        {
+            foreach ($model->getMessages() as $mes)
+            {
+                $this->flashSession->error($mes);
+            }
+        }
+    }
+
     protected function strDbError($model)
     {
         $str = '';
 
         foreach ($model->getMessages() as $mes)
         {
-            $str .= $mes.'<br>';
+            $str .= $mes . '<br>';
         }
         return $str;
     }

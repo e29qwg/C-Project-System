@@ -9,6 +9,96 @@ class ProfileController extends ControllerBase
         parent::initialize();
     }
 
+    public function confirmActivateCodeAction()
+    {
+        $request = $this->request;
+
+        if (!$request->isPost())
+        {
+            $this->flash->error('Invalid Request');
+            $this->forward('profile/verifyEmail');
+            return;
+        }
+
+        $activate_code = $request->getPost('activate_code');
+
+        $user = User::findFirst(array(
+            "conditions" => "id=:id:",
+            "bind" => array("id" => $this->auth['id'])
+        ));
+
+        if (!$user)
+        {
+            $this->flashSession->error('Internal error');
+            $this->session->remove('auth');
+            return $this->response->redirect('session');
+        }
+
+        if ($user->activate_code != $activate_code)
+        {
+            $this->flash->error('Activate code invalid');
+            $this->forward('profile/verifyEmail');
+            return;
+        }
+
+        $user->activate_code = null;
+        $user->active = 1;
+
+        if (!$user->save())
+        {
+            $this->dbError($user);
+            $this->flashSession->error('Database error');
+            return $this->_redirectBack();
+        }
+
+        //set session
+        $this->flashSession->success('Activate success');
+        $this->response->redirect('index');
+
+        return true;
+    }
+
+    public function sendActivateCodeAction()
+    {
+        $user = User::findFirst(array(
+            "conditions" => "id=:id:",
+            "bind" => array("id" => $this->auth['id'])
+        ));
+
+        if (!$user)
+        {
+            $this->flashSession->error('Internal error');
+            $this->session->remove('auth');
+            return $this->response->redirect('session');
+        }
+
+        $code = $this->security->getTokenKey();;
+        $subject = 'Activate code';
+        $body = 'Activate code: ' . $code;
+
+        $user->activate_code = $code;
+        $user->save();
+
+        $this->sendMail($subject, $body, $user->email);
+        return true;
+    }
+
+    public function verifyEmailAction()
+    {
+        $user = User::findFirst(array(
+            "conditions" => "id=:id:",
+            "bind" => array("id" => $this->auth['id'])
+        ));
+
+        if (!$user)
+        {
+            $this->internalError('session/logout');
+            return;
+        }
+
+        $this->view->setVar('user', $user);
+    }
+
     public function advisorProfileAction()
     {
         $this->_getAllSemester();
@@ -92,7 +182,8 @@ class ProfileController extends ControllerBase
 
         $facebook = $request->getPost('facebook');
         $interesting = $request->getPost('interesting');
-        $email = $request->getPost('email');
+        $email = ltrim($request->getPost('email'));
+        $email = rtrim($email);
         $title = $request->getPost('title');
         $tel = $request->getPost('tel');
 
@@ -100,8 +191,6 @@ class ProfileController extends ControllerBase
             "conditions" => "id=:user_id:",
             "bind" => array("user_id" => $user_id)
         ));
-
-        $user->turnOnProfileCheck();
 
         if (!$user)
             $this->forward('session/end');
@@ -126,7 +215,11 @@ class ProfileController extends ControllerBase
             $user->title = $title;
             $user->facebook = $facebook;
             $user->interesting = $interesting;
-            $user->email = $email;
+            if ($user->email != $email)
+            {
+                $user->active = 0;
+                $user->email = $email;
+            }
             $user->tel = $tel;
 
             if (!$user->save())
@@ -144,6 +237,13 @@ class ProfileController extends ControllerBase
         }
 
         $this->flashSession->success("Update profile success");
+
+        if (!$user->active)
+        {
+            $this->response->redirect('profile/verifyEmail');
+            return;
+        }
+
         $this->response->redirect("profile/index/" . $user_id);
     }
 

@@ -26,12 +26,11 @@ class Security extends \Phalcon\Mvc\User\Plugin
         }
         else
         {
-            $role = $auth['type'];
+            $role = $this->permission->getRole($auth['id']);
 
-            $gLib = new Glib();
-
-            if (!$gLib->isCompleteProfile($auth['id']) && $controller != 'profile' && $controller != 'session')
+            if ($role == 'Incomplete' && $controller != 'profile' && $controller != 'session')
             {
+                $this->view->setTemplateAfter('main');
                 $this->flash->warning('Please complete your profile');
                 $this->dispatcher->forward(array(
                     'controller' => 'profile',
@@ -67,6 +66,7 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 'Student' => new Phalcon\Acl\Role('Student'),
                 'Advisor' => new Phalcon\Acl\Role('Advisor'),
                 'Staff' => new Phalcon\Acl\Role('Staff'),
+                'Incomplete' => new Phalcon\Acl\Role('Incomplete'),
                 'Guest' => new Phalcon\Acl\Role('Guest')
             );
 
@@ -79,7 +79,7 @@ class Security extends \Phalcon\Mvc\User\Plugin
             $publicResources = array(
                 'index' => array('index'),
                 'api' => array('getStatusProjectFarm'),
-                'session' => array('index', 'login', 'logout', 'useHash'),
+                'session' => array('index', 'login', 'localLogin', 'logout', 'useHash'),
             );
 
             foreach ($publicResources as $resource => $actions)
@@ -97,6 +97,18 @@ class Security extends \Phalcon\Mvc\User\Plugin
                         $acl->allow($role->getName(), $resource, $action);
                     }
                 }
+            }
+
+            $incompleteResources = array(
+                'profile' => array('*')
+            );
+
+            foreach ($incompleteResources as $resource => $actions)
+            {
+                $acl->addResource(new Phalcon\Acl\Resource($resource), $actions);
+
+                foreach ($actions as $action)
+                    $acl->allow('Incomplete', $resource, $action);
             }
 
             //Student acl
@@ -124,7 +136,12 @@ class Security extends \Phalcon\Mvc\User\Plugin
                     'doEdit',
                     'exportPDF'
                 ),
-                'advisor' => array('advisorList'),
+                'advisor' => array(
+                    'list',
+                    'profile',
+                    'getProjectList',
+                    'checkQuota'
+                ),
                 'profile' => array('*'),
                 'exam' => array('showExam'),
                 'score' => array('studentView'),

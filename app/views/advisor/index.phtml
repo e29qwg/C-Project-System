@@ -8,28 +8,19 @@ $newss = News::find(array("order" => "id DESC", "limit" => 8));
 
 ?>
 
-<table width="100%">
-    <tr>
-        <td width="30%">
-            <a href="<?= $this->url->get('projects/proposed'); ?>" class="btn btn-primary btn-lg btn-block">
-                Proposed<br>Project
-            </a>
-        </td>
-        <td width="5%"></td>
-        <td width="30%">
+<div class="row">
+    <div class="col-sm-6">
+        <a href="<?= $this->url->get('projects/proposed'); ?>" class="btn btn-primary btn-lg btn-block">
+            Proposed<br>Project
+        </a>
+    </div>
+    <div class="col-sm-6">
 
-            <a href="<?= $this->url->get('exam/showExam'); ?>" class="btn btn-primary btn-lg btn-block">
-                Exam<br>Schedule
-            </a>
-        </td>
-        <td width="5%"></td>
-        <td width="30%">
-            <a href="<?= $this->url->get('score/advisorView'); ?>" class="btn btn-primary btn-lg btn-block">
-                View<br>Score
-            </a>
-        </td>
-    </tr>
-</table>
+        <a href="<?= $this->url->get('exam/showExam'); ?>" class="btn btn-primary btn-lg btn-block">
+            Exam<br>Schedule
+        </a>
+    </div>
+</div>
 
 <br>
 
@@ -43,7 +34,7 @@ $newss = News::find(array("order" => "id DESC", "limit" => 8));
             {
                 ?>
                 <li><?= $news->create_date . ' ' . $news->news; ?></li>
-            <?php
+                <?php
             }
 
             ?>

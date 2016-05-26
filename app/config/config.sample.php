@@ -21,17 +21,9 @@ $config = new Phalcon\Config(array(
         'baseUri' => '/',
         'furl' => ''
     ),
-    'gmail' => array(
-        'username' => '',
-        'password' => ''
-    ),
-    'tube' => array(
-        'tube' => ''
-    ),
     'oauth' => array(
         'client_id' => '',
-        'client_secret' => ''
+        'client_secret' => '',
+        'url' => ''
     )
 ));
-
-?>
