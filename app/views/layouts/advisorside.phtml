@@ -3,15 +3,6 @@ $auth = $this->session->get('auth');
 $user_id = $auth['id'];
 $projectMaps = ProjectMap::find("user_id='$user_id' AND map_type='advisor'");
 
-$semesters = Semester::find();
-$allSemesters = array();
-
-foreach ($semesters as $semester)
-{
-    $allSemesters[$semester->semester_id] = $semester->semester_term . '/' . $semester->semester_year;
-}
-
-$this->view->setVar('allSemesters', $allSemesters);
 ?>
 
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -55,7 +46,7 @@ $this->view->setVar('allSemesters', $allSemesters);
 
                 echo $this->tag->selectStatic(array(
                     'lsemester',
-                    $allSemesters,
+                    $allSemester,
                     'required' => 'required',
                     'class' => 'form-control'
                 ));
@@ -180,7 +171,7 @@ function showProject($projectMaps, $level, $di, $currentSemesterId)
                 $str .= $student->title . $student->name.' ('.$student->user_id.')';
             }
             ?>
-            <a class="list-group-item" href="<?= $di->url->get('progress/evaluate/'); ?><?= $project->project_id ?>"
+            <a class="list-group-item list-group-item-success" href="<?= $di->url->get('progress/evaluate/'); ?><?= $project->project_id ?>"
                data-toggle="tooltip" data-placement="bottom" title="<?= $str; ?>">
                 <?= $project->project_name ?>
                 <?php

@@ -24,6 +24,9 @@ $config = new Phalcon\Config(array(
     'oauth' => array(
         'client_id' => '',
         'client_secret' => '',
-        'url' => ''
+        'url' => '',
+        'authorize_url' => '',
+        'token_url' => '',
+        'profile_url' => ''
     )
 ));
