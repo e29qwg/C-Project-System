@@ -61,7 +61,7 @@ $e = new Phalcon\Escaper();
                 {
                     $user = User::findFirst("id='$projectMap->user_id'");
 
-                    if (file_exists(__DIR__.'/../../public/profilePicture/'.$user->user_id.'.img'))
+                    if (file_exists(__DIR__.'/../../../public/profilePicture/'.$user->user_id.'.img'))
                         $imgSrc = $url.'profilePicture/'.$user->user_id.'.img';
                     else
                         $imgSrc = $url.'profilePicture/noface.img';

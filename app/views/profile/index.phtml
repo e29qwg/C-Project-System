@@ -18,7 +18,7 @@ $projectMaps = ProjectMap::find("user_id='$params[0]'");
     <div class="col-sm-5">
         <?php
 
-        if (file_exists(__DIR__.'/../../public/profilePicture/'.$user->user_id.'.img'))
+        if (file_exists(__DIR__.'/../../../public/profilePicture/'.$user->user_id.'.img'))
             $imgSrc = $url.'profilePicture/'.$user->user_id.'.img';
         else
             $imgSrc = $url.'profilePicture/noface.img';
