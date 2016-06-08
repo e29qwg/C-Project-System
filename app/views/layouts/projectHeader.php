@@ -11,39 +11,11 @@ if (!isset($params[0]))
     return $this->flash->error('Invalid request');
 }
 
-$project = Project::findFirst("project_id='$params[0]'");
-
 if ($auth['type'] == 'Student')
 {
+    include __DIR__.'/../projects/me.phtml';
 ?>
-<div class="col-sm-3">
-    <div class="list-group">
-        <a href="#" class="list-group-item active">Project</a>
-        <?php
 
-        $projectMaps = ProjectMap::find(array(
-            "conditions" => "user_id=:user_id:",
-            "order" => "project_id DESC",
-            "bind" => array("user_id" => $user_id)
-        ));
-
-        foreach ($projectMaps as $projectMap)
-        {
-            $project = Project::findFirst("project_id='$projectMap->project_id'");
-            $semester = Semester::findFirst(array(
-                "conditions" => "semester_id=:semester_id:",
-                "bind" => array("semester_id" => $project->semester_id)
-            ));
-
-            echo '<a href="' . $this->url->get('projects/manage/') . $project->project_id . '" class="list-group-item">';
-            echo $project->project_name.' ('.$semester->semester_term.'/'.$semester->semester_year.')';
-            echo '</a>';
-        }
-
-        ?>
-        </ul>
-    </div>
-</div>
 <div class="col-sm-9">
     <?php
     }

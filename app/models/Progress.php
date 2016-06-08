@@ -68,7 +68,7 @@ class Progress extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->hasMany('progress_id', 'ProgressEvaluate', 'progress_id', array('alias' => 'ProgressEvaluate'));
+        $this->hasOne('progress_id', 'ProgressEvaluate', 'progress_id', array('alias' => 'ProgressEvaluate'));
         $this->belongsTo('project_id', 'Project', 'project_id', array('alias' => 'Project'));
         $this->belongsTo('user_id', 'User', 'id', array('alias' => 'User'));
     }

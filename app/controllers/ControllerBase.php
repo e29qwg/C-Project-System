@@ -42,6 +42,55 @@ class ControllerBase extends Phalcon\Mvc\Controller
         $this->loadUserSemester();
         $this->loadAllSemester();
         $this->loadCurrentSemester();
+        $this->userImgUrl(null);
+    }
+
+    protected  function userImgUrl($user_id)
+    {
+        if (empty($user_id))
+            $user_id = $this->auth['user_id'];
+
+        $url = $this->url->get();
+        if (!$this->auth)
+            $this->view->imgUrl = $url.'profilePicture/noface.img';
+        else
+        {
+            if (file_exists(__DIR__.'/../../public/profilePicture/'.$user_id.'.img'))
+                $this->view->imgUrl = $url.'profilePicture/'.$user_id.'.img';
+            else
+                $this->view->imgUrl = $url.'profilePicture/noface.img';
+        }
+    }
+
+    protected function loadAdvisorProject()
+    {
+        $builder = $this->modelsManager->createBuilder();
+        $builder->from("Project");
+        $builder->where("Project.semester_id=:semester_id:", array("semester_id" => $this->userSemester));
+        $builder->innerJoin("ProjectMap", "Project.project_id=ProjectMap.project_id");
+        $builder->andWhere("ProjectMap.user_id=:user_id:", array("user_id" => $this->auth['id']));
+        $builder->andWhere("ProjectMap.map_type='advisor'");
+
+        $projects = $builder->getQuery()->execute();
+
+        $datas = array(
+            'pp' => array(),
+            'p1' => array(),
+            'p2' => array()
+        );
+
+        foreach ($projects as $project)
+        {
+            switch ($project->project_level_id)
+            {
+                case '1': array_push($datas['pp'], $project); break;
+                case '2': array_push($datas['p1'], $project); break;
+                case '3': array_push($datas['p2'], $project); break;
+            }
+        }
+
+        $this->view->projects = $datas;
+        $this->view->project_id = $this->dispatcher->getParam(0);
     }
 
     protected function loadViewAdvisors()
@@ -196,6 +245,20 @@ class ControllerBase extends Phalcon\Mvc\Controller
         return true;
     }
 
+    protected function loadOwnerProject()
+    {
+        $builder = $this->modelsManager->createBuilder();
+        $builder->from("Project");
+        $builder->innerJoin("ProjectMap", "Project.project_id=ProjectMap.project_id");
+        $builder->where("ProjectMap.map_type='owner'");
+        $builder->andWhere("ProjectMap.user_id=:user_id:", array("user_id" => $this->auth['id']));
+        $builder->orderBy("Project.semester_id DESC");
+
+        $projects = $builder->getQuery()->execute();
+
+        $this->view->projects = $projects;
+    }
+
     protected function _checkPermission($project_id)
     {
         $auth = $this->session->get('auth');
@@ -205,9 +268,11 @@ class ControllerBase extends Phalcon\Mvc\Controller
 
         if (!$projectMap || empty($project_id))
         {
+            if (!empty($project_id) && $this->auth['type'] == 'Admin')
+                return true;
+
             $this->flash->error('Access Denied');
             $this->forward('index');
-
             return false;
         }
         return true;

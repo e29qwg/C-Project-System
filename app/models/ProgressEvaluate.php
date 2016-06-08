@@ -32,7 +32,7 @@ class ProgressEvaluate extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->belongsTo('progress_id', 'Progress', 'progress_id', array('alias' => 'Progress'));
+        $this->hasOne('progress_id', 'Progress', 'progress_id', array('alias' => 'Progress'));
     }
 
     /**

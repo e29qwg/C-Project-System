@@ -213,6 +213,7 @@ class AdvisorController extends ControllerBase
 
     public function indexAction()
     {
+        $this->loadAdvisorProject();
     }
 
     public function quotaAction()

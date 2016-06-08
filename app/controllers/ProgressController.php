@@ -7,6 +7,11 @@ class ProgressController extends ControllerBase
         $this->view->setTemplateAfter('main');
         Phalcon\Tag::setTitle('ระบบจัดการโครงงานนักศึกษา');
         parent::initialize();
+
+        $this->loadOwnerProject();
+
+        if ($this->auth['type'] != 'Student')
+            $this->loadAdvisorProject();
     }
 
     public function exportPDFAction()
@@ -92,11 +97,12 @@ class ProgressController extends ControllerBase
             $this->response->send();
 
             $this->view->disable();
-        } catch (HTML2PDF_exception $e)
+        }
+        catch (HTML2PDF_exception $e)
         {
             echo $e;
         }
-        
+
         ini_set('max_execution_time', 30);
     }
 
@@ -236,7 +242,8 @@ class ProgressController extends ControllerBase
                 $this->sendMail($email['subject'], $email['mes'], $email['to']);
             }
 
-        } catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
+        }
+        catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
         {
             $this->flashSession->error('Transaction failure: ' . $e->getMessage());
             return $this->dispatcher->forward(array(
@@ -260,15 +267,16 @@ class ProgressController extends ControllerBase
 
         $project_id = $params[0];
 
-        $progresss = Progress::find(array(
+        $project = Project::findFirst(array(
             "conditions" => "project_id=:project_id:",
             "bind" => array("project_id" => $project_id)
         ));
 
+
         $nonEvalProgresss = array();
         $evaledProgresss = array();
 
-        foreach ($progresss as $progress)
+        foreach ($project->Progress as $progress)
         {
             $progressEvaluate = ProgressEvaluate::findFirst(array(
                 "progress_id=:progress_id:",
@@ -286,6 +294,7 @@ class ProgressController extends ControllerBase
 
         $this->view->setVar('nonEvalProgresss', $nonEvalProgresss);
         $this->view->setVar('evaledProgresss', $evaledProgresss);
+        $this->view->project = $project;
     }
 
     //show evaluate page for advisor
@@ -336,6 +345,16 @@ class ProgressController extends ControllerBase
 
     public function viewAction()
     {
+        $progress_id = $this->dispatcher->getParam(1);
+
+        $this->_checkPermission($progress_id);
+
+        $progress = Progress::findFirst(array(
+            "conditions" => "progress_id=:progress_id:",
+            "bind" => array("progress_id" => $progress_id)
+        ));
+
+        $this->view->progress = $progress;
     }
 
     //view progress
@@ -454,11 +473,15 @@ class ProgressController extends ControllerBase
         $this->_checkPermission($params[0]);
 
         if ($auth['type'] != 'Student')
-            return $this->dispatcher->forward(array(
+        {
+            $this->dispatcher->forward(array(
                 'controller' => 'progress',
                 'action' => 'evaluate',
                 'params' => array($params[0])
             ));
+
+            return;
+        }
     }
 
     //show progress page

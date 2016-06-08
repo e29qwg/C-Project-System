@@ -528,6 +528,10 @@ class ProjectsController extends ControllerBase
     {
         $params = $this->dispatcher->getParams();
         $this->_checkPermission($params[0]);
+        $this->loadOwnerProject();
+
+        if ($this->auth['type'] != 'Student')
+            $this->loadAdvisorProject();
     }
 
     //show edit form
@@ -646,16 +650,31 @@ class ProjectsController extends ControllerBase
 
     public function manageAction()
     {
+        $this->loadOwnerProject();
         $params = $this->dispatcher->getParams();
 
-        $this->_checkPermission($params[0]);
+        $project_id = $params[0];
+
+        $this->_checkPermission($project_id);
+
+        $project = Project::findFirst(array(
+           "conditions" => "project_id=:project_id:",
+            "bind" => array("project_id" => $project_id)
+        ));
+
+        $this->view->selectProject = $project;
+
+        if ($this->auth['type'] != 'Student')
+            $this->loadAdvisorProject();
     }
 
     //add project
 
     public function meAction()
     {
+        $this->loadOwnerProject();
     }
+
 
     public function doNewProjectAction()
     {

@@ -5,26 +5,8 @@ $user_id = $auth['id'];
 ?>
 
 <?php
-$params = $this->dispatcher->getParams();
-$progress = Progress::findFirst("progress_id='$params[1]'");
 
-if (!$progress)
-{
-    $this->flash->error('Access Denied.');
-    return;
-}
-
-$progressEvaluate = ProgressEvaluate::findFirst(array(
-    "conditions" => "progress_id=:progress_id:",
-    "bind" => array("progress_id" => $progress->progress_id)
-));
-if (!$progressEvaluate)
-{
-    $this->flash->error('Access Denied.');
-    return;
-}
-
-\Phalcon\Tag::setDefault("evaluate", $progressEvaluate->evaluation);
+\Phalcon\Tag::setDefault("evaluate", $progress->progressEvaluate->evaluation);
 
 $projectMap = ProjectMap::findFirst("project_id='$progress->project_id' AND user_id='$user_id'");
 
@@ -63,7 +45,7 @@ if (!$projectMap)
                 <form method="post">
                     <div class="form-group">
                         <div class="col-sm-12">
-                            <h4>โครงงาน <?= $project->project_name ?></h4>
+                            <h4>โครงงาน <?= $progress->Project->project_name ?></h4>
                         </div>
                     </div>
                     <div class="form-group">
@@ -120,48 +102,43 @@ if (!$projectMap)
                                 <p class="form-control-static"><?= $progress->edit_date; ?></p>
                             </div>
                         </div>
-                    <?php
+                        <?php
                     }
 
                     ?>
 
                     <?php
-                    $progressEvaluate = ProgressEvaluate::findfirst(array(
-                        "conditions" => "progress_id=:progress_id:",
-                        "bind" => array("progress_id" => $progress->progress_id)
-                    ));
 
-                    if ($progressEvaluate)
+
+                    if ($progress->progressEvaluate->evaluation != '0')
                     {
-                        if ($progressEvaluate->evaluation != '0')
-                        {
-                            ?>
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <label for="evaluate"> ผลการประเมิน </label>
+                        ?>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <label for="evaluate"> ผลการประเมิน </label>
 
-                                    <div class="form-control-static">
-                                        <?php
-                                        switch ($progressEvaluate->evaluation)
-                                        {
-                                            case 1:
-                                                echo 'ต้องปรับปรุง';
-                                                break;
-                                            case 2:
-                                                echo 'พอใช้';
-                                                break;
-                                            case 3:
-                                                echo 'ดี';
-                                                break;
-                                        }
-                                        ?>
-                                    </div>
+                                <div class="form-control-static">
+                                    <?php
+                                    switch ($progress->progressEvaluate->evaluation)
+                                    {
+                                        case 1:
+                                            echo 'ต้องปรับปรุง';
+                                            break;
+                                        case 2:
+                                            echo 'พอใช้';
+                                            break;
+                                        case 3:
+                                            echo 'ดี';
+                                            break;
+                                    }
+                                    ?>
                                 </div>
                             </div>
+                        </div>
 
                         <?php
-                        }
                     }
+
 
                     //enabled evaluation for advisor
                     if ($projectMap->map_type == 'advisor')
@@ -191,14 +168,14 @@ if (!$projectMap)
                             <div class="col-sm-12">
                                 <h4>ความคิดเห็นอาจารย์ที่ปรึกษา</h4>
                                 <?php
-                                \Phalcon\Tag::setDefault('comment', $progressEvaluate->comment);
+                                \Phalcon\Tag::setDefault('comment', $progress->progressEvaluate->comment);
                                 echo \Phalcon\Tag::textArea(array(
                                     'comment'
                                 ));
                                 ?>
                             </div>
                         </div>
-                    <?php
+                        <?php
                     }
                     else
                     {
@@ -207,10 +184,10 @@ if (!$projectMap)
                             <div class="col-sm-12">
                                 <h4>ความคิดเห็นอาจารย์ที่ปรึกษา</h4>
 
-                                <p class="form-control-static"><?= $progressEvaluate->comment; ?></p>
+                                <p class="form-control-static"><?= $progress->progressEvaluate->comment; ?></p>
                             </div>
                         </div>
-                    <?php
+                        <?php
                     }
                     ?>
                     <div class="form-group">
@@ -227,21 +204,21 @@ if (!$projectMap)
                                 ?>
                                 <a href="<?= $this->url->get('progress/index/'); ?><?= $params[0] ?>"
                                    class="btn btn-sm btn-warning">กลับ</a>
-                            <?php
+                                <?php
                             }
                             else
                             {
                                 ?>
                                 <a href="<?= $this->url->get('progress/evaluate/'); ?><?= $params[0] ?>"
                                    class="btn btn-sm btn-warning">กลับ</a>
-                            <?php
+                                <?php
                             }
                             if (($projectMap->map_type == 'owner' && $progress->user_id == $user_id) || $projectMap->map_type == 'advisor')
                             {
                                 ?>
                                 <a href="<?= $this->url->get('progress/edit/') . $params[0] . '/' . $progress->progress_id; ?>"
                                    class="btn btn-sm btn-primary">แก้ไข</a>
-                            <?php
+                                <?php
                             }
                             if ($projectMap->map_type == 'advisor')
                             {
@@ -249,7 +226,7 @@ if (!$projectMap)
                                 <button type="submit" class="btn btn-success btn-sm"
                                         formaction="<?= $this->url->get('progress/doEvaluate'); ?>">ส่งผลการประเมิน
                                 </button>
-                            <?php
+                                <?php
                             }
                             ?>
                         </div>

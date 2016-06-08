@@ -7,6 +7,11 @@ class ProfileController extends ControllerBase
         $this->view->setTemplateAfter('main');
         Phalcon\Tag::setTitle('ระบบจัดการโครงงานนักศึกษา');
         parent::initialize();
+
+        $this->loadOwnerProject();
+
+        if ($this->auth['type'] != 'Student')
+            $this->loadAdvisorProject();
     }
 
     public function confirmActivateCodeAction()
