@@ -158,13 +158,13 @@ $user = User::findFirst(array(
                 <div class="col-sm-3">
                     <?php
 
-                    if (!file_exists("./profilePicture/$username.img"))
-                        $imgsrc = "https://graph.facebook.com/$facebook/picture/?type=square&width=150&height=150";
+                    if (file_exists(__DIR__.'/../../../public/profilePicture/'.$user->user_id.'.img'))
+                        $imgSrc = $url.'profilePicture/'.$user->user_id.'.img';
                     else
-                        $imgsrc = $this->url->get("profilePicture/$username.img");
+                        $imgSrc = $url.'profilePicture/noface.img';
 
                     ?>
-                    <img class="bordered" width="150" height="150" src="<?= $imgsrc; ?>">
+                    <img class="bordered" width="150" height="150" src="<?= $imgSrc; ?>">
                 </div>
                 <div class="col-sm-7">
                     <?=

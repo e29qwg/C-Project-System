@@ -3,6 +3,29 @@
 
 class Permission extends \Phalcon\Mvc\User\Component
 {
+    public function canAddNewProgress($user_id, $project_id)
+    {
+        if (empty($user_id) || empty($project_id))
+            return false;
+
+        $progresss = Progress::find(array(
+            "conditions" => "project_id=:project_id: AND user_id=:user_id:",
+            "bind" => array("project_id" => $project_id, "user_id" => $user_id),
+            "order" => "create_date DESC"
+        ));
+
+        if (!count($progresss))
+            return true;
+
+        $last_date = $progresss[0]->create_date;
+        $next_date = date('Y-m-d H:i:s', strtotime("+7 day", DateTime::createFromFormat('Y-m-d H:i:s', $last_date)->getTimestamp()));
+
+        if (date('Y-m-d H:i:s') >= $next_date)
+            return true;
+
+        return false;
+    }
+
     public function quotaAvailable($advisor_id, $current_semester)
     {
         $quota = Quota::findFirst(array(

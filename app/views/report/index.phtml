@@ -1,0 +1,53 @@
+<?php
+$params = $this->dispatcher->getParams();
+?>
+
+
+<div class="row">
+    <?php require(__DIR__ . '/../layouts/projectHeader.php'); ?>
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="progress">
+            <br>
+
+            <div class="pull-right">
+                <a href="<?= $this->url->get('report/upload/'); ?><?= $params[0] ?>"
+                   class="btn btn-xs btn-success">Upload Report</a>
+            </div>
+
+            <br>
+            <br>
+            <br>
+            <table class="table" width="100%">
+                <tr class="success">
+                    <th><?= $project->project_name; ?>'s Report</th>
+                </tr>
+                <tr>
+                    <?php
+
+                    if (!$foundReport):
+
+                        ?>
+                        <td>ไม่พบข้อมูล</td>
+                        <?php
+                    else:
+                        ?>
+                        <td>
+                            รายงานอัพเดตเวลา <?= $reportComments[count($reportComments) - 1]->create_date; ?>
+                            <div class="pull-right">
+                                <a href="<?= $url . 'report/download/' . $project->project_id; ?>">
+                                    Download
+                                </a>
+                            </div>
+                        </td>
+
+                        <?php
+
+                    endif;
+                    ?>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+</div>
+</div>

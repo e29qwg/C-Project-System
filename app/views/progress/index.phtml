@@ -1,63 +1,62 @@
-<?php
-echo $this->getContent();
-$params = $this->dispatcher->getParams();
-?>
-
-
 <div class="row">
     <?php require(__DIR__ . '/../layouts/projectHeader.php'); ?>
     <div class="tab-content">
         <div class="tab-pane fade in active" id="progress">
             <br>
 
+            <div class="alert-info pull-left">
+                สามารถบันทึกความก้าวหน้าครั้งต่อไปได้ในเวลา <?= date('Y-m-d H:i:s', $next_date); ?>
+            </div>
+
             <div class="pull-right">
-                <a href="<?= $this->url->get('progress/newProgress/'); ?><?= $params[0] ?>"
-                   class="btn btn-xs btn-success">New Progress</a>
-                <a href="<?= $this->url->get('progress/exportPDF/') . $params[0]; ?>"
+                <?php
+
+                //TODO oposite sign before release
+                if (date('Y-m-d H:i:s') >= $next_date):
+                    ?>
+                    <a href="<?= $this->url->get('progress/newProgress/'); ?><?= $selectProject->project_id; ?>"
+                       class="btn btn-xs btn-success">New Progress</a>
+                    <?php
+                endif;
+                ?>
+                <a href="<?= $this->url->get('progress/exportPDF/') . $selectProject->project_id; ?>"
                    class="btn btn-xs btn-primary">Export PDF</a>
             </div>
             <br>
             <br>
             <table class="table" width="100%">
                 <tr class="success">
-                    <th><?= $project->project_name ?> progress</th>
+                    <th><?= $selectProject->project_name ?> progress</th>
                     <th></th>
                     <th width="15%"></th>
                 </tr>
                 <?php
 
-                $project = Project::findFirst(array(
-                    "conditions" => "project_id=:project_id:",
-                    "bind" => array("project_id" => $params[0])
-                ));
-
-                $progresss = Progress::find("project_id='$project->project_id'");
-                foreach ($progresss as $progress)
+                foreach ($selectProject->progress as $progress)
                 {
-                    $user = User::findFirst("id='$progress->user_id'");
                     ?>
                     <tr>
                         <td>
-                            <?= $user->name ?>
+                            <?= $progress->User->name ?>
                         </td>
                         <td>
                             <?= $progress->create_date ?>
                         </td>
                         <td>
-                            <a href="<?= $this->url->get('progress/view/'); ?><?= $params[0] ?>/<?= $progress->progress_id ?>"
+                            <a href="<?= $this->url->get('progress/view/'); ?><?= $selectProject->project_id; ?>/<?= $progress->progress_id; ?>"
                                class="btn btn-xs btn-success">View</a>
                             <?php
                             if ($progress->user_id == $auth['id'])
                             {
                                 ?>
-                                <a href="<?= $this->url->get('progress/delete/'); ?><?= $params[0] ?>/<?= $progress->progress_id ?>"
+                                <a href="<?= $this->url->get('progress/delete/'); ?><?= $selectProject->project_id ?>/<?= $progress->progress_id ?>"
                                    class="btn btn-xs btn-danger" onclick="return confirm('Confirm Delete');">Delete</a>
-                            <?php
+                                <?php
                             }
                             ?>
                         </td>
                     </tr>
-                <?php
+                    <?php
                 }
                 ?>
             </table>

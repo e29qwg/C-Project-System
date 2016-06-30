@@ -4,15 +4,7 @@ echo $this->getContent();
 $auth = $this->session->get('auth');
 $user_id = $auth['id'];
 
-$params = $this->dispatcher->getParams();
-if (!isset($params[0]))
-{
-    return $this->flash->error('Invalid request');
-}
-
-$project = Project::findFirst("project_id='$params[0]'");
-
-if (!$project)
+if (!$selectProject)
 {
     $this->flashSession->error('Project not found');
     $this->response->redirect('projects/me');
@@ -24,32 +16,29 @@ $e = new Phalcon\Escaper();
 
 <div class="row">
     <?php require(__DIR__ . '/../layouts/projectHeader.php'); ?>
-    <?php
-    $params = $this->dispatcher->getParams();
-    $project = Project::findFirst("project_id='$params[0]'");
-    ?>
+
     <div class="tab-content">
         <div class="tab-pane fade in active" id="setting">
             <br>
             <?php
 
-            if ($project->project_status == 'Accept')
+            if ($selectProject->project_status == 'Accept')
             {
             }
             else
             {
                 ?>
-                <a href="<?= $this->url->get('projects/addmember/'); ?><?= $params[0] ?>"
+                <a href="<?= $this->url->get('projects/addmember/'); ?><?= $selectProject->project_id; ?>"
                    class="btn btn-success btn-sm pull-right">New Project Member</a>
                 <br>
                 <br>
-            <?php
+                <?php
             }
             ?>
             <table class="table" width="100%">
                 <thead>
                 <tr class="success">
-                    <th><?= $project->project_name ?> project member</th>
+                    <th><?= $selectProject->project_name ?> project member</th>
                     <th width="5%"></th>
                 </tr>
                 </thead>
@@ -61,10 +50,10 @@ $e = new Phalcon\Escaper();
                 {
                     $user = User::findFirst("id='$projectMap->user_id'");
 
-                    if (file_exists(__DIR__.'/../../../public/profilePicture/'.$user->user_id.'.img'))
-                        $imgSrc = $url.'profilePicture/'.$user->user_id.'.img';
+                    if (file_exists(__DIR__ . '/../../../public/profilePicture/' . $user->user_id . '.img'))
+                        $imgSrc = $url . 'profilePicture/' . $user->user_id . '.img';
                     else
-                        $imgSrc = $url.'profilePicture/noface.img';
+                        $imgSrc = $url . 'profilePicture/noface.img';
 
                     echo '<tr>';
                     echo '<td class="active">';

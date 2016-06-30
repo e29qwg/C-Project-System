@@ -13,7 +13,7 @@ if (!isset($params[0]))
 
 if ($auth['type'] == 'Student')
 {
-    include __DIR__.'/../projects/me.phtml';
+include __DIR__ . '/../projects/me.phtml';
 ?>
 
 <div class="col-sm-9">
@@ -24,22 +24,48 @@ if ($auth['type'] == 'Student')
     ?>
     <ul class="nav nav-tabs" id="pTab">
         <?= ($action == 'manage') ? '<li class="active">' : '<li>'; ?>
-        <a href="<?= $this->url->get('projects/manage/'); ?><?= $params[0] ?>">Project Info</a></li>
-        <?= ($controller == 'progress') ? '<li class="active">' : '<li>'; ?>
+        <a href="<?= $url . 'projects/manage/' . $params[0] ?>">Project Info</a></li>
+
+        <?= ($action == 'member' || $action == 'addmember') ? '<li class="active">' : '<li>'; ?>
+        <a href="<?= $url . 'projects/member/' . $params[0] ?>">Member</a></li>
+
+
         <?php
         if ($auth['type'] != 'Student')
         {
             ?>
-            <a href="<?= $this->url->get('progress/evaluate/'); ?><?= $params[0] ?>">Progress</a></li>
-        <?php
+            <?= ($controller == 'progress') ? '<li class="active">' : '<li>'; ?>
+            <a href="<?= $url . 'progress/evaluate/' . $params[0] ?>">Progress</a></li>
+
+            <?php
+
+            if ($selectProject->project_level_id == 3):
+
+                ?>
+
+                <?= ($controller == 'report') ? '<li class="active">' : '<li>'; ?>
+                <a href="<?= $url . 'report/evaluate/' . $params[0]; ?>">Final Report</a></li>
+
+                <?php
+            endif;
         }
         else
         {
             ?>
-            <a href="<?= $this->url->get('progress/index/'); ?><?= $params[0] ?>">Progress</a></li>
-        <?php
+            <?= ($controller == 'progress') ? '<li class="active">' : '<li>'; ?>
+            <a href="<?= $url . 'progress/index/' . $params[0] ?>">Progress</a></li>
+
+            <?php
+
+            if ($selectProject->project_level_id == 3):
+                ?>
+
+                <?= ($controller == 'report') ? '<li class="active">' : '<li>'; ?>
+                <a href="<?= $url . 'report/index/' . $params[0]; ?>">Final Report</a></li>
+                <?php
+            endif;
         }
         ?>
-        <?= ($action == 'member' || $action == 'addmember') ? '<li class="active">' : '<li>'; ?>
-        <a href="<?= $this->url->get('projects/member/'); ?><?= $params[0] ?>">Member</a></li>
+
+
     </ul>

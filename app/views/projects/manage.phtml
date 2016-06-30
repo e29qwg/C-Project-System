@@ -23,21 +23,21 @@
 <?php require(__DIR__ . '/../layouts/projectHeader.php'); ?>
 <?php
 $params = $this->dispatcher->getParams();
-$project = Project::findFirst("project_id='$params[0]'");
+
 ?>
 <div class="tab-content">
     <div class="tab-pane fade in active" id="setting">
         <br>
         <?php
 
-        if ($project->project_status == "Pending" && $auth['type'] == 'Student')
-            $this->flash->notice('รอการยืนยัน <a href="' . $this->url->get('projects/delete/') . $project->project_id . '" class="btn btn-danger btn-xs" onclick="return confirm(\'ยืนยันการลบโครงงาน\');">Cancel Request</a>');
-        else if ($project->project_status == "Pending")
+        if ($selectProject->project_status == "Pending" && $auth['type'] == 'Student')
+            $this->flash->notice('รอการยืนยัน <a href="' . $this->url->get('projects/delete/') . $selectProject->project_id . '" class="btn btn-danger btn-xs" onclick="return confirm(\'ยืนยันการลบโครงงาน\');">Cancel Request</a>');
+        else if ($selectProject->project_status == "Pending")
             $this->flash->notice('รอยืนยัน');
 
         ?>
         <form class="form-horizontal" action="<?= $this->url->get('projects/editSetting'); ?>" method="post">
-            <input type="hidden" id="id" name="id" value="<?= $project->project_id ?>">
+            <input type="hidden" id="id" name="id" value="<?= $selectProject->project_id ?>">
 
             <div class="form-group">
                 <label class="col-sm-2 control-label">Project Name</label>
@@ -45,7 +45,7 @@ $project = Project::findFirst("project_id='$params[0]'");
                 <div class="col-sm-8">
                     <?php
 
-                    \Phalcon\Tag::setDefault('name', $project->project_name);
+                    \Phalcon\Tag::setDefault('name', $selectProject->project_name);
 
                     echo \Phalcon\Tag::textField(array(
                         'name',
@@ -62,7 +62,7 @@ $project = Project::findFirst("project_id='$params[0]'");
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">Project Type</label>
-                <?php $this->tag->setDefault("project_type", $project->project_type); ?>
+                <?php $this->tag->setDefault("project_type", $selectProject->project_type); ?>
                 <div class="col-sm-2">
                     <?php
 
@@ -80,7 +80,7 @@ $project = Project::findFirst("project_id='$params[0]'");
                 <label class="col-sm-2 control-label">Semester</label>
                 <?php
 
-                $semester = Semester::findFirst("semester_id='$project->semester_id'");
+                $semester = $selectProject->Semester;
 
                 ?>
                 <div class="col-sm-2">
@@ -94,12 +94,15 @@ $project = Project::findFirst("project_id='$params[0]'");
                     <p class="form-control-static">
                         <?php
 
-                        $projectMaps = ProjectMap::find("project_id='$project->project_id' AND map_type='owner'");
+                        $projectMaps = $selectProject->ProjectMap;
+
                         foreach ($projectMaps as $projectMap)
                         {
-                            $user = User::findFirst("id='$projectMap->user_id'");
+                            if ($projectMap->map_type != 'owner')
+                                continue;
+
                             ?>
-                            <a href="<?= $this->url->get('profile/index/') . $user->id; ?>"><?= $user->title . $user->name; ?></a>
+                            <a href="<?= $this->url->get('profile/index/') . $projectMap->User->id; ?>"><?= $projectMap->User->title . $projectMap->User->name; ?></a>
                             <?php
                         }
                         ?>
@@ -112,23 +115,32 @@ $project = Project::findFirst("project_id='$params[0]'");
                 <div class="col-sm-10">
                     <?php
 
-                    $projectMap = ProjectMap::findFirst("project_id='$project->project_id' AND map_type='advisor'");
-                    $user = User::findFirst("id='$projectMap->user_id'");
+                    foreach ($projectMaps as $projectMap)
+                    {
+                        if ($projectMap->map_type == 'advisor')
+                        {
+                            ?>
+                            <p class="form-control-static"><?= $projectMap->User->title . $projectMap->User->name ?></p>
+                            <?php
+
+                            break;
+                        }
+                    }
                     ?>
-                    <p class="form-control-static"><?= $user->title . $user->name ?></p>
+
                 </div>
             </div>
             <?php
-            $projectMaps = projectMap::find("project_id='$project->project_id' AND map_type='coadvisor'");
             foreach ($projectMaps as $projectMap)
             {
-                $user = User::findFirst("id='$projectMap->user_id'");
+                if ($projectMap->map_type != 'coadvisor')
+                    continue;
                 ?>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Co-Advisor</label>
 
                     <div class="col-sm-10">
-                        <p class="form-control-static"><?= $user->title . $user->name ?></p>
+                        <p class="form-control-static"><?= $projectMap->User->title . $projectMap->User->name ?></p>
                     </div>
                 </div>
                 <?php
@@ -138,19 +150,14 @@ $project = Project::findFirst("project_id='$params[0]'");
                 <label class="col-sm-2 control-label">Project Level</label>
 
                 <div class="col-sm-10">
-                    <?php
-
-                    $projectLevel = ProjectLevel::findFirst("project_level_id='$project->project_level_id'");
-
-                    ?>
-                    <p class="form-control-static"><?= $projectLevel->project_level_name ?></p>
+                    <p class="form-control-static"><?= $selectProject->ProjectLevel->project_level_name ?></p>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">Description</label>
 
                 <div class="col-sm-10">
-                    <textarea id="description" name="description"><?= $project->project_description ?></textarea>
+                    <textarea id="description" name="description"><?= $selectProject->project_description ?></textarea>
                 </div>
             </div>
             <div class="form-group">
@@ -162,7 +169,7 @@ $project = Project::findFirst("project_id='$params[0]'");
             <?php
             if ($auth['type'] == 'Advisor' || $auth['type'] == 'Admin')
             {
-            if ($project->project_status == 'Pending')
+            if ($selectProject->project_status == 'Pending')
             {
                 ?>
                 <div class="form-group">
@@ -170,14 +177,15 @@ $project = Project::findFirst("project_id='$params[0]'");
 
 
                     <input type="hidden" id="reason" name="reason" value="">
-                    <input type="hidden" name="project_id" value="<?= $project->project_id; ?>">
+                    <input type="hidden" name="project_id" value="<?= $selectProject->project_id; ?>">
                     <div class="col-sm-10">
                         <a class="btn btn-sm btn-success"
-                           href="<?= $this->url->get('projects/accept/') . $project->project_id; ?>"
+                           href="<?= $this->url->get('projects/accept/') . $selectProject->project_id; ?>"
                            onclick="return confirm('Confirm accept');">Accept</a>
                         <button class="btn btn-sm btn-danger"
-                                formaction="<?= $this->url->get('projects/reject'); ?>" onclick="return confirmReject();
-                        ">Reject
+                                formaction="<?= $this->url->get('projects/reject'); ?>"
+                                onclick="return confirmReject();">
+                            Reject
                         </button>
                     </div>
                 </div>

@@ -1,19 +1,13 @@
 <?php
 
-class Progress extends \Phalcon\Mvc\Model
+class ReportComment extends \Phalcon\Mvc\Model
 {
 
     /**
      *
      * @var integer
      */
-    public $progress_id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $user_id;
+    public $id;
 
     /**
      *
@@ -23,43 +17,25 @@ class Progress extends \Phalcon\Mvc\Model
 
     /**
      *
-     * @var string
+     * @var integer
      */
-    public $progress_finish;
+    public $user_id;
 
     /**
      *
      * @var string
      */
-    public $progress_working;
+    public $comment;
 
     /**
      *
      * @var string
      */
-    public $progress_todo;
+    public $status;
 
     /**
      *
-     * @var string
-     */
-    public $progress_summary;
-
-    /**
-     *
-     * @var string
-     */
-    public $progress_target;
-
-    /**
-     *
-     * @var string
-     */
-    public $edit_date;
-
-    /**
-     *
-     * @var string
+     * @var String
      */
     public $create_date;
 
@@ -73,9 +49,8 @@ class Progress extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->hasOne('progress_id', 'ProgressEvaluate', 'progress_id', array('alias' => 'ProgressEvaluate'));
-        $this->belongsTo('project_id', 'Project', 'project_id', array('alias' => 'Project'));
         $this->belongsTo('user_id', 'User', 'id', array('alias' => 'User'));
+        $this->belongsTo('project_id', 'Project', 'project_id', array('alias' => 'Project'));
     }
 
     /**
@@ -85,14 +60,14 @@ class Progress extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'progress';
+        return 'report_comment';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Progress[]
+     * @return ReportComment[]
      */
     public static function find($parameters = null)
     {
@@ -103,7 +78,7 @@ class Progress extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Progress
+     * @return ReportComment
      */
     public static function findFirst($parameters = null)
     {

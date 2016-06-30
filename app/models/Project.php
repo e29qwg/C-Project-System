@@ -44,12 +44,7 @@ class Project extends \Phalcon\Mvc\Model
      * @var integer
      */
     public $semester_id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $project_farm;
+    
 
     /**
      *
@@ -72,6 +67,7 @@ class Project extends \Phalcon\Mvc\Model
         $this->hasMany('project_id', 'ProjectMap', 'project_id', array('alias' => 'ProjectMap'));
         $this->hasMany('project_id', 'ScorePrepare', 'project_id', array('alias' => 'ScorePrepare'));
         $this->hasMany('project_id', 'ScoreProject', 'project_id', array('alias' => 'ScoreProject'));
+        $this->hasMany('project_id', 'ReportComment', 'project_id', array('alias' => 'ReportComment'));
         $this->belongsTo('project_level_id', 'ProjectLevel', 'project_level_id', array('alias' => 'ProjectLevel'));
         $this->belongsTo('semester_id', 'Semester', 'semester_id', array('alias' => 'Semester'));
     }

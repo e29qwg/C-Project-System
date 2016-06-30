@@ -12,6 +12,15 @@ class ProgressController extends ControllerBase
 
         if ($this->auth['type'] != 'Student')
             $this->loadAdvisorProject();
+
+        $project_id = $this->dispatcher->getParam(0);
+
+        $selectProject = Project::findFirst(array(
+            "conditions" => "project_id=:project_id:",
+            "bind" => array("project_id" => $project_id)
+        ));
+
+        $this->view->selectProject = $selectProject;
     }
 
     public function exportPDFAction()
@@ -246,11 +255,7 @@ class ProgressController extends ControllerBase
         catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
         {
             $this->flashSession->error('Transaction failure: ' . $e->getMessage());
-            return $this->dispatcher->forward(array(
-                'controller' => 'progress',
-                'action' => 'evalutate',
-                'params' => array($project_id)
-            ));
+            return $this->pForward('progress', 'evaluate', array($project_id));
         }
 
         $this->flashSession->success("Update evaluation success");
@@ -347,12 +352,12 @@ class ProgressController extends ControllerBase
     {
         $progress_id = $this->dispatcher->getParam(1);
 
-        $this->_checkPermission($progress_id);
-
         $progress = Progress::findFirst(array(
             "conditions" => "progress_id=:progress_id:",
             "bind" => array("progress_id" => $progress_id)
         ));
+
+        $this->_checkPermission($progress->project_id);
 
         $this->view->progress = $progress;
     }
@@ -370,6 +375,14 @@ class ProgressController extends ControllerBase
         if (!$this->_checkPermission($project_id))
             return false;
 
+        //check time pass
+        if (!$this->permission->canAddNewProgress($user_id, $project_id))
+        {
+            $this->flash->error('Miss time conditions');
+            return $this->pForward('progress', 'progress', array($project_id));
+        }
+
+        //insert progress
         $project = Project::findFirst("project_id='$project_id'");
         $user = User::findFirst("id='$user_id'");
 
@@ -391,12 +404,10 @@ class ProgressController extends ControllerBase
 
         if (!$progress->save())
         {
+            $this->dbError($progress);
             $this->flash->error('Database Failure');
-            return $this->dispatcher->forward(array(
-                'controller' => 'progress',
-                'action' => 'newProgress',
-                'params' => array($project_id)
-            ));
+
+            return $this->pForward('progress', 'newProgress', array($project_id));
         }
 
         $evaluate = new ProgressEvaluate();
@@ -406,11 +417,8 @@ class ProgressController extends ControllerBase
         {
             $progress->delete();
             $this->flash->error('Database Failure');
-            return $this->dispatcher->forward(array(
-                'controller' => 'progress',
-                'action' => 'newProgress',
-                'params' => array($project_id)
-            ));
+
+            return $this->pForward('progress', 'newProgress', array($project_id));
         }
 
         $this->flashSession->success('Add progress success');
@@ -452,7 +460,7 @@ class ProgressController extends ControllerBase
         if ($type != 'Student')
             return $this->response->redirect('progress/evaluate/' . $project_id);
 
-        $this->response->redirect('progress/index/' . $project_id);
+        return $this->response->redirect('progress/index/' . $project_id);
     }
 
     //add progress to db
@@ -461,6 +469,14 @@ class ProgressController extends ControllerBase
     {
         $params = $this->dispatcher->getParams();
         $this->_checkPermission($params[0]);
+
+
+        //$this->permission
+        if (!$this->permission->canAddNewProgress($this->auth['id'], $params[0]))
+        {
+            $this->flash->error('Missing time conditions');
+            return $this->pForward('progress', 'index', array($params[0]));
+        }
     }
 
     //show add progress page
@@ -481,6 +497,23 @@ class ProgressController extends ControllerBase
             ));
 
             return;
+        }
+
+        $progresss = Progress::find(array(
+            "conditions" => "project_id=:project_id:",
+            "bind" => array("project_id" => $params[0]),
+            "order" => "create_date ASC"
+        ));
+
+        $this->view->progresss = $progresss;
+
+
+        if (count($progresss))
+        {
+            //check available time for new progress
+            $last_date = $progresss[count($progresss) - 1]->create_date;
+            $next_date = strtotime("+7 day", DateTime::createFromFormat('Y-m-d H:i:s', $last_date)->getTimestamp());
+            $this->view->next_date = $next_date;
         }
     }
 

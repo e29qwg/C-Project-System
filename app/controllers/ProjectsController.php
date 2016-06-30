@@ -7,6 +7,20 @@ class ProjectsController extends ControllerBase
         $this->view->setTemplateAfter('main');
         Phalcon\Tag::setTitle('ระบบจัดการโครงงานนักศึกษา');
         parent::initialize();
+
+        $this->loadOwnerProject();
+
+        if ($this->auth['type'] != 'Student')
+            $this->loadAdvisorProject();
+
+        $project_id = $this->dispatcher->getParam(0);
+
+        $selectProject = Project::findFirst(array(
+            "conditions" => "project_id=:project_id:",
+            "bind" => array("project_id" => $project_id)
+        ));
+
+        $this->view->selectProject = $selectProject;
     }
 
     //confirm project
@@ -656,13 +670,6 @@ class ProjectsController extends ControllerBase
         $project_id = $params[0];
 
         $this->_checkPermission($project_id);
-
-        $project = Project::findFirst(array(
-           "conditions" => "project_id=:project_id:",
-            "bind" => array("project_id" => $project_id)
-        ));
-
-        $this->view->selectProject = $project;
 
         if ($this->auth['type'] != 'Student')
             $this->loadAdvisorProject();

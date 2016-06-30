@@ -42,26 +42,8 @@ class ControllerBase extends Phalcon\Mvc\Controller
         $this->loadUserSemester();
         $this->loadAllSemester();
         $this->loadCurrentSemester();
-        $this->userImgUrl(null);
     }
-
-    protected  function userImgUrl($user_id)
-    {
-        if (empty($user_id))
-            $user_id = $this->auth['user_id'];
-
-        $url = $this->url->get();
-        if (!$this->auth)
-            $this->view->imgUrl = $url.'profilePicture/noface.img';
-        else
-        {
-            if (file_exists(__DIR__.'/../../public/profilePicture/'.$user_id.'.img'))
-                $this->view->imgUrl = $url.'profilePicture/'.$user_id.'.img';
-            else
-                $this->view->imgUrl = $url.'profilePicture/noface.img';
-        }
-    }
-
+    
     protected function loadAdvisorProject()
     {
         $builder = $this->modelsManager->createBuilder();
@@ -240,6 +222,17 @@ class ControllerBase extends Phalcon\Mvc\Controller
         $this->dispatcher->forward(array(
             'controller' => $uriParts[0],
             'action' => $uriParts[1]
+        ));
+
+        return true;
+    }
+
+    protected function pForward($controller, $action, $params)
+    {
+        $this->dispatcher->forward(array(
+            'controller' => $controller,
+            'action' => $action,
+            'params' => $params
         ));
 
         return true;
