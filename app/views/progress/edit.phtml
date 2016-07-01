@@ -1,32 +1,9 @@
-<?php echo $this->getContent(); ?>
 <?php
 
-$params = $this->dispatcher->getParams();
+echo $this->getContent();
+
 $auth = $this->session->get('auth');
 $user_id = $auth['id'];
-
-if (count($params) != 2)
-{
-    $this->flash->error('Invalid Request');
-    return;
-}
-
-$progress = Progress::findFirst("progress_id='$params[1]'");
-
-//check user permission
-$projectMap = ProjectMap::findFirst("project_id='$progress->project_id' AND user_id='$user_id'");
-
-if (!$projectMap || !$progress)
-{
-    $this->flash->error('Access Denied.');
-    return;
-}
-
-if (!(($projectMap->map_type == 'owner' && $progress->user_id == $user_id) || $projectMap->map_type = 'advisor'))
-{
-    $this->flash->error('Access Denied');
-    return;
-}
 
 ?>
 
@@ -45,7 +22,7 @@ if (!(($projectMap->map_type == 'owner' && $progress->user_id == $user_id) || $p
         image_advtab: true,
         autosave_ask_before_unload: false,
         width: "100%",
-        height: "200px",
+        height: "200px"
     });
 </script>
 
@@ -56,8 +33,8 @@ if (!(($projectMap->map_type == 'owner' && $progress->user_id == $user_id) || $p
             <br>
 
             <form method="post" action="<?= $this->url->get('progress/doEdit'); ?>">
-                <input type="hidden" name="id" value="<?= $params[0] ?>">
-                <input type="hidden" name="progress_id" value="<?= $params[1] ?>">
+                <input type="hidden" name="id" value="<?= $selectProject->project_id; ?>">
+                <input type="hidden" name="progress_id" value="<?= $progress->progress_id; ?>">
 
                 <div class="form-group">
                     <label for="progress_finish">งานที่ทำเสร็จเรียบร้อยแล้ว</label>
@@ -84,7 +61,7 @@ if (!(($projectMap->map_type == 'owner' && $progress->user_id == $user_id) || $p
                 <div class="form-group">
                     <button type="submit" class="btn btn-success btn-sm">Save</button>
                     <a class="btn btn-primary btn-sm"
-                       href="<?= $this->url->get('progress/view/') . $params[0] . '/' . $params[1]; ?>">Cancel</a>
+                       href="<?= $this->url->get('progress/view/') . $selectProject->project_id . '/' . $progress->progress_id; ?>">Cancel</a>
                 </div>
             </form>
         </div>

@@ -252,25 +252,6 @@ class ControllerBase extends Phalcon\Mvc\Controller
         $this->view->projects = $projects;
     }
 
-    protected function _checkPermission($project_id)
-    {
-        $auth = $this->session->get('auth');
-        $user_id = $auth['id'];
-
-        $projectMap = ProjectMap::findFirst("project_id='$project_id' AND user_id='$user_id'");
-
-        if (!$projectMap || empty($project_id))
-        {
-            if (!empty($project_id) && $this->auth['type'] == 'Admin')
-                return true;
-
-            $this->flash->error('Access Denied');
-            $this->forward('index');
-            return false;
-        }
-        return true;
-    }
-
     protected function wantNotification($user_id, $noption)
     {
         $notification = Notification::findFirst(array(

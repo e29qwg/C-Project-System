@@ -170,6 +170,20 @@ class ProgressController extends ControllerBase
 
     public function editAction()
     {
+        $progress_id = $this->dispatcher->getParam(1);
+
+        $progress = Progress::findFirst(array(
+            "conditions" => "progress_id=:progress_id:",
+            "bind" => array("progress_id" => $progress_id)
+        ));
+
+        if (!$this->permission->checkPermission($this->auth['id'], $progress->project_id))
+        {
+            $this->flashSession->error('Access Denied');
+            return $this->_redirectBack();
+        }
+
+        $this->view->progress = $progress;
     }
 
     public function doEvaluateAction()
@@ -357,7 +371,17 @@ class ProgressController extends ControllerBase
             "bind" => array("progress_id" => $progress_id)
         ));
 
-        $this->_checkPermission($progress->project_id);
+        if (!$this->permission->checkPermission($this->auth['id'], $progress->project_id))
+        {
+            $this->flashSession->error('Access Denied');
+            return $this->_redirectBack();
+        }
+
+        if ($progress->user_id != $this->auth['id'] && $this->auth['type'] == 'Student')
+        {
+            $this->flashSession->error('Access Denied');
+            return $this->_redirectBack();
+        }
 
         $this->view->progress = $progress;
     }
@@ -372,8 +396,11 @@ class ProgressController extends ControllerBase
         $type = $auth['type'];
 
         $project_id = $request->getPost('id');
-        if (!$this->_checkPermission($project_id))
-            return false;
+        if (!$this->permission->checkPermission($this->auth['user_id'], $project_id))
+        {
+            $this->flashSession->error('Access Denied');
+            return $this->_redirectBack();
+        }
 
         //check time pass
         if (!$this->permission->canAddNewProgress($user_id, $project_id))
@@ -468,7 +495,12 @@ class ProgressController extends ControllerBase
     public function newProgressAction()
     {
         $params = $this->dispatcher->getParams();
-        $this->_checkPermission($params[0]);
+
+        if (!$this->permission->checkPermission($this->auth['id'], $params[0]))
+        {
+            $this->flashSession->error('Access Denied');
+            return $this->_redirectBack();
+        }
 
 
         //$this->permission
@@ -486,7 +518,11 @@ class ProgressController extends ControllerBase
         $auth = $this->session->get('auth');
 
         $params = $this->dispatcher->getParams();
-        $this->_checkPermission($params[0]);
+        if (!$this->permission->checkPermission($this->auth['id'], $params[0]))
+        {
+            $this->flashSession->error('Access Denied');
+            return $this->_redirectBack();
+        }
 
         if ($auth['type'] != 'Student')
         {

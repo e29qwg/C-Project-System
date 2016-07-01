@@ -18,7 +18,7 @@ class ReportController extends ControllerBase
     {
         $project_id = $this->dispatcher->getParam(0);
 
-        $this->_checkPermission($project_id);
+        $this->permission->checkPermission($project_id);
 
         $fileLocation = __DIR__ . '/../upload/report/report' . $project_id . '.pdf';
 
@@ -47,7 +47,7 @@ class ReportController extends ControllerBase
     {
         $project_id = $this->dispatcher->getParam(0);
 
-        $this->_checkPermission($project_id);
+        $this->permission->checkPermission($project_id);
 
         $project = Project::findFirst(array(
             "conditions" => "project_id=:project_id:",
@@ -75,7 +75,7 @@ class ReportController extends ControllerBase
         $request = $this->request;
         $project_id = $request->getPost('project_id');
 
-        $this->_checkPermission($project_id);
+        $this->permission->checkPermission($project_id);
 
         if (!$request->hasFiles())
         {

@@ -12,7 +12,7 @@
                 <?php
 
                 //TODO oposite sign before release
-                if (date('Y-m-d H:i:s') >= $next_date):
+                if (date('Y-m-d H:i:s') >= date('Y-m-d H:i:s', $next_date)):
                     ?>
                     <a href="<?= $this->url->get('progress/newProgress/'); ?><?= $selectProject->project_id; ?>"
                        class="btn btn-xs btn-success">New Progress</a>

@@ -3,6 +3,43 @@
 
 class Permission extends \Phalcon\Mvc\User\Component
 {
+    //check for owner and advisor
+    public function canManageProgress($user_id, $progress_id)
+    {
+        if (empty($user_id) || empty($progress_id))
+            return false;
+
+        $progress = Progress::findFirst(array(
+            "conditions" => "progress_id=:progress_id:",
+            "bind" => array("progress_id" => $progress_id)
+        ));
+
+        if (!$this->checkPermission($user_id, $progress->project_id))
+            return false;
+        if ($progress->user_id != $user_id && $this->getRole($user_id) != 'Admin' && $this->getRole($user_id) != 'Advisor')
+            return false;
+
+        return true;
+    }
+
+    //check can access project
+    public function checkPermission($user_id, $project_id)
+    {
+        $projectMap = ProjectMap::findFirst(array(
+            "conditions" => "project_id=:project_id: AND user_id=:user_id:",
+            "bind" => array("project_id" => $project_id, "user_id" => $user_id)
+        ));
+
+        if (!$projectMap || empty($project_id))
+        {
+            if (!empty($project_id) && $this->auth['type'] == 'Admin')
+                return true;
+
+            return false;
+        }
+        return true;
+    }
+
     public function canAddNewProgress($user_id, $project_id)
     {
         if (empty($user_id) || empty($project_id))
@@ -53,9 +90,9 @@ class Permission extends \Phalcon\Mvc\User\Component
         ));
 
         $username = $user->user_id;
-        
+
         if (empty($username))
-           return null;
+            return null;
 
         //check enroll
         $enroll = Enroll::findFirst(array(
@@ -97,7 +134,7 @@ class Permission extends \Phalcon\Mvc\User\Component
             "bind" => array("id" => $id)
         ));
 
-        $auth =  $this->session->get('auth');
+        $auth = $this->session->get('auth');
 
         if ($auth)
         {
