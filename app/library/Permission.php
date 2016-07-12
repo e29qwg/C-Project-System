@@ -55,7 +55,7 @@ class Permission extends \Phalcon\Mvc\User\Component
             return true;
 
         $last_date = $progresss[0]->create_date;
-        $next_date = date('Y-m-d H:i:s', strtotime("+7 day", DateTime::createFromFormat('Y-m-d H:i:s', $last_date)->getTimestamp()));
+        $next_date = date('Y-m-d H:i:s', strtotime($last_date) + $this->config->progress->delay);
 
         if (date('Y-m-d H:i:s') >= $next_date)
             return true;

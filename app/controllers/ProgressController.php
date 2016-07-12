@@ -396,7 +396,7 @@ class ProgressController extends ControllerBase
         $type = $auth['type'];
 
         $project_id = $request->getPost('id');
-        if (!$this->permission->checkPermission($this->auth['user_id'], $project_id))
+        if (!$this->permission->checkPermission($user_id, $project_id))
         {
             $this->flashSession->error('Access Denied');
             return $this->_redirectBack();
@@ -436,6 +436,17 @@ class ProgressController extends ControllerBase
 
             return $this->pForward('progress', 'newProgress', array($project_id));
         }
+
+        //add notification queue
+        $this->queue->choose($this->config->queue->progresstube);
+        $this->queue->put(
+            array(
+                'progress_id' => $progress->progress_id
+            ),
+            array(
+                'delay' => $this->config->progress->delay
+            )
+        );
 
         $evaluate = new ProgressEvaluate();
         $evaluate->progress_id = $progress->progress_id;
@@ -548,7 +559,7 @@ class ProgressController extends ControllerBase
         {
             //check available time for new progress
             $last_date = $progresss[count($progresss) - 1]->create_date;
-            $next_date = strtotime("+7 day", DateTime::createFromFormat('Y-m-d H:i:s', $last_date)->getTimestamp());
+            $next_date = strtotime($last_date) + $this->config->progress->delay;
             $this->view->next_date = $next_date;
         }
     }

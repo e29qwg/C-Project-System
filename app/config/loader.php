@@ -7,5 +7,6 @@ $loader->registerDirs(array(
     $config->application->pluginsDir,
     $config->application->libraryDir,
     $config->application->modelsDir,
-    $config->application->formsDir
+    $config->application->formsDir,
+    $config->application->taskDir
 ))->register();

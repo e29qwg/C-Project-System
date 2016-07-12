@@ -31,5 +31,3 @@ catch (\Exception $e)
         echo '<pre>' . $e->getTraceAsString() . '</pre>';
     }
 }
-
-?>
