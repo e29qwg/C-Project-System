@@ -3,7 +3,7 @@ $params = $this->dispatcher->getParams();
 
 $status = $reportComments[count($reportComments) - 1]->status;
 
-if ($status == 'Pending')
+if ($status != 'Accept')
     $alert = "alert alert-warning";
 else
     $alert = "alert alert-success";
@@ -23,7 +23,7 @@ else
 
             <?php
 
-            if ($status == 'Pending'):
+            if ($status != 'Accept'):
 
                 ?>
 

@@ -6,7 +6,7 @@ $status = @$reportComments[count($reportComments) - 1]->status;
 if (empty($status))
     $status = 'Pending';
 
-if ($status == 'Pending')
+if ($status != 'Accept')
     $alert = "alert alert-warning";
 else
     $alert = "alert alert-success";
@@ -26,7 +26,7 @@ else
 
             <?php
 
-            if ($status == 'Pending'):
+            if ($status != 'Accept'):
 
                 ?>
 
