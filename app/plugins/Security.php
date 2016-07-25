@@ -200,7 +200,7 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 'exam' => array('download', 'showExam'),
                 'score' => array('advisorView'),
                 'userSettings' => array('*'),
-                'report' => array('evaluate')
+                'report' => array('evaluate', 'reject', 'accept')
             );
 
             foreach ($advisorResources as $resource => $actions)
