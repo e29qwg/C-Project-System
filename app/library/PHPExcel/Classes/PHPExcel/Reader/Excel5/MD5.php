@@ -22,7 +22,7 @@
  * @package    PHPExcel_Reader_Excel5
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt        LGPL
- * @version    1.8.0, 2014-03-02
+ * @version    ##VERSION##, ##DATE##
  */
 
 
@@ -62,36 +62,16 @@ class PHPExcel_Reader_Excel5_MD5
         $this->d = 0x10325476;
     }
 
-    private static function F($X, $Y, $Z)
-    {
-        return (($X & $Y) | ((~$X) & $Z)); // X AND Y OR NOT X AND Z
-    }
-
-    private static function G($X, $Y, $Z)
-    {
-        return (($X & $Z) | ($Y & (~$Z))); // X AND Z OR Y AND NOT Z
-    }
-
-    private static function H($X, $Y, $Z)
-    {
-        return ($X ^ $Y ^ $Z); // X XOR Y XOR Z
-    }
-
-    private static function I($X, $Y, $Z)
-    {
-        return ($Y ^ ($X | (~$Z))); // Y XOR (X OR NOT Z)
-    }
 
     /**
      * Get MD5 stream context
-     *
+     * 
      * @return string
      */
     public function getContext()
     {
         $s = '';
-        foreach (array('a', 'b', 'c', 'd') as $i)
-        {
+        foreach (array('a', 'b', 'c', 'd') as $i) {
             $v = $this->{$i};
             $s .= chr($v & 0xff);
             $s .= chr(($v >> 8) & 0xff);
@@ -102,9 +82,10 @@ class PHPExcel_Reader_Excel5_MD5
         return $s;
     }
 
+
     /**
      * Add data to context
-     *
+     * 
      * @param string $data Data to add
      */
     public function add($data)
@@ -116,10 +97,10 @@ class PHPExcel_Reader_Excel5_MD5
         $C = $this->c;
         $D = $this->d;
 
-        $F = array('PHPExcel_Reader_Excel5_MD5', 'F');
-        $G = array('PHPExcel_Reader_Excel5_MD5', 'G');
-        $H = array('PHPExcel_Reader_Excel5_MD5', 'H');
-        $I = array('PHPExcel_Reader_Excel5_MD5', 'I');
+        $F = array('PHPExcel_Reader_Excel5_MD5','F');
+        $G = array('PHPExcel_Reader_Excel5_MD5','G');
+        $H = array('PHPExcel_Reader_Excel5_MD5','H');
+        $I = array('PHPExcel_Reader_Excel5_MD5','I');
 
         /* ROUND 1 */
         self::step($F, $A, $B, $C, $D, $words[0], 7, 0xd76aa478);
@@ -199,6 +180,31 @@ class PHPExcel_Reader_Excel5_MD5
         $this->d = ($this->d + $D) & 0xffffffff;
     }
 
+
+    private static function F($X, $Y, $Z)
+    {
+        return (($X & $Y) | ((~ $X) & $Z)); // X AND Y OR NOT X AND Z
+    }
+
+
+    private static function G($X, $Y, $Z)
+    {
+        return (($X & $Z) | ($Y & (~ $Z))); // X AND Z OR Y AND NOT Z
+    }
+
+
+    private static function H($X, $Y, $Z)
+    {
+        return ($X ^ $Y ^ $Z); // X XOR Y XOR Z
+    }
+
+
+    private static function I($X, $Y, $Z)
+    {
+        return ($Y ^ ($X | (~ $Z))) ; // Y XOR (X OR NOT Z)
+    }
+
+
     private static function step($func, &$A, $B, $C, $D, $M, $s, $t)
     {
         $A = ($A + call_user_func($func, $B, $C, $D) + $M + $t) & 0xffffffff;
@@ -210,6 +216,6 @@ class PHPExcel_Reader_Excel5_MD5
     private static function rotate($decimal, $bits)
     {
         $binary = str_pad(decbin($decimal), 32, "0", STR_PAD_LEFT);
-        return bindec(substr($binary, $bits) . substr($binary, 0, $bits));
+        return bindec(substr($binary, $bits).substr($binary, 0, $bits));
     }
 }
