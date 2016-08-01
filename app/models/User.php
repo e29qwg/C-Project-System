@@ -1,6 +1,7 @@
 <?php
 
-use Phalcon\Mvc\Model\Validator\Email as Email;
+use Phalcon\Validation;
+use Phalcon\Validation\Validator\Email;
 
 class User extends \Phalcon\Mvc\Model
 {
@@ -119,11 +120,14 @@ class User extends \Phalcon\Mvc\Model
      */
     public function validation()
     {
-        if ($this->validationHasFailed() == true) {
-            return false;
-        }
 
-        return true;
+        $validator = new Validation();
+
+        $validator->add('email', new Email(array(
+            'message' => 'Email Invalid'
+        )));
+
+        return $this->validate($validator);
     }
 
     /**
