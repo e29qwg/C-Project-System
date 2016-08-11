@@ -68,7 +68,7 @@ class EnrollController extends ControllerBase
 
                     while (true)
                     {
-                        $student_id = $sheet->getCell('A' . $row)->getCalculatedValue();
+                        $student_id = $sheet->getCell('A' . $row)->getValue();
                         if (empty($student_id))
                             break;
 
