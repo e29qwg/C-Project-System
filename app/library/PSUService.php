@@ -9,7 +9,7 @@ class PSUService
 
     public function __construct()
     {
-        $this->_soapClient = new SoapClient("https://passport.psu.ac.th/authentication/authentication.asmx?wsdl");
+        $this->_soapClient = new SoapClient("https://passport.psu.ac.th/authentication/authentication.asmx?wsdl", ["connection_timeout" => 3]);
     }
 
     public function getName()
