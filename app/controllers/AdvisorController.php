@@ -15,7 +15,15 @@ class AdvisorController extends ControllerBase
 
         $advisor_id = $this->dispatcher->getParam(0);
 
-        echo json_encode(array("quota" => $this->permission->quotaAvailable($advisor_id, $this->current_semester)));
+        echo json_encode([
+            "quota" => $this->permission->quotaAvailable($advisor_id, $this->current_semester),
+            "pending" => $this->CheckQuota->pendingProject($advisor_id, $this->current_semester)
+        ]);
+    }
+
+    public function checkPendingAction()
+    {
+
     }
 
     public function getProjectListAction()
@@ -28,6 +36,7 @@ class AdvisorController extends ControllerBase
         $builder = $this->modelsManager->createBuilder();
         $builder->from("Project");
         $builder->where("Project.semester_id=:semester_id:", array("semester_id" => $semester_id));
+        $builder->andWhere("Project.project_status='Accept'");
         $builder->innerJoin("ProjectMap", "Project.project_id=ProjectMap.project_id");
         $builder->andWhere("ProjectMap.user_id=:advisor_id:", array("advisor_id" => $advisor_id));
         $builder->andWhere("ProjectMap.map_type='advisor'");

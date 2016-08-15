@@ -145,15 +145,15 @@ if (empty($project_level_name))
                     var jOBJ = JSON.parse(data);
 
                     if (jOBJ.quota > 5) {
-                        quotaText.html("<div style=\"color: green\">สามารถรับได้อีก " + jOBJ.quota + " โครงงาน </div>");
+                        quotaText.html("<div style=\"color: green\">สามารถรับได้อีก " + jOBJ.quota + " โครงงาน (รอยืนยัน " + jOBJ.pending + " โครงงาน)</div>");
                         secondStep.show();
                     }
                     else if (jOBJ.quota > 0) {
-                        quotaText.html("<div style=\"color: orange\">สามารถรับได้อีก " + jOBJ.quota + " โครงงาน </div>");
+                        quotaText.html("<div style=\"color: orange\">สามารถรับได้อีก " + jOBJ.quota + " โครงงาน (รอยืนยัน " + jOBJ.pending + " โครงงาน)</div>");
                         secondStep.show();
                     }
                     else {
-                        quotaText.html("<div style=\"color: red\">ไม่สามารถรับนักศึกษาได้แล้ว</div>");
+                        quotaText.html("<div style=\"color: red\">ไม่สามารถรับนักศึกษาได้แล้ว (รอยืนยัน " + jOBJ.pending + " โครงงาน)</div>");
                         secondStep.hide();
                     }
                 });
