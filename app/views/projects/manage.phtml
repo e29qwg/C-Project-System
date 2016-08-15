@@ -28,13 +28,21 @@ $params = $this->dispatcher->getParams();
 <div class="tab-content">
     <div class="tab-pane fade in active" id="setting">
         <br>
+
         <?php
 
-        if ($selectProject->project_status == "Pending" && $auth['type'] == 'Student')
-            $this->flash->notice('รอการยืนยัน <a href="' . $this->url->get('projects/delete/') . $selectProject->project_id . '" class="btn btn-danger btn-xs" onclick="return confirm(\'ยืนยันการลบโครงงาน\');">Cancel Request</a>');
-        else if ($selectProject->project_status == "Pending")
-            $this->flash->notice('รอยืนยัน');
+        if ($selectProject->project_status == "Pending" && $auth['type'] == 'Student'):
+            ?>
+            <div class="alert alert-info"><a href="<?= $url; ?>projects/delete/<?= $selectProject->project_id; ?>"
+                                             class="btn btn-danger btn-xs"
+                                             onclick="return confirm('ยินยันการลบโครงงาน');">Cancel Request</a></div>
+            <?php
 
+        elseif ($selectProject->project_status == "Pending"):
+            ?>
+            <div class="alert alert-info">รอยืนยัน</div>
+            <?php
+        endif;
         ?>
         <form class="form-horizontal" action="<?= $this->url->get('projects/editSetting'); ?>" method="post">
             <input type="hidden" id="id" name="id" value="<?= $selectProject->project_id ?>">
