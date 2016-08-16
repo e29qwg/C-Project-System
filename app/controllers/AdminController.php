@@ -49,9 +49,11 @@ class AdminController extends ControllerBase
 
         $sheet = $objPHPExcel->getActiveSheet();
 
-        PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+        //Deprecated code.
+       /* PHPExcel_Shared_Font::setTrueTypeFontPath('/usr/share/fonts/truetype/');
+        PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);*/
 
-        for ($col = 'A'; $col <= 'G'; $col++)
+        for ($col = 'A'; $col <= 'G'; $col++) 
             $sheet->getColumnDimension($col)->setAutoSize(true);
 
         //set table header
@@ -325,7 +327,8 @@ class AdminController extends ControllerBase
                     }
 
                     $transaction->commit();
-                } catch (Phalcon\Mvc\Model\Transaction\Failed $e)
+                }
+                catch (Phalcon\Mvc\Model\Transaction\Failed $e)
                 {
                     $this->flashSession->error('Transaction failure: ' . $e->getMessage());
                 }
@@ -381,7 +384,8 @@ class AdminController extends ControllerBase
                     }
 
                     $transaction->commit();
-                } catch (Phalcon\Mvc\Model\Transaction\Failed $e)
+                }
+                catch (Phalcon\Mvc\Model\Transaction\Failed $e)
                 {
                     $this->flashSession->error('Transaction failure: ' . $e->getMessage());
                 }
