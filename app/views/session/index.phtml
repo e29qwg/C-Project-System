@@ -90,17 +90,10 @@ $bkimg = $this->url->get('image/bg_login.png');
                              width="170" height="150"></center>
                 <br>
 
-                <form class="form-signin" role="form" name="form" action="<?= $this->url->get('session/localLogin'); ?>"
+                <form class="form-signin" role="form" name="form" action="#"
                       method="POST">
-                    <input type="hidden" name="<?= $this->security->getTokenKey(); ?>"
-                           value="<?= $this->security->getToken(); ?>">
                     <fieldset>
-                        <input type="text" class="form-control" placeholder="username" id="username" name="username"
-                               autofocus="autofocus" required="required">
-                        <input type="password" class="form-control" placeholder="xxxxxxxx" id="password" name="password"
-                               required="required">
-                        <button type="submit" class="btn btn-primary btn-block">Login</button>
-                        <a href="<?= $this->oauth->authorize_url.'&client_id='.$this->oauth->client_id; ?>" class="btn btn-primary btn-block">Auth Server</a>
+                        <a href="<?= $this->oauth->authorize_url.'&client_id='.$this->oauth->client_id; ?>" class="btn btn-primary btn-block">Login with PSU PASSPORT</a>
                     </fieldset>
                 </form>
             </div>
