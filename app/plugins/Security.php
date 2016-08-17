@@ -79,7 +79,7 @@ class Security extends \Phalcon\Mvc\User\Plugin
             $publicResources = array(
                 'index' => array('index'),
                 'api' => array('getStatusProjectFarm'),
-                'session' => array('index', 'login', 'localLogin', 'logout', 'useHash'),
+                'session' => array('index', 'login', 'localLogin', 'logout', 'useHash', 'adminLogin'),
             );
 
             foreach ($publicResources as $resource => $actions)
@@ -151,7 +151,8 @@ class Security extends \Phalcon\Mvc\User\Plugin
                     'upload',
                     'doUpload',
                     'download'
-                )
+                ),
+                'room' => ['index']
             );
 
             foreach ($studentResources as $resource => $actions)

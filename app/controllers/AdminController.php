@@ -53,7 +53,7 @@ class AdminController extends ControllerBase
        /* PHPExcel_Shared_Font::setTrueTypeFontPath('/usr/share/fonts/truetype/');
         PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);*/
 
-        for ($col = 'A'; $col <= 'G'; $col++) 
+        for ($col = 'A'; $col <= 'G'; $col++)
             $sheet->getColumnDimension($col)->setAutoSize(true);
 
         //set table header
