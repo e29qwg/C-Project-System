@@ -107,12 +107,20 @@ class ProjectsController extends ControllerBase
                         if (!$owner)
                             $transaction->rollback('Error when send email');
 
+                        //add event log
+                        $eventLog = new EventLog();
+                        $eventLog->username = $owner->user_id;
+                        $eventLog->event = 'success accept project';
+                        $eventLog->system = 'project';
+                        $eventLog->save();
+
                         if (!empty($owner->email) && $owner->id != $auth['id'] && $this->wantNotification($owner->id, 'project_update'))
                         {
                             $data = array();
                             $data['to'] = $owner->email;
                             $data['subject'] = 'โครงงาน ' . $project->project_name . ' ได้รับการยืนยัน';
                             $data['mes'] = htmlspecialchars($user->name . ' ยืนยันโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
+
 
                             array_push($emails, $data);
                         }
@@ -291,23 +299,30 @@ class ProjectsController extends ControllerBase
                         $transaction->rollback('Error when save log');
                     }
 
-                    //send email to advisor
-                    if ($projectMap->map_type = 'owner')
+                    //send email to owner
+                    if ($projectMap->map_type == 'owner')
                     {
-                        $advisor = User::findFirst(array(
+                        $owner = User::findFirst(array(
                             "conditions" => "id=:user_id:",
                             "bind" => array("user_id" => $projectMap->user_id)
                         ));
 
-                        if (!$advisor)
+                        if (!$owner)
                         {
                             $transaction->rollback('User not found');
                         }
 
-                        if (!empty($advisor->email) && $advisor->id != $auth['id'] && $this->wantNotification($advisor->id, 'project_update'))
+                        //add event log
+                        $eventLog = new EventLog();
+                        $eventLog->username = $owner->user_id;
+                        $eventLog->event = 'reject reject project';
+                        $eventLog->system = 'project';
+                        $eventLog->save();
+
+                        if (!empty($owner->email) && $owner->id != $auth['id'] && $this->wantNotification($owner->id, 'project_update'))
                         {
                             $data = array();
-                            $data['to'] = $advisor->email;
+                            $data['to'] = $owner->email;
                             $data['subject'] = 'โครงงานถูกปฏิเสธ';
                             $data['mes'] = htmlspecialchars($user->name . ' ปฏิเสธโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
 
