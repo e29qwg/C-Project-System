@@ -6,7 +6,8 @@ require_once(__DIR__ . '/../library/html2pdf/html2pdf.class.php');
 
 $di = new \Phalcon\DI\FactoryDefault();
 
-$di->set('debug', function () use ($config) {
+$di->set('debug', function () use ($config)
+{
     return $config->debug;
 });
 
@@ -15,7 +16,8 @@ $di->set('permission', function ()
     return new Permission();
 });
 
-$di->set('oauth', function() use ($config) {
+$di->set('oauth', function () use ($config)
+{
     return $config->oauth;
 });
 
@@ -90,6 +92,17 @@ $di->setShared('db', function () use ($config)
     return new $class($dbConfig);
 });
 
+$di->setShared('dbLog', function () use ($config)
+{
+    $dbConfig = $config->databaselog->toArray();
+    $adapter = $dbConfig['adapter'];
+    unset($dbConfig['adapter']);
+
+    $class = 'Phalcon\Db\Adapter\Pdo\\' . $adapter;
+
+    return new $class($dbConfig);
+});
+
 
 $di->set('session', function ()
 {
@@ -150,7 +163,7 @@ $di->set('DownloadFile', function ()
     return new DownloadFile();
 });
 
-$di->set('elements', function () 
+$di->set('elements', function ()
 {
     return new Elements();
 });
