@@ -50,10 +50,10 @@ $e = new Phalcon\Escaper();
                 {
                     $user = User::findFirst("id='$projectMap->user_id'");
 
-                    if (file_exists(__DIR__ . '/../../../public/profilePicture/' . $user->user_id . '.img'))
-                        $imgSrc = $url . 'profilePicture/' . $user->user_id . '.img';
+                    if (file_exists(__DIR__ . '/../../../public/profilePicture/' . $user->user_id . '.jpg'))
+                        $imgSrc = $url . 'profilePicture/' . $user->user_id . '.jpg';
                     else
-                        $imgSrc = $url . 'profilePicture/noface.img';
+                        $imgSrc = $url . 'profilePicture/noface.jpg';
 
                     echo '<tr>';
                     echo '<td class="active">';

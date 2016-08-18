@@ -207,7 +207,7 @@ class ProfileController extends ControllerBase
         {
             foreach ($request->getUploadedFiles() as $file)
             {
-                $file->moveTo('./profilePicture/' . $user->user_id . '.img');
+                $file->moveTo('./profilePicture/' . $user->user_id . '.jpg');
             }
         }
 

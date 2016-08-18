@@ -31,12 +31,12 @@ require('list.phtml');
                 <div class="form-group">
                     <div class="col-sm-12">
                         <?php
-                        $imgURL = __DIR__ . "/../../../public/profilePicture/" . $advisor->user_id . ".img";
+                        $imgURL = __DIR__ . "/../../../public/profilePicture/" . $advisor->user_id . ".jpg";
 
                         if (!file_exists($imgURL))
-                            $imgURL = $url . 'profilePicture/noface.img';
+                            $imgURL = $url . 'profilePicture/noface.jpg';
                         else
-                            $imgURL = $url . 'profilePicture/' . $advisor->user_id . '.img';
+                            $imgURL = $url . 'profilePicture/' . $advisor->user_id . '.jpg';
                         ?>
 
                         <img class="center-block" width="150" height="150" src="<?= $imgURL; ?>">
