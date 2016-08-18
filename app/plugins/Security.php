@@ -18,11 +18,16 @@ class Security extends \Phalcon\Mvc\User\Plugin
 
         if (!$auth)
         {
-            if ($controller != 'session' && $controller != 'api')
+            $role = 'Guest';
+
+            if ($controller != 'session')
             {
-                $this->response->redirect('session');
+                $this->dispatcher->forward([
+                    'controller' => 'session',
+                    'action' => 'index'
+                ]);
+                return false;
             }
-            return true;
         }
         else
         {
@@ -32,10 +37,12 @@ class Security extends \Phalcon\Mvc\User\Plugin
             {
                 $this->view->setTemplateAfter('main');
                 $this->flash->warning('Please complete your profile');
-                $this->dispatcher->forward(array(
+                $this->dispatcher->forward([
                     'controller' => 'profile',
                     'action' => 'updateProfile'
-                ));
+                ]);
+
+                return false;
             }
         }
 
@@ -78,7 +85,6 @@ class Security extends \Phalcon\Mvc\User\Plugin
             //public acl
             $publicResources = array(
                 'index' => array('index'),
-                'api' => array('getStatusProjectFarm'),
                 'session' => array('index', 'login', 'localLogin', 'logout', 'useHash', 'adminLogin'),
             );
 
