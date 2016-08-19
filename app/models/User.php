@@ -96,6 +96,8 @@ class User extends \Phalcon\Mvc\Model
      */
     public $create_date;
 
+    public $ignoreCheck;
+
     public function isComplete()
     {
         if ($this->active == 0 || empty($this->title) || empty($this->name) || empty($this->tel) || empty($this->email))
@@ -120,12 +122,14 @@ class User extends \Phalcon\Mvc\Model
      */
     public function validation()
     {
-
         $validator = new Validation();
 
-        $validator->add('email', new Email(array(
-            'message' => 'Email Invalid'
-        )));
+        if (!$this->ignoreCheck)
+        {
+            $validator->add('email', new Email(array(
+                'message' => 'Email Invalid'
+            )));
+        }
 
         return $this->validate($validator);
     }
@@ -135,6 +139,8 @@ class User extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
+        $this->ignoreCheck = false;
+
         $this->hasMany('id', 'ExcelFile', 'user_id', array('alias' => 'ExcelFile'));
         $this->hasMany('id', 'HashLink', 'user_id', array('alias' => 'HashLink'));
         $this->hasMany('id', 'Log', 'user_id', array('alias' => 'Log'));
