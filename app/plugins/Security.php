@@ -158,7 +158,7 @@ class Security extends \Phalcon\Mvc\User\Plugin
                     'doUpload',
                     'download'
                 ),
-                'room' => ['index']
+                //'room' => ['index']
             );
 
             foreach ($studentResources as $resource => $actions)

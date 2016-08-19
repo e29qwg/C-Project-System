@@ -10,11 +10,6 @@ class Elements extends Phalcon\Mvc\User\Component
                 'action' => 'index',
                 'active' => 'index'
             ),
-            'room' => [
-                'caption' => 'Room',
-                'action' => 'room',
-                'active' => 'room'
-            ]
         ),
     );
 
