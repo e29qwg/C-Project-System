@@ -611,7 +611,7 @@ define("tinymce/dom/Selection", [
 				if (rng.cloneRange) {
 					try {
 						self.tridentSel.addRange(rng);
-						return;
+
 					} catch (ex) {
 						//IE9 throws an error here if called before selection is placed in the editor
 					}

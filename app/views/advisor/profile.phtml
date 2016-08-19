@@ -1,0 +1,160 @@
+<?php
+
+echo $this->getContent();
+
+if (!$advisor)
+{
+    $this->flash->error('User not found');
+    return;
+}
+
+require('list.phtml');
+
+?>
+
+<div class="col-sm-8">
+    <ul class="nav nav-tabs" id="profileTab">
+        <li role="presentation" class="active">
+            <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">
+                Profile
+            </a>
+        </li>
+        <li role="presentation">
+            <a href="#project" aria-controls="project" role="tab" data-toggle="tab">Project Advising</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="profile">
+            <br>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <?php
+                        $imgURL = __DIR__ . "/../../../public/profilePicture/" . $advisor->user_id . ".jpg";
+
+                        if (!file_exists($imgURL))
+                            $imgURL = $url . 'profilePicture/noface.jpg';
+                        else
+                            $imgURL = $url . 'profilePicture/' . $advisor->user_id . '.jpg';
+                        ?>
+
+                        <img class="center-block" width="150" height="150" src="<?= $imgURL; ?>">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-offset-2 col-sm-2 control-label">Name</label>
+                    <div class="col-sm-8">
+                        <div class="form-control-static"><?= $advisor->title . $advisor->name; ?></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-offset-2 col-sm-2 control-label">Tel</label>
+
+                    <div class="col-sm-8">
+                        <div class="form-control-static"><?= $advisor->tel; ?></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-offset-2 col-sm-2 control-label">Facebook</label>
+                    <div class="col-sm-8">
+                        <div class="form-control-static">
+                            <a href="https://www.facebook.com/<?= $advisor->facebook; ?>">
+                                https://www.facebook.com/<?= $advisor->facebook; ?>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-offset-2 col-sm-2 control-label">Email</label>
+                    <div class="form-control-static col-sm-8">
+                        <a href="mailto:<?= $advisor->email; ?>"><?= $advisor->email; ?></a>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-offset-2 col-sm-2 control-label">Interesting</label>
+                    <div class="col-sm-8">
+                        <div class="form-control-static"><?= $advisor->interesting; ?></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane fade in" id="project">
+            <br>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Semester</label>
+
+                    <div class="col-sm-3">
+                        <?php
+
+                        \Phalcon\Tag::setDefault('semester', $current_semester_id);
+
+                        echo \Phalcon\Tag::selectStatic(array(
+                            'semester',
+                            $allSemester,
+                            'class' => 'form-control'
+                        ));
+
+                        ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Project List</label>
+
+                    <div class="col-sm-10">
+                        <ul style="list-style-type: none; padding-left: 0;" class="form-control-static pull-left"
+                            id="project_list">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+
+        var semester = $('#semester');
+        var semester_id = semester.val();
+        loadProjectList();
+
+        semester.change(function () {
+            semester_id = this.value;
+
+            $('#project_list').html("Fetching... data");
+
+            loadProjectList();
+        });
+
+        function loadProjectList() {
+            $.get("<?= $url . 'advisor/getProjectList/' . $advisor->id . '/'; ?>" + semester_id)
+                .success(function (data) {
+                    var datas = JSON.parse(data);
+                    var text = "";
+
+                    $('#project_list').html("ไม่พบข้อมูล");
+
+                    datas.forEach(function (data) {
+                        text += '<li>' + data + '</li>';
+                        $('#project_list').html(text);
+                    });
+                })
+                .error(function (data) {
+                    $('#project_list').html("Server error!!!");
+                })
+            ;
+        }
+    })
+    ;
+</script>

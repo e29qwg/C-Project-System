@@ -1,0 +1,148 @@
+<?php
+$params = $this->dispatcher->getParams();
+
+$status = @$reportComments[count($reportComments) - 1]->status;
+
+if (empty($status))
+    $status = 'Pending';
+
+if ($status != 'Accept')
+    $alert = "alert alert-warning";
+else
+    $alert = "alert alert-success";
+?>
+
+
+<div class="row">
+    <?php require(__DIR__ . '/../layouts/projectHeader.php'); ?>
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="progress">
+
+            <br>
+
+            <div class="<?= $alert; ?>">
+                สถานะปัจจุบัน <?= $status; ?>
+            </div>
+
+            <?php
+
+            if ($status != 'Accept'):
+
+                ?>
+
+                <div class="pull-right">
+                    <a href="<?= $this->url->get('report/upload/'); ?><?= $params[0] ?>"
+                       class="btn btn-xs btn-success">Upload Report</a>
+                </div>
+
+
+                <br>
+                <br>
+
+                <?php
+
+            endif;
+
+            ?>
+
+            <br>
+
+
+            <table class="table" width="100%">
+                <tr class="success">
+                    <th><?= $selectProject->project_name; ?>'s Report</th>
+                </tr>
+                <tr>
+                    <?php
+
+                    if (!$foundReport):
+
+                        ?>
+                        <td>ไม่พบข้อมูล</td>
+                        <?php
+                    else:
+                        ?>
+                        <td>
+                            รายงานอัพเดตเวลา <?= $reportComments[count($reportComments) - 1]->create_date; ?>
+                            <div class="pull-right">
+                                <a href="<?= $url . 'report/download/' . $project->project_id; ?>">
+                                    Download
+                                </a>
+                            </div>
+                        </td>
+
+                        <?php
+
+                    endif;
+                    ?>
+                </tr>
+            </table>
+
+            <table class="table" width="100%">
+                <tr class="success">
+                    <th>Report's Logs</th>
+                </tr>
+
+                <?php
+
+                foreach ($reportComments as $reportComment):
+
+                    ?>
+                    <tr>
+                        <td>
+                            <?= $reportComment->create_date . ' ' . $reportComment->comment; ?>
+                        </td>
+                    </tr>
+                    <?php
+
+                endforeach;
+                ?>
+
+
+            </table>
+
+            <?php
+
+            if ($status == 'Pending'):
+
+                ?>
+                <form class="form-horizontal" method="post">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <h3>ผลการประเมิน</h3>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">ความคิดเห็น</label>
+
+                        <div class="col-sm-10">
+                            <?=
+                            \Phalcon\Tag::textField(array(
+                                'comment',
+                                'class' => 'form-control',
+                            ));
+                            ?>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button class="btn btn-sm btn-danger"
+                                    formaction="<?= $url . 'report/reject/' . $selectProject->project_id; ?>">
+                                ให้กลับไปแก้ไข
+                            </button>
+                            <button class="btn btn-sm btn-success"
+                                    formaction="<?= $url . 'report/accept/' . $selectProject->project_id; ?>">ยอมรับ
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <?php
+            endif;
+            ?>
+        </div>
+    </div>
+</div>
+</div>

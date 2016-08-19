@@ -1,0 +1,57 @@
+25/06/2016
+    - finish final report function
+12/06/2016
+    - send notification to mailqueue
+11/06/2016
+    - put notification with delay
+10/06/2016
+    - fix profile picture error
+08/06/2016
+    - fix profile picture
+    - rewrite code many of file
+    - fix sum permission bug
+28/05/2015
+    - required completed user profiel
+    - fix some minor bug
+18/05/2015
+    - add notification setting
+    - update bs
+    - minor bug fix
+18/01/2015
+    - add confirm when accept
+    - count project with current semester
+    - add or delete advisor from staff
+28/12/2014
+    - export progress to pdf success
+25/12/2014
+    - notification when new, reject project
+    - change evaluate progress step
+19/12/2014
+    - set enroll student form sis
+    - check enroll student when create project
+18/12/2014
+    - optimize manage coadvisor
+    - create excel for manage coadvisor completed
+    - manage coadvisor with excel success
+    - optimize with transaction (manage coadvisor)
+17/12/2014
+    - filter semester in manage coadvisor page
+    - create excel for manage coadvisor (not finished)
+16/12/2014
+    - optimize check quota class
+    - fix new project form
+    - fix user change semester callback
+30/11/2014
+    - use visual foreign key in semester model
+    - use visual foreign key in project model
+    - optimize download file from database
+    - exam menu semester select available
+    - exam change ui and optimize
+    - create score form with select semester
+    - project in advisor with semester
+29/11/2014
+    - add selected item list to admin menu
+    - add settings page
+    - summary topic with select semester
+    - add sw-hw to create project
+    - set current semester available

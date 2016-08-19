@@ -1,6 +1,10 @@
-*.sql
-backup
 app/config/config.php
 public/excel/export*
 .htaccess
-publice/.htaccess
+public/.htaccess
+public/profilePicture
+public/excel
+public/*.docx
+public/pdf
+app/library/composer/vendor
+app/library/composer/composer.lock

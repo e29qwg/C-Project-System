@@ -2,70 +2,112 @@
 
 class ScorePrepare extends \Phalcon\Mvc\Model
 {
+
+    /**
+     *
+     * @var integer
+     */
     public $score_id;
+
+    /**
+     *
+     * @var integer
+     */
     public $user_id;
+
+    /**
+     *
+     * @var integer
+     */
     public $project_id;
+
+    /**
+     *
+     * @var double
+     */
     public $report_advisor;
+
+    /**
+     *
+     * @var double
+     */
     public $present_advisor;
+
+    /**
+     *
+     * @var double
+     */
     public $report_coadvisor;
+
+    /**
+     *
+     * @var double
+     */
     public $present_coadvisor;
+
+    /**
+     *
+     * @var double
+     */
     public $progress_report;
+
+    /**
+     *
+     * @var string
+     */
     public $grade;
+
+    /**
+     *
+     * @var integer
+     */
     public $is_midterm;
+
+    /**
+     *
+     * @var string
+     */
     public $edit_date;
 
+    /**
+     * Initialize method for model.
+     */
     public function initialize()
     {
-        $this->useDynamicUpdate(true);
+        $this->belongsTo('user_id', 'User', 'id', array('alias' => 'User'));
+        $this->belongsTo('project_id', 'Project', 'project_id', array('alias' => 'Project'));
     }
 
-    public function beforeValidationOnUpdate()
+    /**
+     * Returns table name mapped in the model.
+     *
+     * @return string
+     */
+    public function getSource()
     {
-        $sum = $this->report_advisor;
-        $sum += $this->present_advisor;
-        $sum += $this->report_coadvisor;
-        $sum += $this->present_coadvisor;
-        $sum += $this->progress_report;
-
-        if ($this->is_midterm)
-            $sum = $sum/78.0*100;        
-        else
-            $sum = $sum/117.0*100;
-
-        $this->grade = $this->_calGrade($sum);
-
-        $this->edit_date = date('Y-m-d H:i:s');
+        return 'score_prepare';
     }
 
-    public function beforeValidationOnCreate()
+    /**
+     * Allows to query a set of records that match the specified conditions
+     *
+     * @param mixed $parameters
+     * @return ScorePrepare[]
+     */
+    public static function find($parameters = null)
     {
-        $this->report_advisor = 0;
-        $this->present_advisor = 0;
-        $this->report_coadvisor = 0;
-        $this->present_coadvisor = 0;
-        $this->progress_report = 0;
-        $this->grade = ' ';
-        $this->edit_date = date('Y-m-d H:i:s');
+        return parent::find($parameters);
     }
 
-    public function _calGrade($score)
+    /**
+     * Allows to query the first record that match the specified conditions
+     *
+     * @param mixed $parameters
+     * @return ScorePrepare
+     */
+    public static function findFirst($parameters = null)
     {
-        if ($score < 50)
-            return 'E';
-        if ($score < 55)
-            return 'D';
-        if ($score < 60)
-            return 'D+';
-        if ($score < 65)
-            return 'C';
-        if ($score < 70)
-            return 'C+';
-        if ($score < 75)
-            return 'B';
-        if ($score < 80)
-            return 'B+';
-        return 'A';
+        return parent::findFirst($parameters);
     }
+
 }
-
-?>

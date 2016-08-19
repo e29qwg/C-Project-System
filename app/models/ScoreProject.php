@@ -2,86 +2,142 @@
 
 class ScoreProject extends \Phalcon\Mvc\Model
 {
+
+    /**
+     *
+     * @var integer
+     */
     public $score_id;
+
+    /**
+     *
+     * @var integer
+     */
     public $user_id;
+
+    /**
+     *
+     * @var integer
+     */
     public $project_id;
+
+    /**
+     *
+     * @var double
+     */
     public $report_advisor;
+
+    /**
+     *
+     * @var double
+     */
     public $present_advisor;
+
+    /**
+     *
+     * @var double
+     */
     public $system_advisor;
+
+    /**
+     *
+     * @var double
+     */
     public $report_coadvisorI;
+
+    /**
+     *
+     * @var double
+     */
     public $present_coadvisorI;
+
+    /**
+     *
+     * @var double
+     */
     public $system_coadvisorI;
+
+    /**
+     *
+     * @var double
+     */
     public $report_coadvisorII;
+
+    /**
+     *
+     * @var double
+     */
     public $present_coadvisorII;
+
+    /**
+     *
+     * @var double
+     */
     public $system_coadvisorII;
+
+    /**
+     *
+     * @var double
+     */
     public $progress_report;
+
+    /**
+     *
+     * @var string
+     */
     public $grade;
+
+    /**
+     *
+     * @var integer
+     */
     public $is_midterm;
+
+    /**
+     *
+     * @var string
+     */
     public $edit_date;
 
+    /**
+     * Initialize method for model.
+     */
     public function initialize()
     {
-        $this->useDynamicUpdate(true);
+        $this->belongsTo('user_id', 'User', 'id', array('alias' => 'User'));
+        $this->belongsTo('project_id', 'Project', 'project_id', array('alias' => 'Project'));
     }
 
-    public function beforeValidationOnUpdate()
+    /**
+     * Returns table name mapped in the model.
+     *
+     * @return string
+     */
+    public function getSource()
     {
-        $sum = 0;
-        $sum += $this->report_advisor;
-        $sum += $this->present_advisor;
-        $sum += $this->system_advisor;
-        $sum += $this->report_coadvisorI;
-        $sum += $this->present_coadvisorI;
-        $sum += $this->system_coadvisorI;
-        $sum += $this->report_coadvisorII;
-        $sum += $this->present_coadvisorII;
-        $sum += $this->system_coadvisorII;
-        $sum += $this->progress_report;
-
-        if ($this->is_midterm)
-            $sum = $sum/115.0*100;
-        else
-            $sum = $sum/175.0*100;
-
-        $this->grade = $this->_calGrade($sum);
-
-        $this->edit_date = date('Y-m-d H:i:s');
+        return 'score_project';
     }
 
-    public function beforeValidationOnCreate()
+    /**
+     * Allows to query a set of records that match the specified conditions
+     *
+     * @param mixed $parameters
+     * @return ScoreProject[]
+     */
+    public static function find($parameters = null)
     {
-        $this->report_advisor = 0;
-        $this->present_advisor = 0;
-        $this->system_advisor = 0;
-        $this->report_coadvisorI = 0;
-        $this->present_coadvisorI = 0;
-        $this->system_coadvisorI = 0;
-        $this->report_coadvisorII = 0;
-        $this->present_coadvisorII = 0;
-        $this->system_coadvisorII = 0;
-        $this->progress_report = 0;
-        $this->grade = ' ';
-        $this->edit_date = date('Y-m-d H:i:s');
+        return parent::find($parameters);
     }
-    
-    public function _calGrade($score)
+
+    /**
+     * Allows to query the first record that match the specified conditions
+     *
+     * @param mixed $parameters
+     * @return ScoreProject
+     */
+    public static function findFirst($parameters = null)
     {
-        if ($score < 50)
-            return 'E';
-        if ($score < 55)
-            return 'D';
-        if ($score < 60)
-            return 'D+';
-        if ($score < 65)
-            return 'C';
-        if ($score < 70)
-            return 'C+';
-        if ($score < 75)
-            return 'B';
-        if ($score < 80)
-            return 'B+';
-        return 'A';
+        return parent::findFirst($parameters);
     }
+
 }
-
-?>

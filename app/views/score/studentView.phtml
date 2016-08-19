@@ -2,18 +2,18 @@
 
 echo $this->getContent();
 
+$this->flash->notice('กำลังปรับปรุงยังไม่สามารถใช้งานได้ในขณะนี้');
+return;
+
 $auth = $this->session->get('auth');
 $user_id = $auth['id'];
 $student = User::findFirst("id='$user_id'");
 
-$scorePrepares = ScorePrepare::find(array(
-    "user_id='$user_id'",
-    "order" => "project_id ASC, is_midterm DESC"
-));
+$scorePrepares = ScorePrepare::find(array("user_id='$user_id'", "order" => "project_id ASC, is_midterm DESC"));
 $scoreProjects = ScoreProject::find(array(
-    "conditions" => "user_id='$user_id'",
-    "order" => "project_id ASC, is_midterm DESC"
-));
+        "conditions" => "user_id='$user_id'",
+        "order" => "project_id ASC, is_midterm DESC"
+    ));
 
 ?>
 <table class="table" width="100%">
@@ -21,110 +21,110 @@ $scoreProjects = ScoreProject::find(array(
         <th>ชื่อโครงงาน</th>
         <th width="5%">เกรด</th>
     </tr>
-<?php
-foreach ($scorePrepares as $scorePrepare)
-{
-    $project = Project::findFirst("project_id='$scorePrepare->project_id'");
+    <?php
+    foreach ($scorePrepares as $scorePrepare)
+    {
+        $project = Project::findFirst("project_id='$scorePrepare->project_id'");
 
-    if ($scorePrepare->is_midterm)
-    {
-        $str = ' (midterm)';
-    }
-    else
-    {
-        $str = ' (final)';
-    }
-?>
-    <tr>
-        <td><?= $project->project_name.$str ?></td>
-        <td><?= $scorePrepare->grade ?></td>
-    </tr>
-<?php
-    if (!$scorePrepare->is_midterm)
-    {
-        $scores = ScorePrepare::find("project_id='$scorePrepare->project_id' AND user_id='$user_id'");
-        $allScore = 0;
-        $notshow = false;
-        
-        foreach ($scores as $score)
+        if ($scorePrepare->is_midterm)
         {
-            if (empty($score->grade))
-            {
-                $notshow = true;
-                break;
-            }
-            $allScore += $score->report_advisor;
-            $allScore += $score->present_advisor;
-            $allScore += $score->report_coadvisor;
-            $allScore += $score->present_coadvisor;
-            $allScore += $score->progress_report;
+            $str = ' (midterm)';
         }
-        
-        $allScore = $allScore/195.0*100;
-
+        else
+        {
+            $str = ' (final)';
+        }
         ?>
         <tr>
-            <td><?= $project->project_name.' (All)' ?></td>
-            <td><?= ($notshow)?$scorePrepare->_calGrade($allScore):'' ?></td>
+            <td><?= $project->project_name . $str ?></td>
+            <td><?= $scorePrepare->grade ?></td>
         </tr>
         <?php
-    }
-}
-
-//project score
-foreach ($scoreProjects as $scoreProject)
-{
-    $project = Project::findFirst("project_id='$scoreProject->project_id'");
-
-    if ($scoreProject->is_midterm)
-    {
-        $str = ' (midterm)';
-    }
-    else
-    {
-        $str = ' (final)';
-    }
-?>
-    <tr>
-        <td><?= $project->project_name.$str ?></td>
-        <td><?= $scoreProject->grade ?></td>
-    </tr>
-<?php
-    if (!$scoreProject->is_midterm)
-    {
-        $scores = ScoreProject::find("project_id='$scoreProject->project_id' AND user_id='$user_id'");
-        $allScore = 0;
-        $notshow = false;
-
-        foreach ($scores as $score)
+        if (!$scorePrepare->is_midterm)
         {
-            if (empty($score->grade))
-            {
-                $notshow = true;
-                break;
-            }
-            $allScore += $score->report_advisor;
-            $allScore += $score->present_advisor;
-            $allScore += $score->system_advisor;
-            $allScore += $score->report_coadvisorI;
-            $allScore += $score->present_coadvisorI;
-            $allScore += $score->system_coadvisorI;
-            $allScore += $score->report_coadvisorII;
-            $allScore += $score->present_coadvisorII;
-            $allScore += $score->system_coadvisorII;
-            $allScore += $score->progress_report;
-        }
-       
-        $allScore = $allScore/290.0*100;
+            $scores = ScorePrepare::find("project_id='$scorePrepare->project_id' AND user_id='$user_id'");
+            $allScore = 0;
+            $notshow = false;
 
+            foreach ($scores as $score)
+            {
+                if (empty($score->grade))
+                {
+                    $notshow = true;
+                    break;
+                }
+                $allScore += $score->report_advisor;
+                $allScore += $score->present_advisor;
+                $allScore += $score->report_coadvisor;
+                $allScore += $score->present_coadvisor;
+                $allScore += $score->progress_report;
+            }
+
+            $allScore = $allScore / 195.0 * 100;
+
+            ?>
+            <tr>
+                <td><?= $project->project_name . ' (All)' ?></td>
+                <td><?= ($notshow) ? $scorePrepare->_calGrade($allScore) : '' ?></td>
+            </tr>
+        <?php
+        }
+    }
+
+    //project score
+    foreach ($scoreProjects as $scoreProject)
+    {
+        $project = Project::findFirst("project_id='$scoreProject->project_id'");
+
+        if ($scoreProject->is_midterm)
+        {
+            $str = ' (midterm)';
+        }
+        else
+        {
+            $str = ' (final)';
+        }
         ?>
         <tr>
-            <td><?= $project->project_name.' (All)' ?></td>
-            <td><?= ($notshow)?$scoreProject->_calGrade($allScore):'' ?></td>
+            <td><?= $project->project_name . $str ?></td>
+            <td><?= $scoreProject->grade ?></td>
         </tr>
         <?php
+        if (!$scoreProject->is_midterm)
+        {
+            $scores = ScoreProject::find("project_id='$scoreProject->project_id' AND user_id='$user_id'");
+            $allScore = 0;
+            $notshow = false;
+
+            foreach ($scores as $score)
+            {
+                if (empty($score->grade))
+                {
+                    $notshow = true;
+                    break;
+                }
+                $allScore += $score->report_advisor;
+                $allScore += $score->present_advisor;
+                $allScore += $score->system_advisor;
+                $allScore += $score->report_coadvisorI;
+                $allScore += $score->present_coadvisorI;
+                $allScore += $score->system_coadvisorI;
+                $allScore += $score->report_coadvisorII;
+                $allScore += $score->present_coadvisorII;
+                $allScore += $score->system_coadvisorII;
+                $allScore += $score->progress_report;
+            }
+
+            $allScore = $allScore / 290.0 * 100;
+
+            ?>
+            <tr>
+                <td><?= $project->project_name . ' (All)' ?></td>
+                <td><?= ($notshow) ? $scoreProject->_calGrade($allScore) : '' ?></td>
+            </tr>
+        <?php
+        }
     }
-}
-?>
+    ?>
 </table>
 

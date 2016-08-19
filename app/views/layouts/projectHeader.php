@@ -1,7 +1,7 @@
 <?php
 $auth = $this->session->get('auth');
 $user_id = $auth['id'];
-    
+
 $params = $this->dispatcher->getParams();
 $action = $this->dispatcher->getActionName();
 $controller = $this->dispatcher->getControllerName();
@@ -11,53 +11,61 @@ if (!isset($params[0]))
     return $this->flash->error('Invalid request');
 }
 
-$project = Project::findFirst("project_id='$params[0]'");
-
 if ($auth['type'] == 'Student')
-{ ?>
-    <div class="col-sm-3">
-        <div class="list-group">
-			<a href="#" class="list-group-item active">Project</a>
-            <?php
-            
-            $projectMaps = ProjectMap::find("user_id='$user_id'");
+{
+include __DIR__ . '/../projects/me.phtml';
+?>
 
-            foreach ($projectMaps as $projectMap)
-            {
-                $project = Project::findFirst("project_id='$projectMap->project_id'");
-                echo '<a href="'.$this->url->get('projects/manage/').$project->project_id.'" class="list-group-item">';
-                echo $project->project_name;
-                echo '</a>';
-            }
-
-            ?>
-            </ul>
-        </div>
-    </div>
-    <div class="col-sm-9">
-    <?php 
-    } 
+<div class="col-sm-9">
+    <?php
+    }
     else
         echo '<div>';
     ?>
-        <ul class="nav nav-tabs" id="pTab">
-            <?= ($action == 'manage')?'<li class="active">':'<li>'; ?>
-            <a href="<?= $this->url->get('projects/manage/'); ?><?= $params[0] ?>">Project Setting</a></li>
-            <?= ($action == 'member' || $action == 'addmember')?'<li class="active">':'<li>'; ?>
-            <a href="<?= $this->url->get('projects/member/'); ?><?= $params[0] ?>">Member</a></li>
-            <?= ($controller == 'progress')?'<li class="active">':'<li>'; ?>
-            <?php 
-            if ($auth['type'] == 'Advisor') 
-            {
+    <ul class="nav nav-tabs" id="pTab">
+        <?= ($action == 'manage') ? '<li class="active">' : '<li>'; ?>
+        <a href="<?= $url . 'projects/manage/' . $params[0] ?>">Project Info</a></li>
+
+        <?= ($action == 'member' || $action == 'addmember') ? '<li class="active">' : '<li>'; ?>
+        <a href="<?= $url . 'projects/member/' . $params[0] ?>">Member</a></li>
+
+
+        <?php
+        if ($auth['type'] != 'Student')
+        {
             ?>
-                <a href="<?= $this->url->get('progress/evaluate/'); ?><?= $params[0] ?>">Progress</a></li>
+            <?= ($controller == 'progress') ? '<li class="active">' : '<li>'; ?>
+            <a href="<?= $url . 'progress/evaluate/' . $params[0] ?>">Progress</a></li>
+
             <?php
-            }
-            else
-            {
+
+            if ($selectProject->project_level_id == 3):
+
+                ?>
+
+                <?= ($controller == 'report') ? '<li class="active">' : '<li>'; ?>
+                <a href="<?= $url . 'report/evaluate/' . $params[0]; ?>">Final Report</a></li>
+
+                <?php
+            endif;
+        }
+        else
+        {
             ?>
-                <a href="<?= $this->url->get('progress/index/'); ?><?= $params[0] ?>">Progress</a></li>
+            <?= ($controller == 'progress') ? '<li class="active">' : '<li>'; ?>
+            <a href="<?= $url . 'progress/index/' . $params[0] ?>">Progress</a></li>
+
             <?php
-            }
-            ?>
-        </ul>
+
+            if ($selectProject->project_level_id == 3):
+                ?>
+
+                <?= ($controller == 'report') ? '<li class="active">' : '<li>'; ?>
+                <a href="<?= $url . 'report/index/' . $params[0]; ?>">Final Report</a></li>
+                <?php
+            endif;
+        }
+        ?>
+
+
+    </ul>

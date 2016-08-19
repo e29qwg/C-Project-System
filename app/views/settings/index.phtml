@@ -1,0 +1,59 @@
+<?php
+
+echo $this->getContent();
+$url = $this->url->get();
+
+?>
+
+<style>
+    th, .tcenter {
+        text-align: center;
+    }
+</style>
+
+
+<form method="post" action="<?= $this->url->get('settings/save'); ?>">
+    <table class="table">
+        <tr class="success">
+            <th>Name</th>
+            <th>Value</th>
+            <th>Option</th>
+        </tr>
+
+        <tr>
+            <td>ปีการศึกษาปัจจุบัน</td>
+            <td>
+                <?php
+
+                $this->tag->setDefault('current_semester', $currentSemester->semester_id);
+
+                echo $this->tag->selectStatic(array(
+                        'current_semester',
+                        $allSemesters,
+                        'required' => 'required',
+                        'class' => 'form-control'
+                    ));
+
+                ?>
+            </td>
+            <td class="tcenter">
+                <a href="<?= $url . 'settings/addSemester'; ?>" class="btn btn-sm btn-primary">เพิ่ม</a>
+                <a href="#" onclick="return deleteSemester();" class="btn btn-sm btn-danger">ลบ</a>
+            </td>
+        </tr>
+    </table>
+
+    <button type="submit" class="btn btn-sm btn-success pull-right">บันทึก</button>
+</form>
+
+<script>
+    function deleteSemester()
+    {
+        var rconfirm = confirm('ยืนยันการลบ');
+        if (rconfirm)
+        {
+            var currentSemester = $("#current_semester").val();
+            location = "<?= $url.'settings/deleteSemester/'?>" + currentSemester;
+        }
+    }
+</script>

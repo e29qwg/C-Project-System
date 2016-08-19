@@ -1,0 +1,105 @@
+<?php
+
+echo $this->getContent();
+
+?>
+
+<form class="form" method="post" action="<?= $this->url->get('admin/summaryTopic'); ?>">
+    <div class="col-sm-2">
+        <a href="<?= $this->url->get('admin/summaryTopicExport'); ?>" class="btn btn-primary btn-sm">Save Excel</a>
+    </div>
+    <div class="col-sm-3">
+        <?php
+
+        $this->tag->setDefault('semester', $semester);
+
+        echo $this->tag->selectStatic(array(
+            'semester',
+            $allSemesters,
+            'require' => 'require',
+            'class' => 'form-control'
+        ));
+
+        ?>
+    </div>
+    <div class="col-sm-2">
+        <button type="submit" class="btn btn-primary btn-fm">Filter</button>
+    </div>
+</form>
+
+<br>
+<br>
+
+<style>
+    th, td {
+        text-align: center;
+    }
+
+    .aleft {
+        text-align: left;
+    }
+</style>
+
+
+<table class="table table-bordered" width="100%">
+    <thead>
+    <tr class="success">
+        <th>ลำดับ</th>
+        <th>รหัสนักศึกษา</th>
+        <th>ระดับโครงงาน</th>
+        <th>ชื่อโครงงาน</th>
+        <th>อาจารย์ที่ปรึกษา</th>
+        <th>วันที่</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php
+
+    $count = 0;
+
+    foreach ($projects as $project)
+    {
+        if ($project->project_status != 'Accept')
+            $con = '(รอยืนยัน)';
+        else
+            $con = '';
+
+        $projectMaps = ProjectMap::find("project_id='$project->project_id' AND map_type='owner'");
+        $advisor = ProjectMap::findFirst("project_id='$project->project_id' AND map_type='advisor'");
+        $advisor = User::findFirst("id='$advisor->user_id'");
+
+        foreach ($projectMaps as $projectMap)
+        {
+            $user = User::findFirst("id='$projectMap->user_id'");
+            switch ($project->project_level_id)
+            {
+                case 1:
+                    $projectLevel = "pp";
+                    break;
+                case 2:
+                    $projectLevel = "1";
+                    break;
+                case 3:
+                    $projectLevel = "2";
+                    break;
+                default:
+                    $projectLevel = $project->project_level_id;
+            }
+
+            ?>
+            <tr>
+                <td><?= ++$count; ?></td>
+                <td class="aleft"><?= $user->user_id; ?></td>
+                <td><?= $projectLevel; ?></td>
+                <td class="aleft"><?= $project->project_name . $con; ?></td>
+                <td class="aleft"><?= $advisor->name; ?></td>
+                <td class="aleft"><?= $project->create_date; ?></td>
+
+            </tr>
+        <?php
+        }
+    }
+
+    ?>
+    </tbody>
+</table>

@@ -1,7 +1,13 @@
+<style>
+    .tooltip-inner {
+        white-space: pre-wrap;
+    }
+</style>
+
+
 <?php
 $auth = $this->session->get('auth');
 $user_id = $auth['id'];
-$projectMaps = ProjectMap::find("user_id='$user_id' AND map_type='advisor'");
 ?>
 
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -25,24 +31,72 @@ $projectMaps = ProjectMap::find("user_id='$user_id' AND map_type='advisor'");
     <div class="row">
         <div class="col-sm-3">
             <div class="list-group">
-                <a href="#" class="list-group-item active">
-					Prepare Project
-				</a>
                 <?php
-                    showProject($projectMaps, '1', $this);
+                $userCurrentSemester = UserCurrentSemester::findfirst(array(
+                    "conditions" => "user_id=:user_id:",
+                    "bind" => array("user_id" => $user_id)
+                ));
+
+                if (!$userCurrentSemester)
+                {
+                    $lCurrentSemester = Settings::findFirst("name='current_semester'");
+                    if (!$lCurrentSemester)
+                        return $this->settingError();
+                    $lCurrentSemester = $lCurrentSemester->value;
+                }
+                else
+                    $lCurrentSemester = $userCurrentSemester->semester_id;
+
+                $this->tag->setDefault('lsemester', $lCurrentSemester);
+
+                echo $this->tag->selectStatic(array(
+                    'lsemester',
+                    $allSemester,
+                    'required' => 'required',
+                    'class' => 'form-control'
+                ));
+
                 ?>
+            </div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#lsemester").change(function () {
+                        var semester_id = $("#lsemester").val();
+                        $.get('<?= $this->url->get('userSettings/setSemester/'); ?>' + semester_id, function () {
+                            location.replace('<?= $this->url->get() ?>');
+                        })
+                    });
+                });
+            </script>
+
+            <div class="list-group">
                 <a href="#" class="list-group-item active">
-					Project I
-				</a>
-                <?php
-                    showProject($projectMaps, '2', $this);
-                ?>
-                <a href="#" class="list-group-item active">
-	                Project II
+                    Prepare Project
+                    <span class="badge"><?= count($projects['pp']); ?></span>
                 </a>
-                <?php
-                    showProject($projectMaps, '3', $this);
-                ?>
+                <?php showProjects($projects['pp'], $project_id, $url); ?>
+                <a href="#" class="list-group-item active">
+                    Project I
+                    <span class="badge"><?= count($projects['p1']); ?></span>
+                </a>
+                <?php showProjects($projects['p1'], $project_id, $url); ?>
+                <a href="#" class="list-group-item active">
+                    Project II
+                    <span class="badge"><?= count($projects['p2']); ?></span>
+                </a>
+                <?php showProjects($projects['p2'], $project_id, $url); ?>
+            </div>
+            <div class="list-group">
+                <a href="#" class="list-group-item active">
+                    Menu
+                </a>
+                <a href="<?= $this->url->get(); ?>" class="list-group-item">
+                    Home
+                </a>
+                <a href="<?= $this->url->get('projects/proposed'); ?>" class="list-group-item">
+                    Proposed Project
+                </a>
             </div>
         </div>
         <div class="col-sm-9">
@@ -51,30 +105,68 @@ $projectMaps = ProjectMap::find("user_id='$user_id' AND map_type='advisor'");
     </div>
 </div>
 
-<?php
-function showProject($projectMaps, $level, $di)
-{
-    $current_semester = Semester::maximum(array("column" => "semester_id"));
-	
-	$found = false;
-    foreach ($projectMaps as $projectMap)
-    {
-        $project = Project::findFirst("project_id='$projectMap->project_id' AND project_level_id='$level' AND project_status='Accept' AND semester_id='$current_semester'");
-        if ($project)
-        {
-        ?>
-            <a class="list-group-item" href="<?= $di->url->get('projects/manage/');?><?= $project->project_id?>"><?= $project->project_name ?></a>
-        <?php
-			$found = true;
-        }
-    }
+<script>
+    $('.list-group-item').tooltip();
+</script>
 
-	if (!$found)
-	{
-		?>
-		<a class="list-group-item" href="#">ยังไม่ระบุ</a>
-		<?php
-	}
+<?php
+
+function showProjects($projects, $project_id, $url)
+{
+    if (!count($projects)):
+        ?>
+        <a class="list-group-item" href="#">ไม่พบข้อมูล</a>
+        <?php
+    else:
+        foreach ($projects as $project):
+            if ($project->project_id == $project_id)
+                $str = 'list-group-item-success';
+            else
+                $str = '';
+
+            $owner = '';
+
+            foreach ($project->ProjectMap as $projectMap)
+            {
+                if ($projectMap->map_type == 'owner')
+                    $owner .= $projectMap->User->title . $projectMap->User->name . ' (' . $projectMap->User->user_id . ')' . "\n";
+
+                $countNewProgress = 0;
+
+                foreach ($project->Progress as $progress)
+                {
+                    if ($progress->ProgressEvaluate->evaluation == 0)
+                        $countNewProgress++;
+                }
+            }
+
+            ?>
+
+            <a class="list-group-item <?= $str; ?>" href="<?= $url . 'progress/evaluate/' . $project->project_id; ?>"
+               data-toggle="tooltip" data-placement="bottom" title="<?= $owner; ?>">
+                <?= $project->project_name; ?>
+
+                <?php
+
+                if ($countNewProgress):
+
+                    ?>
+                    <span class="badge"><?= $countNewProgress; ?></span>
+                    <?php
+                endif;
+                ?>
+
+
+            </a>
+
+
+            <?php
+        endforeach;
+    endif;
 }
+
 ?>
 
+<script>
+    $('.list-group-item').tooltip();
+</script>

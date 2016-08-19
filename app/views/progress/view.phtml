@@ -1,64 +1,241 @@
 <?php echo $this->getContent(); ?>
-<?php 
-    $auth = $this->session->get('auth');
-    $user_id = $auth['id'];
+<?php
+$auth = $this->session->get('auth');
+$user_id = $auth['id'];
 ?>
 
+<?php
+
+\Phalcon\Tag::setDefault("evaluate", $progress->progressEvaluate->evaluation);
+
+$projectMap = ProjectMap::findFirst("project_id='$progress->project_id' AND user_id='$user_id'");
+
+if (!$projectMap)
+{
+    $this->flash->error('Access Denied.');
+    return;
+}
+?>
+
+<script type="text/javascript">
+
+    tinymce.init({
+        selector: "textarea#comment",
+        theme: "modern",
+        plugins: [
+            "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+            "searchreplace wordcount visualblocks visualchars code fullscreen",
+            "insertdatetime media nonbreaking save table contextmenu directionality",
+            "template paste textcolor"
+        ],
+        toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image print preview media | forecolor backcolor emoticons",
+        image_advtab: true,
+        autosave_ask_before_unload: false,
+        width: "100%",
+        height: "200px"
+    });
+</script>
+
 <div class="row">
-    <?php require(__DIR__.'/../layouts/projectHeader.php'); ?>
-        <div class="tab-content">
-            <div class="tab-pane fade in active" id="progress">
-                <br>
-                <br>
-                <div>
-                    <?php $progress = Progress::findFirst("progress_id='$params[1]'"); ?>
-                    <form>
-                        <div class="form-group">
-                            <h4>โครงงาน <?= $project->project_name ?></h4>
+    <?php require(__DIR__ . '/../layouts/projectHeader.php'); ?>
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="progress">
+
+            <div>
+                <form method="post">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <h4>โครงงาน <?= $progress->Project->project_name ?></h4>
                         </div>
-                        <div class="form-group">
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
                             <label for="progress_finish">งานที่ทำเสร็จเรียบร้อยแล้ว</label>
+
                             <p class="form-control-static"><?= $progress->progress_finish ?></p>
                         </div>
-                        <div class="form-group">
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
                             <label for="progress_working">งานที่อยู่ระหว่างดำเนินการ</label>
+
                             <p class="form-control-static"><?= $progress->progress_working ?></p>
                         </div>
-                        <div class="form-group">
+                    </div>
+                    <div class="form-group">.
+                        <div class="col-sm-12">
                             <label for="progress_todo">งานที่ยังไม่ได้ดำเนินการ</label>
+
                             <p class="form-control-static"><?= $progress->progress_todo ?></p>
                         </div>
-                        <div class="form-group">
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
                             <label for="progress_summary">สรุปผลการดำเนินการและปัญหาที่เกิดขึ้น</label>
+
                             <p class="form-control-static"><?= $progress->progress_summary ?></p>
                         </div>
-                        <div class="form-group">
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
                             <label for="progress_target">เป้าหมายที่วางไว้เพื่อประเมินความสำเร็จในครั้งต่อไป</label>
+
                             <p class="form-control-static"><?= $progress->progress_target ?></p>
                         </div>
-                        <div class="form-group">
-                            <label for="create_date">วันที่</label>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <label for="create_date">วันที่สร้าง</label>
+
                             <p class="form-control-static"><?= $progress->create_date ?></p>
                         </div>
+                    </div>
+                    <?php
+
+                    if (!empty($progress->edit_date))
+                    {
+                        ?>
                         <div class="form-group">
+                            <div class="col-sm-12">
+                                <label for="edit_date">วันที่แก้ไข</label>
+
+                                <p class="form-control-static"><?= $progress->edit_date; ?></p>
+                            </div>
+                        </div>
+                        <?php
+                    }
+
+                    ?>
+
+                    <?php
+
+
+                    if ($progress->progressEvaluate->evaluation != '0')
+                    {
+                        ?>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <label for="evaluate"> ผลการประเมิน </label>
+
+                                <div class="form-control-static">
+                                    <?php
+                                    switch ($progress->progressEvaluate->evaluation)
+                                    {
+                                        case 1:
+                                            echo 'ต้องปรับปรุง';
+                                            break;
+                                        case 2:
+                                            echo 'พอใช้';
+                                            break;
+                                        case 3:
+                                            echo 'ดี';
+                                            break;
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+
+                        <?php
+                    }
+
+
+                    //enabled evaluation for advisor
+                    if ($projectMap->map_type == 'advisor')
+                    {
+                        ?>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <h4>ประเมินความก้าวหน้า</h4>
+
+                                <div class="col-sm-3">
+                                    <?php
+                                    echo \Phalcon\Tag::selectStatic(array(
+                                        "evaluate",
+                                        array(
+                                            "0" => "เลือกผลการประเมิน",
+                                            "1" => "ต้องปรับปรุง",
+                                            "2" => "พอใช้",
+                                            "3" => "ดี"
+                                        ),
+                                        'class' => 'form-control'
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <h4>ความคิดเห็นอาจารย์ที่ปรึกษา</h4>
+                                <?php
+                                \Phalcon\Tag::setDefault('comment', $progress->progressEvaluate->comment);
+                                echo \Phalcon\Tag::textArea(array(
+                                    'comment'
+                                ));
+                                ?>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                    else
+                    {
+                        ?>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <h4>ความคิดเห็นอาจารย์ที่ปรึกษา</h4>
+
+                                <p class="form-control-static"><?= $progress->progressEvaluate->comment; ?></p>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="col-sm-12">
                             <?php
-                            if ($auth['type'] != 'Advisor')
+                            if ($auth['type'] == 'Student')
                             {
-                            ?>
-                                <a href="<?= $this->url->get('progress/index/'); ?><?= $params[0] ?>" class="btn btn-sm btn-primary">Back</a>
-                            <?php
+                                ?>
+                                <a href="<?= $this->url->get('progress/index/'); ?><?= $params[0] ?>"
+                                   class="btn btn-sm btn-warning">กลับ</a>
+                                <?php
                             }
                             else
                             {
-                            ?>
-                                <a href="<?= $this->url->get('progress/evaluate/'); ?><?= $params[0] ?>" class="btn btn-sm btn-primary">Back</a>
-                            <?php
+                                ?>
+                                <a href="<?= $this->url->get('progress/evaluate/'); ?><?= $params[0] ?>"
+                                   class="btn btn-sm btn-warning">กลับ</a>
+                                <?php
+                            }
+                            if (($projectMap->map_type == 'owner' && $progress->user_id == $user_id) || $projectMap->map_type == 'advisor')
+                            {
+                                ?>
+                                <a href="<?= $this->url->get('progress/edit/') . $params[0] . '/' . $progress->progress_id; ?>"
+                                   class="btn btn-sm btn-primary">แก้ไข</a>
+                                <?php
+                            }
+                            if ($projectMap->map_type == 'advisor')
+                            {
+                                ?>
+                                <button type="submit" class="btn btn-success btn-sm"
+                                        formaction="<?= $this->url->get('progress/doEvaluate'); ?>">ส่งผลการประเมิน
+                                </button>
+                                <?php
                             }
                             ?>
                         </div>
-                    </form>
-                </div>
+                    </div>
+
+                    <input type="hidden" name="progress_id" value="<?= $progress->progress_id ?>">
+                </form>
             </div>
         </div>
     </div>
+</div>
 </div>

@@ -1,5 +1,5 @@
 <?php echo $this->getContent() ?>
-<?php use \Phalcon\Tag as Tag; ?>
+<?php use Phalcon\Tag as Tag; ?>
 
 <?php
 
@@ -7,7 +7,7 @@
 $auth = $this->session->get('auth');
 $params = $this->dispatcher->getParams();
 if (empty($params[0]))
-	$params[0] = 0;
+    $params[0] = 0;
 $user = User::findFirst("id='$params[0]'");
 $projectMaps = ProjectMap::find("user_id='$params[0]'");
 
@@ -17,98 +17,203 @@ $projectMaps = ProjectMap::find("user_id='$params[0]'");
 <div class="row">
     <div class="col-sm-5">
         <?php
-            $imgSrc = "https://graph.facebook.com/";
-            $imgSrc .= $user->facebook;
-            $imgSrc .= "/picture?type=square&width=150&height=150";
+
+        if (file_exists(__DIR__.'/../../../public/profilePicture/'.$user->user_id.'.jpg'))
+            $imgSrc = $url.'profilePicture/'.$user->user_id.'.jpg';
+        else
+            $imgSrc = $url.'profilePicture/noface.jpg';
+
         ?>
 
-        <center>
-            <img src="<?=$imgSrc?>" class="bordered" width="150" height="150"><br><br>
-            <?php 
+        <div class="text-center">
+            <img src="<?= $imgSrc ?>" class="bordered" width="150" height="150"><br><br>
+            <?php
             if ($params[0] == $auth['id'])
             {
-            ?>
-                <a href="<?= $this->url->get('profile/updateProfile'); ?>" class="btn btn-success btn-sm">Edit Profile</a>
+                ?>
+                <a href="<?= $this->url->get('profile/updateProfile'); ?>" class="btn btn-success btn-sm">Edit
+                    Profile</a>
             <?php
             }
             ?>
-        </center>
+        </div>
     </div>
 
     <div class="col-sm-7">
-		<div class="row">
-        	<label class="col-sm-3">Name: </label>
-	        <div class="col-sm-9">
-	            <?=$user->title?> <?= $user->name ?>
-	        </div>
-		</div>
-		<div class="row">
-	        <label class="col-sm-3">Interesting: </label>
-			<div class="col-sm-9">
-    	        <?= $user->interesting ?> 
-	        </div>
-		</div>
-    
-	<?php
-	if ($user->type == 'Advisor')
- 	{
-	?>
-		<div class="row">
-			<label class="col-sm-3">Project Advisor: </label>
-			<div class="col-sm-9">
-    
-			<?php
-			foreach ($projectMaps as $projectMap)
-			{
-				if ($projectMap->map_type == 'advisor')
-				{
-					$project = Project::findFirst("project_id='$projectMap->project_id'");
-					echo $project->project_name;
-					echo '<br>';
-				}
-			}
-		?>
-			</div>
+        <div class="row">
+            <label class="col-sm-3">Name: </label>
+
+            <div class="col-sm-9">
+                <?= $user->title ?><?= $user->name ?>
+            </div>
         </div>
-		<div class="row">
-			<label class="col-sm-3">Project Coadvisor: </label>
-			<div class="col-sm-9">
-			<?php
-	
-			foreach ($projectMaps as $projectMap)
-			{
-				if ($projectMap->map_type == 'coadvisor')
-				{
-					$project = Project::findFirst("project_id='$projectMap->project_id'");
-					echo $project->project_name;
-					echo '<br>';
-				}
-			}
-			?>
-	        </div>
-		</div>
-    <?php
-    }
-    else
-    {
-    ?>
-		<div class="row">
-			<label class="col-sm-3">Project: </label>
-			<div class="col-sm-9">
-				<?php
-				foreach ($projectMaps as $projectMap)
-				{
-					if ($projectMap->map_type == 'owner')
-					{
-						$project = Project::findFirst("project_id='$projectMap->project_id'");
-						echo $project->project_name;
-						echo '<br>';
-					}
-				}
-				?>
-			</div>
-		</div>
-	<?php
- 	}
-	?>
+
+    
+        <div class="row">
+            <label class="col-sm-3">Tel: </label>
+
+            <div class="col-sm-9">
+                <?= $user->tel; ?>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <label class="col-sm-3">Facebook: </label>
+
+            <div class="col-sm-9">
+                <a href="https://www.facebook.com/<?= $user->facebook; ?>"
+                   target="_blank">https://www.facebook.com/<?= $user->facebook; ?></a>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3">Email: </label>
+
+            <div class="col-sm-9">
+                <a href="mailto:<?= $user->email; ?>"><?= $user->email; ?></a>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-3">Interesting: </label>
+
+            <div class="col-sm-9">
+                <?= $user->interesting ?>
+            </div>
+        </div>
+
+        <?php
+        if ($user->type == 'Advisor')
+        {
+            ?>
+            <div class="row">
+                <label class="col-sm-10">Project Advising: </label>
+            </div>
+            <div class="row">
+                <div class="col-sm-offset-3 col-sm-10">
+                    <?php
+                    foreach ($projectMaps as $projectMap)
+                    {
+                        if ($projectMap->map_type == 'advisor')
+                        {
+                            $project = Project::findFirst(array(
+                                "conditions" => "project_id=:project_id: AND project_status='Accept' AND semester_id=:semester_id:",
+                                "bind" => array(
+                                    "project_id" => $projectMap->project_id,
+                                    "semester_id" => $currentSemesterId
+                                )
+                            ));
+                            if (!$project)
+                                continue;
+                            echo $project->project_name;
+                            echo '<br>';
+                        }
+                    }
+                    ?>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-sm-10">Project Co-advising: </label>
+            </div>
+            <div class="row">
+                <div class="col-sm-offset-3 col-sm-10">
+                    <?php
+
+                    foreach ($projectMaps as $projectMap)
+                    {
+                        if ($projectMap->map_type == 'coadvisor')
+                        {
+                            $project = Project::findFirst(array(
+                                "conditions" => "project_id=:project_id: AND project_status='Accept' AND semester_id=:semester_id:",
+                                "bind" => array(
+                                    "project_id" => $projectMap->project_id,
+                                    "semester_id" => $currentSemesterId
+                                )
+                            ));
+                            if (!$project)
+                                continue;
+                            echo $project->project_name;
+                            echo '<br>';
+                        }
+                    }
+                    ?>
+                </div>
+            </div>
+
+            <a href="#" id="showhide">Show/Hide project all semester</a><br><br>
+
+            <div class="panel panel-info" id="allproject">
+                <div class="panel panel-body">
+                    <?php
+
+                    $count = 0;
+
+                    foreach ($allSemesters as $allSemester)
+                    {
+                        ?>
+                        <h3><?= $allSemester; ?></h3>
+                        <?php
+                        foreach ($projectMaps as $projectMap)
+                        {
+                            if ($projectMap->map_type == 'advisor')
+                            {
+                                $project = Project::findFirst(array(
+                                    "conditions" => "project_id=:project_id: AND project_status='Accept' AND semester_id=:semester_id:",
+                                    "bind" => array(
+                                        "project_id" => $projectMap->project_id,
+                                        "semester_id" => $allSemesterIds[$count]
+                                    )
+                                ));
+                                if (!$project)
+                                    continue;
+                                echo $project->project_name;
+                                echo '<br>';
+                            }
+                        }
+                        ?>
+                        <?php
+                        $count++;
+                    }
+
+                    ?>
+                </div>
+            </div>
+
+            <script>
+                $(document).ready(function () {
+                    $('#allproject').hide();
+
+                    $("#showhide").click(function () {
+                        $('#allproject').toggle(1000);
+                    });
+                });
+            </script>
+
+        <?php
+        }
+        else
+        {
+        ?>
+            <div class="row">
+                <label class="col-sm-3">Project: </label>
+
+                <div class="col-sm-9">
+                    <?php
+                    foreach ($projectMaps as $projectMap)
+                    {
+                        if ($projectMap->map_type == 'owner')
+                        {
+                            $project = Project::findFirst("project_id='$projectMap->project_id'");
+                            echo $project->project_name;
+                            echo '<br>';
+                        }
+                    }
+                    ?>
+                </div>
+            </div>
+        <?php
+        }
+        ?>
+    </div>
 </div>

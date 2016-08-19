@@ -10,7 +10,7 @@ class IndexController extends ControllerBase
     }
 
     public function indexAction()
- 	{
+    {
         $auth = $this->session->get('auth');
 
         if ($auth['type'] == 'Student')

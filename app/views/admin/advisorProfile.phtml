@@ -1,0 +1,40 @@
+<?php echo $this->getContent() ?>
+<?php use Phalcon\Tag as Tag; ?>
+
+<?php
+
+$auth = $this->session->get('auth');
+$user_id = $auth['id'];
+$user = User::findFirst("id='$user_id'");
+
+if ($this->request->isPost())
+{
+    $advisor_id = $this->request->getPost('advisor');
+    $advisor = User::findFirst("id='$advisor_id'");
+    if ($advisor)
+    {
+        $auth['id'] = $advisor->id;
+        $auth['user_id'] = $advisor->user_id;
+        $auth['title'] = $advisor->title;
+        $auth['name'] = $advisor->name;
+        $auth['view'] = $advisor->type;
+        $auth['facebook'] = $advisor->facebook;
+        $this->session->set('auth', $auth);
+        $this->response->redirect('index');
+    }
+}
+else
+{
+    $advisors = User::find("type='Advisor' OR type='Admin'");
+    ?>
+    <form method="post" action="<?= $this->url->get('admin/advisorProfile'); ?>">
+        <div class="col-sm-5">
+            <?=
+            $this->tag->select(array('advisor', $advisors, 'class' => 'form-control', 'using' => array('id', 'name')));
+            ?>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">เปลี่ยน</button>
+    </form>
+<?php
+}
+

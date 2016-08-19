@@ -7,6 +7,20 @@ class ProjectsController extends ControllerBase
         $this->view->setTemplateAfter('main');
         Phalcon\Tag::setTitle('ระบบจัดการโครงงานนักศึกษา');
         parent::initialize();
+
+        $this->loadOwnerProject();
+
+        if ($this->auth['type'] != 'Student')
+            $this->loadAdvisorProject();
+
+        $project_id = $this->dispatcher->getParam(0);
+
+        $selectProject = Project::findFirst(array(
+            "conditions" => "project_id=:project_id:",
+            "bind" => array("project_id" => $project_id)
+        ));
+
+        $this->view->selectProject = $selectProject;
     }
 
     //confirm project
@@ -15,7 +29,25 @@ class ProjectsController extends ControllerBase
         $params = $this->dispatcher->getParams();
         $auth = $this->session->get('auth');
         $user_id = $auth['id'];
-        $user = User::findFirst("id='$user_id'");
+
+        $user = User::findFirst(array(
+            "conditions" => "id=:user_id:",
+            "bind" => array("user_id" => $user_id)
+        ));
+
+        $quota = Quota::findFirst(array(
+            "conditions" => "advisor_id=:user_id:",
+            "bind" => array("user_id" => $user_id)
+        ));
+
+        if ($this->CheckQuota->acceptProject($user_id, $this->view->getVar('currentSemesterId')) + 1 > $quota->quota_pp)
+        {
+            $this->flash->error('ไม่สามารถเพิ่มได้เนื่องจากเกินจำนวนที่อาจารย์ที่ปรึกษาจะรับได้');
+            if ($auth['type'] != 'Student')
+                return $this->forward('index');
+
+            return $this->forward('projects/newProject');
+        }
 
         if (empty($params[0]))
         {
@@ -23,30 +55,99 @@ class ProjectsController extends ControllerBase
             return $this->forward('projects/proposed');
         }
 
-        if (!$this->_checkPermission($params[0]))
-            return false;
-
-        $project = Project::findFirst("project_id='$params[0]' AND project_status='Pending'");
-
-        if ($project)
+        if (!$this->permission->checkPermission($this->auth['id'], $params[0]))
         {
-            //save log
-            $projectMaps = ProjectMap::find("project_id='$params[0]'");
-            
-            foreach ($projectMaps as $projectMap)
+            $this->flashSession->error('Access Denied');
+            return $this->_redirectBack();
+        }
+
+        $transaction = $this->transactionManager->get();
+
+        try
+        {
+            $project = Project::findFirst(array(
+                "conditions" => "project_id=:project_id: AND project_status='Pending'",
+                "bind" => array("project_id" => $params[0])
+            ));
+
+            $project->setTransaction($transaction);
+
+            if ($project)
             {
-                $log = new Log();
-                $log->user_id = $projectMap->user_id;
-                $log->description = $user->name.' ยืนยันโครงงาน '.$project->project_name; 
-                $log->save();
+                //save log
+                $projectMaps = ProjectMap::find(array(
+                    "conditions" => "project_id=:project_id: AND (map_type='advisor' OR map_type='owner')",
+                    "bind" => array("project_id" => $params[0])
+                ));
+
+                $emails = array();
+
+                foreach ($projectMaps as $projectMap)
+                {
+                    $log = new Log();
+                    $log->setTransaction($transaction);
+                    $log->user_id = $projectMap->user_id;
+
+                    if ($projectMap->map_type == 'advisor')
+                        $log->description = $user->name . ' ยืนยันโครงงาน ' . $project->project_name;
+                    else
+                        $log->description = 'โครงงาน ' . $project->project_name . '<font style="color: red"> ได้รับการยืนยันแล้ว</font>';
+
+                    if (!$log->save())
+                        $transaction->rollback('Error when notification');
+
+                    //send email to owner
+                    if ($projectMap->map_type == 'owner')
+                    {
+                        $owner = User::findFirst(array(
+                            "conditions" => "id=:user_id:",
+                            "bind" => array("user_id" => $projectMap->user_id)
+                        ));
+
+                        if (!$owner)
+                            $transaction->rollback('Error when send email');
+
+                        //add event log
+                        $eventLog = new EventLog();
+                        $eventLog->username = $owner->user_id;
+                        $eventLog->event = 'success accept project';
+                        $eventLog->system = 'project';
+                        $eventLog->save();
+
+                        if (!empty($owner->email) && $owner->id != $auth['id'] && $this->wantNotification($owner->id, 'project_update'))
+                        {
+                            $data = array();
+                            $data['to'] = $owner->email;
+                            $data['subject'] = 'โครงงาน ' . $project->project_name . ' ได้รับการยืนยัน';
+                            $data['mes'] = htmlspecialchars($user->name . ' ยืนยันโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
+
+
+                            array_push($emails, $data);
+                        }
+                    }
+                }
+
+
+                //update project
+                $project->project_status = 'Accept';
+                if (!$project->save())
+                    $transaction->rollback('Error when update project');
+
+                $transaction->commit();
+
+                $this->_createScore($projectMaps, $project);
+                $this->_updateWorkLoad($user, $project, NULL);
+
+                foreach ($emails as $email)
+                {
+                    $this->sendMail($email['subject'], $email['mes'], $email['to']);
+                }
             }
-
-            //update project
-            $project->project_status = 'Accept';
-            $project->save();
-
-            $this->_createScore($projectMaps, $project);
-            $this->_updateWorkLoad($user, $project, NULL);
+        }
+        catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
+        {
+            $this->flash->error('Transaction error: ' . $e->getMessage());
+            return $this->forward('projects/proposed');
         }
 
         $this->flash->success('Accept Success');
@@ -64,7 +165,7 @@ class ProjectsController extends ControllerBase
             if ($projectMap->map_type != "owner")
                 continue;
 
-            for ($i = 0 ; $i < 2 ; $i++)
+            for ($i = 0; $i < 2; $i++)
             {
                 if ($project->project_level_id == 1)
                     $score = new ScorePrepare();
@@ -72,10 +173,10 @@ class ProjectsController extends ControllerBase
                     $score = new ScoreProject();
                 $score->user_id = $projectMap->user_id;
                 $score->project_id = $project->project_id;
-				if ($i == 0)
-					$score->is_midterm = 1;
-				else
-					$score->is_midterm = 0;
+                if ($i == 0)
+                    $score->is_midterm = 1;
+                else
+                    $score->is_midterm = 0;
                 $score->save();
             }
         }
@@ -91,15 +192,18 @@ class ProjectsController extends ControllerBase
         $projectLevel = ProjectLevel::findFirst("project_level_id='$project->project_level_id'");
         $ncoadvisor = $projectLevel->coadvisor;
 
-		if ($project->project_level_id > 1)
-			$ncoadvisor = 0;
+        if ($project->project_level_id > 1)
+            $ncoadvisor = 0;
+
+        //TODO
+        $ncoadvisor = 0;
 
         $coadvisors = User::find(array(
             "conditions" => "advisor_group='$advisor->advisor_group' AND id!='$advisor->id' AND type='Advisor'",
             "limit" => $ncoadvisor,
             "order" => "work_load ASC"
         ));
-        
+
         foreach ($coadvisors as $coadvisor)
         {
             //add to map
@@ -107,73 +211,166 @@ class ProjectsController extends ControllerBase
             $projectMap->user_id = $coadvisor->id;
             $projectMap->project_id = $project->project_id;
             $projectMap->map_type = 'coadvisor';
-
             $projectMap->save();
-            $coadvisor->work_load = $coadvisor->work_load+1;
-            $coadvisor->save();
         }
-        
-        //increse work_load
-        $advisor->work_load = $advisor->work_load + 1;
-        $advisor->save();
+
+        $this->_updateWork();
     }
 
+    private function _updateWork()
+    {
+        $works = User::find("type='Advisor'");
+        $currentSemesterId = $this->view->getVar('currentSemesterId');
+        foreach ($works as $work)
+        {
+            $work->work_load = $this->CheckQuota->getLoad($work->id, $currentSemesterId);
+            $work->save();
+        }
+    }
+
+    //show propose page
     //reject project
+
     public function rejectAction()
     {
-        $params = $this->dispatcher->getParams();
         $auth = $this->session->get('auth');
         $user_id = $auth['id'];
-        $user = User::findFirst("id='$user_id'");
 
-        if (empty($params[0]))
+        $project_id = $this->request->getPost('project_id');
+        $reason = $this->request->getPost('reason');
+
+        $user = User::findFirst(array(
+            "conditions" => "id=:user_id:",
+            "bind" => array("user_id" => $user_id)
+        ));
+
+        if (empty($project_id))
         {
             $this->flash->error('Invalid Request');
             return $this->forward('projects/proposed');
         }
 
-        if (!$this->_checkPermission($params[0]))
-            return false;
-
-        $project = Project::findFirst("project_id='$params[0]'");
-
-        if ($project)
+        if (!$this->permission->checkPermission($this->auth['id'], $project_id))
         {
-            //check project accepted
-            if ($project->project_status == 'Accept' && $auth['type'] != 'Advisor')
+            $this->flashSession->error('Access Denied');
+            return $this->_redirectBack();
+        }
+
+        $transaction = $this->transactionManager->get();
+        $emails = array();
+
+        try
+        {
+            $project = Project::findFirst(array(
+                "conditions" => "project_id=:project_id:",
+                "bind" => array("project_id" => $project_id)
+            ));
+
+            $project->setTransaction($transaction);
+
+            if ($project)
             {
-                $this->flash->error('Access Denied: Contact your advisor');
-                return $this->forward('index');
-            }
-            
-            //save log
-            $projectMaps = ProjectMap::find("project_id='$params[0]'");
-            
-            foreach ($projectMaps as $projectMap)
-            {
-                $log = new Log();
-                $log->user_id = $projectMap->user_id;
-                $log->description = $user->name.' ปฏิเสธโครงงาน '.$project->project_name; 
-                $log->save();
+                //check project accepted
+                if ($project->project_status == 'Accept' && $auth['type'] != 'Advisor')
+                {
+                    $this->flash->error('Access Denied: Contact your advisor');
+                    return $this->forward('index');
+                }
+
+                //save log
+                $projectMaps = ProjectMap::find(array(
+                    "conditions" => "project_id=:project_id: AND (map_type='owner' OR map_type='advisor')",
+                    "bind" => array("project_id" => $project_id)
+                ));
+
+
+                foreach ($projectMaps as $projectMap)
+                {
+                    $log = new Log();
+                    $log->setTransaction($transaction);
+                    $log->user_id = $projectMap->user_id;
+                    $log->description = $user->name . ' ปฏิเสธโครงงาน ' . $project->project_name;
+
+                    if (!empty($reason))
+                        $log->description .= ' (' . $reason . ')';
+
+                    if (!$log->save())
+                    {
+                        $transaction->rollback('Error when save log');
+                    }
+
+                    //send email to owner
+                    if ($projectMap->map_type == 'owner')
+                    {
+                        $owner = User::findFirst(array(
+                            "conditions" => "id=:user_id:",
+                            "bind" => array("user_id" => $projectMap->user_id)
+                        ));
+
+                        if (!$owner)
+                        {
+                            $transaction->rollback('User not found');
+                        }
+
+                        //add event log
+                        $eventLog = new EventLog();
+                        $eventLog->username = $owner->user_id;
+                        $eventLog->event = 'reject reject project';
+                        $eventLog->system = 'project';
+                        $eventLog->save();
+
+                        if (!empty($owner->email) && $owner->id != $auth['id'] && $this->wantNotification($owner->id, 'project_update'))
+                        {
+                            $data = array();
+                            $data['to'] = $owner->email;
+                            $data['subject'] = 'โครงงานถูกปฏิเสธ';
+                            $data['mes'] = htmlspecialchars($user->name . ' ปฏิเสธโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
+
+                            if (!empty($reason))
+                                $data['mes'] .= htmlspecialchars("\n" . $reason);
+
+                            array_push($emails, $data);
+                        }
+                    }
+                }
             }
 
             //delete project
-            $project->delete();
+            if (!$project->delete())
+            {
+                $transaction->rollback("Error when save project");
+            }
+
+            $transaction->commit();
+
+            foreach ($emails as $email)
+            {
+                $this->sendMail($email['subject'], $email['mes'], $email['to']);
+            }
+
+        }
+        catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
+        {
+            $this->flash->error('Transaction failure: ' . $e->getMessage());
+            return $this->forward('project/proposed');
         }
 
-        $this->flash->success('Reject Success');
-        return $this->forward('projects/proposed');
+        $this->_updateWork();
+
+        $this->flashSession->success('Reject Success');
+        return $this->response->redirect('projects/proposed');
     }
 
-    //show propose page
+    //delete member from current project
+
     public function proposedAction()
     {
     }
 
-    //delete member from current project
+    //add project member
+
     public function deletememberAction()
     {
-        $request = $this->request;
         $auth = $this->session->get('auth');
         $params = $this->dispatcher->getParams();
         $user_id = $auth['id'];
@@ -186,14 +383,17 @@ class ProjectsController extends ControllerBase
 
         $project = Project::findFirst("project_id='$params[0]'");
 
-        if (!$this->_checkPermission($project->project_id))
-            return false;
-            
+        if (!$this->permission->checkPermission($this->auth['id'], $project->project_id))
+        {
+            $this->flashSession->error('Access Denied');
+            return $this->_redirectBack();
+        }
+
         $logUsers = ProjectMap::find("project_id='$params[0]'");
 
         //check user permission
         $projectMap = ProjectMap::findFirst("project_map_id='$params[1]'");
-        
+
         if (!$projectMap || !$project)
         {
             $this->flash->error('Access Denied');
@@ -215,21 +415,22 @@ class ProjectsController extends ControllerBase
         $projectMap = ProjectMap::findFirst("project_map_id='$params[1]'");
         $user = User::findFirst("id='$projectMap->user_id'");
         $projectMap->delete();
-        
+
         //log
-        foreach($logUsers as $logUser)
+        foreach ($logUsers as $logUser)
         {
             $log = new Log();
             $log->user_id = $logUser->user_id;
-            $log->description = $auth['name'].' ได้ลบ '.$user->name.' ออกจากโครงงาน '.$project->project_name;
+            $log->description = $auth['name'] . ' ได้ลบ ' . $user->name . ' ออกจากโครงงาน ' . $project->project_name;
             $log->save();
         }
-        
+
         $this->flashSession->success('Delete member success');
-        return $this->response->redirect('projects/member/'.$params[0]);
+        return $this->response->redirect('projects/member/' . $params[0]);
     }
-    
-    //add project member
+
+    //show add member form
+
     public function doAddMemberAction()
     {
         $request = $this->request;
@@ -242,11 +443,7 @@ class ProjectsController extends ControllerBase
         if (empty($project_id) || empty($member_id))
         {
             $this->flash->error('User not found');
-            return $this->dispatcher->forward(array(
-                'controller' => 'projects',
-                'action' => 'addmember',
-                'params' => array($project_id)
-            ));
+            return $this->pForward('projects', 'addmember', array($project_id));
         }
 
         //check users exists
@@ -255,13 +452,9 @@ class ProjectsController extends ControllerBase
         if (!$user)
         {
             $this->flash->error('User not found');
-            return $this->dispatcher->forward(array(
-                'controller' => 'projects',
-                'action' => 'addmember',
-                'params' => array($project_id)
-            ));
+            return $this->pForward('projects', 'addmember', array($project_id));
         }
-                
+
         //check project exists
         $project = Project::findFirst("project_id='$project_id'");
         if (!$project)
@@ -273,13 +466,9 @@ class ProjectsController extends ControllerBase
         if ($project->project_status == 'Accept')
         {
             $this->flash->error('Access denied: Project already accepted');
-            return $this->dispatcher->forward(array(
-                'controller' => 'projects',
-                'action' => 'addmember',
-                'params' => array($project_id)
-            ));
+            return $this->pForward('projects', 'addmember', array($project_id));
         }
-        
+
         //check exists new member project
         $projectMaps = ProjectMap::find("user_id='$member_id' AND map_type='owner'");
         $member_project_ids = array();
@@ -289,27 +478,23 @@ class ProjectsController extends ControllerBase
         }
 
         if (count($member_project_ids))
-            $records = $this->modelsManager->createBuilder()
-                ->from(array("Project"))
-                ->inWhere("Project.project_id", $member_project_ids)
-                ->andWhere("Project.semester_id='$project->semester_id'")
-                ->getQuery()
-                ->execute();
+        {
+            $records = $this->modelsManager->createBuilder();
+            $records->from(array("Project"));
+            $records->inWhere("Project.project_id", $member_project_ids);
+            $records->andWhere("Project.semester_id='$project->semester_id'");
+            $records = $records->getQuery()->execute();
+        }
 
-        
         if (count($member_project_ids))
         {
             foreach ($records as $record)
             {
                 $this->flash->error('User has only one project');
-                return $this->dispatcher->forward(array(
-                    'controller' => 'projects',
-                    'action' => 'addmember',
-                    'params' => array($project_id)
-                ));
+                return $this->pForward('projects', 'addmember', array($project_id));
             }
         }
-        
+
         //check owner
         $projectMap = ProjectMap::findFirst("project_id='$project_id' AND user_id='$user_id'");
 
@@ -319,7 +504,7 @@ class ProjectsController extends ControllerBase
             return $this->forward('projects/me');
         }
 
-        //check exists owner in current project 
+        //check exists owner in current project
         $projectMap = ProjectMap::findFirst("project_id='$project_id' AND user_id='$member_id'");
 
         if (!$projectMap)
@@ -337,49 +522,71 @@ class ProjectsController extends ControllerBase
             {
                 $log = new Log();
                 $log->user_id = $projectMap->user_id;
-                $log->description = $auth['name'].' ได้เพิ่ม '.$user->name.' ในโครงงาน '.$project->project_name;
+                $log->description = $auth['name'] . ' ได้เพิ่ม ' . $user->name . ' ในโครงงาน ' . $project->project_name;
                 $log->save();
             }
         }
-        
-        $this->flash->success('Add member success');
-        return $this->dispatcher->forward(array(
-            'controller' => 'projects',
-            'action' => 'member',
-            'params' => array($project_id)
-        ));
-    }
 
-    //show add member form
-    public function addmemberAction()
-    {
-        $params = $this->dispatcher->getParams();
-        $this->_checkPermission($params[0]);
+        $this->flash->success('Add member success');
+        return $this->pForward('projects', 'member', array($project_id));
     }
 
     //show member list in current project
-    public function memberAction()
+
+    public function addmemberAction()
     {
         $params = $this->dispatcher->getParams();
-        $this->_checkPermission($params[0]);
+        if (!$this->permission->checkPermission($this->auth['id'], $params[0]))
+        {
+            $this->flashSession->error('Access Denied');
+            return $this->_redirectBack();
+        }
     }
 
     //delete project
+
+    public function memberAction()
+    {
+        $params = $this->dispatcher->getParams();
+        if (!$this->permission->checkPermission($this->auth['id'], $params[0]))
+        {
+            $this->flashSession->error('Access Denied');
+            return $this->_redirectBack();
+        }
+
+        $this->loadOwnerProject();
+
+        if ($this->auth['type'] != 'Student')
+            $this->loadAdvisorProject();
+    }
+
+    //show edit form
+
     public function deleteAction()
     {
         $params = $this->dispatcher->getParams();
 
         $auth = $this->session->get('auth');
         $user_id = $auth['id'];
+        $pid = $this->request->getPost('pid');
+        $comment = $this->request->getPost('comment');
 
-        if (empty($params[0]))
+        if (empty($pid))
         {
-            $this->flash->error('Invalid Request');
-            return $this->forward('projects/me');
+            if (!empty($params[0]))
+                $pid = $params[0];
+            else
+            {
+                $this->flash->error('Invalid Request');
+                return $this->forward('projects/me');
+            }
         }
 
         //check owner
-        $projectMap = ProjectMap::findFirst("project_id='$params[0]' AND user_id='$user_id'");
+        $projectMap = ProjectMap::findFirst(array(
+            "conditions" => "project_id=:project_id: AND user_id=:user_id:",
+            "bind" => array("project_id" => $pid, "user_id" => $user_id)
+        ));
 
         if (!$projectMap)
         {
@@ -387,51 +594,79 @@ class ProjectsController extends ControllerBase
             return $this->forward('projects/me');
         }
 
-        $project = Project::findFirst("project_id='$params[0]'");
-        
-        if ($project->project_status == "Accept" && $auth['type'] != 'Advisor')
+        $project = Project::findFirst(array(
+            "conditions" => "project_id=:project_id:",
+            "bind" => array("project_id" => $pid)
+        ));
+
+        if ($project->project_status == "Accept" && $auth['type'] != 'Advisor' && $auth['type'] != 'Admin')
         {
             $this->flash->error('Access Denied: Contact your advisor');
-            return $this->forward('projects/me');
+            return;
         }
-        
-        $projectMaps = ProjectMap::find("project_id='$project->project_id'"); 
+
+        $projectMaps = ProjectMap::find(array(
+            "conditions" => "project_id=:project_id:",
+            "bind" => array("project_id" => $project->project_id)
+        ));
 
         foreach ($projectMaps as $projectMap)
         {
-            if ($project->project_status == 'Accept' && $projectMap->map_type != 'owner' && $project->semester_id == Semester::maximum(array("column" => "semester_id")))
-            {
-                $advisor = User::findFirst("id='$projectMap->user_id'");
-                $advisor->work_load = $advisor->work_load - 1;
-                $advisor->save();
-            }
             $log = new Log();
             $log->user_id = $projectMap->user_id;
-            $log->description = $auth['name'].' ได้ลบโครงงาน '.$project->project_name;
+            $log->description = $auth['name'] . ' ได้ลบโครงงาน ' . $project->project_name;
+            if (!empty($comment))
+                $log->description .= $log->description . ' ( ' . $comment . ' ) ';
             $log->save();
+
+            //send email notification to advisor or owner
+            if (($projectMap->map_type == 'owner' || $projectMap->map_type == 'advisor') && $projectMap->user_id != $user_id)
+            {
+                $user = User::findFirst(array(
+                    "conditions" => "id=:user_id:",
+                    "bind" => array("user_id" => $projectMap->user_id)
+                ));
+
+                if ($user)
+                {
+                    if (!empty($user->email) && $user->id != $auth['id'] && $this->wantNotification($user->id, 'project_update'))
+                    {
+                        $to = $user->email;
+                        $subject = 'โครงงาน ' . $project->project_name . ' ถูกลบ';
+                        $mes = htmlspecialchars($auth['name'] . ' ได้ลบโครงงาน ' . $project->project_name . ' เวลา ' . date('d-m-Y H:i:s'));
+                        $this->sendMail($subject, $mes, $to);
+                    }
+                }
+            }
         }
 
         $project->delete();
-        
+        $this->_updateWork();
+
         $this->flash->success('Cancel success');
         return $this->forward('index');
     }
 
-    //show edit form
+    //show project for user
     public function editSettingAction()
     {
         $request = $this->request;
         $project_id = $request->getPost('id');
-        $this->_checkPermission($project_id);
 
-        $project_name = $request->getPost('project_name');
+        if (!$this->permission->checkPermission($this->auth['id'], $project_id))
+        {
+            $this->flashSession->error('Access Denied');
+            return $this->_redirectBack();
+        }
+
+        $project_name = $request->getPost('name');
         $project_type = $request->getPost('project_type');
         $description = $request->getPost('description');
 
         if (empty($project_name) || empty($project_type))
         {
             $this->flashSession->error('Important data is missing.');
-            return $this->response->redirect('projects/manage/'.$project_id);
+            return $this->response->redirect('projects/manage/' . $project_id);
         }
 
         $project = Project::findFirst("project_id='$project_id'");
@@ -441,130 +676,205 @@ class ProjectsController extends ControllerBase
         $project->save();
 
         $this->flashSession->success('Edit Success');
-        return $this->response->redirect('projects/manage/'.$project_id);
+        return $this->response->redirect('projects/manage/' . $project_id);
     }
 
-    //show project for user
     public function manageAction()
     {
+        $this->loadOwnerProject();
         $params = $this->dispatcher->getParams();
 
-        $this->_checkPermission($params[0]);
-    }
+        $project_id = $params[0];
 
-    public function meAction()
-    {
+        if (!$this->permission->checkPermission($this->auth['id'], $project_id))
+        {
+            $this->flashSession->error('Access Denied');
+            return $this->_redirectBack();
+        }
+
+        if ($this->auth['type'] != 'Student')
+            $this->loadAdvisorProject();
     }
 
     //add project
+
+    public function meAction()
+    {
+        $this->loadOwnerProject();
+    }
+
+
     public function doNewProjectAction()
     {
-        $auth = $this->session->get('auth');
+        //fetch student
+        $student = User::findFirst(array(
+            "conditions" => "id=:id:",
+            "bind" => array("id" => $this->auth['id'])
+        ));
+
+        if (!$student)
+        {
+            $this->flash->error('User not found');
+            return $this->forward('projects/new');
+        }
+
+        //check can create project
+
+        $project_level = $this->permission->canCreateProject($this->current_semester);
+
+
+        if (empty($project_level))
+        {
+            $this->flash->error('Error missing some condition');
+            return $this->forward('projects/new');
+        }
 
         $request = $this->request;
 
-        $user_id = $auth['id'];
-        $project_name = $request->getPost('name');
+        $advisor_id = $request->getPost('advisor_id');
+        $project_name = $request->getPost('project_name');
         $project_type = $request->getPost('project_type');
-        $advisor = $request->getPost('advisor');
-        $project_level = $request->getPost('project_level');
-        $semester = $request->getPost('semester');
         $description = $request->getPost('description');
-		$coadvisor1 = $request->getPost('coadvisor1');
-		$coadvisor2 = $request->getPost('coadvisor2');
 
-        if (empty($project_name) || empty($project_type) || empty($advisor) || empty($project_level) || empty($semester))
+        \Phalcon\Tag::setDefaults(array(
+            'advisor_id' => $advisor_id,
+            'project_name' => $project_name,
+            'project_type' => $project_type,
+            'description' => $description,
+        ));
+
+
+        if (empty($advisor_id) || empty($project_name) || empty($project_type) || empty($description))
         {
-            $this->flashSession->error('Importand field are required');
+            $this->flash->error('Important data missing');
+            return $this->forward('projects/new');
+        }
+
+        //check advisor quota
+        if ($this->permission->quotaAvailable($advisor_id, $this->current_semester) <= 0)
+        {
+            $this->flash->error('Advisor\' quota limit exceed');
+            return $this->forward('projects/new');
+        }
+
+        $transaction = $this->transactionManager->get();
+
+        try
+        {
+            $project = new Project();
+            $project->setTransaction($transaction);
+            $project->project_name = $project_name;
+            $project->project_type = $project_type;
+            $project->project_level_id = $project_level->project_level_id;
+            $project->project_description = $description;
+            $project->semester_id = $this->current_semester;
+
+            //save fail
+            if (!$project->save())
+            {
+                $this->dbError($project);
+                $transaction->rollback('Error when create project');
+            }
+
+            //add owner
+            $projectMap = new ProjectMap();
+            $projectMap->setTransaction($transaction);
+            $projectMap->user_id = $student->id;
+            $projectMap->project_id = $project->project_id;
+            $projectMap->map_type = 'owner';
+            if (!$projectMap->save())
+            {
+                $transaction->rollback('Error When create project');
+            }
+
+            //add advisor
+            $projectMap = new ProjectMap();
+            $projectMap->setTransaction($transaction);
+            $projectMap->user_id = $advisor_id;
+            $projectMap->project_id = $project->project_id;
+            $projectMap->map_type = 'advisor';
+            if (!$projectMap->save())
+            {
+                $transaction->rollback('Error when create project');
+            }
+
+            //insert log to advisor
+            $log = new Log();
+            $log->setTransaction($transaction);
+            $log->user_id = $student->id;
+            $log->description = 'สร้างโครงงาน ' . $project_name . ' เรียบร้อยแล้ว (รอการยืนยันจากอาจารย์ที่ปรึกษา)';
+            if (!$log->save())
+            {
+                $transaction->rollback('Error when create log');
+            }
+
+            $log = new Log();
+            $log->setTransaction($transaction);
+            $log->user_id = $advisor_id;
+            $log->description = $this->auth['name'] . 'ได้สร้างโครงงาน ' . $project_name . ' รอการยืนยัน';
+            if (!$log->save())
+            {
+                $transaction->rollback('Error when create log');
+            }
+
+            //send email to advisor
+            $advisor = User::findFirst(array(
+                "conditions" => "id=:id:",
+                "bind" => array("id" => $advisor_id)
+            ));
+
+            if (!$advisor)
+            {
+                $transaction->rollback('Advisor not found');
+            }
+
+            if (!empty($advisor->email) && $advisor->active && $advisor->id != $this->auth['id'] && $this->wantNotification($advisor->id, 'project_update'))
+            {
+                $hashLink = new HashLink();
+                $hashLink->setTransaction($transaction);
+                $hashLink->user_id = $advisor->id;
+                $hashLink->hash = \Phalcon\Text::random(Phalcon\Text::RANDOM_ALNUM, 20);
+                $hashLink->link = 'projects/manage/' . $project->project_id;
+                if (!$hashLink->save())
+                    $transaction->rollback('Error when create project');
+
+                $to = $advisor->email;
+                $subject = "มีโครงงานใหม่ รอการยืนยัน";
+                $body = htmlspecialchars($this->auth['name'] . ' ได้สร้างโครงงาน ' . $project_name . ' (รอการยืนยัน) เวลา ' . date('d-m-Y H:i:s'));
+                $body .= "<br>";
+                $body .= "<a href=\"" . $this->furl . $this->url->get('session/useHash/') . $hashLink->hash . "\">คลิกที่นี่เพื่อดูขอเสนอโครงงาน</a>";
+
+                $this->sendMail($subject, $body, $to);
+            }
+
+            $transaction->commit();
+
+        }
+        catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
+        {
+            $this->flash->error('Transaction failure: ' . $e->getMessage());
             return $this->forward('projects/newProject');
         }
 
-        //check project in semester
-        $projectMaps = ProjectMap::find("user_id='$user_id'");
-
-        foreach ($projectMaps as $projectMap)
-        {
-            $project = Project::findFirst("project_id='$projectMap->project_id'");
-            if ($semester == $project->semester_id)
-            {
-                $this->flashSession->error('Project duplicate');
-                return $this->forward('projects/newProject');
-            }
-        }
-
-        $project = new Project();
-        $project->project_name = $project_name;
-        $project->project_type = $project_type;
-        $project->project_level_id = $project_level;
-        $project->project_description = $description;
-        $project->semester_id = $semester;
-
-        //save fail
-        if (!$project->save())
-        {
-            $this->flash->error('Database Failure');
-            return $this->forward('project/newProject');
-        }
-
-        //add owner
-        $projectMap = new ProjectMap();
-        $projectMap->user_id = $user_id;
-        $projectMap->project_id = $project->project_id;
-        $projectMap->map_type = 'owner';
-        $projectMap->save();
-
-        //add advisor
-        $projectMap = new ProjectMap();
-        $projectMap->user_id = $advisor;
-        $projectMap->project_id = $project->project_id;
-        $projectMap->map_type = 'advisor';
-        $projectMap->save();
-
-		if (!empty($coadvisor1) && !empty($coadvisor2))
-		{
-			$projectMap = new ProjectMap();
-			$projectMap->user_id = $coadvisor1;
-			$projectMap->project_id = $project->project_id;
-			$projectMap->map_type = 'coadvisor';
-			$projectMap->save();
-
-			$projectMap = new ProjectMap();
-			$projectMap->user_id = $coadvisor2;
-			$projectMap->project_id = $project->project_id;
-			$projectMap->map_type = 'coadvisor';
-			$projectMap->save();
-		}
-
-        //insert log to advisor
-        $log = new Log();
-        $log->user_id = $user_id;
-        $log->description = 'สร้างโครงงาน '.$project_name.' เรียบร้อยแล้ว (รอการยืนยันจากอาจารย์ที่ปรึกษา)';
-        $log->save();
-
-        $log = new Log();
-        $log->user_id = $advisor;
-        $log->description = $auth['name'].'ได้สร้างโครงงาน '.$project_name.' รอการยืนยัน';
-        $log->save();
-
-		$this->_updateWorkloads();
-
         $this->flash->success('New project success');
-        return $this->forward('index');
+        return $this->response->redirect('index');
     }
-
-	private function _updateWorkloads()
-	{
-		$works = User::find("type='Advisor'");
-		foreach ($works as $work)
-		{
-			$count = ProjectMap::find("user_id='$work->id'");
-			$work->work_load = count($count);
-			$work->save();
-		}
-	}
 
     public function newProjectAction()
     {
+        //check can create project
+        $project_level = $this->permission->canCreateProject($this->current_semester, $this->auth['id']);
+
+        if (empty($project_level))
+            return;
+
+        //set project level
+        $this->view->setVar('project_level_name', $project_level->project_level_name);
+
+        $this->loadViewAdvisors();
+
+        //TODO Get old project
+
     }
 }
 

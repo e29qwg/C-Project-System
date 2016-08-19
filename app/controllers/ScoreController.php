@@ -8,14 +8,6 @@ class ScoreController extends ControllerBase
         parent::initialize();
     }
 
-    public function advisorViewAction()
-    {
-        $auth = $this->session->get('auth');
-        $this->Score->advisorView();
-        $this->DownloadFile->download($auth['id']);
-        $this->view->disable();
-    }
-
     public function studentViewAction()
     {
         $this->view->setTemplateAfter('main');
@@ -24,7 +16,7 @@ class ScoreController extends ControllerBase
     public function uploadScoreAction()
     {
         $request = $this->request;
-        
+
         if ($request->hasFiles())
         {
             foreach ($request->getUploadedFiles() as $file)
@@ -44,18 +36,20 @@ class ScoreController extends ControllerBase
         $request = $this->request;
         $all = $request->getPost("all");
         $advisors = $request->getPost("advisor");
+        $semester_id = $request->getPost('semester_id');
 
         if (!empty($all))
-            $this->Score->createScoreForm();
+            $this->Score->createScoreForm($semester_id);
         else
-            $this->Score->createScoreForm($advisors);
+            $this->Score->createScoreForm($advisors, $semester_id);
 
         $this->DownloadFile->download("ScoreDraff");
         $this->view->disable();
     }
 
     public function manageScoreAction()
-    {        
+    {
+        $this->_getAllSemester();
     }
 }
 

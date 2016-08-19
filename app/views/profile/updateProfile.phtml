@@ -1,62 +1,239 @@
 <?php echo $this->getContent() ?>
-<?php use \Phalcon\Tag as Tag; ?>
+<?php use Phalcon\Tag as Tag; ?>
 
 <?php
 $auth = $this->session->get('auth');
 $user_id = $auth['id'];
-$user = User::findFirst("id='$user_id'");
+$username = $auth['user_id'];
+$facebook = $auth['facebook'];
+
+if ($auth['type'] == 'Admin')
+{
+    if (isset($advisor_id))
+        $user_id = $advisor_id;
+}
+
+$user = User::findFirst(array(
+    "conditions" => "id=:user_id:",
+    "bind" => array("user_id" => $user_id)
+));
 ?>
 
 <script type="text/javascript">
-
-
-tinymce.init({
-    selector: "textarea#interesting",
-    theme: "modern",
-    plugins: [
-        "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-        "searchreplace wordcount visualblocks visualchars code fullscreen",
-        "insertdatetime media nonbreaking save table contextmenu directionality",
-        "template paste textcolor"
-    ],
-    toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image print preview media | forecolor backcolor emoticons",
-    image_advtab: true,
-    autosave_ask_before_unload: false,
-    width: "80%",
-    height: "200px",
-});
+    tinymce.init({
+        selector: "textarea#interesting",
+        theme: "modern",
+        plugins: [
+            "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+            "searchreplace wordcount visualblocks visualchars code fullscreen",
+            "insertdatetime media nonbreaking save table contextmenu directionality",
+            "template paste textcolor"
+        ],
+        toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image print preview media | forecolor backcolor emoticons",
+        image_advtab: true,
+        autosave_ask_before_unload: false,
+        width: "80%",
+        height: "200px"
+    });
 
 </script>
 
-<h2>Edit User Profile</h2>
-<hr>
-<form class="form-horizontal" method="post" action="<?= $this->url->get('profile/update'); ?>">
-    <div class="form-group">
-        <label class="col-sm-2 control-label" for="name">Name</label>
-        <div class="col-sm-10">
-            <p class="static-form-control"><?= $user->title.' '.$user->name ?></p>
-        </div>
+<ul class="nav nav-tabs" id="profileTab">
+    <li role="presentation" class="active">
+        <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">
+            Update Profile
+        </a>
+    </li>
+    <li role="presentation" role="tablist">
+        <a href="#notification" aria-controls="notification" role="tab" data-toggle="tab">
+            Notification
+        </a>
+    </li>
+</ul>
+
+
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane fade in active" id="profile">
+        <br>
+
+        <form class="form-horizontal" method="post" action="<?= $this->url->get('profile/update'); ?>"
+              enctype="multipart/form-data">
+            <input type="hidden" name="advisor_id" value="<?= $user_id ?>">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="title">Title</label>
+
+                <div class="col-sm-3">
+                    <?php
+                    \Phalcon\Tag::setDefault('title', $user->title);
+
+                    echo \Phalcon\Tag::textField(array(
+                        'title',
+                        'class' => 'form-control',
+                        'required' => 'required'
+                    ));
+                    ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="name">Name</label>
+
+                <div class="col-sm-10">
+                    <p class="form-control-static"><?= $user->title . $user->name ?></p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="tel">Tel</label>
+
+                <div class="col-sm-3">
+                    <?php
+
+                    \Phalcon\Tag::setDefault('tel', $user->tel);
+
+                    echo \Phalcon\Tag::textField(array(
+                        'tel',
+                        'placeholder' => 'ex. 0912345678',
+                        'class' => 'form-control',
+                        'required' => 'required'
+                    ))
+
+                    ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="email">Email</label>
+
+                <div class="col-sm-3">
+                    <?php
+                    \Phalcon\Tag::setDefault('email', $user->email);
+
+                    echo \Phalcon\Tag::emailField(array(
+                        'email',
+                        'placeholder' => 'example@example.com',
+                        'class' => 'form-control',
+                        'required' => 'required'
+                    ));
+                    ?>
+                </div>
+                <div class="col-sm-2">
+                    <?php
+
+                    if ($user->active):
+                        ?>
+                        <span class="glyphicon glyphicon-ok form-control-static" style="color: green;"></span>
+                        <?php
+                    else:
+                        if (!empty($user->email)):
+                            ?>
+
+
+                            <span class=" glyphicon glyphicon-time form-control-static"
+                                  style="color: orangered;"> Waiting for verify</span>
+
+                            <?php
+                        endif;
+                    endif;
+                    ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="facebook">Facebook</label>
+
+                <div class="col-sm-5">
+                    <input type="text" id="facebook" name="facebook" class="form-control"
+                           value="<?= $user->facebook ?>">
+
+                    <p class="help-inline">ใส่เฉพาะ id เท่านั้น เช่น https://www.facebook.com/xxx<strong>ให้ใส่เฉพาะ
+                            xxx</strong></p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="profilePicture">Profile Picture</label>
+
+                <div class="col-sm-3">
+                    <?php
+
+                    if (file_exists(__DIR__.'/../../../public/profilePicture/'.$user->user_id.'.jpg'))
+                        $imgSrc = $url.'profilePicture/'.$user->user_id.'.jpg';
+                    else
+                        $imgSrc = $url.'profilePicture/noface.jpg';
+
+                    ?>
+                    <img class="bordered" width="150" height="150" src="<?= $imgSrc; ?>">
+                </div>
+                <div class="col-sm-7">
+                    <?=
+
+                    $this->tag->fileField(array('profile_picture'));
+                    ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="interesting">Interesting</label>
+
+                <div class="col-sm-10">
+                    <textarea id="interesting" name="interesting"><?= $user->interesting ?></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-8">
+                    <button type="submit" class="btn btn-success btn-md">Save</button>
+                </div>
+            </div>
+        </form>
     </div>
 
-    <div class="form-group">
-        <label class="col-sm-2 control-label" for="facebook">Facebook</label>
-        <div class="col-sm-5">
-            <input type="text" id="facebook" name="facebook" class="form-control" value="<?= $user->facebook ?>">
-            <p class="help-inline">ใส่เฉพาะ id เท่านั้น เช่น https://www.facebook.com/xxx<strong>ให้ใส่เฉพาะ xxx</strong> </p>
-        </div>
-    </div>
+    <div role="tabpanel" class="tab-pane fade" id="notification">
+        <br>
 
-    <div class="form-group">
-        <label class="col-sm-2 control-label" for="interesting">Interesting</label>
-        <div class="col-sm-10">
-            <textarea id="interesting" name="interesting"><?= $user->interesting ?></textarea>
-        </div>
-    </div>
+        <form class="form-horizontal" method="post" action="<?= $this->url->get('profile/setNotification'); ?>">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">New/Accept/Reject Project</label>
 
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-8">
-            <button type="submit" class="btn btn-primary btn-md">Edit</button>
-        </div>
-    </div>
+                <div class="col-sm-8">
+                    <?php
 
-</form>
+                    echo \Phalcon\Tag::checkField(array(
+                        'project_update',
+                        'class' => 'pull-right'
+                    ));
+
+                    ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">New/Update/Evaluate Progress</label>
+
+                <div class="col-sm-8">
+                    <?php
+
+                    echo \Phalcon\Tag::checkField(array(
+                        'progress_update',
+                        'class' => 'pull-right'
+                    ));
+
+                    ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-success btn-sm">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    $("#project_update, #progress_update").bootstrapSwitch();
+</script>

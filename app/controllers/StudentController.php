@@ -9,9 +9,10 @@ class StudentController extends ControllerBase
         parent::initialize();
     }
 
+
     public function indexAction()
     {
     }
 }
 
-?>
+
