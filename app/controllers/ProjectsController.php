@@ -659,7 +659,7 @@ class ProjectsController extends ControllerBase
             return $this->_redirectBack();
         }
 
-        $project_name = $request->getPost('project_name');
+        $project_name = $request->getPost('name');
         $project_type = $request->getPost('project_type');
         $description = $request->getPost('description');
 
