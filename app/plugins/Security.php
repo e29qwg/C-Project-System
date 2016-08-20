@@ -158,7 +158,17 @@ class Security extends \Phalcon\Mvc\User\Plugin
                     'doUpload',
                     'download'
                 ),
+<<<<<<< HEAD
                 //'room' => ['index']
+=======
+                'room' => [
+                    'index',
+                    'newRequest',
+                    'createNewRequest',
+                    'selectSeat',
+                    'confirmSeat'
+                ]
+>>>>>>> develop
             );
 
             foreach ($studentResources as $resource => $actions)
@@ -207,7 +217,8 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 'exam' => array('download', 'showExam'),
                 'score' => array('advisorView'),
                 'userSettings' => array('*'),
-                'report' => array('evaluate', 'reject', 'accept')
+                'report' => array('evaluate', 'reject', 'accept'),
+                'room' => ['proposed', 'accept', 'reject']
             );
 
             foreach ($advisorResources as $resource => $actions)
@@ -257,4 +268,3 @@ class Security extends \Phalcon\Mvc\User\Plugin
     }
 }
 
-?>

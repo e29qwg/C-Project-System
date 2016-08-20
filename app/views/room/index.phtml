@@ -1,3 +1,9 @@
+<?php
+
+$auth = $this->session->get('auth');
+
+?>
+
 <style>
     .table th, .table td {
         border-top: none !important;
@@ -31,7 +37,21 @@
     .eslot {
         background-color: #D0E6F1;
     }
+
+    .success {
+        color: green;
+    }
+
+    .warning {
+        color: orange;
+    }
+
+    .error {
+        color: red;
+    }
 </style>
+
+<h3>สภานะปัจจุบัน <span class="<?= $status_type; ?>"><?= $current_status; ?></span></h3>
 
 <div class="table-responsive table-bordered">
     <table class="table table-responsive borderless">
@@ -50,9 +70,14 @@
                     ]);
 
                     if ($room->status == 'in_use')
-                        $text = '<span class="glyphicon glyphicon-user" style="color: red;"></span>';
-                    elseif ($room->status == 'pending')
-                        $text = '<span class="glyphicon glyphicon-user" style="color: orange;"></span>';
+                    {
+                        if ($room->user_id == $auth['id'])
+                            $text = '<span class="glyphicon glyphicon-user" style="color: yellow;"></span>';
+                        else
+                            $text = '<span class="glyphicon glyphicon-user error" style="color: red;"></span>';
+                    }
+                    else if ($room->status == 'pending')
+                        $text = '<span class="glyphicon glyphicon-user warning"></span>';
                     else
                         $text = $room->text;
 
@@ -72,10 +97,31 @@
     </table>
 </div>
 
+
 <br>
+
+<?php
+if ($status == 'can_request'):
+
+    ?>
+
+    <a href="<?= $url . 'room/newRequest'; ?>" class="btn btn-sm btn-primary">คลิกที่นี่เพื่อทำการขอใช้ห้องโครงงาน</a>
+
+    <?php
+
+elseif ($status == 'can_select_seat'):
+    ?>
+
+    <a href="<?= $url . 'room/selectSeat'; ?>" class="btn btn-sm btn-primary">คลิกที่นี่เพื่อเลือกที่นั่ง</a>
+
+    <?php
+endif;
+?>
 
 <h2>หมายเหตุ</h2>
 <ul>
+    <li>Project I เริ่มจองได้ตั้งแต่วันที่: <?= $p1_start; ?></li>
+    <li>Project II เริ่มจองได้ตั้งแต่วันที่: <?= $p2_start; ?></li>
     <li>
         Zone A B C ใช้ระบบเครือข่ายผ่านสาย Lan เท่านั้น
     </li>
@@ -87,6 +133,9 @@
         ไม่สามารถย้ายที่ได้)
     </li>
     <li>
-        <span class="glyphicon glyphicon-user" style="color: orange;"></span> คือ มีคนใช้งานแล้ว (รอยืนยัน)
+        <span class="glyphicon glyphicon-user" style="color: yellow;"></span> คือ ที่นั่งของนักศึกษา (ยืนยันแล้ว
+        ไม่สามารถย้ายที่ได้)
     </li>
 </ul>
+
+
