@@ -37,9 +37,10 @@ $config = new Phalcon\Config(array(
     'oauth' => array(
         'client_id' => '',
         'client_secret' => '',
-        'url' => '',
+        'app_url' => '',
         'authorize_url' => '',
         'token_url' => '',
-        'profile_url' => ''
+        'profile_url' => '',
+        'logout_url' => ''
     )
 ));
