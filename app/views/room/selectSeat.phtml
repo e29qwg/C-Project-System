@@ -1,0 +1,134 @@
+<style>
+    .table th, .table td {
+        border-top: none !important;
+    }
+
+    .freeslot {
+        background-color: transparent;
+
+    }
+
+    .staffslot {
+        background-color: #FFD700;
+    }
+
+    .bslot {
+        background-color: #739FD0;
+    }
+
+    .aslot {
+        background-color: #3566A1;
+    }
+
+    .cslot {
+        background-color: #3399FE;
+    }
+
+    .dslot {
+        background-color: #82CBFE;
+    }
+
+    .eslot {
+        background-color: #D0E6F1;
+    }
+
+    .success {
+        color: green;
+    }
+
+    .warning {
+        color: orange;
+    }
+
+    .error {
+        color: red;
+    }
+</style>
+
+<?php
+
+echo $this->getContent();
+?>
+
+
+<h3>สภานะปัจจุบัน <span class="<?= $status_type; ?>"><?= $current_status; ?></span></h3>
+
+<h3>คลิกตำแหน่งที่ต้องการ เพื่อเลือกที่นั่ง</h3>
+
+<div class="table-responsive table-bordered">
+    <form method="post">
+        <table class="table table-responsive borderless">
+            <?php
+
+            for ($i = 0 ; $i < 11 ; $i++)
+            {
+                ?>
+                <tr>
+                    <?php
+                    for ($j = 0 ; $j < 13 ; $j++)
+                    {
+                        $room = Room::findFirst([
+                            'conditions' => 'col=:col: AND row=:row:',
+                            'bind' => ['row' => $i, 'col' => $j]
+                        ]);
+
+                        if ($room->status == 'in_use')
+                            $text = '<span class="glyphicon glyphicon-user error"></span>';
+                        else if ($room->status == 'pending')
+                            $text = '<span class="glyphicon glyphicon-user warning"></span>';
+                        else
+                            $text = $room->text;
+
+                        ?>
+
+                        <?php
+                        if ($room->status == 'available'):
+                            ?>
+                            <td>
+                                <button
+                                    onclick="return confirm('ยืนยันการเลือกที่นั่ง เมื่อยืนยันแล้วจะไม่สามารถแก้ไขได้');"
+                                    formaction="<?= $url . "room/confirmSeat/" . $text; ?>"
+                                    class="btn btn-block <?= $room->class; ?>">
+                                    <?= $text ?>
+                                </button>
+                            </td>
+
+                            <?php
+                        else:
+                            ?>
+
+                            <td>
+                                <button type="button" class="btn btn-block <?= $room->class; ?>"><?= $text ?></button>
+                            </td>
+
+                            <?php
+                        endif;
+                    }
+                    ?>
+                </tr>
+
+                <?php
+            }
+            ?>
+        </table>
+    </form>
+</div>
+
+
+<br>
+
+<h2>หมายเหตุ</h2>
+<ul>
+    <li>Project I เริ่มจองได้ตั้งแต่วันที่: <?= $p1_start; ?></li>
+    <li>Project II เริ่มจองได้ตั้งแต่วันที่: <?= $p2_start; ?></li>
+    <li>
+        Zone A B C ใช้ระบบเครือข่ายผ่านสาย Lan เท่านั้น
+    </li>
+    <li>
+        Zone D E ใช้ระบบเครือข่ายผ่าน CoE-WiFi เท่านั้น
+    </li>
+    <li>
+        <span class="glyphicon glyphicon-user" style="color: red;"></span> คือ มีคนใช้งานแล้ว (ยืนยันแล้ว
+        ไม่สามารถย้ายที่ได้)
+    </li>
+</ul>

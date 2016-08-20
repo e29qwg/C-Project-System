@@ -1,0 +1,42 @@
+<?php
+
+echo $this->getContent();
+
+if (!count($roomRequests))
+    $this->flash->notice('ไม่พบข้อมูล');
+
+foreach ($roomRequests as $roomRequest):
+    $project = $roomRequest->Project;
+    $user = $roomRequest->User;
+    ?>
+
+    <div class="panel panel-info" style="display: block;">
+        <div class="panel-heading">
+            <h3 class="panel-title">คำขอใช้ห้องโครงงาน: โครงงาน <?= $project->project_name ?></h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <label class="col-sm-2">Project Name</label>
+
+                <p class="col-sm-10"><?= $project->project_name ?></p>
+            </div>
+            <div class="row">
+                <label class="col-sm-2">Request From</label>
+
+                <p class="col-sm-10"><?= $user->title.$user->name; ?></p>
+            </div>
+            <div class="row">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <a href="<?= $url.'room/reject/'.$roomRequest->id; ?>" class="btn btn-xs btn-danger" onclick="return confirm('Confirm reject'); ">Reject</a>
+                    <a href="<?= $url.'room/accept/'.$roomRequest->id; ?>" class="btn btn-xs btn-success" onclick="return confirm('Confirm success');">Accept</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <?php
+
+endforeach;
+
+?>

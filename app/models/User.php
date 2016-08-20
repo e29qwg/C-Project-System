@@ -152,6 +152,7 @@ class User extends \Phalcon\Mvc\Model
         $this->hasMany('id', 'ScoreProject', 'user_id', array('alias' => 'ScoreProject'));
         $this->hasMany('id', 'UserCurrentSemester', 'user_id', array('alias' => 'UserCurrentSemester'));
         $this->hasOne('id', 'Room', 'user_id', array('alias' => 'Room'));
+        $this->hasOne('id', 'RoomMap', 'user_id', array('alias' => 'RoomMap'));
     }
 
     /**

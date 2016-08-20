@@ -6,6 +6,8 @@ class ControllerBase extends Phalcon\Mvc\Controller
     protected $current_semester;
     protected $allSemester;
     protected $userSemester;
+    protected $p1_start;
+    protected $p2_start;
 
     protected function initialize()
     {
@@ -42,6 +44,16 @@ class ControllerBase extends Phalcon\Mvc\Controller
         $this->loadUserSemester();
         $this->loadAllSemester();
         $this->loadCurrentSemester();
+        $this->loadRoomDate();
+    }
+
+    protected function loadRoomDate()
+    {
+        $setting = Settings::findFirst("name='room_reserve_p1_start'");
+        $this->p1_start = $setting->value;
+
+        $setting = Settings::findFirst("name='room_reserve_p2_start'");
+        $this->p2_start = $setting->value;
     }
     
     protected function loadAdvisorProject()

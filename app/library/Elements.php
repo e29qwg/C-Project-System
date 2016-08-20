@@ -15,9 +15,45 @@ class Elements extends Phalcon\Mvc\User\Component
                 'action' => 'room',
                 'active' => 'room'
             ]
-        ),
+        )
     );
 
+    private $_advisorMenu = [
+        'pull-left' => array(
+            'mainmenu' => array(
+                'caption' => 'Home',
+                'action' => 'index',
+                'active' => 'index'
+            )
+        )
+    ];
+
+    public function getAdvisorMenu()
+    {
+        $controllerName = $this->view->getControllerName();
+        foreach ($this->_advisorMenu as $position => $menu)
+        {
+            echo '<ul class="nav navbar-nav navbar-' . $position . '">';
+            foreach ($menu as $controller => $option)
+            {
+                if ($option['active'] == $controllerName)
+                {
+                    echo '<li class="active">';
+                }
+                else
+                {
+                    echo '<li>';
+                }
+
+                echo Phalcon\Tag::linkTo('./' . $option['action'], $option['caption']);
+                echo '</li>';
+            }
+        }
+        echo '</ul>';
+        echo '<ul class="nav navbar-nav navbar-right">';
+        $this->getLIO();
+        echo '</ul>';
+    }
 
     public function getMenu()
     {

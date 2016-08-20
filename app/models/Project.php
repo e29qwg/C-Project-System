@@ -70,6 +70,7 @@ class Project extends \Phalcon\Mvc\Model
         $this->hasMany('project_id', 'ReportComment', 'project_id', array('alias' => 'ReportComment'));
         $this->belongsTo('project_level_id', 'ProjectLevel', 'project_level_id', array('alias' => 'ProjectLevel'));
         $this->belongsTo('semester_id', 'Semester', 'semester_id', array('alias' => 'Semester'));
+        $this->hasOne('project_id', 'RoomMap', 'project_id', array('alias' => 'RoomMap'));
     }
 
     /**
