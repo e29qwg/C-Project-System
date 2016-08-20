@@ -10,16 +10,12 @@ class Elements extends Phalcon\Mvc\User\Component
                 'action' => 'index',
                 'active' => 'index'
             ),
-<<<<<<< HEAD
-        ),
-=======
             'room' => [
                 'caption' => 'Room',
                 'action' => 'room',
                 'active' => 'room'
             ]
         )
->>>>>>> develop
     );
 
     private $_advisorMenu = [

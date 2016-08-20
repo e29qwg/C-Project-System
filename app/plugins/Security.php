@@ -158,9 +158,6 @@ class Security extends \Phalcon\Mvc\User\Plugin
                     'doUpload',
                     'download'
                 ),
-<<<<<<< HEAD
-                //'room' => ['index']
-=======
                 'room' => [
                     'index',
                     'newRequest',
@@ -168,7 +165,6 @@ class Security extends \Phalcon\Mvc\User\Plugin
                     'selectSeat',
                     'confirmSeat'
                 ]
->>>>>>> develop
             );
 
             foreach ($studentResources as $resource => $actions)
