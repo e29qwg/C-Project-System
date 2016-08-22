@@ -138,13 +138,13 @@ class RoomController extends ControllerBase
             $projectMaps = $roomMap->Project->ProjectMap;
             $owner = $roomMap->User;
             $found = false;
-            $advisor = null;
+
             foreach ($projectMaps as $projectMap)
             {
                 if ($projectMap->map_type == 'advisor' && $projectMap->user_id == $this->auth['id'])
                 {
                     $found = true;
-                    $advisor = $projectMap;
+                    break;
                 }
             }
 
@@ -233,13 +233,13 @@ class RoomController extends ControllerBase
             $projectMaps = $roomMap->Project->ProjectMap;
             $owner = $roomMap->User;
             $found = false;
-            $advisor = null;
+
             foreach ($projectMaps as $projectMap)
             {
                 if ($projectMap->map_type == 'advisor' && $projectMap->user_id == $this->auth['id'])
                 {
                     $found = true;
-                    $advisor = $projectMap;
+                    break;
                 }
             }
 
@@ -372,7 +372,7 @@ class RoomController extends ControllerBase
             $log = new Log();
             $log->setTransaction($transaction);
             $log->user_id = $advisorMap->user_id;
-            $log->description = $auth['title'] . $auth['name'] . ' (' . $auth['user_id'] . ') ขอใช้ห้องโครงงาน ในการทำโครงงาน ' . $projectMap->Project->project_name . ' รอการอนุมัติจากอาจารย์ที่ปรึกษา เวลา ' . date('Y-m-d H:i:s');
+            $log->description = $auth['title'] . $auth['name'] . ' (' . $auth['user_id'] . ') ขอใช้ห้องโครงงาน ในการทำโครงงาน ' . $projectMap->Project->project_name . ' รอการอนุมัติจากอาจารย์ที่ปรึกษา';
             if (!$log->save())
             {
                 $this->dbError($log);
