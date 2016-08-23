@@ -380,6 +380,7 @@ class RoomController extends ControllerBase
             $log->setTransaction($transaction);
             $log->user_id = $advisorMap->user_id;
             $log->description = $auth['title'] . $auth['name'] . ' (' . $auth['user_id'] . ') ขอใช้ห้องโครงงาน ในการทำโครงงาน ' . $projectMap->Project->project_name . ' รอการอนุมัติจากอาจารย์ที่ปรึกษา';
+
             if (!$log->save())
             {
                 $this->dbError($log);
@@ -390,6 +391,7 @@ class RoomController extends ControllerBase
             {
                 $subject = $auth['title'] . $auth['name'] . ' (' . $auth['user_id'] . ') ขอใช้ห้องโครงงาน';
                 $mes = $subject . 'ในการทำโครงงาน ' . $projectMap->Project->project_name . ' รอการอนุมัติจากอาจารย์ที่ปรึกษา เวลา ' . date('Y-m-d H:i:s');
+                $mes .= "<br>สามารถเข้าไปอนุมัติหรือปฏิเสธคำขอใช้ห้องได้ที่ระบบโครงงาน <a href=\"https://x.coe.phuket.psu.ac.th/project\">https://x.coe.phuket.psu.ac.th/project</a>";
                 $to = $advisorMap->User->email;
 
                 $this->sendMail($subject, $mes, $to);
