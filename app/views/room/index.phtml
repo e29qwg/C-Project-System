@@ -2,101 +2,18 @@
 
 $auth = $this->session->get('auth');
 
+echo \Phalcon\Tag::stylesheetLink('lib/custom/roomseat.css')
+
 ?>
 
-<style>
-    .table th, .table td {
-        border-top: none !important;
-    }
-
-    .freeslot {
-        background-color: transparent;
-
-    }
-
-    .staffslot {
-        background-color: #FFD700;
-    }
-
-    .bslot {
-        background-color: #739FD0;
-    }
-
-    .aslot {
-        background-color: #3566A1;
-    }
-
-    .cslot {
-        background-color: #3399FE;
-    }
-
-    .dslot {
-        background-color: #82CBFE;
-    }
-
-    .eslot {
-        background-color: #D0E6F1;
-    }
-
-    .success {
-        color: green;
-    }
-
-    .warning {
-        color: orange;
-    }
-
-    .error {
-        color: red;
-    }
-</style>
 
 <h3>สภานะปัจจุบัน <span class="<?= $status_type; ?>"><?= $current_status; ?></span></h3>
 
-<div class="table-responsive table-bordered">
-    <table class="table table-responsive borderless">
-        <?php
+<?php
 
-        for ($i = 0 ; $i < 11 ; $i++)
-        {
-            ?>
-            <tr>
-                <?php
-                for ($j = 0 ; $j < 13 ; $j++)
-                {
-                    $room = Room::findFirst([
-                        'conditions' => 'col=:col: AND row=:row:',
-                        'bind' => ['row' => $i, 'col' => $j]
-                    ]);
+require __DIR__.'/roomMap.phtml';
 
-                    if ($room->status == 'in_use')
-                    {
-                        if ($room->user_id == $auth['id'])
-                            $text = '<span class="glyphicon glyphicon-user" style="color: yellow;"></span>';
-                        else
-                            $text = '<span class="glyphicon glyphicon-user error" style="color: red;"></span>';
-                    }
-                    else if ($room->status == 'pending')
-                        $text = '<span class="glyphicon glyphicon-user warning"></span>';
-                    else
-                        $text = $room->text;
-
-                    ?>
-
-                    <td>
-                        <button class="btn btn-block <?= $room->class; ?>"><?= $text ?></button>
-                    </td>
-
-                    <?php
-                }
-                ?>
-            </tr>
-            <?php
-        }
-        ?>
-    </table>
-</div>
-
+?>
 
 <br>
 

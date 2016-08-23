@@ -22,7 +22,7 @@ $user_id = $auth['id'];
             <a class="navbar-brand" href="<?= $this->url->get('index'); ?>">CoE-Project</a>
         </div>
         <div class="navbar-collapse collapse">
-            <?php echo $this->elements->getAdvisorMenu(); ?>
+            <?php echo $this->elements->getMenu(); ?>
         </div>
     </div>
 </nav>
@@ -166,7 +166,3 @@ function showProjects($projects, $project_id, $url)
 }
 
 ?>
-
-<script>
-    $('.list-group-item').tooltip();
-</script>

@@ -1,0 +1,44 @@
+.table th, .table td {
+    border-top: none !important;
+}
+
+.freeslot {
+    background-color: transparent;
+
+}
+
+.staffslot {
+    background-color: #FFD700;
+}
+
+.bslot {
+    background-color: #739FD0;
+}
+
+.aslot {
+    background-color: #3566A1;
+}
+
+.cslot {
+    background-color: #3399FE;
+}
+
+.dslot {
+    background-color: #82CBFE;
+}
+
+.eslot {
+    background-color: #D0E6F1;
+}
+
+.success {
+    color: green;
+}
+
+.warning {
+    color: orange;
+}
+
+.error {
+    color: red;
+}

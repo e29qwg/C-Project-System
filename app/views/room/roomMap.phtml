@@ -1,0 +1,69 @@
+<div class="table-responsive table-bordered">
+    <table class="table table-responsive borderless">
+        <?php
+
+        for ($i = 0 ; $i < 11 ; $i++)
+        {
+            ?>
+            <tr>
+                <?php
+                for ($j = 0 ; $j < 13 ; $j++)
+                {
+                    $room = Room::findFirst([
+                        'conditions' => 'col=:col: AND row=:row:',
+                        'bind' => ['row' => $i, 'col' => $j]
+                    ]);
+
+                    if ($room->status == 'in_use')
+                    {
+                        if ($room->user_id == $auth['id'])
+                        {
+                            $text = '<span class="glyphicon glyphicon-user" style="color: yellow;"></span>';
+                        }
+                        else
+                        {
+                            $text = '<span class="glyphicon glyphicon-user error" style="color: red;"></span>';
+                        }
+                    }
+                    else if ($room->status == 'pending')
+                        $text = '<span class="glyphicon glyphicon-user warning"></span>';
+                    else
+                        $text = $room->text;
+
+                    ?>
+
+                    <td>
+
+                        <?php
+
+                        if ($room->status == 'in_use')
+                        {
+                            $title = "Student ID: " . $room->User->user_id;
+                            $title .= "\nStudent Name: ".$room->User->name;
+                        }
+                        else
+                        {
+                            $title = "";
+                        }
+
+                        ?>
+
+
+                        <button data-toggle="tooltip" title="<?= $title; ?>"
+                                class="btn btn-block <?= $room->class; ?>"><?= $text ?></button>
+                    </td>
+
+                    <?php
+                }
+                ?>
+            </tr>
+            <?php
+        }
+        ?>
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>

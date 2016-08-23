@@ -17,6 +17,13 @@ class RoomController extends ControllerBase
         $this->view->p2_start = $this->p2_start;
     }
 
+    public function viewOnlyAction()
+    {
+        $availableSeats = Room::find("status='available'");
+
+        $this->view->availableSeats = $availableSeats;
+    }
+
     public function confirmSeatAction()
     {
         $status = $this->checkStatus();
