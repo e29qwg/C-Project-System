@@ -375,6 +375,9 @@ class RoomController extends ControllerBase
                 $transaction->rollback('Cannot find advisor');
             }
 
+            if ($advisorMap->user_id == 2)
+                $transaction->rollback('(กรณีพิเศษ) นศ. ต้องรอแจ้ง อ. เพื่อเลือขอใช้ห้อง IOS');
+
             //add to advisor log
             $log = new Log();
             $log->setTransaction($transaction);
