@@ -12,6 +12,7 @@ class Security extends \Phalcon\Mvc\User\Plugin
     public function beforeDispatch(Phalcon\Events\Event $event, Phalcon\Mvc\Dispatcher $dispatcher)
     {
         $this->flashSession->output();
+
         $auth = $this->session->get('auth');
         $controller = $dispatcher->getControllerName();
         $action = $dispatcher->getActionName();
@@ -19,15 +20,6 @@ class Security extends \Phalcon\Mvc\User\Plugin
         if (!$auth)
         {
             $role = 'Guest';
-
-            if ($controller != 'session')
-            {
-                $this->dispatcher->forward([
-                    'controller' => 'session',
-                    'action' => 'index'
-                ]);
-                return false;
-            }
         }
         else
         {
@@ -53,11 +45,13 @@ class Security extends \Phalcon\Mvc\User\Plugin
         {
             $this->flash->error("You cannot access this module");
 
-            $dispatcher->forward(array('controller' => 'index', 'action' => 'index'));
+            $dispatcher->forward(array(
+                'controller' => 'index',
+                'action' => 'index'
+            ));
 
             return false;
         }
-
     }
 
     public function getAcl()
@@ -86,6 +80,7 @@ class Security extends \Phalcon\Mvc\User\Plugin
             $publicResources = array(
                 'index' => array('index'),
                 'session' => array('index', 'login', 'localLogin', 'logout', 'useHash', 'adminLogin'),
+                'room' => ['viewOnly']
             );
 
             foreach ($publicResources as $resource => $actions)

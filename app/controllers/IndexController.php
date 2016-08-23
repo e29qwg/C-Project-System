@@ -13,6 +13,9 @@ class IndexController extends ControllerBase
     {
         $auth = $this->session->get('auth');
 
+        if (!$auth)
+            return $this->response->redirect('session');
+
         if ($auth['type'] == 'Student')
             return $this->forward('student');
         else if ($auth['type'] == 'Advisor')

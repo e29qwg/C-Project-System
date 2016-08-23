@@ -1,0 +1,18 @@
+<?php
+
+$auth = $this->session->get('auth');
+
+echo \Phalcon\Tag::stylesheetLink('lib/custom/roomseat.css')
+
+?>
+
+
+<h3>สภานะปัจจุบัน เหลือที่นั่งว่าง <?= count($availableSeats); ?> ที่นั่ง</h3>
+
+<?php
+
+require __DIR__.'/roomMap.phtml';
+
+?>
+
+

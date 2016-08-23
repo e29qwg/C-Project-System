@@ -3,7 +3,7 @@
 class Elements extends Phalcon\Mvc\User\Component
 {
 
-    private $_headerMenu = array(
+    private $_studentMenu = array(
         'pull-left' => array(
             'mainmenu' => array(
                 'caption' => 'Home',
@@ -24,7 +24,12 @@ class Elements extends Phalcon\Mvc\User\Component
                 'caption' => 'Home',
                 'action' => 'index',
                 'active' => 'index'
-            )
+            ),
+            'room' => [
+                'caption' => 'Room',
+                'action' => 'room/viewOnly',
+                'active' => 'room'
+            ]
         )
     ];
 
@@ -57,8 +62,21 @@ class Elements extends Phalcon\Mvc\User\Component
 
     public function getMenu()
     {
+        $auth = $this->session->get('auth');
+
+        if ($auth['type'] == 'Student')
+            $this->getStudentMenu();
+        else if ($auth['type'] == 'Advisor')
+            $this->getAdvisorMenu();
+        else if ($auth['type'] == 'Admin')
+            $this->getAdvisorMenu();
+    }
+
+    public function getStudentMenu()
+    {
         $controllerName = $this->view->getControllerName();
-        foreach ($this->_headerMenu as $position => $menu)
+
+        foreach ($this->_studentMenu as $position => $menu)
         {
             echo '<ul class="nav navbar-nav navbar-' . $position . '">';
             foreach ($menu as $controller => $option)
