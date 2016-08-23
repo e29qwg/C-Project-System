@@ -376,7 +376,7 @@ class RoomController extends ControllerBase
             }
 
             if ($advisorMap->user_id == 2)
-                $transaction->rollback('(กรณีพิเศษ) นศ. ต้องรอแจ้ง อ. เพื่อเลือขอใช้ห้อง IOS');
+                $transaction->rollback('(กรณีพิเศษ) นศ. ต้องรอแจ้ง อ.ที่ปรึกษา เพื่อขอใช้ห้อง IOS กำหนดการให้รอประกาศจาก อ.ที่ปรึกษาอีกครั้ง');
 
             //add to advisor log
             $log = new Log();
