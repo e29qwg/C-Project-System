@@ -833,7 +833,6 @@ class ProjectsController extends ControllerBase
                 $hashLink = new HashLink();
                 $hashLink->setTransaction($transaction);
                 $hashLink->user_id = $advisor->id;
-                $hashLink->hash = \Phalcon\Text::random(Phalcon\Text::RANDOM_ALNUM, 20);
                 $hashLink->link = 'projects/manage/' . $project->project_id;
                 if (!$hashLink->save())
                     $transaction->rollback('Error when create project');
@@ -843,6 +842,7 @@ class ProjectsController extends ControllerBase
                 $body = htmlspecialchars($this->auth['name'] . ' ได้สร้างโครงงาน ' . $project_name . ' (รอการยืนยัน) เวลา ' . date('d-m-Y H:i:s'));
                 $body .= "<br>";
                 $body .= "<a href=\"" . $this->furl . $this->url->get('session/useHash/') . $hashLink->hash . "\">คลิกที่นี่เพื่อดูขอเสนอโครงงาน</a>";
+                $body .= "<br>หมายเหตุ ลิงค์นี้ใช้ได้ครั้งเดียวและจะหมดอายุในวันที่ ".$hashLink->expire_time;
 
                 $this->sendMail($subject, $body, $to);
             }

@@ -39,7 +39,7 @@
                         if ($room->status == 'in_use')
                         {
                             $title = "(".$room->User->user_id.") ";
-                            $title .= "Student Name: ".$room->User->name;
+                            $title .= $room->User->name;
                         }
                         else
                         {

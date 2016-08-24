@@ -1,52 +1,37 @@
 <?php
 
-class HashLink extends \Phalcon\Mvc\Model
+class RoomBacklist extends \Phalcon\Mvc\Model
 {
 
     /**
      *
      * @var integer
+     * @Primary
+     * @Identity
+     * @Column(type="integer", length=10, nullable=false)
      */
     public $id;
 
     /**
      *
-     * @var integer
+     * @var string
+     * @Column(type="string", nullable=false)
      */
-    public $user_id;
+    public $username;
 
     /**
      *
      * @var string
+     * @Column(type="string", nullable=false)
      */
-    public $hash;
+    public $reason;
 
     /**
      *
      * @var string
+     * @Column(type="string", nullable=false)
      */
-    public $link;
-
-    /**
-     *
-     * @var string
-     */
-    public $expire_time;
-
-
-    public function beforeValidationOnCreate()
-    {
-        $this->hash = \Phalcon\Text::random(Phalcon\Text::RANDOM_ALNUM, 20);
-        $this->expire_time =  date('Y-m-d H:i:s', time() + 604800);
-    }
-
-    /**
-     * Initialize method for model.
-     */
-    public function initialize()
-    {
-        $this->belongsTo('user_id', 'User', 'id', array('alias' => 'User'));
-    }
+    public $create_date;
 
     /**
      * Returns table name mapped in the model.
@@ -55,14 +40,14 @@ class HashLink extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'hash_link';
+        return 'room_backlist';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return HashLink[]
+     * @return RoomBacklist[]
      */
     public static function find($parameters = null)
     {
@@ -73,7 +58,7 @@ class HashLink extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return HashLink
+     * @return RoomBacklist
      */
     public static function findFirst($parameters = null)
     {

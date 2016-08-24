@@ -85,7 +85,7 @@ class RoomController extends ControllerBase
             //add log to owner
             $log = new Log();
             $log->user_id = $this->auth['id'];
-            $log->description = 'ยืนยันการเลือกที่นั่ง '.$seat_name.' แล้ว รอการติดต่อจากเจ้าหน้าที่';
+            $log->description = 'ยืนยันการเลือกที่นั่ง ' . $seat_name . ' แล้ว รอการติดต่อจากเจ้าหน้าที่';
 
             if (!$log->save())
             {
@@ -94,8 +94,8 @@ class RoomController extends ControllerBase
             }
 
             //mail to staff
-            $subject = 'ยืนยันที่นั่งห้องโครงงาน ('.$this->auth['user_id'].')';
-            $mes = $subject.' เวลา '.date('Y-m-d H:i:s');
+            $subject = 'ยืนยันที่นั่งห้องโครงงาน (' . $this->auth['user_id'] . ')';
+            $mes = $subject . ' เวลา ' . date('Y-m-d H:i:s');
             $to = 'sakarin@coe.phuket.psu.ac.th';
 
             $this->sendMail($subject, $mes, $to);
@@ -392,9 +392,20 @@ class RoomController extends ControllerBase
 
             if (!empty($advisorMap->User->email))
             {
+                $hashLink = new HashLink();
+                $hashLink->setTransaction($transaction);
+                $hashLink->link = "/room/proposed";
+                $hashLink->user_id = $advisorMap->User->id;
+                if (!$hashLink->save())
+                {
+                    $this->dbError($hashLink);
+                    $transaction->rollback('Error when send email to advisor');
+                }
+
                 $subject = $auth['title'] . $auth['name'] . ' (' . $auth['user_id'] . ') ขอใช้ห้องโครงงาน';
                 $mes = $subject . 'ในการทำโครงงาน ' . $projectMap->Project->project_name . ' รอการอนุมัติจากอาจารย์ที่ปรึกษา เวลา ' . date('Y-m-d H:i:s');
-                $mes .= "<br>สามารถเข้าไปอนุมัติหรือปฏิเสธคำขอใช้ห้องได้ที่ระบบโครงงาน <a href=\"https://x.coe.phuket.psu.ac.th/project\">https://x.coe.phuket.psu.ac.th/project</a>";
+                $mes .= "<br>สามารถเข้าไปอนุมัติหรือปฏิเสธคำขอใช้ห้องได้ที่ระบบโครงงาน <a href=\"" . $this->furl . $this->url->get('session/useHash/') . $hashLink->hash . "\">คลิกที่นี่</a>";
+                $mes .= "<br>หมายเหตุ ลิงค์นี้ใช้ได้ครั้งเดียวและจะหมดอายุในวันที่ ".$hashLink->expire_time;
                 $to = $advisorMap->User->email;
 
                 $this->sendMail($subject, $mes, $to);
@@ -465,6 +476,14 @@ class RoomController extends ControllerBase
 
         $user_id = $this->auth['id'];
         $projectMap = $this->getProjectMap();
+        $backlist = $this->isBackList($this->auth['user_id']);
+
+        if ($backlist != false)
+        {
+            $this->view->current_status = $backlist . " ไม่อนุญาตให้ใช้ห้องโครงงาน";
+            $this->view->status_type = 'error';
+            return;
+        }
 
         if (empty($projectMap) || $projectMap == null)
         {
@@ -556,5 +575,18 @@ class RoomController extends ControllerBase
             $this->view->status_type = 'success';
             return;
         }
+    }
+
+    protected function isBackList($username)
+    {
+        $roomBacklist = RoomBacklist::findFirst([
+            "conditions" => "username=:username:",
+            "bind" => ["username" => $username]
+        ]);
+
+        if ($roomBacklist)
+            return $roomBacklist->reason;
+
+        return false;
     }
 }
