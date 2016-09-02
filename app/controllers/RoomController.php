@@ -495,9 +495,12 @@ class RoomController extends ControllerBase
         //check date project pp
         if ($projectMap->Project->project_level_id == '1')
         {
-            $this->view->current_status = 'Project Prepare ไม่มีสิทธิ์ใช้ห้อง';
-            $this->view->status_type = 'error';
-            return;
+            if ($this->pp_start > date('Y-m-d H:i:s'))
+            {
+                $this->view->current_status = 'Project Prepare เริ่มขอใช้ห้องได้ในวันที่ ' . $this->pp_start;
+                $this->view->status_type = 'error';
+                return;
+            }
         }
         //check date project 1
         else if ($projectMap->Project->project_level_id == '2')

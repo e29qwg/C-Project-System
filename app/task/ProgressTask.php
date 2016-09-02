@@ -19,9 +19,8 @@ class ProgressTask extends \Phalcon\Cli\Task
             if (!$job)
             {
                 echo 'Invalid job found.';
-                continue;
+                exit;
             }
-
 
             $body = $job->getBody();
             $this->checkProgress($body['progress_id']);
