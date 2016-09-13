@@ -50,10 +50,10 @@ class AdminController extends ControllerBase
         $sheet = $objPHPExcel->getActiveSheet();
 
         //Deprecated code.
-       /* PHPExcel_Shared_Font::setTrueTypeFontPath('/usr/share/fonts/truetype/');
-        PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);*/
+        /* PHPExcel_Shared_Font::setTrueTypeFontPath('/usr/share/fonts/truetype/');
+         PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);*/
 
-        for ($col = 'A'; $col <= 'G'; $col++)
+        for ($col = 'A' ; $col <= 'G' ; $col++)
             $sheet->getColumnDimension($col)->setAutoSize(true);
 
         //set table header
@@ -132,7 +132,9 @@ class AdminController extends ControllerBase
                 $sheet->setCellValue('D' . $row, $projectLevel);
                 $sheet->setCellValue('E' . $row, $advisor->name);
 
-                for ($count = 0; $count < 2; $count++)
+                $coadvisors = [];
+
+                for ($count = 0 ; $count < 2 ; $count++)
                 {
                     if (!$count)
                         $objValidation = $objPHPExcel->getActiveSheet()->getCell('F' . $row)->getDataValidation();
@@ -149,8 +151,8 @@ class AdminController extends ControllerBase
                     $objValidation->setError('Value is not in list.');
                     $objValidation->setPromptTitle('Pick from list');
                     $objValidation->setPrompt('Please pick a value from the drop-down list.');
-                    //
                     $objValidation->setFormula1($advisors);
+
 
                     //set coadvisor if exists
                     if (!empty($projectMaps[$count]))
@@ -165,9 +167,40 @@ class AdminController extends ControllerBase
                         else
                             $sheet->setCellValue('G' . $row, $coadvisor->name);
                     }
+                    elseif ($projectLevel != 'PP')
+                    {
+                        $count2 = 0;
+
+                        $tmpProjectMaps = ProjectMap::find([
+                            "conditions" => "user_id=:user_id: AND map_type='owner'",
+                            "bind" => ["user_id" => $owner->user_id]
+                        ]);
+
+                        foreach ($tmpProjectMaps as $tmpProjectMap)
+                        {
+                            $coProjectMaps = ProjectMap::find([
+                                "conditions" => "project_id=:project_id: AND map_type='coadvisor'",
+                                "bind" => ["project_id" => $tmpProjectMap->project_id]
+                            ]);
+
+                            foreach ($coProjectMaps as $coProjectMap)
+                            {
+                                if (!in_array($coProjectMap->user_id, $coadvisors))
+                                {
+                                    array_push($coadvisors, $coProjectMap->user_id);
+                                    if (!$count2)
+                                    {
+                                        $sheet->setCellValue('F' . $row, $coProjectMap->User->name);
+                                        $count2 = 1;
+                                    }
+                                    else
+                                        $sheet->setCellValue('G' . $row, $coProjectMap->User->name);
+                                }
+                            }
+                        }
+                    }
 
                     $sheet->setCellValue('H' . $row, $project->project_id);
-
                 }
             }
 
@@ -366,7 +399,7 @@ class AdminController extends ControllerBase
                             }
                         }
 
-                        for ($i = 0; $i < 2; $i++, $count++)
+                        for ($i = 0 ; $i < 2 ; $i++, $count++)
                         {
                             if (empty($coadvisors[$count]))
                                 continue;
