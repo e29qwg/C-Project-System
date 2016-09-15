@@ -147,6 +147,12 @@ class ProgressController extends ControllerBase
             return;
         }
 
+        if ($progress->Project->semester_id != $this->current_semester)
+        {
+            $this->flashSession->error('ไม่สามารถแก้ไขได้ เนื่องจากไม่ใช่ภาคการศึกษาปัจจุบัน');
+            return $this->_redirectBack();
+        }
+
         $progress->progress_finish = $progress_finish;
         $progress->progress_working = $progress_working;
         $progress->progress_todo = $progress_todo;
@@ -180,6 +186,12 @@ class ProgressController extends ControllerBase
         if (!$this->permission->checkPermission($this->auth['id'], $progress->project_id))
         {
             $this->flashSession->error('Access Denied');
+            return $this->_redirectBack();
+        }
+
+        if ($progress->Project->semester_id != $this->current_semester)
+        {
+            $this->flashSession->error('ไม่สามารถแก้ไขได้ เนื่องจากไม่ใช่ภาคการศึกษาปัจจุบัน');
             return $this->_redirectBack();
         }
 
@@ -348,6 +360,12 @@ class ProgressController extends ControllerBase
             return $this->forward('projects/me');
         }
 
+        if ($progress->Project->semester_id != $this->current_semester)
+        {
+            $this->flashSession->error('ไม่สามารถลบได้ เนื่องจากไม่ใช่ภาคการศึกาาปัจจุบัน');
+            return $this->_redirectBack();
+        }
+
         $progress->delete();
 
 
@@ -411,6 +429,14 @@ class ProgressController extends ControllerBase
 
         //insert progress
         $project = Project::findFirst("project_id='$project_id'");
+
+
+        if ($project->semester_id != $this->current_semester)
+        {
+            $this->flashSession->error('บันทึกความก้าวหน้าผิดเทิอม!!!! อ่านหน่อยนะ');
+            return $this->_redirectBack();
+        }
+
         $user = User::findFirst("id='$user_id'");
 
         $progress_finish = $request->getPost('progress_finish');
