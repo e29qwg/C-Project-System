@@ -48,6 +48,18 @@ class ControllerBase extends Phalcon\Mvc\Controller
         $this->loadRoomDate();
     }
 
+    protected function loadSetting($key)
+    {
+        $setting = Settings::findFirst([
+            "conditions" => "name=:key:",
+            "bind" => ["key" => $key]
+        ]);
+
+        if (!$setting)
+            return null;
+        return $setting->value;
+    }
+
     protected function loadRoomDate()
     {
         $setting = Settings::findFirst("name='room_reserve_p1_start'");

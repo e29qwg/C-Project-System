@@ -14,6 +14,52 @@ class ExamController extends ControllerBase
             $this->loadAdvisorProject();
     }
 
+    public function midtermListAction()
+    {
+        $builder = $this->modelsManager->createBuilder();
+        $builder->from(["ProjectMap"]);
+        $builder->where("ProjectMap.map_type='owner'");
+        $builder->innerJoin("Project", "Project.project_id=ProjectMap.project_id");
+        $builder->andWhere("Project.semester_id=:semester_id:", ["semester_id" => $this->current_semester]);
+        $builder->innerJoin("User", "User.id=ProjectMap.user_id");
+        $builder->orderBy("User.user_id ASC");
+
+        $projectMaps = $builder->getQuery()->execute();
+
+        $lastDate = $this->loadSetting('last_progress_midterm_date');
+        $canExamUsers = [];
+        $cantExamUsers = [];
+        $countProgresss = [];
+
+
+        foreach ($projectMaps as $projectMap)
+        {
+            $progresss = Progress::find([
+                "conditions" => "user_id=:user_id: AND project_id=:project_id: AND create_date <= :last_date:",
+                "bind" => ["user_id" => $projectMap->user_id, "project_id" => $projectMap->project_id, "last_date" => $lastDate]
+            ]);
+
+            if (count($progresss) >= 4)
+                array_push($canExamUsers, $projectMap->User);
+            else
+                array_push($cantExamUsers, $projectMap->User);
+
+            $countProgresss[''.$projectMap->user_id] = count($progresss);
+        }
+
+        $this->view->setVars([
+            'lastDate' => $lastDate,
+            'canExamUsers' => $canExamUsers,
+            'cantExamUsers' => $cantExamUsers,
+            'countProgresss' => $countProgresss
+        ]);
+    }
+
+    public function finalListAction()
+    {
+
+    }
+
     public function showExamAction()
     {
         $this->downloadAction();
@@ -21,7 +67,7 @@ class ExamController extends ControllerBase
 
     public function downloadAction()
     {
-        if ($this->DownloadFile->download("Exam".$this->current_semester))
+        if ($this->DownloadFile->download("Exam" . $this->current_semester))
         {
             $this->view->disable();
             return;
@@ -131,4 +177,4 @@ class ExamController extends ControllerBase
     }
 }
 
-?>
+

@@ -80,7 +80,8 @@ class Security extends \Phalcon\Mvc\User\Plugin
             $publicResources = array(
                 'index' => array('index'),
                 'session' => array('index', 'login', 'localLogin', 'logout', 'useHash', 'adminLogin'),
-                'room' => ['viewOnly']
+                'room' => ['viewOnly'],
+                'exam' => ['midtermList']
             );
 
             foreach ($publicResources as $resource => $actions)

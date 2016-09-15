@@ -1,0 +1,83 @@
+<?php
+
+echo $this->getContent();
+
+if (date('Y-m-d H:i:s') < $lastDate)
+    $this->flash->notice('ยังมีการเปลี่ยนแปลงจนกว่าจะถึงเวลา: '.$lastDate);
+
+?>
+
+<h3>Midterm checklist <?= $current_semester; ?></h3>
+
+<div>
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#pass" aria-controls="pass" role="tab" data-toggle="tab">บันทึกความก้าวหน้าครบแล้ว</a></li>
+        <li role="presentation"><a href="#nopass" aria-controls="nopass" role="tab" data-toggle="tab">ไม่มีสิทธิ์สอบ</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="pass">
+            <br>
+
+            <h4>จำนวน <?= count($canExamUsers); ?> คน</h4>
+
+            <br>
+
+            <table class="table table-responsive">
+                <tr class="success">
+                    <th class="text-center">รหัส นศ.</th>
+                    <th class="text-center">ชื่อ - นามสกุล</th>
+                    <th class="text-center">จำนวนความก้าวหน้า</th>
+                </tr>
+
+                <?php
+                foreach ($canExamUsers as $canExamUser):
+
+                ?>
+
+                    <tr>
+                        <td class="text-center"><?= $canExamUser->user_id; ?></td>
+                        <td><?= $canExamUser->title.$canExamUser->name; ?></td>
+                        <td class="text-center"><?= $countProgresss[$canExamUser->id.'']; ?></td>
+                    </tr>
+
+                <?php
+                endforeach;
+                ?>
+            </table>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="nopass">
+            <br>
+
+            <h4>จำนวน <?= count($cantExamUsers); ?> คน</h4>
+
+            <br>
+            <table class="table table-responsive">
+                <tr class="danger">
+                    <th class="text-center">รหัส นศ.</th>
+                    <th class="text-center">ชื่อ - นามสกุล</th>
+                    <th class="text-center">จำนวนความก้าวหน้า</th>
+                </tr>
+
+                <?php
+                foreach ($cantExamUsers as $canExamUser):
+
+                    ?>
+
+                    <tr>
+                        <td class="text-center"><?= $canExamUser->user_id; ?></td>
+                        <td><?= $canExamUser->title.$canExamUser->name; ?></td>
+                        <td class="text-center"><?= $countProgresss[$canExamUser->id.'']; ?></td>
+                    </tr>
+
+                    <?php
+                endforeach;
+                ?>
+            </table>
+        </div>
+    </div>
+
+</div>
