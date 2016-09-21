@@ -22,36 +22,37 @@ class ExamController extends ControllerBase
         $builder->innerJoin("Project", "Project.project_id=ProjectMap.project_id");
         $builder->andWhere("Project.semester_id=:semester_id:", ["semester_id" => $this->current_semester]);
         $builder->innerJoin("User", "User.id=ProjectMap.user_id");
-        $builder->orderBy("User.user_id ASC");
+        //$builder->orderBy("User.user_id ASC");
 
         $projectMaps = $builder->getQuery()->execute();
 
         $lastDate = $this->loadSetting('last_progress_midterm_date');
+
         $canExamUsers = [];
         $cantExamUsers = [];
-        $countProgresss = [];
-
 
         foreach ($projectMaps as $projectMap)
         {
             $progresss = Progress::find([
-                "conditions" => "user_id=:user_id: AND project_id=:project_id: AND create_date <= :last_date:",
-                "bind" => ["user_id" => $projectMap->user_id, "project_id" => $projectMap->project_id, "last_date" => $lastDate]
+                "conditions" => "project_id=:project_id: AND create_date <= :last_date:",
+                "bind" => ["project_id" => $projectMap->project_id, "last_date" => $lastDate]
             ]);
 
-            if (count($progresss) >= 4)
-                array_push($canExamUsers, $projectMap->User);
-            else
-                array_push($cantExamUsers, $projectMap->User);
+            $data = [];
+            $data['user'] = $projectMap->User;
+            $data['nProgress'] = count($progresss);
+            $data['project'] = $projectMap->Project;
 
-            $countProgresss[''.$projectMap->user_id] = count($progresss);
+            if ($data['nProgress'] >= 4)
+                array_push($canExamUsers, $data);
+            else
+                array_push($cantExamUsers, $data);
         }
 
         $this->view->setVars([
             'lastDate' => $lastDate,
             'canExamUsers' => $canExamUsers,
             'cantExamUsers' => $cantExamUsers,
-            'countProgresss' => $countProgresss
         ]);
     }
 
