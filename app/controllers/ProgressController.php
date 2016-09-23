@@ -55,7 +55,7 @@ class ProgressController extends ControllerBase
                 $txt .= $progress->progress_finish;
                 $txt .= '<h4>งานที่อยู่ระหว่างดำเนินการ</h4>';
                 $txt .= $progress->progress_working;
-                $txt .= '<h4>งานที่ยังไม่ได้นำเนินการ</h4>';
+                $txt .= '<h4>งานที่ยังไม่ได้ดำเนินการ</h4>';
                 $txt .= $progress->progress_todo;
                 $txt .= '<h4>สรุปผลการดำเนินการและปัญหาที่เกิดขึ้น</h4>';
                 $txt .= $progress->progress_summary;
