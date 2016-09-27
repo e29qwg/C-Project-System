@@ -1,3 +1,5 @@
+
+
 <div class="row">
     <?php require(__DIR__ . '/../layouts/projectHeader.php'); ?>
     <div class="tab-content">
@@ -5,14 +7,13 @@
             <br>
 
             <div class="alert-info pull-left">
-                สามารถบันทึกความก้าวหน้าครั้งต่อไปได้ในเวลา <?= date('Y-m-d H:i:s', $next_date); ?>
+                สามารถบันทึกความก้าวหน้าครั้งต่อไปได้ในเวลา <?=  $next_date->format('Y-m-d H:i:s');  ?>
             </div>
 
             <div class="pull-right">
                 <?php
 
-                //TODO oposite sign before release
-                if (date('Y-m-d H:i:s') >= date('Y-m-d H:i:s', $next_date)):
+                if (date('Y-m-d H:i:s') >= $next_date->format('Y-m-d H:i:s')):
                     ?>
                     <a href="<?= $this->url->get('progress/newProgress/'); ?><?= $selectProject->project_id; ?>"
                        class="btn btn-xs btn-success">New Progress</a>

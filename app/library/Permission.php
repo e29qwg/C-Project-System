@@ -25,6 +25,8 @@ class Permission extends \Phalcon\Mvc\User\Component
     //check can access project
     public function checkPermission($user_id, $project_id)
     {
+        $auth = $this->session->get('auth');
+
         $projectMap = ProjectMap::findFirst(array(
             "conditions" => "project_id=:project_id: AND user_id=:user_id:",
             "bind" => array("project_id" => $project_id, "user_id" => $user_id)
@@ -32,11 +34,27 @@ class Permission extends \Phalcon\Mvc\User\Component
 
         if (!$projectMap || empty($project_id))
         {
-            if (!empty($project_id) && $this->auth['type'] == 'Admin')
+            if (!empty($project_id) && $auth['type'] == 'Admin')
                 return true;
 
             return false;
         }
+        return true;
+    }
+
+    public function checkAdvisorPermission($project_id)
+    {
+        $auth = $this->session->get('auth');
+        $user_id = $auth['id'];
+
+        $projectMap = ProjectMap::findFirst([
+            "conditions" => "user_id=:user_id: AND project_id=:project_id: AND map_type='advisor'",
+            "bind" => ["user_id" => $user_id, "project_id" => $project_id]
+        ]);
+
+        if (!$projectMap || empty($project_id))
+            return false;
+
         return true;
     }
 
@@ -55,9 +73,10 @@ class Permission extends \Phalcon\Mvc\User\Component
             return true;
 
         $last_date = $progresss[0]->create_date;
-        $next_date = date('Y-m-d H:i:s', strtotime($last_date) + $this->config->progress->delay);
+        $next_date = new DateTime($last_date);
+        $next_date->modify('next monday');
 
-        if (date('Y-m-d H:i:s') >= $next_date)
+        if (date('Y-m-d H:i:s') >= $next_date->format('Y-m-d H:i:s'))
             return true;
 
         return false;

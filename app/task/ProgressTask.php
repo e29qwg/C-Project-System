@@ -52,23 +52,21 @@ class ProgressTask extends \Phalcon\Cli\Task
         $user = $progress->User;
         $project = $progress->Project;
 
-        if (date('Y-m-d H:i:s', strtotime($progress->create_date) + $this->config->progress->delay - 1) < date('Y-m-d H:i:s'))
+        $last_date = $progress->create_date;
+        $next_date = new DateTime($last_date);
+        $next_date->modify('next monday');
+
+        if ($next_date->format('Y-m-d H:i:s') < date('Y-m-d H:i:s'))
         {
             //send notification
             if (empty($user->email) || $user->active == '0')
+            {
+                $this->db->close();
                 return;
-
-            $remain_mid = 4-count($progresss);
-            if ($remain_mid < 0)
-                $remain_mid = 0;
-            $remain_fin = 8-count($progresss);
-            if ($remain_fin < 0)
-                $remain_fin = 0;
+            }
 
             $subject = "แจ้งเตือนการบันทึกความก้าวหน้าโครงงาน ".$project->project_name;
-            $mes = "โครงงาน ".$project->project_name."สามารถบันทึกความก้าวหน้าได้แล้ว<br>";
-            $mes .= "ต้องบันทึกความก้าวหน้าอีก ".$remain_mid." ครั้ง ก่อนกำหนดส่งรายงานมิดเทิอม<br>";
-            $mes .= "ต้องบันทึกความก้าวหน้าอีก ".$remain_fin." ครั้ง ก่อนกำหนดส่งรายงานไฟนอล";
+            $mes = "โครงงาน ".$project->project_name."สามารถบันทึกความก้าวหน้าได้แล้ว";
             $to = $user->email;
 
             $this->sendMail($subject, $mes, $to);

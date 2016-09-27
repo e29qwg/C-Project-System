@@ -221,24 +221,6 @@ class ControllerBase extends Phalcon\Mvc\Controller
         $this->view->setVar('allSemesterIds', $allSemesterIds);
     }
 
-    protected function _checkAdvisorPermission($project_id)
-    {
-        $auth = $this->session->get('auth');
-        $user_id = $auth['id'];
-
-        $projectMap = ProjectMap::findFirst("user_id='$user_id' AND map_type='advisor' AND project_id='$project_id'");
-
-        if (!$projectMap || empty($project_id))
-        {
-            $this->flash->error('Access Denied');
-            $this->forward('index');
-
-            return false;
-        }
-
-
-        return true;
-    }
 
     protected function forward($uri)
     {

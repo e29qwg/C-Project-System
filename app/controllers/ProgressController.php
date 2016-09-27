@@ -221,8 +221,8 @@ class ProgressController extends ControllerBase
             $project_id = $progress->project_id;
 
             //check is advisor in this project
-            if (!$this->_checkAdvisorPermission($project_id))
-                return false;
+            if (!$this->permission->checkAdvisorPermission($project_id))
+                return $this->forward('index');
 
             $progressEvaluate = ProgressEvaluate::findFirst(array(
                 "conditions" => "progress_id=:progress_id:",
@@ -293,8 +293,8 @@ class ProgressController extends ControllerBase
     public function evaluateAction()
     {
         $params = $this->dispatcher->getParams();
-        if (!$this->_checkAdvisorPermission($params[0]))
-            return;
+        if (!$this->permission->checkAdvisorPermission($params[0]))
+            return $this->forward('index');
 
         $project_id = $params[0];
 
@@ -414,6 +414,7 @@ class ProgressController extends ControllerBase
         $type = $auth['type'];
 
         $project_id = $request->getPost('id');
+
         if (!$this->permission->checkPermission($user_id, $project_id))
         {
             $this->flashSession->error('Access Denied');
@@ -421,19 +422,21 @@ class ProgressController extends ControllerBase
         }
 
         //check time pass
-        if (!$this->permission->canAddNewProgress($user_id, $project_id))
+        if (!$this->permission->checkAdvisorPermission($project_id))
         {
-            $this->flash->error('Miss time conditions');
-            return $this->pForward('progress', 'progress', array($project_id));
+            if (!$this->permission->canAddNewProgress($user_id, $project_id))
+            {
+                $this->flash->error('Miss time conditions');
+                return $this->pForward('progress', 'progress', array($project_id));
+            }
         }
 
         //insert progress
         $project = Project::findFirst("project_id='$project_id'");
 
-
         if ($project->semester_id != $this->current_semester)
         {
-            $this->flashSession->error('บันทึกความก้าวหน้าผิดเทิอม!!!! อ่านหน่อยนะ');
+            $this->flashSession->error('บันทึกความก้าวหน้าผิดเทิอม!!!!');
             return $this->_redirectBack();
         }
 
@@ -463,6 +466,13 @@ class ProgressController extends ControllerBase
             return $this->pForward('progress', 'newProgress', array($project_id));
         }
 
+        //find delay in seconds.
+        $last_date = $progress->create_date;
+        $next_date = new DateTime($progress->create_date);
+        $next_date->modify('next monday');
+
+        $delay = strtotime($next_date->format('Y-m-d H:i:s')) - strtotime($last_date) + 5;
+
         //add notification queue
         $this->queue->choose($this->config->queue->progresstube);
         $this->queue->put(
@@ -470,7 +480,7 @@ class ProgressController extends ControllerBase
                 'progress_id' => $progress->progress_id
             ),
             array(
-                'delay' => $this->config->progress->delay
+                'delay' => $delay
             )
         );
 
@@ -496,7 +506,7 @@ class ProgressController extends ControllerBase
         $log->save();
 
         //send email to advisor
-        $advisor = User::findFIrst(array(
+        $advisor = User::findFirst(array(
             "conditions" => "id=:user_id:",
             "bind" => array("user_id" => $projectMap->user_id)
         ));
@@ -541,10 +551,13 @@ class ProgressController extends ControllerBase
 
 
         //$this->permission
-        if (!$this->permission->canAddNewProgress($this->auth['id'], $params[0]))
+        if (!$this->permission->checkAdvisorPermission($params[0]))
         {
-            $this->flash->error('Missing time conditions');
-            return $this->pForward('progress', 'index', array($params[0]));
+            if (!$this->permission->canAddNewProgress($this->auth['id'], $params[0]))
+            {
+                $this->flash->error('Missing time conditions');
+                return $this->pForward('progress', 'index', array($params[0]));
+            }
         }
     }
 
@@ -580,13 +593,17 @@ class ProgressController extends ControllerBase
 
         $this->view->progresss = $progresss;
 
-
         if (count($progresss))
         {
             //check available time for new progress
             $last_date = $progresss[count($progresss) - 1]->create_date;
-            $next_date = strtotime($last_date) + $this->config->progress->delay;
-            $this->view->next_date = $next_date;
+            $last_date = new DateTime($last_date);
+            $next_date = $last_date->modify('next monday');
+            $this->view->setVar('next_date', $next_date);
+        }
+        else
+        {
+            $this->view->setVar('next_date', new DateTime("now"));
         }
     }
 
