@@ -4,11 +4,15 @@ echo $this->getContent();
 
 if (date('Y-m-d H:i:s') < $lastDate)
     $this->flash->notice('ยังมีการเปลี่ยนแปลงจนกว่าจะถึงเวลา: ' . $lastDate);
+else
+    $this->flash->warning('อัพเดตครั้งสุดท้ายเวลา: '.$lastDate);
 
 $cmpStr = $this->request->getQuery('cmpStr');
 
 if ($cmpStr == "compareByNProgress" || $cmpStr == "compareByUserId")
     $compareStr = $cmpStr;
+else
+    $compareStr = "";
 
 
 if (!empty($compareStr))
