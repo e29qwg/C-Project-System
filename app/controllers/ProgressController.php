@@ -136,10 +136,16 @@ class ProgressController extends ControllerBase
         $progress_summary = $request->getPost('progress_summary');
         $progress_target = $request->getPost('progress_target');
 
-        $progress = Progress::findFirst("progress_id='$progress_id'");
+        $progress = Progress::findFirst([
+            "conditions" => "progress_id=:progress_id:",
+            "bind" => ["progress_id" => $progress_id]
+        ]);
 
         //check user permission
-        $projectMap = ProjectMap::findFirst("project_id='$progress->project_id' AND user_id='$user_id'");
+        $projectMap = ProjectMap::findFirst([
+            "conditions" => "project_id=:project_id: AND user_id=:user_id:",
+            "bind" => ["project_id" => $progress->project_id, "user_id" => $user_id]
+        ]);
 
         if (!(($projectMap->map_type == 'owner' && $progress->user_id == $user_id) || $projectMap->map_type = 'advisor'))
         {
@@ -339,8 +345,15 @@ class ProgressController extends ControllerBase
 
         $progress_id = $params[1];
 
-        $progress = Progress::findFirst("progress_id='$progress_id'");
-        $projectMap = ProjectMap::findFirst("project_id='$progress->project_id' AND user_id='$user_id'");
+        $progress = Progress::findFirst([
+            "conditions" => "progress_id=:progress_id:",
+            "bind" => ["progress_id" => $progress_id]
+        ]);
+
+        $projectMap = ProjectMap::findFirst([
+            "conditions" => "project_id=:project_id: AND user_id=:user_id:",
+            "bind" => ["project_id" => $progress->project_id, "user_id" => $user_id]
+        ]);
 
         if (!$progress || !$projectMap)
         {
@@ -432,7 +445,11 @@ class ProgressController extends ControllerBase
         }
 
         //insert progress
-        $project = Project::findFirst("project_id='$project_id'");
+        $project = Project::findFirst([
+            "conditions" => "project_id=:project_id:",
+            "bind" => ["project_id" => $project_id]
+        ]);
+
 
         if ($project->semester_id != $this->current_semester)
         {
@@ -440,7 +457,10 @@ class ProgressController extends ControllerBase
             return $this->_redirectBack();
         }
 
-        $user = User::findFirst("id='$user_id'");
+        $user = User::findFirst([
+            "conditions" => "id=:id:",
+            "bind" => ["id" => $user_id]
+        ]);
 
         $progress_finish = $request->getPost('progress_finish');
         $progress_working = $request->getPost('progress_working');
@@ -497,7 +517,11 @@ class ProgressController extends ControllerBase
 
         $this->flashSession->success('Add progress success');
 
-        $projectMap = ProjectMap::findFirst("project_id='$project_id' AND map_type='advisor'");
+        $projectMap = ProjectMap::findFirst([
+            "conditions" => "project_id=:project_id: AND map_type='advisor'",
+            "bind" => ["project_id" => $project_id]
+        ]);
+
 
         //sent notification to advisor
         $log = new Log();

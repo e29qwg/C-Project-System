@@ -4,7 +4,7 @@
 
 if (empty($project_level_name))
 {
-    $this->flash->error('ไม่มีข้อมูลการลงทะเบียนหรือมีโครงงานแล้ว');
+    $this->flash->error('ไม่มีข้อมูลการลงทะเบียน/มีโครงงานแล้ว/ไม่ผ่านเกณฑ์การใช้งาน TMM (กรณี Prepare project)');
     return;
 }
 

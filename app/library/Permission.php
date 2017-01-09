@@ -130,6 +130,26 @@ class Permission extends \Phalcon\Mvc\User\Component
         if (!$project_level)
             return null;
 
+        //check tmm if prepare project
+        if ($project_level->project_level_id == 1)
+        {
+            $detail = Detail::findFirst([
+                "conditions" => "username=:username:",
+                "bind" => ["username" => $username]
+            ]);
+
+            if (!$detail)
+            {
+                return null;
+            }
+
+            if ($detail->total_time < 420 || is_null($detail->placement_test))
+            {
+                return null;
+            }
+        }
+
+
         $builder = $this->modelsManager->createBuilder();
         $builder->from("Project");
         $builder->where("Project.semester_id=:semester_id:", array("semester_id" => $current_semester));
@@ -138,7 +158,6 @@ class Permission extends \Phalcon\Mvc\User\Component
         $builder->andWhere("ProjectMap.map_type='owner'");
 
         $projects = $builder->getQuery()->execute();
-
 
         if (count($projects))
             return null;

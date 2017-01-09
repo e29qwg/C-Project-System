@@ -165,7 +165,7 @@ class ProjectsController extends ControllerBase
             if ($projectMap->map_type != "owner")
                 continue;
 
-            for ($i = 0; $i < 2; $i++)
+            for ($i = 0 ; $i < 2 ; $i++)
             {
                 if ($project->project_level_id == 1)
                     $score = new ScorePrepare();
@@ -189,7 +189,10 @@ class ProjectsController extends ControllerBase
         if ($project->semester_id != $currentSemester)
             return;
 
-        $projectLevel = ProjectLevel::findFirst("project_level_id='$project->project_level_id'");
+        $projectLevel = ProjectLevel::findFirst([
+            "conditions" => "project_level_id=:id:",
+            "bind" => ["id" => $project->project_level_id]
+        ]);
         $ncoadvisor = $projectLevel->coadvisor;
 
         if ($project->project_level_id > 1)
@@ -199,7 +202,8 @@ class ProjectsController extends ControllerBase
         $ncoadvisor = 0;
 
         $coadvisors = User::find(array(
-            "conditions" => "advisor_group='$advisor->advisor_group' AND id!='$advisor->id' AND type='Advisor'",
+            "conditions" => "advisor_group=:advisor_group: AND id != :advisor_id: AND type='Advisor'",
+            "bind" => ["advisor_group" => $advisor->advisor_group, "advisor_id" => $advisor->id],
             "limit" => $ncoadvisor,
             "order" => "work_load ASC"
         ));
@@ -381,7 +385,10 @@ class ProjectsController extends ControllerBase
             return $this->forward('projects/me');
         }
 
-        $project = Project::findFirst("project_id='$params[0]'");
+        $project = Project::findFirst([
+            "conditions" => "project_id=:id:",
+            "bind" => ["id" => $params[0]]
+        ]);
 
         if (!$this->permission->checkPermission($this->auth['id'], $project->project_id))
         {
@@ -389,10 +396,16 @@ class ProjectsController extends ControllerBase
             return $this->_redirectBack();
         }
 
-        $logUsers = ProjectMap::find("project_id='$params[0]'");
+        $logUsers = ProjectMap::find([
+            "conditions" => "project_id=:id:",
+            "bind" => ["id" => $params[0]]
+        ]);
 
         //check user permission
-        $projectMap = ProjectMap::findFirst("project_map_id='$params[1]'");
+        $projectMap = ProjectMap::findFirst([
+            "conditions" => "project_map_id=:id:",
+            "bind" => ["id" => $params[1]]
+        ]);
 
         if (!$projectMap || !$project)
         {
@@ -412,8 +425,16 @@ class ProjectsController extends ControllerBase
             return $this->forward('projects/me');
         }
 
-        $projectMap = ProjectMap::findFirst("project_map_id='$params[1]'");
-        $user = User::findFirst("id='$projectMap->user_id'");
+        $projectMap = ProjectMap::findFirst([
+            "conditions" => "project_map_id=:id:",
+            "bind" => ["id" => $params[1]]
+        ]);
+
+        $user = User::findFirst([
+            "conditions" => "id=:id:",
+            "bind" => ["id" => $projectMap->user_id]
+        ]);
+
         $projectMap->delete();
 
         //log
@@ -447,7 +468,10 @@ class ProjectsController extends ControllerBase
         }
 
         //check users exists
-        $user = User::findFirst("id='$member_id' AND type='Student'");
+        $user = User::findFirst([
+            "conditions" => "id=:id: AND type='Student'",
+            "bind" => ["id" => $member_id]
+        ]);
 
         if (!$user)
         {
@@ -456,7 +480,11 @@ class ProjectsController extends ControllerBase
         }
 
         //check project exists
-        $project = Project::findFirst("project_id='$project_id'");
+        $project = Project::findFirst([
+            "conditions" => "project_id=:id:",
+            "bind" => ["id" => $project_id]
+        ]);
+
         if (!$project)
         {
             $this->flash->error('Project not found');
@@ -470,7 +498,11 @@ class ProjectsController extends ControllerBase
         }
 
         //check exists new member project
-        $projectMaps = ProjectMap::find("user_id='$member_id' AND map_type='owner'");
+        $projectMaps = ProjectMap::find([
+            "conditions" => "user_id=:user_id: AND map_type='owner'",
+            "bind" => ["user_id" => $member_id]
+        ]);
+
         $member_project_ids = array();
         foreach ($projectMaps as $projectMap)
         {
@@ -842,7 +874,7 @@ class ProjectsController extends ControllerBase
                 $body = htmlspecialchars($this->auth['name'] . ' ได้สร้างโครงงาน ' . $project_name . ' (รอการยืนยัน) เวลา ' . date('d-m-Y H:i:s'));
                 $body .= "<br>";
                 $body .= "<a href=\"" . $this->furl . $this->url->get('session/useHash/') . $hashLink->hash . "\">คลิกที่นี่เพื่อดูขอเสนอโครงงาน</a>";
-                $body .= "<br>หมายเหตุ ลิงค์นี้ใช้ได้ครั้งเดียวและจะหมดอายุในวันที่ ".$hashLink->expire_time;
+                $body .= "<br>หมายเหตุ ลิงค์นี้ใช้ได้ครั้งเดียวและจะหมดอายุในวันที่ " . $hashLink->expire_time;
 
                 $this->sendMail($subject, $body, $to);
             }

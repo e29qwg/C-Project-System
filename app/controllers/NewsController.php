@@ -14,7 +14,10 @@ class NewsController extends ControllerBase
         $data = $this->request->getPost('news');
         $id = $this->request->getPost('id');
 
-        $news = News::findFirst("id='$id'");
+        $news = News::findFirst([
+            "conditions" => "id=:id:",
+            "bind" => ["id" => $id]
+        ]);
 
         if ($news)
         {
@@ -35,7 +38,10 @@ class NewsController extends ControllerBase
         $params = $this->dispatcher->getParams();
         $id = $params[0];
 
-        $news = News::findFirst("id='$id'");
+        $news = News::findFirst([
+            "conditions" => "id=:id:",
+            "bind" => ["id" => $id]
+        ]);
 
         if ($news)
         {
