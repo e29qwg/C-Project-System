@@ -734,7 +734,7 @@ class ProjectsController extends ControllerBase
 
     public function meAction()
     {
-        if ($this->auth['type'] != 'student')
+        if ($this->auth['type'] != 'Student')
             return $this->forward('index');
 
         /*$this->loadOwnerProject();*/
