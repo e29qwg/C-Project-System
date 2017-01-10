@@ -419,11 +419,12 @@ class ProjectsController extends ControllerBase
             return $this->forward('projects/me');
         }
 
-        if ($project->project_status == 'Accept')
+        if ($project->project_status == 'Accept' && $this->auth['type'] == 'Student')
         {
-            $this->flash->error('Access Denied: Project already accepted');
+            $this->flashSession->error('Access Denied: Project already accepted');
             return $this->forward('projects/me');
         }
+
 
         $projectMap = ProjectMap::findFirst([
             "conditions" => "project_map_id=:id:",
@@ -445,6 +446,7 @@ class ProjectsController extends ControllerBase
             $log->description = $auth['name'] . ' ได้ลบ ' . $user->name . ' ออกจากโครงงาน ' . $project->project_name;
             $log->save();
         }
+
 
         $this->flashSession->success('Delete member success');
         return $this->response->redirect('projects/member/' . $params[0]);
@@ -732,7 +734,10 @@ class ProjectsController extends ControllerBase
 
     public function meAction()
     {
-        $this->loadOwnerProject();
+        if ($this->auth['type'] != 'student')
+            return $this->forward('index');
+
+        /*$this->loadOwnerProject();*/
     }
 
 
