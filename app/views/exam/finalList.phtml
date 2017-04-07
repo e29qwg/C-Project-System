@@ -1,0 +1,203 @@
+<?php
+
+echo $this->getContent();
+
+if (date('Y-m-d H:i:s') < $lastDate)
+    $this->flash->notice('(Project I && PP) ยังมีการเปลี่ยนแปลงจนกว่าจะถึงเวลา: ' . $lastDate);
+else
+    $this->flash->warning('(Project I && PP) อัพเดตครั้งสุดท้ายเวลา: '.$lastDate);
+
+if (date('Y-m-d H:i:s') < $lastDateP2)
+    $this->flash->notice('(Project II) ยังมีการเปลี่ยนแปลงจนกว่าจะถึงเวลา: ' . $lastDateP2);
+else
+    $this->flash->warning('(Project II) อัพเดตครั้งสุดท้ายเวลา: '.$lastDateP2);
+
+
+$cmpStr = $this->request->getQuery('cmpStr');
+
+if ($cmpStr == "compareByNProgress" || $cmpStr == "compareByUserId")
+    $compareStr = $cmpStr;
+else
+    $compareStr = "";
+
+
+if (!empty($compareStr))
+{
+    usort($canExamUsers, $compareStr);
+    usort($cantExamUsers, $compareStr);
+}
+
+$countFrequency = [];
+
+for ($i = 0 ; $i < 21 ; $i++)
+    $countFrequency[$i] = 0;
+
+?>
+
+    <h3>Final checklist <?= $current_semester; ?></h3>
+
+    <div class="row">
+        <form class="form" method="get" action="<?= $url . 'exam/midtermList'; ?>">
+            <label class="col-sm-2 control-label">Sort By</label>
+            <div class="col-sm-3">
+                <?php
+
+                \Phalcon\Tag::setDefault("cmpStr", $compareStr);
+
+                echo \Phalcon\Tag::selectStatic([
+                    'cmpStr',
+                    [
+                        'compareByNProgress' => 'Progress',
+                        'compareByUserId' => 'Student ID'
+                    ],
+                    'useEmpty' => 'useEmpty',
+                    'class' => 'form-control'
+                ]);
+
+                ?>
+            </div>
+
+            <button class="btn btn-primary btn-sm">Sort</button>
+        </form>
+    </div>
+
+    <br>
+
+    <div>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#pass" aria-controls="pass" role="tab" data-toggle="tab">บันทึกความก้าวหน้าครบแล้ว</a>
+            </li>
+            <li role="presentation"><a href="#nopass" aria-controls="nopass" role="tab"
+                                       data-toggle="tab">ไม่มีสิทธิ์สอบ</a>
+            </li>
+            <li role="presentation"><a href="#summary" aria-controls="summary" role="tab" data-toggle="tab">สรุป</a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="pass">
+                <br>
+
+                <h4>จำนวน <?= count($canExamUsers); ?> คน</h4>
+
+                <br>
+
+                <table class="table table-responsive">
+                    <tr class="success">
+                        <th class="text-center">รหัส นศ.</th>
+                        <th class="text-center">ชื่อ - นามสกุล</th>
+                        <th class="text-center">จำนวนความก้าวหน้า</th>
+                    </tr>
+
+                    <?php
+
+
+                    foreach ($canExamUsers as $canExamUser):
+
+                        $countFrequency[$canExamUser['nProgress']]++;
+
+                        ?>
+
+                        <tr>
+                            <td class="text-center"><?= $canExamUser['user']->user_id; ?></td>
+                            <td><?= $canExamUser['user']->title . $canExamUser['user']->name; ?></td>
+                            <td class="text-center"><?= $canExamUser['nProgress']; ?></td>
+                        </tr>
+
+                        <?php
+                    endforeach;
+                    ?>
+                </table>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="nopass">
+                <br>
+
+                <h4>จำนวน <?= count($cantExamUsers); ?> คน</h4>
+
+                <br>
+                <table class="table table-responsive">
+                    <tr class="danger">
+                        <th class="text-center">รหัส นศ.</th>
+                        <th class="text-center">ชื่อ - นามสกุล</th>
+                        <th class="text-center">จำนวนความก้าวหน้า</th>
+                    </tr>
+
+                    <?php
+                    foreach ($cantExamUsers as $cantExamUser):
+
+                        $countFrequency[$cantExamUser['nProgress']]++;
+
+                        ?>
+
+                        <tr>
+                            <td class="text-center"><?= $cantExamUser['user']->user_id; ?></td>
+                            <td><?= $cantExamUser['user']->title . $cantExamUser['user']->name; ?></td>
+                            <td class="text-center"><?= $cantExamUser['nProgress']; ?></td>
+                        </tr>
+
+                        <?php
+                    endforeach;
+                    ?>
+                </table>
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="summary">
+
+                <br>
+
+                <table class="table table-responsive">
+                    <tr class="info">
+                        <th class="text-center">รายละเอียด</th>
+                        <th class="text-center">จำนวน (คน)</th>
+                    </tr>
+
+                    <tr>
+                        <td>ทั้งหมด</td>
+                        <td class="text-center"><?= count($canExamUsers) + count($cantExamUsers); ?></td>
+                    </tr>
+                    <tr>
+                        <td>ครบตามกำหนด</td>
+                        <td class="text-center"><?= count($canExamUsers); ?></td>
+                    </tr>
+                    <tr>
+                        <td>ไม่มีสิทธิ์สอบ</td>
+                        <td class="text-center"><?= count($cantExamUsers); ?></td>
+                    </tr>
+                    <?php
+
+                    for ($i = 0 ; $i < 21 ; $i++): 
+
+                        if (!empty($countFrequency[$i])):
+
+                            ?>
+                            <tr>
+                                <td>จำนวน <?= $i; ?> ครั้ง</td>
+                                <td class="text-center"><?= $countFrequency[$i]; ?></td>
+                            </tr>
+
+                            <?php
+                        endif;
+                    endfor ;
+                    ?>
+                </table>
+            </div>
+        </div>
+    </div>
+
+<?php
+
+function compareByNProgress($a, $b)
+{
+    if ($a['nProgress'] == $b['nProgress'])
+        return strcmp($a['user']->user_id, $b['user']->user_id);
+    return $a['nProgress'] - $b['nProgress'];
+}
+
+function compareByUserId($a, $b)
+{
+    return strcmp($a['user']->user_id, $b['user']->user_id);
+}
+
+?>
