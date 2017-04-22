@@ -78,10 +78,16 @@ if (empty($project_level_name))
                 echo \Phalcon\Tag::textField(array(
                     'project_name',
                     'class' => 'form-control',
-                    'required' => 'required'
+                    'required' => 'required',
+                    'maxlength' => '250'
                 ))
 
+
+
                 ?>
+
+                <p class="help-block">ใส่เฉพาะชื่อภาษาไทย <strong>หรือ</strong> ภาษาอังกฤษ จำกัดความยาวไม่เกิน 250
+                    อักขระ</p>
             </div>
         </div>
 
