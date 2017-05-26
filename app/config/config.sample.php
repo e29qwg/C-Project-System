@@ -4,9 +4,6 @@ $config = new Phalcon\Config(array(
     'maintain_mode' => array(
         'active' => false
     ),
-    'progress' => array(
-        'delay' => '604800'
-    ),
     'database' => array(
         'adapter' => 'Mysql',
         'host' => 'localhost',
