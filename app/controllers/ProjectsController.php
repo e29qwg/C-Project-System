@@ -23,6 +23,96 @@ class ProjectsController extends ControllerBase
         $this->view->selectProject = $selectProject;
     }
 
+    /*
+        * this function for api call
+        * required: username
+        * response: advisor of user's project in current semester
+    */
+    public function APIGetAdvisorAction() {
+        $this->view->disable();
+        $request = $this->request;
+
+        $project_id = $request->getPost('project_id');
+
+        $response = [
+            'status' => 'error',
+            'data' => null,
+            'message' => ''
+        ];
+
+        if (!$this->checkAPIClient($request))
+            return;
+
+        $project = Project::findFirst([
+            "conditions" => "project_id=:id:",
+            "bind" => ["id" => $project_id]
+        ]);
+
+        if (!$project)
+        {
+            $response['message'] = 'Project not found';
+            echo json_encode($response);
+            return;
+        }
+
+        foreach ($project->ProjectMap as $projectMap)
+        {
+            if ($projectMap->map_type == 'advisor') {
+                $response['status'] = 'success';
+                $response['data'] = $projectMap->User;
+            }
+        }
+
+        echo json_encode($response);
+        return;
+    }
+
+
+    /*
+     * this function for api call
+     * required: username
+     * response: user's project in current semester
+    */
+    public function APIGetCurrentProjectInfoAction()
+    {
+        $this->view->disable();
+        $request = $this->request;
+
+        $username = $request->getPost('username');
+
+        $response = [
+            'status' => 'error',
+            'data' => null,
+            'message' => ''
+        ];
+
+        if (!$this->checkAPIClient($request))
+            return;
+
+
+        $builder = $this->modelsManager->createBuilder();
+        $builder->from("Project");
+        $builder->where("Project.semester_id=:semester_id:", ["semester_id" => $this->current_semester]);
+        $builder->innerJoin("ProjectMap", "Project.project_id=ProjectMap.project_id");
+        $builder->andWhere("ProjectMap.map_type='owner'");
+        $builder->innerJoin("User", "ProjectMap.user_id=User.id");
+        $builder->andWhere("User.user_id=:username:", ["username" => $username]);
+
+        $projects = $builder->getQuery()->execute();
+
+        if (!count($projects))
+        {
+            $response['message'] = 'Project not found';
+        }
+
+        $project = $projects[0];
+
+        $response['status'] = 'success';
+        $response['data'] = $project;
+
+        echo json_encode($response);
+    }
+
     //confirm project
     public function acceptAction()
     {

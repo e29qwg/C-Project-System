@@ -30,6 +30,7 @@ include __DIR__ . '/../projects/me.phtml';
         <a href="<?= $url . 'projects/member/' . $params[0] ?>">Member</a></li>
 
 
+
         <?php
         if ($auth['type'] != 'Student')
         {
@@ -66,6 +67,10 @@ include __DIR__ . '/../projects/me.phtml';
             endif;
         }
         ?>
+
+
+        <?= ($controller == 'store') ? '<li class="active">':'<li>'; ?>
+        <a href="<?= $url. 'store/index/'.$params[0] ?>">Store</a>
 
 
     </ul>

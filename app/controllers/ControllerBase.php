@@ -48,6 +48,37 @@ class ControllerBase extends Phalcon\Mvc\Controller
         $this->loadRoomDate();
     }
 
+    protected  function checkAPIClient($request)
+    {
+        $client_id = $request->getPost('client_id');
+        $client_secret = $request->getPost('client_secret');
+
+        $client = Client::findFirst([
+            "conditions" => "client_id=:client_id:",
+            "bind" => ["client_id" => $client_id]
+        ]);
+
+        $response = [
+            'status' => 'error',
+            'data' => null,
+            'message' => ''
+        ];
+
+        if (!$client) {
+            $response['message'] = 'Invalid client';
+            echo json_encode($response);
+            return false;
+        }
+
+        if ($client->client_secret != $client_secret) {
+            $response['message'] = 'Invalid secret';
+            echo json_encode($response);
+            return false;
+        }
+
+        return true;
+    }
+
     protected function loadSetting($key)
     {
         $setting = Settings::findFirst([
@@ -276,5 +307,3 @@ class ControllerBase extends Phalcon\Mvc\Controller
     }
 
 }
-
-?>

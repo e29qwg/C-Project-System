@@ -81,7 +81,8 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 'index' => array('index'),
                 'session' => array('index', 'login', 'localLogin', 'logout', 'useHash', 'adminLogin'),
                 'room' => ['viewOnly'],
-                'exam' => ['midtermList', 'finalList']
+                'exam' => ['midtermList', 'finalList'],
+                'projects' => ['APIGetCurrentProjectInfo', 'APIGetAdvisor']
             );
 
             foreach ($publicResources as $resource => $actions)
@@ -160,6 +161,9 @@ class Security extends \Phalcon\Mvc\User\Plugin
                     'createNewRequest',
                     'selectSeat',
                     'confirmSeat'
+                ],
+                'store' => [
+                    'index'
                 ]
             );
 
@@ -210,7 +214,8 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 'score' => array('advisorView'),
                 'userSettings' => array('*'),
                 'report' => array('evaluate', 'reject', 'accept'),
-                'room' => ['proposed', 'accept', 'reject']
+                'room' => ['proposed', 'accept', 'reject'],
+                'store' => ['index']
             );
 
             foreach ($advisorResources as $resource => $actions)

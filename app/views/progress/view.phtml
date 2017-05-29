@@ -8,7 +8,10 @@ $user_id = $auth['id'];
 
 \Phalcon\Tag::setDefault("evaluate", $progress->progressEvaluate->evaluation);
 
-$projectMap = ProjectMap::findFirst("project_id='$progress->project_id' AND user_id='$user_id'");
+$projectMap = ProjectMap::findFirst([
+    "conditions" => "project_id+:project_id: AND user_id=:user_id:",
+    "bind" => ["project_id" => $progress->project_id, "user_id" => $user_id]
+]);
 
 if (!$projectMap)
 {
