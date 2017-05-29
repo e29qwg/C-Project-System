@@ -757,7 +757,7 @@ class ProjectsController extends ControllerBase
 
         //check can create project
 
-        $project_level = $this->permission->canCreateProject($this->current_semester);
+        $project_level = $this->permission->canCreateProject($this->current_semester, $this->auth['id']);
 
 
         if (empty($project_level))
@@ -893,7 +893,7 @@ class ProjectsController extends ControllerBase
             return $this->forward('projects/newProject');
         }
 
-        $this->flash->success('New project success');
+        $this->flashSession->success('New project success');
         return $this->response->redirect('index');
     }
 
