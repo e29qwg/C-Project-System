@@ -81,8 +81,7 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 'index' => array('index'),
                 'session' => array('index', 'login', 'localLogin', 'logout', 'useHash', 'adminLogin'),
                 'room' => ['viewOnly'],
-                'exam' => ['midtermList', 'finalList'],
-                'projects' => ['APIGetCurrentProjectInfo', 'APIGetAdvisor']
+                'exam' => ['midtermList', 'finalList']
             );
 
             foreach ($publicResources as $resource => $actions)

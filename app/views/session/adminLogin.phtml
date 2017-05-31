@@ -100,6 +100,7 @@ $bkimg = $this->url->get('image/bg_login.png');
                         <input type="password" class="form-control" placeholder="xxxxxxxx" id="password" name="password"
                                required="required">
                         <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        <a href="<?= $this->oauth->authorize_url.'&client_id='.$this->oauth->client_id; ?>" class="btn btn-primary btn-block">Normal User Login</a>
                     </fieldset>
                 </form>
             </div>

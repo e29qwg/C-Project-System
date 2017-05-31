@@ -20,7 +20,7 @@ class StoreController extends ControllerBase
             "bind" => array("project_id" => $project_id)
         ));
 
-        $this->view->selectProject = $selectProject;
+        $this->view->setVar('selectProject', $selectProject);
     }
 
     public function indexAction()
@@ -47,23 +47,26 @@ class StoreController extends ControllerBase
         $params = $this->dispatcher->getParams();
 
         $project_id = $params[0];
-        //get project info
-        $curl_datas= ['project_id' => $project_id, 'client_id' => $this->store_client->client_id, 'client_secret' => $this->store_client->client_secret];
-        $curl = curl_init($this->store_client->get_rent_items_url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($curl_datas));
-        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        $output = curl_exec($curl);
 
-        $response = json_decode($output);
+        $bookings = StoreBooking::find([
+            "conditions" => "project_id=:project_id: AND (status='pending' OR status='pending' OR status='wait' OR status='accept' OR status='in_use')",
+            "bind" => ["project_id" => $project_id]
+        ]);
 
-        if ($response->status != 'success')
-            return;
 
-        $this->view->setVar('bookings', $response->booking);
-        $this->view->setVar('bookingItems', $response->bookingItem);
-        $this->view->setVar('items', $response->item);
+        $finalBookings = StoreBooking::find([
+            "conditions" => "project_id=:project_id: AND status='final'",
+            "bind" => ["project_id" => $project_id]
+        ]);
 
+        $cancelBookings = StoreBooking::find([
+            "conditions" => "project_id=:project_id: AND status='cancel'",
+            "bind" => ["project_id" => $project_id]
+        ]);
+
+        $this->view->setVar('bookings', $bookings);
+        $this->view->setVar('finalBookings', $finalBookings);
+        $this->view->setVar('cancelBookings', $cancelBookings);
     }
 }
 

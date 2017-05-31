@@ -20,6 +20,14 @@ $config = new Phalcon\Config(array(
         'dbname' => '',
         'charset' => 'utf8'
     ],
+    'databasestore' => [
+        'adapater' => 'Mysql',
+        'host' => 'localhost',
+        'username' => '',
+        'password' => '',
+        'dbname' => '',
+        'charset' => 'utf8'
+    ],
     'phalcon' => array(
         'controllersDir' => APP_PATH . '/app/controllers/',
         'modelsDir' => APP_PATH . '/app/models/',

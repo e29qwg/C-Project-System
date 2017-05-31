@@ -21,11 +21,6 @@ $di->set('oauth', function () use ($config)
     return $config->oauth;
 });
 
-$di->set('store_client', function () use ($config)
-{
-    return $config->store_client;
-});
-
 $di->set('queue', function () use ($config)
 {
     $queue = new Phalcon\Queue\Beanstalk(array(
@@ -100,6 +95,18 @@ $di->setShared('db', function () use ($config)
 $di->setShared('dbLog', function () use ($config)
 {
     $dbConfig = $config->databaselog->toArray();
+    $adapter = $dbConfig['adapter'];
+    unset($dbConfig['adapter']);
+
+    $class = 'Phalcon\Db\Adapter\Pdo\\' . $adapter;
+
+    return new $class($dbConfig);
+});
+
+
+$di->setShared('dbStore', function () use ($config)
+{
+    $dbConfig = $config->databasestore->toArray();
     $adapter = $dbConfig['adapter'];
     unset($dbConfig['adapter']);
 
