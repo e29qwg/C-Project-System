@@ -160,6 +160,9 @@ class Security extends \Phalcon\Mvc\User\Plugin
                     'createNewRequest',
                     'selectSeat',
                     'confirmSeat'
+                ],
+                'store' => [
+                    'index'
                 ]
             );
 
@@ -210,7 +213,8 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 'score' => array('advisorView'),
                 'userSettings' => array('*'),
                 'report' => array('evaluate', 'reject', 'accept'),
-                'room' => ['proposed', 'accept', 'reject']
+                'room' => ['proposed', 'accept', 'reject'],
+                'store' => ['index']
             );
 
             foreach ($advisorResources as $resource => $actions)

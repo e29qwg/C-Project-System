@@ -1,0 +1,86 @@
+<?php echo $this->getContent(); ?>
+
+
+    <div class="row">
+        <?php require(__DIR__ . '/../layouts/projectHeader.php'); ?>
+
+        <br>
+        <h3>ประวัติการยืมอุปกรณ์สำหรับโครงงาน <?= $selectProject->project_name; ?></h3>
+        <h4>รายการที่ยังไม่คืนอุปกรณ์</h4>
+
+        <div class="tab-content">
+            <br>
+            <?php showTable($bookings); ?>
+        </div>
+
+        <h4>รายการที่คืนอุปกรณ์แล้ว</h4>
+
+        <div class="tab-content">
+            <br>
+            <?php showTable($finalBookings); ?>
+        </div>
+
+        <h4>รายการที่ยกเลิกการยืม</h4>
+
+        <div class="tab-content">
+            <br>
+            <?php showTable($cancelBookings); ?>
+        </div>
+    </div>
+
+<?php
+
+function showTable($bookings)
+{
+    ?>
+
+    <table class="table table-responsive">
+        <?php
+
+        if (!(count($bookings))):
+
+            ?>
+
+
+            <th class="info">ไม่มีรายการ</th>
+
+            <?php
+
+        endif;
+
+        foreach ($bookings as $booking):
+
+            ?>
+            <tr class="success">
+                <th colspan="4">ใบยืมเลขที่ <?= $booking->id; ?></th>
+            </tr>
+            <tr>
+                <th class="text-center" width="15%">รหัสอุปกรณ์</th>
+                <th class="text-center">ชื่ออุปกรณ์</th>
+                <th class="text-center" width="20%">วันที่ยืม</th>
+                <th class="text-center" width="10%">จำนวน</th>
+            </tr>
+
+            <?php
+
+            foreach ($booking->BookingItem as $bookingItem):
+                ?>
+
+                <tr>
+                    <td class="text-center"><?= $bookingItem->item_id; ?></td>
+                    <td><?= $bookingItem->Item->name; ?></td>
+                    <td><?= $booking->create_date; ?></td>
+                    <td class="text-center"><?= $bookingItem->amount; ?></td>
+                </tr>
+
+                <?php
+            endforeach;
+
+        endforeach;
+
+        ?>
+
+    </table>
+
+    <?php
+}

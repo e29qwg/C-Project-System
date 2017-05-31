@@ -10,7 +10,6 @@ class SessionController extends ControllerBase
         parent::initialize();
     }
 
-
     public function useHashAction()
     {
         $this->clearHash();
@@ -91,7 +90,7 @@ class SessionController extends ControllerBase
         if (empty($username) || empty($password))
         {
             $this->flash->error('Login Failure');
-            return $this->forward('session');
+            return $this->forward('session/adminLogin');
         }
 
         //TODO un comment for use real psu passport

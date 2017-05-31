@@ -103,6 +103,18 @@ $di->setShared('dbLog', function () use ($config)
     return new $class($dbConfig);
 });
 
+
+$di->setShared('dbStore', function () use ($config)
+{
+    $dbConfig = $config->databasestore->toArray();
+    $adapter = $dbConfig['adapter'];
+    unset($dbConfig['adapter']);
+
+    $class = 'Phalcon\Db\Adapter\Pdo\\' . $adapter;
+
+    return new $class($dbConfig);
+});
+
 $di->setShared('dbTMM', function () use ($config)
 {
     $dbConfig = $config->databasetmm->toArray();
