@@ -1,0 +1,92 @@
+<?php echo $this->getContent(); ?>
+
+
+<div class="row">
+    <?php require(__DIR__ . '/../layouts/projectHeader.php'); ?>
+
+    <div class="tab-content">
+        <div class="tab-pane fade in active">
+            <form class="form-horizontal" method="post">
+
+                <br>
+
+                <input type="hidden" name="id" value="<?= $selectProject->project_id; ?>">
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">สถานะการเรียน</label>
+
+                    <div class="col-sm-5">
+                        <?php
+
+                        \Phalcon\Tag::setDefault('status', $selectProject->project_status);
+
+                        echo \Phalcon\Tag::selectStatic([
+                            'status',
+                            [
+                                'Accept' => 'กำลังเรียน',
+                                'Drop' => 'นักศึกษาดรอปแล้ว',
+                                'Pass' => 'นักศึกษาผ่านวิชาโครงงาน',
+                                'Fail' => 'นักศึกษาไม่ผ่านวิชาโครงงาน'
+                            ],
+                            'class' => 'form-control',
+                            'required' => 'required'
+                        ]);
+
+                        ?>
+                    </div>
+                </div>
+
+
+                <div id="store_option">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Remarks</label>
+
+                        <div class="col-sm-10">
+                            <div class="col-sm-1">
+                                <?php
+
+                                echo \Phalcon\Tag::radioField([
+                                    'options',
+                                    'use_in_next_project',
+                                    'class' => 'form-control',
+                                ]);
+
+                                ?>
+                            </div>
+                            <p class="form-control-static">ใช้อุปกรณ์ต่อในการทำโครงงานในภาคเรียนหน้า<br>
+                                (เมื่อนักศึกษาสร้างโครงงานในภาคเรียนหน้าระบบจะย้ายอุปกรณ์ให้โดยอัตโนมัติ)</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+
+                            <div class="col-sm-1">
+                                <?php
+
+                                echo \Phalcon\Tag::radioField([
+                                    'options',
+                                    'move_to_advisor',
+                                    'class' => 'form-control',
+                                ]);
+
+                                ?>
+                            </div>
+                            <p class="form-control-static">ใช้อุปกรณ์ต่อในชิ้นงานที่เสร็จแล้ว<br>
+                            (ระบบจะย้ายอุปกรณ์ให้อาจารย์ที่ปรึกษาโครงงานเป็นผู้รับผิดชอบ)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" formaction="<?= $url . 'projects/setStatus'; ?>"
+                                class="btn btn-sm btn-primary">Apply
+                        </button>
+                    </label>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>

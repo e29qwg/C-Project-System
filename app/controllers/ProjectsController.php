@@ -23,6 +23,65 @@ class ProjectsController extends ControllerBase
         $this->view->selectProject = $selectProject;
     }
 
+    public function setStatusAction()
+    {
+        $request = $this->request;
+
+        $id = $request->getPost('id');
+        $status = $request->getPost('status');
+
+        if (!$this->permission->checkPermission($this->auth['id'], $id)) {
+            $this->flashSession->error('Access denied');
+            return $this->_redirectBack();
+        }
+
+        $project = Project::findFirst([
+           "conditions" => "project_id=:id:",
+            "bind" => ["id" => $id]
+        ]);
+
+        if (!$project)
+        {
+            $this->flashSession->error('Project not found');
+            return $this->_redirectBack();
+        }
+
+        $project->project_status = $status;
+
+        $storeController = new StoreController();
+        $bookings = $storeController->getStoreInfo($project->project_id);
+
+        //check pending rent item from store
+        if (count($bookings['bookings']) && $status != 'Accept')
+        {
+            if ($status == 'Drop')
+            {
+            }
+
+            $this->flash->error('ไม่สามารถเปลี่ยนสถานะได้เนื่องจากนักศึกษายังคืนอุปกรณ์ไม่ครบ');
+            return $this->pForward('projects', 'status', [$project->project_id]);
+        }
+
+
+        if (!$project->save())
+        {
+            $this->dbError($project);
+            return $this->_redirectBack();
+        }
+
+        $this->flashSession->success('Update success');
+        return $this->response->redirect('projects/status/'.$id);
+    }
+
+    public function statusAction()
+    {
+        $storeController = new StoreController();
+        $bookings = $storeController->getStoreInfo($this->dispatcher->getParam(0));
+
+        if ($bookings['bookings'])
+            $this->view->setVar('pendingRent', true);
+    }
+
     //confirm project
     public function acceptAction()
     {

@@ -39,14 +39,20 @@ class StoreController extends ControllerBase
         if ($this->auth['type'] != 'Student')
             $this->loadAdvisorProject();
 
-        $this->getStoreInfo();
+        $datas = $this->getStoreInfo(null);
+        $this->view->setVars([
+            'bookings' => $datas['bookings'],
+            'finalBookings' => $datas['finalBookings'],
+            'cancelBookings' => $datas['cancelBookings']
+        ]);
     }
 
-    public function getStoreInfo()
+    public function getStoreInfo($project_id)
     {
         $params = $this->dispatcher->getParams();
 
-        $project_id = $params[0];
+        if (empty($project_id))
+            $project_id = $params[0];
 
         $bookings = StoreBooking::find([
             "conditions" => "project_id=:project_id: AND (status='pending' OR status='pending' OR status='wait' OR status='accept' OR status='in_use')",
@@ -64,9 +70,19 @@ class StoreController extends ControllerBase
             "bind" => ["project_id" => $project_id]
         ]);
 
-        $this->view->setVar('bookings', $bookings);
-        $this->view->setVar('finalBookings', $finalBookings);
-        $this->view->setVar('cancelBookings', $cancelBookings);
+        $datas = [
+            'bookings' => $bookings,
+            'finalBookings' => $finalBookings,
+            'cancelBookings' => $cancelBookings
+        ];
+
+        return $datas;
+
+        /*        $this->view->setVar('bookings', $bookings);
+                $this->view->setVar('finalBookings', $finalBookings);
+                $this->view->setVar('cancelBookings', $cancelBookings);*/
     }
+
+
 }
 

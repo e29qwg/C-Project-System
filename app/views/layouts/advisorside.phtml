@@ -119,7 +119,15 @@ function showProjects($projects, $project_id, $url)
         <?php
     else:
         foreach ($projects as $project):
-            if ($project->project_id == $project_id)
+            //project_status
+            $strStatus = '';
+
+            if ($project->project_status == 'Drop')
+            {
+                $str = 'list-group-item-danger';
+                $strStatus = ' (นศ. ดรอปแล้ว)';
+            }
+            else if ($project->project_id == $project_id)
                 $str = 'list-group-item-success';
             else
                 $str = '';
@@ -144,7 +152,7 @@ function showProjects($projects, $project_id, $url)
 
             <a class="list-group-item <?= $str; ?>" href="<?= $url . 'progress/evaluate/' . $project->project_id; ?>"
                data-toggle="tooltip" data-placement="bottom" title="<?= $owner; ?>">
-                <?= $project->project_name; ?>
+                <?= $project->project_name.$strStatus; ?>
 
                 <?php
 
