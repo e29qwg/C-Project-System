@@ -2,55 +2,17 @@
 
 class Project extends \Phalcon\Mvc\Model
 {
-
-    /**
-     *
-     * @var integer
-     */
     public $project_id;
-
-    /**
-     *
-     * @var string
-     */
     public $project_name;
-
-    /**
-     *
-     * @var string
-     */
     public $project_type;
-
-    /**
-     *
-     * @var integer
-     */
     public $project_level_id;
-
-    /**
-     *
-     * @var string
-     */
     public $project_status;
-
-    /**
-     *
-     * @var string
-     */
     public $project_description;
-
-    /**
-     *
-     * @var integer
-     */
     public $semester_id;
-    
-
-    /**
-     *
-     * @var string
-     */
     public $create_date;
+    public $store_option;
+    public static $STORE_IN_NEXT_PROJECT = 'use_in_next_project';
+    public static $STORE_MOVE_TO_ADVISOR = 'move_to_advisor';
 
     public function beforeValidationOnCreate()
     {

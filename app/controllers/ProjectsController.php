@@ -29,6 +29,7 @@ class ProjectsController extends ControllerBase
 
         $id = $request->getPost('id');
         $status = $request->getPost('status');
+        $option = $request->getPost('option');
 
         if (!$this->permission->checkPermission($this->auth['id'], $id)) {
             $this->flashSession->error('Access denied');
@@ -54,14 +55,14 @@ class ProjectsController extends ControllerBase
         //check pending rent item from store
         if (count($bookings['bookings']) && $status != 'Accept')
         {
-            if ($status == 'Drop')
+            if (empty($option))
             {
+                $this->flash->error('ไม่สามารถเปลี่ยนสถานะได้เนื่องจากนักศึกษายังคืนอุปกรณ์ไม่ครบ');
+                return $this->pForward('projects', 'status', [$project->project_id]);
             }
 
-            $this->flash->error('ไม่สามารถเปลี่ยนสถานะได้เนื่องจากนักศึกษายังคืนอุปกรณ์ไม่ครบ');
-            return $this->pForward('projects', 'status', [$project->project_id]);
+            $project->store_option = $option;
         }
-
 
         if (!$project->save())
         {
@@ -195,7 +196,6 @@ class ProjectsController extends ControllerBase
                 $transaction->commit();
 
                 $this->_createScore($projectMaps, $project);
-                $this->_updateWorkLoad($user, $project, NULL);
 
                 foreach ($emails as $email)
                 {
@@ -238,56 +238,6 @@ class ProjectsController extends ControllerBase
                     $score->is_midterm = 0;
                 $score->save();
             }
-        }
-    }
-
-    //update work load and add advisor if latest semester
-    private function _updateWorkLoad($advisor, $project, $deCoAdvisor)
-    {
-        $currentSemester = Semester::maximum(array("column" => "semester_id"));
-        if ($project->semester_id != $currentSemester)
-            return;
-
-        $projectLevel = ProjectLevel::findFirst([
-            "conditions" => "project_level_id=:id:",
-            "bind" => ["id" => $project->project_level_id]
-        ]);
-        $ncoadvisor = $projectLevel->coadvisor;
-
-        if ($project->project_level_id > 1)
-            $ncoadvisor = 0;
-
-        //TODO
-        $ncoadvisor = 0;
-
-        $coadvisors = User::find(array(
-            "conditions" => "advisor_group=:advisor_group: AND id != :advisor_id: AND type='Advisor'",
-            "bind" => ["advisor_group" => $advisor->advisor_group, "advisor_id" => $advisor->id],
-            "limit" => $ncoadvisor,
-            "order" => "work_load ASC"
-        ));
-
-        foreach ($coadvisors as $coadvisor)
-        {
-            //add to map
-            $projectMap = new ProjectMap();
-            $projectMap->user_id = $coadvisor->id;
-            $projectMap->project_id = $project->project_id;
-            $projectMap->map_type = 'coadvisor';
-            $projectMap->save();
-        }
-
-        $this->_updateWork();
-    }
-
-    private function _updateWork()
-    {
-        $works = User::find("type='Advisor'");
-        $currentSemesterId = $this->view->getVar('currentSemesterId');
-        foreach ($works as $work)
-        {
-            $work->work_load = $this->CheckQuota->getLoad($work->id, $currentSemesterId);
-            $work->save();
         }
     }
 
@@ -418,7 +368,6 @@ class ProjectsController extends ControllerBase
             return $this->forward('project/proposed');
         }
 
-        $this->_updateWork();
 
         $this->flashSession->success('Reject Success');
         return $this->response->redirect('projects/proposed');
@@ -692,10 +641,19 @@ class ProjectsController extends ControllerBase
             "bind" => array("project_id" => $pid)
         ));
 
+        $storeController = new StoreController();
+        $bookings = $storeController->getStoreInfo($project->project_id);
+
+        if (count($bookings['bookings']))
+        {
+            $this->flashSession->error('ไม่สามารถลบโครงงานได้เนื่องจากมีรายการยืมอุปกรณ์');
+            return $this->_redirectBack();
+        }
+
         if ($project->project_status == "Accept" && $auth['type'] != 'Advisor' && $auth['type'] != 'Admin')
         {
-            $this->flash->error('Access Denied: Contact your advisor');
-            return;
+            $this->flashSession->error('Access Denied: Contact your advisor');
+            return $this->_redirectBack();
         }
 
         $projectMaps = ProjectMap::find(array(
@@ -734,7 +692,6 @@ class ProjectsController extends ControllerBase
         }
 
         $project->delete();
-        $this->_updateWork();
 
         $this->flash->success('Cancel success');
         return $this->forward('index');
