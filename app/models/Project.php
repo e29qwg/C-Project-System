@@ -11,8 +11,12 @@ class Project extends \Phalcon\Mvc\Model
     public $semester_id;
     public $create_date;
     public $store_option;
-    public static $STORE_IN_NEXT_PROJECT = 'use_in_next_project';
-    public static $STORE_MOVE_TO_ADVISOR = 'move_to_advisor';
+    const PROJECT_ACCEPT = 'Accept';
+    const PROJECT_DROP = 'Drop';
+    const PROJECT_PASS = 'Pass';
+    const PROJECT_FAIL = 'Fail';
+    const STORE_IN_NEXT_PROJECT = 'use_in_next_project';
+    const STORE_MOVE_TO_ADVISOR = 'move_to_advisor';
 
     public function beforeValidationOnCreate()
     {

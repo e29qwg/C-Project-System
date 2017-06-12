@@ -23,10 +23,10 @@
                         echo \Phalcon\Tag::selectStatic([
                             'status',
                             [
-                                'Accept' => 'กำลังเรียน',
-                                'Drop' => 'นักศึกษาดรอปแล้ว',
-                                'Pass' => 'นักศึกษาผ่านวิชาโครงงาน',
-                                'Fail' => 'นักศึกษาไม่ผ่านวิชาโครงงาน'
+                                Project::PROJECT_ACCEPT => 'กำลังเรียน',
+                                Project::PROJECT_DROP => 'นักศึกษาดรอปแล้ว',
+                                Project::PROJECT_PASS => 'นักศึกษาผ่านวิชาโครงงาน',
+                                Project::PROJECT_FAIL => 'นักศึกษาไม่ผ่านวิชาโครงงาน'
                             ],
                             'class' => 'form-control',
                             'required' => 'required'
@@ -35,6 +35,12 @@
                         ?>
                     </div>
                 </div>
+
+                <?php
+
+                \Phalcon\Tag::setDefault('option', $selectProject->store_option);
+
+                ?>
 
 
                 <div id="store_option">
@@ -47,14 +53,14 @@
 
                                 echo \Phalcon\Tag::radioField([
                                     'option',
-                                    'use_in_next_project',
+                                    'value' => 'use_in_next_project',
                                     'class' => 'form-control',
                                 ]);
 
                                 ?>
                             </div>
                             <p class="form-control-static">ใช้อุปกรณ์ต่อในการทำโครงงานในภาคเรียนหน้า<br>
-                                (เมื่อนักศึกษาสร้างโครงงานในภาคเรียนหน้าระบบจะย้ายอุปกรณ์ให้โดยอัตโนมัติ)</p>
+                                (เมื่อนักศึกษาสร้างโครงงานและได้รับการยืนยันในภาคเรียนหน้าระบบจะย้ายอุปกรณ์ให้โดยอัตโนมัติ)</p>
                         </div>
                     </div>
 
@@ -66,14 +72,14 @@
 
                                 echo \Phalcon\Tag::radioField([
                                     'option',
-                                    'move_to_advisor',
+                                    'value' => 'move_to_advisor',
                                     'class' => 'form-control',
                                 ]);
 
                                 ?>
                             </div>
                             <p class="form-control-static">ใช้อุปกรณ์ต่อในชิ้นงานที่เสร็จแล้ว<br>
-                            (ระบบจะย้ายอุปกรณ์ให้อาจารย์ที่ปรึกษาโครงงานเป็นผู้รับผิดชอบ)</p>
+                                (ระบบจะย้ายอุปกรณ์ให้อาจารย์ที่ปรึกษาโครงงานเป็นผู้รับผิดชอบ)</p>
                         </div>
                     </div>
                 </div>
