@@ -8,3 +8,5 @@ public/*.docx
 public/pdf
 app/library/composer/vendor
 app/library/composer/composer.lock
+vendor
+composer.lock

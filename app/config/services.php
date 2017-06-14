@@ -1,10 +1,14 @@
 <?php
 
+use Phalcon\Events\Manager as EventsManager;
+
 require_once(__DIR__ . '/../library/PHPExcel/Classes/PHPExcel.php');
 require_once(__DIR__ . '/../library/PHPExcel/Classes/PHPExcel/IOFactory.php');
-require_once(__DIR__ . '/../library/html2pdf/html2pdf.class.php');
+//require_once(__DIR__ . '/../library/html2pdf/html2pdf.class.php');
 
 $di = new \Phalcon\DI\FactoryDefault();
+
+$eventsManager = new EventsManager();
 
 $di->set('debug', function () use ($config)
 {
@@ -43,7 +47,6 @@ $di->set('mode', function () use ($config)
 
 $di->set('dispatcher', function () use ($di)
 {
-
     $eventsManager = $di->getShared('eventsManager');
 
     $security = new Security($di);
@@ -64,8 +67,16 @@ $di->set('transactionManager', function ()
 $di->set('url', function () use ($config)
 {
     $url = new \Phalcon\Mvc\Url();
-    $url->setBaseUri($config->application->baseUri);
-    $url->setStaticBaseUri($config->application->baseUri);
+
+    if (getenv('APPLICATION_ENV'))
+    {
+        $url->setBaseUri('/');
+        $url->setBaseUri('/');
+    }
+    else {
+        $url->setBaseUri($config->application->baseUri);
+        $url->setStaticBaseUri($config->application->baseUri);
+    }
     return $url;
 });
 
