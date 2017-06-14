@@ -20,7 +20,7 @@ $di->set('oauth', function () use ($config)
 {
     return $config->oauth;
 });
-
+ 
 $di->set('queue', function () use ($config)
 {
     $queue = new Phalcon\Queue\Beanstalk(array(

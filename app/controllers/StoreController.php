@@ -2,6 +2,8 @@
 
 class StoreController extends ControllerBase
 {
+    public $_model = null;
+
     public function initialize()
     {
         $this->view->setTemplateAfter('main');
@@ -78,9 +80,6 @@ class StoreController extends ControllerBase
 
         return $datas;
 
-        /*        $this->view->setVar('bookings', $bookings);
-                $this->view->setVar('finalBookings', $finalBookings);
-                $this->view->setVar('cancelBookings', $cancelBookings);*/
     }
 
 

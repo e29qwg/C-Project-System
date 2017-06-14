@@ -1051,9 +1051,6 @@ class ProjectsController extends ControllerBase
         $this->view->setVar('project_level_name', $project_level->project_level_name);
 
         $this->loadViewAdvisors();
-
-        //TODO Get old project
-
     }
 }
 
