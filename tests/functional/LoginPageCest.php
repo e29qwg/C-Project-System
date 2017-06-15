@@ -1,6 +1,5 @@
 <?php
 
-
 class LoginPageCest
 {
     public function _before(FunctionalTester $I)
@@ -14,9 +13,9 @@ class LoginPageCest
     // tests
     public function showNormalUserLoginPage(FunctionalTester $I)
     {
-        putenv('APPLICATION_ENV=testing');
         $I->amOnPage('/');
         $I->seeInCurrentUrl('/session');
+        $I->see('Login with PSU PASSPORT');
         $I->see('Admin Login');
     }
 
@@ -24,6 +23,8 @@ class LoginPageCest
     {
         $I->amOnPage('/session/adminLogin');
         $I->see('Normal User Login');
+        $I->seeElement('input', ['name' => 'username']);
+        $I->seeElement('input', ['name' => 'password']);
     }
 
     public function linkToAdminLogin(FunctionalTester $I)
@@ -31,5 +32,6 @@ class LoginPageCest
         $I->amOnPage('/session/index');
         $I->click('Admin Login');
         $I->see('Normal User Login');
+        $this->showAdminLoginPage($I);
     }
 }

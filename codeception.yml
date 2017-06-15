@@ -12,3 +12,11 @@ settings:
     bootstrap: _bootstrap.php
     colors: true
     memory_limit: 1024M
+coverage:
+    remote: false
+    enabled: true
+    include:
+        - app/views/*
+        - app/controllers/*
+        - app/plugins/*
+        - app/library/Permission.php

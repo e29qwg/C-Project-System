@@ -20,8 +20,6 @@ try
     $application = new \Phalcon\Mvc\Application();
     $application->setDI($di);
 
-    putenv('APPLICATION_ENV=testing');
-
     if (getenv('APPLICATION_ENV'))
         return $application;
     else

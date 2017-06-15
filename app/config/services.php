@@ -4,7 +4,9 @@ use Phalcon\Events\Manager as EventsManager;
 
 require_once(__DIR__ . '/../library/PHPExcel/Classes/PHPExcel.php');
 require_once(__DIR__ . '/../library/PHPExcel/Classes/PHPExcel/IOFactory.php');
-//require_once(__DIR__ . '/../library/html2pdf/html2pdf.class.php');
+
+if (!getenv('APPLICATION_ENV'))
+require_once(__DIR__ . '/../library/html2pdf/html2pdf.class.php');
 
 $di = new \Phalcon\DI\FactoryDefault();
 
