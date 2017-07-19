@@ -20,3 +20,12 @@ coverage:
         - app/controllers/*
         - app/plugins/*
         - app/library/Permission.php
+modules:
+    enabled:
+        - Db:
+            dsn: 'mysql:host=localhost;dbname=database'
+            user: ''
+            password: ''
+            dump: tests/_data/dump.sql
+            populate: true
+            cleanup: true

@@ -58,6 +58,7 @@ class Detail extends \Phalcon\Mvc\Model
      * @Column(type="integer", length=10, nullable=false)
      */
     public $total_time;
+    public $update_time;
 
     public function initialize()
     {

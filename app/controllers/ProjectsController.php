@@ -933,8 +933,8 @@ class ProjectsController extends ControllerBase
         //check advisor quota
         if ($this->permission->quotaAvailable($advisor_id, $this->current_semester) <= 0)
         {
-            $this->flash->error('Advisor\' quota limit exceed');
-            return $this->forward('projects/new');
+            $this->flash->error('Advisor quota limit exceed');
+            return $this->forward('projects/newProject');
         }
 
         $transaction = $this->transactionManager->get();

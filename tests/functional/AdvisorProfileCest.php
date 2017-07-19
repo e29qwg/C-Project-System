@@ -23,12 +23,10 @@ class AdvisorProfileCest
         $I->click($advisor->title.$advisor->name);
         $I->click('Project Advising');
         $I->see('Semester', ['class' => 'control-label']);
-        //TODO check selectoption
-        //$I->selectOption('semester', '1/2557');
         $I->see('Project List', ['class' => 'control-label']);
     }
 
-    public function viewAdvisorProfile(FunctionalTester $I, UserSteps $userSteps)
+/*    public function viewAdvisorProfile(FunctionalTester $I, UserSteps $userSteps)
     {
         $userSteps->loginAsStudent();
         $I->amOnPage('/advisor/list');
@@ -61,7 +59,7 @@ class AdvisorProfileCest
             $I->see($text);
             $I->seeLink($text, '/advisor/profile/'.$advisor->id);
         }
-    }
+    }*/
 
     private function getAdvisor()
     {
