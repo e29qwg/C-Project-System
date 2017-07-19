@@ -81,7 +81,7 @@ class ControllerBase extends Phalcon\Mvc\Controller
         $builder->innerJoin("ProjectMap", "Project.project_id=ProjectMap.project_id");
         $builder->andWhere("ProjectMap.user_id=:user_id:", array("user_id" => $this->auth['id']));
         $builder->andWhere("ProjectMap.map_type='advisor'");
-        $builder->andWhere("Project.project_status='accept'");
+        $builder->andWhere("Project.project_status!='Pending'");
 
         $projects = $builder->getQuery()->execute();
 

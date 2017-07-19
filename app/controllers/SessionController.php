@@ -93,7 +93,6 @@ class SessionController extends ControllerBase
             return $this->forward('session/adminLogin');
         }
 
-        //TODO un comment for use real psu passport
         //Authenticate
 
         $user = User::findFirst(array(
@@ -104,7 +103,7 @@ class SessionController extends ControllerBase
         if (!$user)
         {
             $this->flash->error('Login Failure this page only admin can login');
-            return $this->forward('session');
+            return $this->forward('session/adminLogin');
         }
 
         if (!$this->security->checkHash($password, $user->password))
@@ -119,11 +118,12 @@ class SessionController extends ControllerBase
         {
             $this->dbError($user);
             $this->flash->error('Database Failure');
-            return $this->forward('session');
+            return $this->forward('session/adminLogin');
         }
 
         $this->_registerSession($user);
         $this->flash->success('Login Success');
+
 
         return $this->forward('session/adminLogin');
     }

@@ -2,55 +2,21 @@
 
 class Project extends \Phalcon\Mvc\Model
 {
-
-    /**
-     *
-     * @var integer
-     */
     public $project_id;
-
-    /**
-     *
-     * @var string
-     */
     public $project_name;
-
-    /**
-     *
-     * @var string
-     */
     public $project_type;
-
-    /**
-     *
-     * @var integer
-     */
     public $project_level_id;
-
-    /**
-     *
-     * @var string
-     */
     public $project_status;
-
-    /**
-     *
-     * @var string
-     */
     public $project_description;
-
-    /**
-     *
-     * @var integer
-     */
     public $semester_id;
-    
-
-    /**
-     *
-     * @var string
-     */
     public $create_date;
+    public $store_option;
+    const PROJECT_ACCEPT = 'Accept';
+    const PROJECT_DROP = 'Drop';
+    const PROJECT_PASS = 'Pass';
+    const PROJECT_FAIL = 'Fail';
+    const STORE_IN_NEXT_PROJECT = 'use_in_next_project';
+    const STORE_MOVE_TO_ADVISOR = 'move_to_advisor';
 
     public function beforeValidationOnCreate()
     {
@@ -71,38 +37,6 @@ class Project extends \Phalcon\Mvc\Model
         $this->belongsTo('project_level_id', 'ProjectLevel', 'project_level_id', array('alias' => 'ProjectLevel'));
         $this->belongsTo('semester_id', 'Semester', 'semester_id', array('alias' => 'Semester'));
         $this->hasOne('project_id', 'RoomMap', 'project_id', array('alias' => 'RoomMap'));
-    }
-
-    /**
-     * Returns table name mapped in the model.
-     *
-     * @return string
-     */
-    public function getSource()
-    {
-        return 'project';
-    }
-
-    /**
-     * Allows to query a set of records that match the specified conditions
-     *
-     * @param mixed $parameters
-     * @return Project[]
-     */
-    public static function find($parameters = null)
-    {
-        return parent::find($parameters);
-    }
-
-    /**
-     * Allows to query the first record that match the specified conditions
-     *
-     * @param mixed $parameters
-     * @return Project
-     */
-    public static function findFirst($parameters = null)
-    {
-        return parent::findFirst($parameters);
     }
 
 }

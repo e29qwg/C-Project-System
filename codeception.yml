@@ -1,0 +1,31 @@
+paths:
+    tests: tests
+    output: tests/_output
+    data: tests/_data
+    support: tests/_support
+    envs: tests/_envs
+actor_suffix: Tester
+extensions:
+    enabled:
+        - Codeception\Extension\RunFailed
+settings:
+    bootstrap: _bootstrap.php
+    colors: true
+    memory_limit: 1024M
+coverage:
+    remote: false
+    enabled: true
+    include:
+        - app/views/*
+        - app/controllers/*
+        - app/plugins/*
+        - app/library/Permission.php
+modules:
+    enabled:
+        - Db:
+            dsn: 'mysql:host=localhost;dbname=database'
+            user: ''
+            password: ''
+            dump: tests/_data/dump.sql
+            populate: true
+            cleanup: true

@@ -5,8 +5,10 @@ class Topic extends Phalcon\Mvc\User\Component
     //generate excel
     public function updateTopic($projects)
     {
+        if (getenv('DISABLE_EXCEL'))
+            return true;
         $excel = PHPExcel_IOFactory::createReader('Excel2007');
-        $obj = $excel->load('./excel/topic.xlsx');
+        $obj = $excel->load(__DIR__.'/../../public/excel/topic.xlsx');
         $obj->setActiveSheetIndex(0);
 
         $row = 2;

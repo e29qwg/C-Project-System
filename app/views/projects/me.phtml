@@ -16,18 +16,30 @@ $project_id = $this->dispatcher->getParam(0);
 
         foreach ($projects as $project)
         {
-            if ($project->project_id == $project_id)
+            $strStatus = '';
+
+            if ($project->project_status == 'Drop')
+            {
+                $str = "list-group-item-danger";
+                $strStatus = 'ดรอปวิชานี้แล้ว';
+            }
+            elseif ($project->project_id == $project_id)
+            {
                 $str = "list-group-item-success";
+            }
             else
+            {
                 $str = '';
+            }
 
 
             ?>
-            <a href="<?= $this->url->get('projects/manage/').$project->project_id; ?>" class="list-group-item <?= $str; ?>">
-                <?=  $project->project_name . ' (' . $project->Semester->semester_term . '/' . $project->Semester->semester_year . ')'; ?>
+            <a href="<?= $this->url->get('projects/manage/') . $project->project_id; ?>"
+               class="list-group-item <?= $str; ?>">
+                <?= $project->project_name . ' (' . $project->Semester->semester_term . '/' . $project->Semester->semester_year . ' ' . $strStatus . ')'; ?>
             </a>
 
-        <?php
+            <?php
         }
 
         ?>
