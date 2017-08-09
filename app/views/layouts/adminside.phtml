@@ -4,6 +4,9 @@ $auth = $this->session->get('auth');
 $action = $this->dispatcher->getActionName();
 $controller = $this->dispatcher->getControllerName();
 
+if (!defined('LISTSELECTED'))
+define('LISTSELECTED', 'list-group-item-success');
+
 ?>
 
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -45,7 +48,7 @@ $controller = $this->dispatcher->getControllerName();
                 <a class="list-group-item <?= ($controller == 'advisor' && $action == 'quota') ? LISTSELECTED : ''; ?>"
                    href="<?= $this->url->get('advisor/quota'); ?>">จัดการโควต้า</a>
                 <a class="list-group-item <?= ($controller == 'admin' && $action == 'advisorProfile') ? LISTSELECTED : ''; ?>"
-                   href="<?= $this->url->get('admin/advisorProfile'); ?>">เปลี่ยนสิทธิการใช้งาน</a>
+                   href="<?= $this->url->get('admin/advisorProfile'); ?>">เปลี่ยนสิทธิ์การใช้งาน</a>
                 <a class="list-group-item <?= ($controller == 'news' && $action == 'manageNews') ? LISTSELECTED : ''; ?>"
                    href="<?= $this->url->get('news/manageNews'); ?>">จัดการข่าว</a>
                 <a class="list-group-item <?= ($controller == 'admin' && $action == 'setView') ? LISTSELECTED : ''; ?>"
@@ -60,23 +63,4 @@ $controller = $this->dispatcher->getControllerName();
         </div>
     </div>
 </div>
-
-<?php
-function showProject($projectMaps, $level)
-{
-    foreach ($projectMaps as $projectMap)
-    {
-        $project = Project::findFirst("project_id='$projectMap->project_id' AND project_level_id='$level' AND project_status='Accept'");
-        if ($project)
-        {
-            ?>
-            <li>
-                <a href="<?= $this->url->get('projects/manage/'); ?><?= $project->project_id ?>"><?= $project->project_name ?></a>
-            </li>
-        <?php
-        }
-    }
-}
-
-?>
 

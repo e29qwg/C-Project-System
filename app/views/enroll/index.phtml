@@ -4,61 +4,109 @@ echo $this->getContent();
 
 ?>
 
-<form class="form-horizontal" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label class="col-sm-2 control-label">ปีการศึกษา</label>
+<div class="row">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#import" aria-controls="import" role="tab" data-toggle="tab">นำเข้ารายชื่อ</a>
+        </li>
+        <li role="presentation"><a href="#manage" aria-controls="manage" role="tab"
+                                   data-toggle="tab">จัดการรายชื่อ</a>
+        </li>
+    </ul>
 
-        <div class="col-sm-2">
-            <?php
-            \Phalcon\Tag::setDefault("semester_id", $currentSemesterId);
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="import">
 
-            echo \Phalcon\Tag::selectStatic(array(
-                'semester_id',
-                $allSemesters,
-                'class' => 'form-control',
-                'required' => 'required'
-            ));
-            ?>
+            <br>
+
+            <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Prepare Project</label>
+
+                    <div class="col-sm-10">
+                        <?php
+                        echo \Phalcon\Tag::fileField(array(
+                            'pp_file'
+                        ));
+                        ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Project I</label>
+
+                    <div class="col-sm-10">
+                        <?php
+                        echo \Phalcon\Tag::fileField(array(
+                            'p1_file'
+                        ));
+                        ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Project II</label>
+
+                    <div class="col-sm-10">
+                        <?php
+                        echo \Phalcon\Tag::fileField(array(
+                            'p2_file'
+                        ));
+                        ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" formaction="<?= $url . 'enroll/setUser'; ?>"
+                                class="btn btn-primary btn-sm">
+                            เพิ่มรายชื่อ
+                        </button>
+                        <button type="submit" formaction="<?= $url . 'enroll/clearUser'; ?>"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('ยืนยันการลบ')">ลบข้อมูลเก่า
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+
+            <div class="alert alert-info">วิธีใช้ สร้างไฟล์ Excel แล้ววางเฉพาะรหัสนักศึกษาที่ต้องการเพิ่มลงใน Column A
+                โดยเริ่มต้นจากแถวที่ 1 2 3 ...
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="manage">
+            <br>
+
+
+            <a href="<?= $url.'enroll/addUser'; ?>" class="btn btn-success btn-sm pull-right">เพิ่มรายชื่อ</a>
+
+            <br>
+            <br>
+
+            <table class="table table-responsive">
+                <tr class="success">
+                    <th>รหัสนักศึกษา</th>
+                    <th>วิชา</th>
+                    <th width="5%"></th>
+                </tr>
+
+                <?php
+
+                foreach ($enrolls as $enroll):
+
+                ?>
+
+                    <tr>
+                        <td><?= $enroll->student_id; ?></td>
+                        <td><?= $enroll->ProjectLevel->project_level_name; ?></td>
+                        <td><a href="<?= $url.'enroll/deleteUser/'.$enroll->id; ?>">ลบ</a></td>
+                    </tr>
+
+                <?php
+
+                endforeach;
+
+                ?>
+
+            </table>
         </div>
     </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Prepare Project</label>
-
-        <div class="col-sm-10">
-            <?php
-            echo \Phalcon\Tag::fileField(array(
-                'pp_file'
-            ));
-            ?>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Project I</label>
-
-        <div class="col-sm-10">
-            <?php
-            echo \Phalcon\Tag::fileField(array(
-                'p1_file'
-            ));
-            ?>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Project II</label>
-
-        <div class="col-sm-10">
-            <?php
-            echo \Phalcon\Tag::fileField(array(
-                'p2_file'
-            ));
-            ?>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" formaction="<?= $this->url->get('enroll/setUser'); ?>" class="btn btn-primary btn-sm">
-                บันทึก
-            </button>
-        </div>
-    </div>
-</form>
+</div>

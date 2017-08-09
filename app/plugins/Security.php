@@ -194,7 +194,9 @@ class Security extends \Phalcon\Mvc\User\Plugin
                     'deletemember',
                     'proposed',
                     'accept',
-                    'reject'
+                    'reject',
+                    'status',
+                    'setStatus'
                 ),
                 'progress' => array(
                     'view',
@@ -214,7 +216,7 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 'userSettings' => array('*'),
                 'report' => array('evaluate', 'reject', 'accept'),
                 'room' => ['proposed', 'accept', 'reject'],
-                'store' => ['index']
+                'store' => ['index'],
             );
 
             foreach ($advisorResources as $resource => $actions)

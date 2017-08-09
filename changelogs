@@ -1,3 +1,11 @@
+12/06/2017
+    - advisor can change status
+    - remove unused feature
+05/06/2017
+    - change manage enroll ui
+29/05/2017
+    - create api to store system
+    - creating store view
 24/08/2016
     - add backlist feature
     - add hashlink expire time
@@ -19,7 +27,7 @@
     - rewrite code many of file
     - fix sum permission bug
 28/05/2015
-    - required completed user profiel
+    - required completed user profile
     - fix some minor bug
 18/05/2015
     - add notification setting

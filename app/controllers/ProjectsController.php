@@ -23,6 +23,189 @@ class ProjectsController extends ControllerBase
         $this->view->selectProject = $selectProject;
     }
 
+    public function setStatusAction()
+    {
+        $request = $this->request;
+
+        $id = $request->getPost('id');
+        $status = $request->getPost('status');
+        $option = $request->getPost('option');
+
+        if (!$this->permission->checkPermission($this->auth['id'], $id))
+        {
+            $this->flashSession->error('Access denied');
+            return $this->_redirectBack();
+        }
+
+        $project = Project::findFirst([
+            "conditions" => "project_id=:id:",
+            "bind" => ["id" => $id]
+        ]);
+
+        if (!$project)
+        {
+            $this->flashSession->error('Project not found');
+            return $this->_redirectBack();
+        }
+
+        $project->project_status = $status;
+
+        $storeController = new StoreController();
+        $bookings = $storeController->getStoreInfo($project->project_id);
+
+        //check pending rent item from store
+        if (count($bookings['bookings']) && $status != Project::PROJECT_ACCEPT)
+        {
+            if (empty($option))
+            {
+                $this->flash->error('ไม่สามารถเปลี่ยนสถานะได้เนื่องจากนักศึกษายังคืนอุปกรณ์ไม่ครบ');
+                return $this->pForward('projects', 'status', [$project->project_id]);
+            }
+
+            $project->store_option = $option;
+        }
+
+        //remove option for in progress project
+        if ($status == Project::PROJECT_ACCEPT)
+            $project->store_option = null;
+
+        if ($status == Project::PROJECT_PASS && $project->store_option == PROJECT::STORE_MOVE_TO_ADVISOR)
+        {
+            $this->moveStoreItem($project, null, null, true);
+        }
+
+        if (!$project->save())
+        {
+            $this->dbError($project);
+            return $this->_redirectBack();
+        }
+
+        $this->flashSession->success('Update success');
+        return $this->response->redirect('projects/status/' . $id);
+    }
+
+    public function statusAction()
+    {
+        $project_id = $this->dispatcher->getParam(0);
+
+        $storeController = new StoreController();
+        $bookings = $storeController->getStoreInfo($project_id);
+
+        if (!$this->permission->checkAdvisorPermission($project_id))
+        {
+            $this->flashSession->error('Access denied');
+            return $this->_redirectBack();
+        }
+
+        if ($bookings['bookings'])
+            $this->view->setVar('pendingRent', true);
+    }
+
+    //private call from checkPrerequire
+    private function moveStoreItem($oldProject, $newProject, $transaction, $advisor=false)
+    {
+        //get pending items
+        $store = new StoreController();
+        $infos = $store->getStoreInfo($oldProject->project_id);
+        $this->dbStore->begin();
+
+        //move to new booking
+        if (!$advisor)
+        {
+            foreach ($infos['bookings'] as $info)
+            {
+                $info->project_id = $newProject->project_id;
+                if (!$info->save())
+                {
+                    $transaction->rollback('Database Error');
+                }
+            }
+        }
+        //move to advisor
+        else
+        {
+            foreach ($infos['bookings'] as $booking)
+            {
+                $booking->user_id = $booking->advisor_id;
+                $booking->use_for_type = 'etc.';
+                if (!$booking->save())
+                {
+                    $transaction->rollback('Database Error');
+                }
+            }
+        }
+
+        $this->dbStore->commit();
+    }
+
+    //private call from acceptAction
+    private function checkPrerequire($project, $transaction)
+    {
+        //prepare project skip check
+        if ($project->project_level_id == 1)
+            return;
+
+        //get owner id
+        $projectMaps = $project->ProjectMap;
+
+        foreach ($projectMaps as $projectMap)
+        {
+            if ($projectMap->map_type == 'owner')
+            {
+                $owner_id = $projectMap->user_id;
+                break;
+            }
+        }
+
+        $builder = $this->modelsManager->createBuilder();
+        $builder->from("Project");
+        $builder->innerJoin("ProjectMap", "Project.project_id=ProjectMap.project_id");
+        $builder->where("ProjectMap.map_type='owner'");
+        $builder->andWhere("ProjectMap.user_id=:user_id:", ["user_id" => $owner_id]);
+        $builder->andWhere("Project.project_id!=:project_id:", ["project_id" => $project->project_id]);
+        $builder->orderBy("Project.semester_id DESC");
+        $builder->limit(1);
+
+        $records = $builder->getQuery()->execute();
+        if (!count($records))
+            return;
+
+        $oldProject = $records[0];
+
+        if ($oldProject->project_level_id == $project->project_level_id)
+        {
+            if ($oldProject->project_status != Project::PROJECT_FAIL && $oldProject->project_status != Project::PROJECT_DROP)
+                $transaction->rollback('พบข้อขัดแย้งของโครงงานในเทิอมที่แล้ว กรุณาติดต่อผู้ดูแลระบบ');
+        }
+        elseif ($oldProject->project_level_id < $project->project_level_id)
+        {
+            if ($oldProject->project_status != Project::PROJECT_PASS)
+            {
+                //if accept alert advisor to change status
+                if ($oldProject->project_status == Project::PROJECT_ACCEPT)
+                {
+                    $link = '<a href="'.$this->url->get().'projects/status/'.$oldProject->project_id.'" target="_blank">click</a>';
+                    $transaction->rollback('โครงงานภาคเรียนที่แล้วยังไม่เรียบร้อย ตรวจสอบสถานะโครงงานได้ที่'. $link);
+                }
+                else
+                {
+                    $link = '<a href="'.$this->url->get().'projects/status/'.$oldProject->project_id.'" target="_blank">click</a>';
+                    $transaction->rollback('โครงงานภาคเรียนที่แล้วมีข้อขัดแย้ง ตรวจสอบสถานะโครงงานได้ที่'. $link);
+                }
+            }
+        }
+
+        //options
+        if ($oldProject->store_option == PROJECT::STORE_IN_NEXT_PROJECT)
+        {
+            $this->moveStoreItem($oldProject, $project, $transaction);
+        }
+        elseif ($oldProject->store_option == PROJECT::STORE_MOVE_TO_ADVISOR)
+        {
+            $this->moveStoreItem($oldProject, $project, $transaction, true);
+        }
+    }
+
     //confirm project
     public function acceptAction()
     {
@@ -74,6 +257,8 @@ class ProjectsController extends ControllerBase
 
             if ($project)
             {
+                $this->checkPrerequire($project, $transaction);
+
                 //save log
                 $projectMaps = ProjectMap::find(array(
                     "conditions" => "project_id=:project_id: AND (map_type='advisor' OR map_type='owner')",
@@ -133,20 +318,22 @@ class ProjectsController extends ControllerBase
                 if (!$project->save())
                     $transaction->rollback('Error when update project');
 
+
+                //$transaction->rollback('debug');
                 $transaction->commit();
 
                 $this->_createScore($projectMaps, $project);
-                $this->_updateWorkLoad($user, $project, NULL);
 
                 foreach ($emails as $email)
                 {
                     $this->sendMail($email['subject'], $email['mes'], $email['to']);
                 }
             }
-        }
-        catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
+        } catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
         {
+            $this->flash->setAutoescape(false);
             $this->flash->error('Transaction error: ' . $e->getMessage());
+            $this->flash->setAutoescape(true);
             return $this->forward('projects/proposed');
         }
 
@@ -165,7 +352,7 @@ class ProjectsController extends ControllerBase
             if ($projectMap->map_type != "owner")
                 continue;
 
-            for ($i = 0 ; $i < 2 ; $i++)
+            for ($i = 0; $i < 2; $i++)
             {
                 if ($project->project_level_id == 1)
                     $score = new ScorePrepare();
@@ -179,56 +366,6 @@ class ProjectsController extends ControllerBase
                     $score->is_midterm = 0;
                 $score->save();
             }
-        }
-    }
-
-    //update work load and add advisor if latest semester
-    private function _updateWorkLoad($advisor, $project, $deCoAdvisor)
-    {
-        $currentSemester = Semester::maximum(array("column" => "semester_id"));
-        if ($project->semester_id != $currentSemester)
-            return;
-
-        $projectLevel = ProjectLevel::findFirst([
-            "conditions" => "project_level_id=:id:",
-            "bind" => ["id" => $project->project_level_id]
-        ]);
-        $ncoadvisor = $projectLevel->coadvisor;
-
-        if ($project->project_level_id > 1)
-            $ncoadvisor = 0;
-
-        //TODO
-        $ncoadvisor = 0;
-
-        $coadvisors = User::find(array(
-            "conditions" => "advisor_group=:advisor_group: AND id != :advisor_id: AND type='Advisor'",
-            "bind" => ["advisor_group" => $advisor->advisor_group, "advisor_id" => $advisor->id],
-            "limit" => $ncoadvisor,
-            "order" => "work_load ASC"
-        ));
-
-        foreach ($coadvisors as $coadvisor)
-        {
-            //add to map
-            $projectMap = new ProjectMap();
-            $projectMap->user_id = $coadvisor->id;
-            $projectMap->project_id = $project->project_id;
-            $projectMap->map_type = 'coadvisor';
-            $projectMap->save();
-        }
-
-        $this->_updateWork();
-    }
-
-    private function _updateWork()
-    {
-        $works = User::find("type='Advisor'");
-        $currentSemesterId = $this->view->getVar('currentSemesterId');
-        foreach ($works as $work)
-        {
-            $work->work_load = $this->CheckQuota->getLoad($work->id, $currentSemesterId);
-            $work->save();
         }
     }
 
@@ -352,14 +489,12 @@ class ProjectsController extends ControllerBase
                 $this->sendMail($email['subject'], $email['mes'], $email['to']);
             }
 
-        }
-        catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
+        } catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
         {
             $this->flash->error('Transaction failure: ' . $e->getMessage());
             return $this->forward('project/proposed');
         }
 
-        $this->_updateWork();
 
         $this->flashSession->success('Reject Success');
         return $this->response->redirect('projects/proposed');
@@ -633,10 +768,19 @@ class ProjectsController extends ControllerBase
             "bind" => array("project_id" => $pid)
         ));
 
+        $storeController = new StoreController();
+        $bookings = $storeController->getStoreInfo($project->project_id);
+
+        if (count($bookings['bookings']))
+        {
+            $this->flashSession->error('ไม่สามารถลบโครงงานได้เนื่องจากมีรายการยืมอุปกรณ์');
+            return $this->_redirectBack();
+        }
+
         if ($project->project_status == "Accept" && $auth['type'] != 'Advisor' && $auth['type'] != 'Admin')
         {
-            $this->flash->error('Access Denied: Contact your advisor');
-            return;
+            $this->flashSession->error('Access Denied: Contact your advisor');
+            return $this->_redirectBack();
         }
 
         $projectMaps = ProjectMap::find(array(
@@ -675,7 +819,6 @@ class ProjectsController extends ControllerBase
         }
 
         $project->delete();
-        $this->_updateWork();
 
         $this->flash->success('Cancel success');
         return $this->forward('index');
@@ -790,8 +933,8 @@ class ProjectsController extends ControllerBase
         //check advisor quota
         if ($this->permission->quotaAvailable($advisor_id, $this->current_semester) <= 0)
         {
-            $this->flash->error('Advisor\' quota limit exceed');
-            return $this->forward('projects/new');
+            $this->flash->error('Advisor quota limit exceed');
+            return $this->forward('projects/newProject');
         }
 
         $transaction = $this->transactionManager->get();
@@ -886,8 +1029,7 @@ class ProjectsController extends ControllerBase
 
             $transaction->commit();
 
-        }
-        catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
+        } catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
         {
             $this->flash->error('Transaction failure: ' . $e->getMessage());
             return $this->forward('projects/newProject');
@@ -909,9 +1051,6 @@ class ProjectsController extends ControllerBase
         $this->view->setVar('project_level_name', $project_level->project_level_name);
 
         $this->loadViewAdvisors();
-
-        //TODO Get old project
-
     }
 }
 

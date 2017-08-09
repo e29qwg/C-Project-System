@@ -9,6 +9,35 @@ class EnrollController extends ControllerBase
         parent::initialize();
     }
 
+    public function clearUserAction()
+    {
+        $oldRecords = Enroll::find();
+        $transaction = $this->transactionManager->get();
+
+        try
+        {
+
+            foreach ($oldRecords as $oldRecord)
+            {
+                $oldRecord->setTransaction($transaction);
+                if (!$oldRecord->delete())
+                {
+                    $transaction->rollback("Error when clear old data");
+                }
+            }
+
+            $transaction->commit();
+
+        } catch (\Phalcon\Mvc\Model\Transaction\Failed $e)
+        {
+            $this->flash->error('Transaction failure: ' . $e->getMessage());
+            return $this->forward('enroll');
+        }
+
+        $this->flashSession->success('ลบช้อมูลสำเร็จ');
+        return $this->response->redirect('enroll');
+    }
+
     public function setUserAction()
     {
         $request = $this->request;
@@ -19,7 +48,7 @@ class EnrollController extends ControllerBase
             return $this->forward('enroll');
         }
 
-        $semester_id = $request->getPost('semester_id');
+        $semester_id = $this->current_semester;
 
         if ($request->hasFiles())
         {
@@ -40,9 +69,8 @@ class EnrollController extends ControllerBase
                         $project_level_id = 3;
 
                     //read excel file
-                    $filename = $file->getTempName();
-                    $file->moveTo('excel/'.$file->getName());
-                    $filename = 'excel/'.$file->getName();
+                    $file->moveTo('excel/' . $file->getName());
+                    $filename = 'excel/' . $file->getName();
                     $inputFileType = PHPExcel_IOFactory::identify($filename);
                     $objReader = PHPExcel_IOFactory::createReader($inputFileType);
                     $objReader->setReadDataOnly(true);
@@ -50,21 +78,7 @@ class EnrollController extends ControllerBase
                     $objPHPExcel = $objReader->load($filename);
                     $sheet = $objPHPExcel->setActiveSheetIndex(0);
 
-                    $row = 3;
-
-                    $oldRecords = Enroll::find(array(
-                        "conditions" => "semester_id=:semester_id: AND project_level_id=:project_level_id:",
-                        "bind" => array("semester_id" => $semester_id, "project_level_id" => $project_level_id)
-                    ));
-
-                    foreach ($oldRecords as $oldRecord)
-                    {
-                        $oldRecord->setTransaction($transaction);
-                        if (!$oldRecord->delete())
-                        {
-                            $transaction->rollback("Error when clear old data");
-                        }
-                    }
+                    $row = 1;
 
                     while (true)
                     {
@@ -93,16 +107,66 @@ class EnrollController extends ControllerBase
             } catch (Phalcon\Mvc\Model\Transaction\Failed $e)
             {
                 $this->flash->error('Transaction failure: ' . $e->getMessage());
+                return $this->forward('enroll');
             }
         }
 
         $this->flashSession->success('บันทึกสำเร็จ');
-        $this->response->redirect('enroll');
+        return $this->response->redirect('enroll');
+    }
+
+    public function deleteUserAction()
+    {
+        $id = $this->dispatcher->getParam(0);
+
+        $enroll = Enroll::findFirst([
+            "conditions" => "id=:id:",
+            "bind" => ["id" => $id]
+        ]);
+
+        if ($enroll)
+            $enroll->delete();
+
+        $this->flashSession->success('delete success');
+        return $this->_redirectBack();
     }
 
     public function indexAction()
     {
-        $this->_getAllSemester();
+        $enrolls = Enroll::find([
+            "conditions" => "semester_id=:semester_id:",
+            "bind" => ["semester_id" => $this->current_semester]
+        ]);
+
+        $this->view->setVar('enrolls', $enrolls);
+    }
+
+    public function addUserAction()
+    {
+        $projectLevels = ProjectLevel::find();
+        $this->view->setVar('projectLevels', $projectLevels);
+    }
+
+    public function doAddUserAction()
+    {
+        $request = $this->request;
+
+        $project_level = $request->getPost('project_level');
+        $student_id = $request->getPost('student_id');
+
+        $enroll = new Enroll();
+        $enroll->student_id = $student_id;
+        $enroll->project_level_id = $project_level;
+        $enroll->semester_id = $this->current_semester;
+
+        if (!$enroll->save())
+        {
+            $this->dbError($enroll);
+            return $this->forward('enroll/addUser');
+        }
+
+        $this->flashSession->success('Add user success');
+        return $this->response->redirect('enroll#manage');
     }
 }
 

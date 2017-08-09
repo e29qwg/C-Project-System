@@ -2,7 +2,6 @@
 
 class StoreBooking extends \Phalcon\Mvc\Model
 {
-
     public $id;
     public $user_id;
     public $advisor_id;

@@ -41,42 +41,12 @@ class ControllerBase extends Phalcon\Mvc\Controller
 
         $this->view->setVar('url', $this->url->get());
         $this->auth = $auth;
+        $this->view->url = $this->url->get();
 
         $this->loadUserSemester();
         $this->loadAllSemester();
         $this->loadCurrentSemester();
         $this->loadRoomDate();
-    }
-
-    protected  function checkAPIClient($request)
-    {
-        $client_id = $request->getPost('client_id');
-        $client_secret = $request->getPost('client_secret');
-
-        $client = Client::findFirst([
-            "conditions" => "client_id=:client_id:",
-            "bind" => ["client_id" => $client_id]
-        ]);
-
-        $response = [
-            'status' => 'error',
-            'data' => null,
-            'message' => ''
-        ];
-
-        if (!$client) {
-            $response['message'] = 'Invalid client';
-            echo json_encode($response);
-            return false;
-        }
-
-        if ($client->client_secret != $client_secret) {
-            $response['message'] = 'Invalid secret';
-            echo json_encode($response);
-            return false;
-        }
-
-        return true;
     }
 
     protected function loadSetting($key)
@@ -111,7 +81,7 @@ class ControllerBase extends Phalcon\Mvc\Controller
         $builder->innerJoin("ProjectMap", "Project.project_id=ProjectMap.project_id");
         $builder->andWhere("ProjectMap.user_id=:user_id:", array("user_id" => $this->auth['id']));
         $builder->andWhere("ProjectMap.map_type='advisor'");
-        $builder->andWhere("Project.project_status='accept'");
+        $builder->andWhere("Project.project_status!='Pending'");
 
         $projects = $builder->getQuery()->execute();
 
