@@ -120,7 +120,7 @@ class NewProjectCest
         $I->cantSee('Create Project');
     }
 
-    public function createProject1InvalidTMM(FunctionalTester $I, UserSteps $userSteps)
+  /*  public function createProject1InvalidTMM(FunctionalTester $I, UserSteps $userSteps)
     {
         $userSteps->loginAsStudent();
 
@@ -136,13 +136,13 @@ class NewProjectCest
         //test
         $I->amOnPage('/projects/newProject');
         $I->cantSee('Create Project');
-    }
+    }*/
 
 
     public function notFoundEnroll(FunctionalTester $I, UserSteps $userSteps)
     {
         $userSteps->loginAsStudent();
         $I->amOnPage('/projects/newProject');
-        $I->see('ไม่มีข้อมูลการลงทะเบียน');
+        $I->see('ไม่พบข้อมูลการลงทะเบียน');
     }
 }
