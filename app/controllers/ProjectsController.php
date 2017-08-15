@@ -899,13 +899,13 @@ class ProjectsController extends ControllerBase
         }
 
         //check can create project
+        $projectPermission = new ProjectPermission();
+        $canCreateProject = $projectPermission->canCreateProject($this->current_semester, $this->auth['id']);
 
-        $project_level = $this->permission->canCreateProject($this->current_semester, $this->auth['id']);
 
-
-        if (empty($project_level))
+        if (!$canCreateProject)
         {
-            $this->flash->error('Error missing some condition');
+            $this->flash->error($projectPermission->getErrorMessage());
             return $this->forward('projects/new');
         }
 
@@ -945,7 +945,7 @@ class ProjectsController extends ControllerBase
             $project->setTransaction($transaction);
             $project->project_name = $project_name;
             $project->project_type = $project_type;
-            $project->project_level_id = $project_level->project_level_id;
+            $project->project_level_id = $projectPermission->getProjectLevel()->project_level_id;
             $project->project_description = $description;
             $project->semester_id = $this->current_semester;
 
@@ -1042,16 +1042,22 @@ class ProjectsController extends ControllerBase
     public function newProjectAction()
     {
         //check can create project
-        $project_level = $this->permission->canCreateProject($this->current_semester, $this->auth['id']);
+        $projectPermission = new ProjectPermission();
+        $canCreateProject = $projectPermission->canCreateProject($this->current_semester, $this->auth['id']);
 
-        if (empty($project_level))
-            return;
+        $this->view->setVar('canCreateProject', $canCreateProject);
+
+        if (empty($canCreateProject))
+        {
+            $this->flash->error($projectPermission->getErrorMessage());
+            return true;
+        }
+
 
         //set project level
-        $this->view->setVar('project_level_name', $project_level->project_level_name);
-
+        $this->view->setVar('project_level_name', $projectPermission->getProjectLevel()->project_level_name);
         $this->loadViewAdvisors();
     }
-}
 
-?>
+
+}
