@@ -47,7 +47,7 @@ $this->flash->notice('เมื่อแก้ไข user จำเป็นต�
     {
         ?>
         <tr>
-            <td><?= $staff->title . $staff->name; ?> ( <?= $staff->username; ?> )</td>
+            <td><?= $staff->title . $staff->name; ?> ( <?= $staff->user_id; ?> )</td>
             <td><a href="<?= $this->url->get('advisor/addAdvisor/') . $staff->id; ?>" class="btn btn-primary btn-sm">เพิ่ม</a>
             </td>
         </tr>
