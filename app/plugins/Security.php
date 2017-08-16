@@ -146,7 +146,6 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 ),
                 'profile' => array('*'),
                 'exam' => array('showExam'),
-                'score' => array('studentView'),
                 'userSettings' => array('*'),
                 'report' => array(
                     'index',
@@ -212,7 +211,6 @@ class Security extends \Phalcon\Mvc\User\Plugin
                 ),
                 'profile' => array('*'),
                 'exam' => array('download', 'showExam'),
-                'score' => array('advisorView'),
                 'userSettings' => array('*'),
                 'report' => array('evaluate', 'reject', 'accept'),
                 'room' => ['proposed', 'accept', 'reject'],
@@ -237,7 +235,6 @@ class Security extends \Phalcon\Mvc\User\Plugin
             $adminResources = array(
                 'admin' => array('*'),
                 'profile' => array('*'),
-                'score' => array('*'),
                 'exam' => array('*'),
                 'news' => array('*'),
                 'settings' => array('*'),

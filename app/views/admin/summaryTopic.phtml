@@ -15,7 +15,7 @@ echo $this->getContent();
 
         echo $this->tag->selectStatic(array(
             'semester',
-            $allSemesters,
+            $allSemester,
             'require' => 'require',
             'class' => 'form-control'
         ));
@@ -23,7 +23,7 @@ echo $this->getContent();
         ?>
     </div>
     <div class="col-sm-2">
-        <button type="submit" class="btn btn-primary btn-fm">Filter</button>
+        <button class="btn btn-primary btn-fm">Filter</button>
     </div>
 </form>
 

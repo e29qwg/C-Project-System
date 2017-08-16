@@ -436,30 +436,62 @@ class AdminController extends ControllerBase
         $this->view->disable();
     }
 
-    public function advisorProfileAction()
+    public function changeRoleAction()
     {
         $this->view->setTemplateAfter('adminside');
+
+        $roles = User::find("type='Advisor' OR type='Admin'");
+
+        $this->view->setVar('roles', $roles);
+    }
+
+    public function doChangeRoleAction()
+    {
+        $request = $this->request;
+
+        if (!$request->isPost())
+        {
+            return $this->forward('admin/changeRole');
+        }
+
+        $user_id = $request->getPost('role');
+
+        $user = User::findFirst([
+           "conditions" => "id=:user_id:",
+           "bind" => ["user_id" => $user_id]
+        ]);
+
+        $this->replaceSession($user);
+
+        return $this->response->redirect('index');
+    }
+
+    private function replaceSession($user)
+    {
+        if ($user)
+        {
+            $auth = $this->session->get('auth');
+            $auth['id'] = $user->id;
+            $auth['user_id'] = $user->user_id;
+            $auth['name'] = $user->name;
+            $auth['title'] = $user->title;
+            $auth['view'] = $user->type;
+            $auth['facebook'] = $user->facebook;
+            $this->session->set('auth', $auth);
+        }
     }
 
     public function summaryTopicAction()
     {
-        $currentSemester = Settings::findFirst("name='current_semester'");
-
-        if (!$currentSemester)
-        {
-            $this->flash->error('setting error');
-            return $this->forward('admin');
-        }
-
         $semester = $this->request->getPost('semester');
 
         if (empty($semester))
         {
             $projects = Project::find(array(
                 "conditions" => "semester_id=:semester_id:",
-                "bind" => array("semester_id" => $currentSemester->value)
+                "bind" => array("semester_id" => $this->current_semester)
             ));
-            $this->view->setVar('semester', $currentSemester->value);
+            $this->view->setVar('semester', $this->current_semester);
         }
         else
         {
@@ -471,26 +503,20 @@ class AdminController extends ControllerBase
             $this->view->setVar('semester', $semester);
         }
 
-        $this->Topic->updateTopic($projects);
+        $topic = new Topic();
+        $topic->updateTopic($projects);
         $this->view->setVar('projects', $projects);
-
-        $semesters = Semester::find();
-        $allSemesters = array();
-
-        foreach ($semesters as $semester)
-        {
-            $allSemesters[$semester->semester_id] = $semester->semester_term . '/' . $semester->semester_year;
-        }
-
-        $this->view->setVar('allSemesters', $allSemesters);
-
         $this->view->setTemplateAfter('adminside');
     }
-
 
     public function indexAction()
     {
         $this->view->setTemplateAfter('adminside');
+
+        $user = User::findFirst("user_id='Admin'");
+
+        if ($user)
+            $this->replaceSession($user);
     }
 
     public function setViewAction()
@@ -516,5 +542,3 @@ class AdminController extends ControllerBase
             return $this->forward('admin');
     }
 }
-
-?>

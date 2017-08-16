@@ -16,12 +16,17 @@ if ($auth['type'] == 'Student')
 include __DIR__ . '/../projects/me.phtml';
 ?>
 
+
+
 <div class="col-sm-9">
     <?php
     }
     else
         echo '<div>';
     ?>
+
+    <h4><?= $selectProject->project_name; ?> ( <?= $selectProject->Semester->semester_term; ?>/<?= $selectProject->Semester->semester_year; ?> )</h4>
+
     <ul class="nav nav-tabs" id="pTab">
         <?= ($action == 'manage') ? '<li class="active">' : '<li>'; ?>
         <a href="<?= $url . 'projects/manage/' . $params[0] ?>">Project Info</a></li>
