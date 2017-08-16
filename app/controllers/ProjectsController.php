@@ -173,10 +173,12 @@ class ProjectsController extends ControllerBase
         $oldProject = $records[0];
         $oldProject->setTransaction($transaction);
 
+        $setStatusLink = '<a href="'.$this->url->get().'projects/status/'.$oldProject->project_id.'" target="_blank">click</a>';
+
         if ($oldProject->project_level_id == $project->project_level_id)
         {
             if ($oldProject->project_status != Project::PROJECT_FAIL && $oldProject->project_status != Project::PROJECT_DROP)
-                $transaction->rollback('พบข้อขัดแย้งของโครงงานในเทิอมที่แล้ว กรุณาติดต่อผู้ดูแลระบบ');
+                $transaction->rollback('พบข้อขัดแย้งของโครงงานในเทิอมที่แล้ว ตรวจสอบและตั้งค่าสถานะของโครงงานเดิมได้ที่ '. $setStatusLink);
         }
         elseif ($oldProject->project_level_id < $project->project_level_id)
         {
@@ -185,8 +187,6 @@ class ProjectsController extends ControllerBase
                 //if accept alert advisor to change status
                 if ($oldProject->project_status == Project::PROJECT_ACCEPT)
                 {
-                    $link = '<a href="'.$this->url->get().'projects/status/'.$oldProject->project_id.'" target="_blank">click</a>';
-
                     //auto set status
                     $oldProject->project_status = Project::PROJECT_PASS;
                     $oldProject->save();
@@ -197,7 +197,7 @@ class ProjectsController extends ControllerBase
                     //check pending rent item from store
                     if (count($bookings['bookings']))
                     {
-                        $transaction->rollback('ไม่สามารถยอมรับโครงงานได้เนื่องจากนักศึกษามีรายการยืมอุปกรณ์ค้างอยู่ ตรวจสอบสถานะได้ที่ '. $link);
+                        $transaction->rollback('ไม่สามารถยอมรับโครงงานได้เนื่องจากนักศึกษามีรายการยืมอุปกรณ์ค้างอยู่ ตรวจสอบสถานะได้ที่ '. $setStatusLink);
                     }
                 }
                 else
