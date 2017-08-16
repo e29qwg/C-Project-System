@@ -1,3 +1,8 @@
+16/08/2017
+    - fix invalid error message
+    - add project name header
+    - show username for advisor manage page
+    - remove un use action
 15/08/2017
     - change create project structure
     - optimize error message
