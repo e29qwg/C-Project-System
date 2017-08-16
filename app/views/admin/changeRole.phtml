@@ -1,0 +1,17 @@
+<?php echo $this->getContent() ?>
+
+
+<form method="post" action="<?= $url . 'admin/doChangeRole'; ?>">
+    <div class="col-sm-5">
+        <?= Phalcon\Tag::select([
+            'role',
+            $roles,
+            'class' => 'form-control',
+            'using' => array('id', 'name')
+        ]);
+        ?>
+    </div>
+    <button class="btn btn-primary btn-sm">เปลี่ยน</button>
+</form>
+
+

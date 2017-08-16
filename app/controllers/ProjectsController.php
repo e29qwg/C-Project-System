@@ -178,7 +178,7 @@ class ProjectsController extends ControllerBase
         if ($oldProject->project_level_id == $project->project_level_id)
         {
             if ($oldProject->project_status != Project::PROJECT_FAIL && $oldProject->project_status != Project::PROJECT_DROP)
-                $transaction->rollback('พบข้อขัดแย้งของโครงงานในเทิอมที่แล้ว ตรวจสอบและตั้งค่าสถานะของโครงงานเดิมได้ที่ '. $setStatusLink);
+                $transaction->rollback('พบข้อขัดแย้งของโครงงานในภาคเรียนที่แล้ว ตรวจสอบและตั้งค่าสถานะของโครงงานภาคเรียนที่แล้วได้ที่ '. $setStatusLink);
         }
         elseif ($oldProject->project_level_id < $project->project_level_id)
         {
@@ -335,8 +335,6 @@ class ProjectsController extends ControllerBase
                 //$transaction->rollback('debug');
                 $transaction->commit();
 
-                $this->_createScore($projectMaps, $project);
-
                 foreach ($emails as $email)
                 {
                     $this->sendMail($email['subject'], $email['mes'], $email['to']);
@@ -352,34 +350,6 @@ class ProjectsController extends ControllerBase
 
         $this->flash->success('Accept Success');
         return $this->forward('projects/proposed');
-    }
-
-    private function _createScore($projectMaps, $project)
-    {
-        $currentSemester = Semester::maximum(array("column" => "semester_id"));
-        if ($project->semester_id != $currentSemester)
-            return;
-
-        foreach ($projectMaps as $projectMap)
-        {
-            if ($projectMap->map_type != "owner")
-                continue;
-
-            for ($i = 0; $i < 2; $i++)
-            {
-                if ($project->project_level_id == 1)
-                    $score = new ScorePrepare();
-                else
-                    $score = new ScoreProject();
-                $score->user_id = $projectMap->user_id;
-                $score->project_id = $project->project_id;
-                if ($i == 0)
-                    $score->is_midterm = 1;
-                else
-                    $score->is_midterm = 0;
-                $score->save();
-            }
-        }
     }
 
     //show propose page
