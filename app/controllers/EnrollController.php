@@ -86,6 +86,14 @@ class EnrollController extends ControllerBase
                         if (empty($student_id))
                             break;
 
+                        $enroll = Enroll::findFirst([
+                           "conditions" => "student_id=:student_id: AND semester_id=:semester_id: AND project_level_id=:project_level_id:",
+                           "bind" => ["student_id" => $student_id, "semester_id" => $semester_id, "project_level_id" => $project_level_id]
+                        ]);
+
+                        if ($enroll)
+                            continue;
+
                         $enroll = new Enroll();
                         $enroll->setTransaction($transaction);
                         $enroll->student_id = $student_id;
