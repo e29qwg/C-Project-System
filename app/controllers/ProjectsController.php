@@ -146,7 +146,7 @@ class ProjectsController extends ControllerBase
     }
 
     //private call from acceptAction
-    private function checkPrerequire($project, $transaction)
+    private function checkPrerequire(Project $project, \Phalcon\Mvc\Model\Transaction $transaction)
     {
         //prepare project skip check
         if ($project->project_level_id == 1)
