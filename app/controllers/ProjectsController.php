@@ -71,7 +71,11 @@ class ProjectsController extends ControllerBase
 
         if ($status == Project::PROJECT_PASS && $project->store_option == PROJECT::STORE_MOVE_TO_ADVISOR)
         {
-            $this->moveStoreItem($project, null, null, true);
+            if (!$this->moveStoreItem($project, null, true))
+            {
+                $this->flashSession->error('Error when transaction');
+                return $this->_redirectBack();
+            }
         }
 
         if (!$project->save())
@@ -102,7 +106,7 @@ class ProjectsController extends ControllerBase
     }
 
     //private call from checkPrerequire
-    private function moveStoreItem($oldProject, $newProject, $transaction, $advisor=false)
+    private function moveStoreItem($oldProject, $newProject, $advisor=false)
     {
         //get pending items
         $store = new StoreController();
@@ -117,7 +121,8 @@ class ProjectsController extends ControllerBase
                 $info->project_id = $newProject->project_id;
                 if (!$info->save())
                 {
-                    $transaction->rollback('Database Error');
+                    $this->dbStore->rollback();
+                    return false;
                 }
             }
         }
@@ -130,12 +135,14 @@ class ProjectsController extends ControllerBase
                 $booking->use_for_type = 'etc.';
                 if (!$booking->save())
                 {
-                    $transaction->rollback('Database Error');
+                    $this->dbStore->rollback();
+                    return false;
                 }
             }
         }
 
         $this->dbStore->commit();
+        return true;
     }
 
     //private call from acceptAction
@@ -173,12 +180,14 @@ class ProjectsController extends ControllerBase
         $oldProject = $records[0];
         $oldProject->setTransaction($transaction);
 
-        $setStatusLink = '<a href="'.$this->url->get().'projects/status/'.$oldProject->project_id.'" target="_blank">click</a>';
-
         if ($oldProject->project_level_id == $project->project_level_id)
         {
+            //if old project not set status auto set to fail
             if ($oldProject->project_status != Project::PROJECT_FAIL && $oldProject->project_status != Project::PROJECT_DROP)
-                $transaction->rollback('พบข้อขัดแย้งของโครงงานในภาคเรียนที่แล้ว ตรวจสอบและตั้งค่าสถานะของโครงงานภาคเรียนที่แล้วได้ที่ '. $setStatusLink);
+            {
+                $oldProject->project_status = Project::PROJECT_FAIL;
+                $oldProject->store_option = Project::STORE_IN_NEXT_PROJECT;
+            }
         }
         elseif ($oldProject->project_level_id < $project->project_level_id)
         {
@@ -189,16 +198,8 @@ class ProjectsController extends ControllerBase
                 {
                     //auto set status
                     $oldProject->project_status = Project::PROJECT_PASS;
+                    $oldProject->store_option = Project::STORE_IN_NEXT_PROJECT;
                     $oldProject->save();
-
-                    $storeController = new StoreController();
-                    $bookings = $storeController->getStoreInfo($oldProject->project_id);
-
-                    //check pending rent item from store
-                    if (count($bookings['bookings']))
-                    {
-                        $transaction->rollback('ไม่สามารถยอมรับโครงงานได้เนื่องจากนักศึกษามีรายการยืมอุปกรณ์ค้างอยู่ ตรวจสอบสถานะได้ที่ '. $setStatusLink);
-                    }
                 }
                 else
                 {
@@ -211,11 +212,13 @@ class ProjectsController extends ControllerBase
         //options
         if ($oldProject->store_option == PROJECT::STORE_IN_NEXT_PROJECT)
         {
-            $this->moveStoreItem($oldProject, $project, $transaction);
+            if (!$this->moveStoreItem($oldProject, $project))
+                $transaction->rollback('เกิดข้อผิดพลาดกรุณาติดต่อผู้ดูแลระบบ');
         }
         elseif ($oldProject->store_option == PROJECT::STORE_MOVE_TO_ADVISOR)
         {
-            $this->moveStoreItem($oldProject, $project, $transaction, true);
+            if (!$this->moveStoreItem($oldProject, $project, true))
+                $transaction->rollback('เกิดข้อผิดพลาดกรุณาติดต่อผู้ดูแลระบบ');
         }
     }
 
