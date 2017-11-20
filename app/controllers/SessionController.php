@@ -190,13 +190,6 @@ class SessionController extends ControllerBase
             return $this->response->redirect('session');
         }
 
-        if ($officename != 'ภาควิชาวิศวกรรมคอมพิวเตอร์ คณะวิศวกรรมศาสตร์')
-        {
-            $this->flashSession->error('Valid only CoE User');
-            return $this->response->redirect('session');
-        }
-
-
         $user = User::findFirst(array(
             "conditions" => "user_id=:username:",
             "bind" => array("username" => $username)
