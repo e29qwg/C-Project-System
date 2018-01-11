@@ -83,6 +83,7 @@ class EnrollController extends ControllerBase
                     while (true)
                     {
                         $student_id = $sheet->getCell('A' . $row)->getCalculatedValue();
+
                         if (empty($student_id))
                             break;
 
@@ -92,7 +93,10 @@ class EnrollController extends ControllerBase
                         ]);
 
                         if ($enroll)
+                        {
+                            $row++;
                             continue;
+                        }
 
                         $enroll = new Enroll();
                         $enroll->setTransaction($transaction);
