@@ -5,7 +5,7 @@ echo $this->getContent();
 if (date('Y-m-d H:i:s') < $lastDate)
     $this->flash->notice('ยังมีการเปลี่ยนแปลงจนกว่าจะถึงเวลา: ' . $lastDate);
 else
-    $this->flash->warning('อัพเดตครั้งสุดท้ายเวลา: '.$lastDate);
+    $this->flash->warning('อัพเดตครั้งสุดท้ายเวลา: ' . $lastDate);
 
 $cmpStr = $this->request->getQuery('cmpStr');
 
@@ -31,27 +31,57 @@ for ($i = 0 ; $i < 21 ; $i++)
     <h3>Midterm checklist <?= $current_semester; ?></h3>
 
     <div class="row">
-        <form class="form" method="get" action="<?= $url . 'exam/midtermList'; ?>">
-            <label class="col-sm-2 control-label">Sort By</label>
-            <div class="col-sm-3">
-                <?php
+        <form class="form-horizontal" method="get" action="<?= $url . 'exam/midtermList'; ?>">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Sort By</label>
+                <div class="col-sm-3">
+                    <?php
 
-                \Phalcon\Tag::setDefault("cmpStr", $compareStr);
+                    \Phalcon\Tag::setDefault("cmpStr", $compareStr);
 
-                echo \Phalcon\Tag::selectStatic([
-                    'cmpStr',
-                    [
-                        'compareByNProgress' => 'Progress',
-                        'compareByUserId' => 'Student ID'
-                    ],
-                    'useEmpty' => 'useEmpty',
-                    'class' => 'form-control'
-                ]);
+                    echo \Phalcon\Tag::selectStatic([
+                        'cmpStr',
+                        [
+                            'compareByNProgress' => 'Progress',
+                            'compareByUserId' => 'Student ID'
+                        ],
+                        'useEmpty' => 'useEmpty',
+                        'class' => 'form-control'
+                    ]);
 
-                ?>
+                    ?>
+                </div>
+
             </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Deadline</label>
+                <div class="col-sm-3">
+                    <?php
 
-            <button class="btn btn-primary btn-sm">Sort</button>
+                    echo \Phalcon\Tag::dateTimeField([
+                        'deadline',
+                        'placeholder' => 'YYYY-MM-DD HH:MM:SS',
+                        'class' => 'form-control'
+                    ]);
+
+                    ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Min Progress</label>
+                <div class="col-sm-3">
+                    <?php
+
+                    echo \Phalcon\Tag::numericField([
+                        'target_progress',
+                        'class' => 'form-control',
+                        'required' => 'required'
+                    ]);
+
+                    ?>
+                </div>
+                <button class="btn btn-primary btn-sm">Set</button>
+            </div>
         </form>
     </div>
 
@@ -100,7 +130,7 @@ for ($i = 0 ; $i < 21 ; $i++)
                             <td class="text-center"><?= $canExamUser['nProgress']; ?></td>
                         </tr>
 
-                        <?php
+                    <?php
                     endforeach;
                     ?>
                 </table>
@@ -131,7 +161,7 @@ for ($i = 0 ; $i < 21 ; $i++)
                             <td class="text-center"><?= $cantExamUser['nProgress']; ?></td>
                         </tr>
 
-                        <?php
+                    <?php
                     endforeach;
                     ?>
                 </table>
@@ -161,7 +191,7 @@ for ($i = 0 ; $i < 21 ; $i++)
                     </tr>
                     <?php
 
-                    for ($i = 0 ; $i < 21 ; $i++): 
+                    for ($i = 0 ; $i < 21 ; $i++):
 
                         if (!empty($countFrequency[$i])):
 
@@ -171,7 +201,7 @@ for ($i = 0 ; $i < 21 ; $i++)
                                 <td class="text-center"><?= $countFrequency[$i]; ?></td>
                             </tr>
 
-                            <?php
+                        <?php
                         endif;
                     endfor ;
                     ?>

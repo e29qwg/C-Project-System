@@ -16,17 +16,24 @@ class ExamController extends ControllerBase
 
     public function midtermListAction()
     {
+        $lastDate = $this->request->getQuery('deadline');
+        $targetProgress = $this->request->getQuery('target_progress');
+
+        if (empty($lastDate))
+            $lastDate = date('Y-m-d H:i:s');
+
+        if (empty($targetProgress))
+            return;
+
         $builder = $this->modelsManager->createBuilder();
         $builder->from(["ProjectMap"]);
         $builder->where("ProjectMap.map_type='owner'");
         $builder->innerJoin("Project", "Project.project_id=ProjectMap.project_id");
         $builder->andWhere("Project.semester_id=:semester_id:", ["semester_id" => $this->current_semester]);
         $builder->innerJoin("User", "User.id=ProjectMap.user_id");
-        //$builder->orderBy("User.user_id ASC");
 
         $projectMaps = $builder->getQuery()->execute();
 
-        $lastDate = $this->loadSetting('last_progress_midterm_date');
 
         $canExamUsers = [];
         $cantExamUsers = [];
@@ -43,7 +50,7 @@ class ExamController extends ControllerBase
             $data['nProgress'] = count($progresss);
             $data['project'] = $projectMap->Project;
 
-            if ($data['nProgress'] >= 4)
+            if ($data['nProgress'] >= $targetProgress)
                 array_push($canExamUsers, $data);
             else
                 array_push($cantExamUsers, $data);
@@ -54,56 +61,10 @@ class ExamController extends ControllerBase
             'canExamUsers' => $canExamUsers,
             'cantExamUsers' => $cantExamUsers,
         ]);
-    }
 
-    public function finalListAction()
-    {
-        $builder = $this->modelsManager->createBuilder();
-        $builder->from(["ProjectMap"]);
-        $builder->where("ProjectMap.map_type='owner'");
-        $builder->innerJoin("Project", "Project.project_id=ProjectMap.project_id");
-        $builder->andWhere("Project.semester_id=:semester_id:", ["semester_id" => $this->current_semester]);
-        $builder->innerJoin("User", "User.id=ProjectMap.user_id");
-        //$builder->orderBy("User.user_id ASC");
-
-        $projectMaps = $builder->getQuery()->execute();
-
-        $lastDate = $this->loadSetting('last_progress_final_date');
-        $lastDateP2 = $this->loadSetting('last_progress_final_date_p2');
-
-        $canExamUsers = [];
-        $cantExamUsers = [];
-
-        foreach ($projectMaps as $projectMap)
-        {
-
-
-            if ($projectMap->Project->project_level_id == 3)
-                $dateCon = $lastDateP2;
-            else
-                $dateCon = $lastDate;
-
-            $progresss = Progress::find([
-                "conditions" => "project_id=:project_id: AND create_date <= :last_date:",
-                "bind" => ["project_id" => $projectMap->project_id, "last_date" => $dateCon]
-            ]);
-
-            $data = [];
-            $data['user'] = $projectMap->User;
-            $data['nProgress'] = count($progresss);
-            $data['project'] = $projectMap->Project;
-
-            if ($data['nProgress'] >= 8)
-                array_push($canExamUsers, $data);
-            else
-                array_push($cantExamUsers, $data);
-        }
-
-        $this->view->setVars([
-            'lastDate' => $lastDate,
-            'lastDateP2' => $lastDateP2,
-            'canExamUsers' => $canExamUsers,
-            'cantExamUsers' => $cantExamUsers
+        \Phalcon\Tag::setDefaults([
+           'deadline' => $lastDate,
+           'target_progress' => $targetProgress
         ]);
     }
 
